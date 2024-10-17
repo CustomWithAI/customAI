@@ -4,6 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -n 'backend,frontend' -c '#007755,#2f6da3' 'cd apps/backend && bun dev' 'cd apps/frontend && bun --bun run dev'",
+    "dev:backend": "concurrently -n 'backend' -c '#007755' 'cd apps/backend && bun dev'",
+    "dev:frontend": "concurrently -n 'frontend' -c '#2f6da3' 'cd apps/frontend && bun --bun run dev'",
     "typecheck": "bunx --bun tsc",
     "lint": "biome lint .",
     "lint:fix": "biome lint --apply .",
@@ -11,6 +13,9 @@
     "format:fix": "biome format --write .",
     "prepare": "husky"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "@biomejs/biome": "1.9.1",
     "@types/bun": "latest",

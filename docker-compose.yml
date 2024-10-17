@@ -1,0 +1,43 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: webapp_dev
+      POSTGRES_HOST_AUTH_METHOD: trust
+  redis:
+    image: redis:6.2.5-alpine
+
+  backend_app:
+    container_name: backend_app
+    profiles:
+      - ""
+      - backend
+    build:
+      context: .
+      dockerfile: ./docker/dev.backend.Dockerfile
+    env_file: .env.local
+    volumes:
+      - ./apps/backend:/app/apps/backend
+      - /app/apps/backend/node_modules
+    ports:
+      - 4000:4000 
+  frontend_app:
+    container_name: frontend_app
+    profiles:
+      - ""
+      - frontend
+    build:
+      context: .
+      dockerfile: ./docker/dev.frontend.Dockerfile
+    env_file: .env.local
+    volumes:
+      - ./apps/frontend:/app/apps/frontend
+      - /app/apps/frontend/node_modules
+      - /app/apps/frontend/.next
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend_app
