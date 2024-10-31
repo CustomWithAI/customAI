@@ -4,15 +4,15 @@ import type { NextRequest } from "next/server";
 import { AppConfig } from "./utils/appconfig";
 
 const intlMiddleware = createMiddleware({
-	locales: AppConfig.locales,
-	localePrefix: "as-needed",
-	defaultLocale: AppConfig.defaultLocale,
+  locales: AppConfig.locales,
+  localePrefix: "as-needed",
+  defaultLocale: AppConfig.defaultLocale,
 });
 
 export default function middleware(request: NextRequest) {
-	return intlMiddleware(request);
+  return intlMiddleware(request);
 }
 
 export const config = {
-	matcher: ["/((?!.+\\.[\\w]+$|_next|monitoring).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next|monitoring).*)", "/", "/(api|trpc)(.*)"],
 };

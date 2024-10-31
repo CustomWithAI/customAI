@@ -1,18 +1,18 @@
-import { logger, postgresLogger } from "@/config/logger";
+import { logger, postgresLogger, redisLogger } from "@/config/logger";
 import { pool } from "@/infrastructures/database/connection";
+import { redis } from "@/infrastructures/redis/connection";
 
-export const shutdown = (): void => {
-	logger.warn("Shutting down ( 2 seconds ) ...");
-	pool
-		.end()
-		.then(() => postgresLogger.warn("✅  Shutdown postgres success"))
-		.catch((e) =>
-			postgresLogger.error(
-				`❌  Shutdown postgres failed: ${JSON.stringify(e)}`,
-			),
-		);
-	setTimeout((): void => {
-		logger.warn("✅  Shutdown success");
-		process.exit();
-	}, 2000);
+export const shutdown = async (): Promise<void> => {
+  logger.warn("Shutting down ( 2 seconds ) ...");
+  await pool
+    .end()
+    .then(() => postgresLogger.warn("✅  Shutdown postgres success"))
+    .catch((e) =>
+      postgresLogger.error(`❌  Shutdown postgres failed: ${JSON.stringify(e)}`)
+    );
+  await redis
+    .disconnect()
+    .then(() => redisLogger.warn("✅  Shutdown redis success"));
+  logger.warn("🔒  Shutdown success");
+  process.exit();
 };

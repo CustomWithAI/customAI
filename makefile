@@ -1,0 +1,27 @@
+dc-nuclear:
+	- docker stop $$(docker ps -a -q)
+	- docker kill $$(docker ps -q)
+	- docker rm $$(docker ps -a -q)
+	- docker rmi $$(docker images -q)
+	- docker system prune --all --force --volumes
+	
+dcup-dev:
+	- docker-compose up
+
+dcup-dev-backend:
+	- docker-compose --profile backend up
+
+dcup-dev-frontend:
+	- docker-compose --profile frontend up
+
+dcup-build:
+	- docker-compose build
+
+dcup-prod:
+	- docker-compose -f ./docker-compose.prod.yaml up
+
+dcup-prod-build:
+	- docker-compose -f ./docker-compose.prod.yaml build
+
+dc-down:
+	- docker-compose down
