@@ -1,4 +1,4 @@
-# CustomAI Website
+# CustomAI Platform
 
 ## Overview
 The **CustomAI Website** is a no-code platform designed to enable users to create, train, and deploy custom AI models without any coding knowledge. The platform provides an intuitive interface, allowing users to upload datasets, configure model parameters, and deploy trained models for real-world applications. This project is ideal for medical professionals, researchers, and others looking to leverage AI without technical expertise.
