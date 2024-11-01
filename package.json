@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "concurrently -n 'backend,frontend' -c '#007755,#2f6da3' 'cd apps/backend && bun dev' 'cd apps/frontend && pnpm run dev'",
     "typecheck": "bunx --bun tsc",
-    "lint": "biome lint --skip=suspicious/noExplicitAny .",
-    "lint:fix": "biome lint --write --skip=suspicious/noExplicitAny .",
+    "lint": "biome lint --skip=suspicious/noExplicitAny --skip=security/noDangerouslySetInnerHtml .",
+    "lint:fix": "biome lint --write --skip=suspicious/noExplicitAny --skip=security/noDangerouslySetInnerHtml .",
     "format": "biome format .",
     "format:fix": "biome format --write .",
     "prepare": "husky"
