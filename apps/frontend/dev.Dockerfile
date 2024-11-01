@@ -1,17 +1,20 @@
-FROM oven/bun:latest AS base
+FROM node:23-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
 FROM base AS build
 
 WORKDIR /app
 
-COPY package.json bun.lockb /
-
-RUN bun install
+RUN npm install -g pnpm
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install
 
 COPY . .
 
 ENV NODE_ENV=development
 
 EXPOSE 3000
-CMD ["bun", "run", "dev"]
+CMD ["pnpm", "dev"]
 
 
