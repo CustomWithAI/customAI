@@ -20,7 +20,7 @@ export const connectRedis = async (): Promise<void> => {
     redisLogger.error(
       `❌  Connect redis (redis://${config.REDIS_HOST}:${config.REDIS_PORT}/${
         config.REDIS_DBINDEX || 0
-      }) failed: ${(e as any)?.message}`,
+      }) failed: ${e}`,
       e
     );
   }

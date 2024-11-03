@@ -6,8 +6,8 @@ export class HttpError extends Error {
     public message: string,
     public statusCode: number,
     public traceCode: string,
-    public errorData: Record<string, any> = {},
-    public errorParams: Record<string, any> = {}
+    public errorData: Record<string, unknown> = {},
+    public errorParams: Record<string, unknown> = {}
   ) {
     super(message);
   }
@@ -15,8 +15,8 @@ export class HttpError extends Error {
   public static BadRequest(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "Bad Request",
@@ -30,8 +30,8 @@ export class HttpError extends Error {
   public static Unauthorized(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "Unauthorized",
@@ -45,8 +45,8 @@ export class HttpError extends Error {
   public static PaymentRequired(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "Payment Required",
@@ -60,8 +60,8 @@ export class HttpError extends Error {
   public static Forbidden(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "Forbidden",
@@ -75,8 +75,8 @@ export class HttpError extends Error {
   public static NotFound(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "Not Found",
@@ -90,8 +90,8 @@ export class HttpError extends Error {
   public static MethodNotAllowed(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "Method Not Allowed",
@@ -105,8 +105,8 @@ export class HttpError extends Error {
   public static Conflict(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "Conflict",
@@ -120,8 +120,8 @@ export class HttpError extends Error {
   public static UnsupportedMediaType(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "UnsupportedMediaType",
@@ -135,8 +135,8 @@ export class HttpError extends Error {
   public static IAmATeapot(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "IAmATeapot",
@@ -150,8 +150,8 @@ export class HttpError extends Error {
   public static TooManyRequests(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "Too Many Requests",
@@ -165,8 +165,8 @@ export class HttpError extends Error {
   public static Internal(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "Internal Server Error",
@@ -180,8 +180,8 @@ export class HttpError extends Error {
   public static NotImplemented(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "Not Implemented",
@@ -195,8 +195,8 @@ export class HttpError extends Error {
   public static BadGateway(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "Bad Gateway",
@@ -210,8 +210,8 @@ export class HttpError extends Error {
   public static ServiceUnavailable(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "Service Unavailable",
@@ -225,8 +225,8 @@ export class HttpError extends Error {
   public static GatewayTimeout(
     message?: string,
     traceCode?: string,
-    errorData?: Record<string, any>,
-    errorParams?: Record<string, any>
+    errorData?: Record<string, unknown>,
+    errorParams?: Record<string, unknown>
   ): HttpError {
     return new HttpError(
       message || "Gateway Timeout",

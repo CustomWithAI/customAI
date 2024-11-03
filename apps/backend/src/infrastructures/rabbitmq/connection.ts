@@ -10,13 +10,9 @@ export const connectRabbitMQ = async () => {
     return { connection, channel };
   }
   try {
-    connection = await amqp.connect({
-      hostname: config.RABBITMQ_HOST,
-      port: config.RABBITMQ_PORT,
-      username: config.RABBITMQ_USER,
-      password: config.RABBITMQ_PASSWORD,
-    });
-
+    connection = await amqp.connect(
+      `amqp://${config.RABBITMQ_USER}:${config.RABBITMQ_PASSWORD}@${config.RABBITMQ_HOST}:${config.RABBITMQ_PORT}/`
+    );
     channel = await connection.createChannel();
     queueLogger.info("✅ Connected to RabbitMQ");
     queueLogger.info(

@@ -1,20 +1,16 @@
 FROM node:23-alpine AS base
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-
 FROM base AS build
 
 WORKDIR /app
 
-RUN npm install -g pnpm
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install
+COPY package.json package-lock.json ./
+RUN npm install
 
 COPY . .
 
 ENV NODE_ENV=development
 
 EXPOSE 3000
-CMD ["pnpm", "dev"]
+CMD ["npm", "run", "dev"]
 
 
