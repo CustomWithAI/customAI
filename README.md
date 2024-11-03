@@ -74,7 +74,11 @@ frontend
 │   ├── 📁 layout          # Layout components (e.g., Header, Footer)
 │   └── 📁 specific        # Specific components for particular pages/features
 │
+├── 📁 features            # Custom group of components
 ├── 📁 hooks               # Custom React hooks
+│   ├── 📁 queries         # 'get' API hooks
+│   └── 📁 mutations       # 'post' 'put' 'patch' 'delete' API hooks
+│
 ├── 📁 context             # React context providers for state management
 ├── 📁 utils               # Utility functions
 ├── 📁 services            # API calls and services
