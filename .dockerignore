@@ -3,6 +3,12 @@ Dockerfile*
 docker-compose*
 .dockerignore
 .git
+__pycache__/
+.git/
+*.pyc
+*.pyo
+*.pyd
+.venv/
 .gitignore
 README.md
 LICENSE

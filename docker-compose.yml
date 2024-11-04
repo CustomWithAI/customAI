@@ -26,6 +26,19 @@ services:
   redis:
     image: redis:6.2.5-alpine
 
+  ai_app:
+    container_name: python_ai
+    profiles:
+      - ""
+      - python
+    build: 
+      context: ./apps/python
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./apps/frontend:/app
+    ports:
+      - 8000:8000 
+
   backend_app:
     container_name: backend_app
     profiles:

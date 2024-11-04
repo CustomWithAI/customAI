@@ -26,13 +26,17 @@ export const connectRabbitMQ = async () => {
   }
 };
 
-export const getRabbitMQChannel = async () => {
+export const getRabbitMQChannel = async (isAttempting = true) => {
   try {
     if (!connection || !channel) {
       queueLogger.info(
         "🔄  No active RabbitMQ connection, attempting to connect..."
       );
-      await connectRabbitMQ();
+      if (isAttempting) {
+        await connectRabbitMQ();
+      } else {
+        return null;
+      }
     }
     return channel;
   } catch (error) {
