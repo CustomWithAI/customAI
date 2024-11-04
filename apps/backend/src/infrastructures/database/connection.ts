@@ -1,4 +1,5 @@
 import { config } from "@/config/env";
+import { postgresLogger } from "@/config/logger";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { sql } from "drizzle-orm/sql";
 import { Pool } from "pg";
@@ -14,8 +15,8 @@ export const db = drizzle(pool, {
 export const connectDatabase = async (): Promise<void> => {
   try {
     await db.execute(sql`SELECT 1`);
-    console.log("✅ Database connected successfully");
+    postgresLogger.info("✅  Database connected successfully");
   } catch (error) {
-    console.error("❌ Database connection failed:", error);
+    postgresLogger.error("❌  Database connection failed:", error);
   }
 };

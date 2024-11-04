@@ -9,6 +9,7 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
+  basePath: "/api/v1/auth",
   emailAndPassword: {
     enabled: true,
   },

@@ -8,7 +8,7 @@ export const swaggerConfig = () => (app: Elysia) => {
       swagger({
         documentation: {
           info: {
-            title: "Elysia Documentation",
+            title: "Custom AI Documentation",
             description: "Development documentation",
             license: { name: "MIT", url: "https://opensource.org/license/mit" },
             termsOfService: "termsOfService",

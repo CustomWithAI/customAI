@@ -1,4 +1,4 @@
-import { createPinoLogger, pino } from "@bogeychan/elysia-logger";
+import { createPinoLogger } from "@bogeychan/elysia-logger";
 
 export const logger = createPinoLogger({
   transport: {
@@ -7,7 +7,12 @@ export const logger = createPinoLogger({
       colorize: true,
     },
   },
-  timestamp: pino.stdTimeFunctions.isoTime,
+  // FOR: print all information about api
+  // formatters: {
+  //   log: (object) => ({
+  //     ...object,
+  //   }),
+  // },
   level: "debug",
 });
 

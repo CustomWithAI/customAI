@@ -13,6 +13,6 @@ export const shutdown = async (): Promise<void> => {
   await redis
     .disconnect()
     .then(() => redisLogger.warn("✅  Shutdown redis success"));
-  logger.warn("🔒  Shutdown success");
+  logger.info("🔒  Shutdown success");
   process.exit();
 };
