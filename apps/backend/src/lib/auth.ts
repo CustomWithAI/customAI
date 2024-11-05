@@ -3,6 +3,7 @@ import { db } from "@/infrastructures/database/connection";
 import { redis } from "@/infrastructures/redis/connection";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { admin } from "better-auth/plugins";
 import type { Context } from "elysia/context";
 
 export const auth = betterAuth({
@@ -29,6 +30,7 @@ export const auth = betterAuth({
       await redis.del(key);
     },
   },
+  plugins: [admin()],
   account: {
     accountLinking: {
       enabled: true,
@@ -46,15 +48,10 @@ export const auth = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 7,
     updateAge: 60 * 60 * 24,
+    additionalFields: {},
   },
   user: {
-    additionalFields: {
-      role: {
-        type: "string",
-        required: false,
-        defaultValue: "user",
-      },
-    },
+    additionalFields: {},
   },
   databaseHooks: {
     user: {
