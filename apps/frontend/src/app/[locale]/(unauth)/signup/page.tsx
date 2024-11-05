@@ -126,6 +126,19 @@ function SignupPage() {
 										</FormItem>
 									)}
 								/>
+								<FormField
+									control={form.control}
+									name="confirmPassword"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>{t("AuthForm.confirmpassword")}</FormLabel>
+											<FormControl>
+												<Input {...field} id="password" type="password" />
+											</FormControl>
+											<FormMessage className="relative h-4" />
+										</FormItem>
+									)}
+								/>
 								<ButtonLoading
 									className="w-full"
 									name="LocaleLayout.signup"

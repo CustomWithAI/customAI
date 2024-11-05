@@ -24,7 +24,8 @@
   "AuthForm": {
     "email": "อีเมล",
     "password": "รหัสผ่าน",
-    "name": "ชื่อผู้ใช้งาน"
+    "name": "ชื่อผู้ใช้งาน",
+    "confirmpassword": "ยืนยันรหัสผ่าน"
   },
   "Button": {
     "please_wait": "โปรดรอสักครู่..",

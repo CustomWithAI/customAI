@@ -9,7 +9,7 @@ import {
 	NavigationMenuTrigger,
 	navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Link } from "@/libs/i18nNavigation";
+import { Link, useRouter } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import {
 	type ComponentPropsWithoutRef,
@@ -56,10 +56,14 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 export function GuestNavbar() {
+	const router = useRouter();
 	return (
 		<NavigationMenu>
 			<NavigationMenuList>
-				<NavigationMenuItem className="mr-9 font-medium">
+				<NavigationMenuItem
+					onClick={() => router.push("/")}
+					className="hover:cursor-pointer mr-9 font-medium"
+				>
 					CustomAI
 				</NavigationMenuItem>
 				<NavigationMenuItem>
@@ -116,7 +120,7 @@ export function GuestNavbar() {
 					</NavigationMenuContent>
 				</NavigationMenuItem>
 				<NavigationMenuItem>
-					<Link href="/docs" legacyBehavior passHref>
+					<Link href="/docs" passHref>
 						<NavigationMenuLink
 							className={cn(navigationMenuTriggerStyle(), "font-light")}
 						>

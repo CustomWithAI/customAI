@@ -18,33 +18,31 @@ import { LoginSchema, type LoginSchemaType } from "@/models/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
 import { ArrowRight } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 
-export default function Signup({
-	params: { locale },
-}: { params: { locale: string } }) {
+export default function Signup() {
 	return (
 		<Suspense fallback={<div>a</div>}>
-			<SignupPage locale={locale} />
+			<SignupPage />
 		</Suspense>
 	);
 }
-function SignupPage({ locale }: { locale: string }) {
+function SignupPage() {
 	const t = useTranslations();
 	const { toast } = useToast();
+	const locale = useLocale();
 	const router = useRouter();
 	const [state, setState] = useState<"idle" | "loading" | "success">("idle");
 	const form = useForm<LoginSchemaType>({
 		resolver: zodResolver(LoginSchema),
 		mode: "onTouched",
 	});
-
 	const signinGoogle = async () => {
 		const { data, error } = await authClient.signIn.social({
 			provider: "google",
-			callbackURL: `/${locale}/overview`,
+			callbackURL: `/${locale.split("-")[0]}/overview`,
 		});
 		if (error) {
 			toast({
@@ -139,7 +137,7 @@ function SignupPage({ locale }: { locale: string }) {
 											<FormControl>
 												<Input {...field} id="password" type="password" />
 											</FormControl>
-											<FormMessage />
+											<FormMessage className="relative h-4" />
 										</FormItem>
 									)}
 								/>
