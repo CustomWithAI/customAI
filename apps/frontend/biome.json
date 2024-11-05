@@ -39,6 +39,9 @@
       },
       "complexity": {
         "noBannedTypes": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
       }
     }
   },

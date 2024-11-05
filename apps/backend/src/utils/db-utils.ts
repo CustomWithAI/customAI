@@ -1,4 +1,4 @@
-import { sql, type AnyColumn, type TableConfig } from "drizzle-orm";
+import { type AnyColumn, type TableConfig, sql } from "drizzle-orm";
 import type {
   PgQueryResultHKT,
   PgTableWithColumns,
@@ -6,11 +6,7 @@ import type {
 } from "drizzle-orm/pg-core";
 
 export async function cleanupDB<T extends TableConfig>(
-  schema: PgTransaction<
-    PgQueryResultHKT,
-    Record<string, unknown>,
-    Record<string, any>
-  >,
+  schema: PgTransaction<PgQueryResultHKT, Record<string, unknown>>,
   table: PgTableWithColumns<T>
 ): Promise<void> {
   await schema.delete(table);

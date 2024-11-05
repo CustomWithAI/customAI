@@ -1,11 +1,21 @@
-import { clsx } from "clsx";
-import { GeistMono } from "geist/font/mono";
+import { Toaster } from "@/components/ui/toaster";
+import { ReactQueryProvider } from "@/libs/react-query-providers";
+import { cn } from "@/libs/utils";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { Inter } from "next/font/google";
+import { Inter, Prompt } from "next/font/google";
 import type { ReactNode } from "react";
 
-const inter = Inter({ subsets: ["latin"] });
+const prompt = Prompt({
+	weight: ["200", "300", "400", "500", "600", "700"],
+	subsets: ["thai"],
+	display: "swap",
+});
+
+const inter = Inter({
+	subsets: ["latin"],
+	display: "swap",
+});
 
 type Props = {
 	children: ReactNode;
@@ -18,14 +28,16 @@ export default async function BaseLayout({ children, locale }: Props) {
 	return (
 		<html className="h-full" lang={locale}>
 			<body
-				className={clsx(
-					inter.className,
-					GeistMono.variable,
+				className={cn(
+					locale === "en" ? inter.className : prompt.className,
 					"flex h-full flex-col",
 				)}
 			>
 				<NextIntlClientProvider messages={messages}>
-					{children}
+					<ReactQueryProvider>
+						{children}
+						<Toaster />
+					</ReactQueryProvider>
 				</NextIntlClientProvider>
 			</body>
 		</html>
