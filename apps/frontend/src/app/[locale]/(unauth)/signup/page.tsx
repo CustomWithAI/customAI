@@ -1,5 +1,6 @@
 "use client";
 import { HomeMenu } from "@/components/layout/homeMenu";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 import {
 	Form,
 	FormControl,
@@ -19,6 +20,7 @@ import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
+import { cn } from "../../../../libs/utils";
 
 export default function Signup() {
 	return (
@@ -38,41 +40,52 @@ function SignupPage() {
 	});
 
 	async function onSubmit(data: SignUpSchemaType) {
-		const { data: authData, error } = await authClient.signUp.email(
-			{
-				name: data.name,
-				email: data.email,
-				password: data.password,
-			},
-			{
-				onRequest: () => {
-					setState("loading");
+		try {
+			const { data: authData, error } = await authClient.signUp.email(
+				{
+					name: data.name,
+					email: data.email,
+					password: data.password,
 				},
-				onSuccess: () => {
-					setState("success");
-					toast({
-						title: "create account successfully",
-						description: `welcome back, ${authData?.user.email}`,
-					});
-					router.push("/signin");
+				{
+					onRequest: () => {
+						setState("loading");
+					},
+					onSuccess: () => {
+						setState("success");
+						toast({
+							title: "create account successfully",
+							description: `welcome back, ${authData?.user.email}`,
+						});
+						router.push("/signin");
+					},
+					onError: (ctx) => {
+						setState("idle");
+						toast({
+							variant: "destructive",
+							title: "create account failed",
+							description: ctx.error.message,
+						});
+					},
 				},
-				onError: (ctx) => {
-					setState("idle");
-					toast({
-						variant: "destructive",
-						title: "create account failed",
-						description: ctx.error.message,
-					});
-				},
-			},
-		);
+			);
+		} catch (err) {
+			console.error(err);
+		}
 	}
 	return (
 		<>
 			<HomeMenu />
-			<div className="pb-10 h-full w-full">
-				<div className="flex flex-col justify-center w-full h-full items-center">
-					<h1 className="font-medium text-lg">{t("HomePage.signup")}</h1>
+			<BackgroundBeams className="bg-zinc-50/10 dark:bg-zinc-700/20" />
+			<div className="flex z-0 flex-col justify-center pb-10 h-full w-full">
+				<div
+					className={cn(
+						"py-6 px-10 max-md:w-full dark:bg-white/10 bg-white/40 max-md:h-full",
+						"md:backdrop-blur-sm md:rounded-md md:shadow-sm w-fit mx-auto flex flex-col",
+						"justify-center text-center items-center",
+					)}
+				>
+					<h1 className="font-semibold text-xl">{t("HomePage.signup")}</h1>
 					<p className=" text-zinc-600 font-light text-sm mb-4">
 						{t("SignUp.signup_description")}
 					</p>
@@ -80,7 +93,7 @@ function SignupPage() {
 						<Form {...form}>
 							<form
 								onSubmit={form.handleSubmit(onSubmit)}
-								className="space-y-6 pb-3"
+								className="space-y-3 pb-3"
 							>
 								<FormField
 									control={form.control}

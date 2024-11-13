@@ -11,11 +11,11 @@ export const HomeMenu = () => {
 	const [isHovered, setIsHovered] = useState<boolean>(false);
 	const router = useRouter();
 	return (
-		<div className="w-full sticky top-0 flex justify-between px-10 py-4 border-b">
+		<div className="w-full sticky z-10 top-0 bg-white flex justify-between px-10 py-4 border-b">
 			<GuestNavbar />
 			<div className="flex space-x-3">
 				<div className=" border" />
-				<Button onClick={() => router.push("/login")} variant="ghost">
+				<Button onClick={() => router.push("/signin")} variant="ghost">
 					{t("login")}
 				</Button>
 				<Button

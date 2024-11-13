@@ -26,7 +26,7 @@ export default async function BaseLayout({ children, locale }: Props) {
 	const messages = await getMessages();
 
 	return (
-		<html className="h-full" lang={locale}>
+		<html suppressHydrationWarning className="h-full" lang={locale}>
 			<body
 				className={cn(
 					locale === "en" ? inter.className : prompt.className,

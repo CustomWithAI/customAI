@@ -1,5 +1,6 @@
 "use client";
 import { HomeMenu } from "@/components/layout/homeMenu";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -14,6 +15,7 @@ import { ButtonLoading } from "@/components/ui/loading-button";
 import { useToast } from "@/hooks/use-toast";
 import { authClient } from "@/libs/auth-client";
 import { useRouter } from "@/libs/i18nNavigation";
+import { cn } from "@/libs/utils";
 import { LoginSchema, type LoginSchemaType } from "@/models/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
@@ -40,54 +42,69 @@ function SignupPage() {
 		mode: "onTouched",
 	});
 	const signinGoogle = async () => {
-		const { data, error } = await authClient.signIn.social({
-			provider: "google",
-			callbackURL: `/${locale.split("-")[0]}/overview`,
-		});
-		if (error) {
-			toast({
-				variant: "destructive",
-				title: "authenticate failed",
-				description: error.message,
+		try {
+			const { data, error } = await authClient.signIn.social({
+				provider: "google",
+				callbackURL: `/${locale.split("-")[0]}/overview`,
 			});
-			return;
+			if (error) {
+				toast({
+					variant: "destructive",
+					title: "authenticate failed",
+					description: error.message,
+				});
+				return;
+			}
+		} catch (err) {
+			console.error(err);
 		}
 	};
 
 	async function onSubmit(data: LoginSchemaType) {
-		const { data: authData, error } = await authClient.signIn.email(
-			{
-				email: data.email,
-				password: data.password,
-			},
-			{
-				onRequest: () => {
-					setState("loading");
+		try {
+			const { data: authData, error } = await authClient.signIn.email(
+				{
+					email: data.email,
+					password: data.password,
 				},
-				onSuccess: () => {
-					setState("success");
-					toast({
-						title: "authenticate successfully",
-						description: `welcome back, ${authData?.user.email}`,
-					});
+				{
+					onRequest: () => {
+						setState("loading");
+					},
+					onSuccess: () => {
+						setState("success");
+						toast({
+							title: "authenticate successfully",
+							description: `welcome back, ${authData?.user.email}`,
+						});
+					},
+					onError: (ctx) => {
+						setState("idle");
+						toast({
+							variant: "destructive",
+							title: "authenticate failed",
+							description: ctx.error.message,
+						});
+					},
 				},
-				onError: (ctx) => {
-					setState("idle");
-					toast({
-						variant: "destructive",
-						title: "authenticate failed",
-						description: ctx.error.message,
-					});
-				},
-			},
-		);
+			);
+		} catch (err) {
+			console.error(err);
+		}
 	}
 	return (
 		<>
 			<HomeMenu />
-			<div className="pb-10 h-full w-full">
-				<div className="flex flex-col justify-center w-full h-full items-center">
-					<h1 className="font-medium text-lg">{t("HomePage.login")}</h1>
+			<BackgroundBeams className="bg-zinc-50/10 dark:bg-zinc-700/20" />
+			<div className="flex z-0 flex-col justify-center pb-10 h-full w-full">
+				<div
+					className={cn(
+						"py-6 px-10 max-md:w-full dark:bg-white/10 bg-white/40 max-md:h-full",
+						"md:backdrop-blur-sm md:rounded-md md:shadow-sm w-fit mx-auto flex flex-col",
+						"justify-center text-center items-center",
+					)}
+				>
+					<h1 className="font-semibold text-xl">{t("HomePage.login")}</h1>
 					<p className=" text-zinc-600 font-light text-sm mb-4">
 						{t("Login.login_description")}
 					</p>
@@ -108,7 +125,7 @@ function SignupPage() {
 						<Form {...form}>
 							<form
 								onSubmit={form.handleSubmit(onSubmit)}
-								className="space-y-6 pb-3"
+								className="space-y-3 pb-3"
 							>
 								<FormField
 									control={form.control}

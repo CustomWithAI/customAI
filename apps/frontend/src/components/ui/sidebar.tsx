@@ -1,10 +1,5 @@
 "use client";
 
-import { Slot } from "@radix-ui/react-slot";
-import { type VariantProps, cva } from "class-variance-authority";
-import { PanelLeft } from "lucide-react";
-import * as React from "react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -18,10 +13,14 @@ import {
 } from "@/components/ui/tooltip";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/libs/utils";
+import { Slot } from "@radix-ui/react-slot";
+import { type VariantProps, cva } from "class-variance-authority";
+import { PanelLeft } from "lucide-react";
+import * as React from "react";
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-const SIDEBAR_WIDTH = "16rem";
+const SIDEBAR_WIDTH = "12rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
@@ -322,7 +321,7 @@ const SidebarInset = React.forwardRef<
 		<main
 			ref={ref}
 			className={cn(
-				"relative flex min-h-svh flex-1 flex-col bg-white dark:bg-zinc-950",
+				"relative flex min-h-svh flex-1 flex-col bg-background",
 				"peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
 				className,
 			)}
@@ -341,7 +340,7 @@ const SidebarInput = React.forwardRef<
 			ref={ref}
 			data-sidebar="input"
 			className={cn(
-				"h-8 w-full bg-white shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring dark:bg-zinc-950",
+				"h-8 w-full bg-background shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
 				className,
 			)}
 			{...props}
@@ -518,7 +517,7 @@ const sidebarMenuButtonVariants = cva(
 			variant: {
 				default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
 				outline:
-					"bg-white shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))] dark:bg-zinc-950",
+					"bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
 			},
 			size: {
 				default: "h-8 text-sm",
