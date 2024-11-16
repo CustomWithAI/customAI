@@ -1,3 +1,4 @@
+import { staticPlugin } from "@elysiajs/static";
 import { Elysia } from "elysia";
 import { config } from "./config/env";
 import { logger } from "./config/logger";
@@ -18,14 +19,18 @@ try {
 	const app = new Elysia();
 
 	app.use(logger.into());
+	app.use(staticPlugin());
 	app.use(swaggerConfig()).all("/*", betterAuthView);
 	app.get("/", () => "hello world").post("/", () => "hello world");
-
+	app.get("/route-count", () => {
+		const routeCount = Object.keys(app.routes).length;
+		const routeLength = app.routes.length;
+		return { routes: routeCount, length: routeLength };
+	});
 	app.onStop(shutdown);
 
 	process.on("SIGINT", app.stop);
 	process.on("SIGTERM", app.stop);
-
 	app.listen(config.APP_PORT);
 
 	logger.info(

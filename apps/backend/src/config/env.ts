@@ -36,6 +36,10 @@ const envSchema = z.object({
   REDIS_PORT: z.coerce.number().default(6379),
   REDIS_PASSWORD: z.string().optional(),
   REDIS_DBINDEX: z.string().optional(),
+  
+  // elasticsearch
+  ELASTICSEARCH_URL: z.string().default(""),
+  ELASTICSEARCH_PORT: z.coerce.number().default(9200),
 
   APP_VERSION: z.string().default(packageJson.version),
 });

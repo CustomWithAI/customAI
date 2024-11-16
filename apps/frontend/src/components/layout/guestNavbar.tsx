@@ -74,19 +74,20 @@ export function GuestNavbar() {
 						<ul className="grid gap-3 p-6 m-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
 							<li className="row-span-3">
 								<NavigationMenuLink asChild>
-									<Link
-										className="flex h-full m-6 w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-										href="/"
+									<button
+										type="button"
+										className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-zinc-100 p-6 no-underline outline-none focus:shadow-md"
+										onClick={() => router.push("/")}
 									>
 										<div className="mb-2 mt-4 text-lg font-medium">
-											shadcn/ui
+											AI Platform
 										</div>
-										<p className="text-sm leading-tight text-zinc-400 font-light text-muted-foreground">
+										<p className="text-sm leading-tight text-zinc-400 font-light text-fo">
 											Beautifully designed components that you can copy and
 											paste into your apps. Accessible. Customizable. Open
 											Source.
 										</p>
-									</Link>
+									</button>
 								</NavigationMenuLink>
 							</li>
 							<ListItem href="/docs" title="Introduction">
@@ -120,13 +121,13 @@ export function GuestNavbar() {
 					</NavigationMenuContent>
 				</NavigationMenuItem>
 				<NavigationMenuItem>
-					<Link href="/docs" passHref>
+					<button type="button" onClick={() => router.push("/")}>
 						<NavigationMenuLink
 							className={cn(navigationMenuTriggerStyle(), "font-light")}
 						>
 							Documentation
 						</NavigationMenuLink>
-					</Link>
+					</button>
 				</NavigationMenuItem>
 			</NavigationMenuList>
 		</NavigationMenu>
@@ -142,7 +143,7 @@ const ListItem = forwardRef<ElementRef<"a">, ComponentPropsWithoutRef<"a">>(
 						href={href || "/"}
 						ref={ref}
 						className={cn(
-							"block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+							"block select-none space-y-1 hover:bg-muted rounded-md p-3 leading-none no-underline outline-none transition-colors hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
 							className,
 						)}
 						{...props}

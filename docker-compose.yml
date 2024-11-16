@@ -25,7 +25,14 @@ services:
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
   redis:
     image: redis:6.2.5-alpine
-
+  elasticsearch:
+    image: elasticsearch:8.8.0
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
   ai_app:
     container_name: python_ai
     profiles:
