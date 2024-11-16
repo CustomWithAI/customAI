@@ -1,0 +1,127 @@
+services:
+  watchtower:
+      image: containrrr/watchtower
+      command:
+        - "--label-enable"
+        - "--interval"
+        - "30"
+        - "--rolling-restart"
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+
+  reverse-proxy:
+    image: traefik:v3.1
+    command: 
+      - "--api.insecure=true"
+      - "--providers.docker"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  postgres:
+    image: postgres:17-alpine
+    user: "user"
+    restart: always
+    ports:
+      - 5432:5432
+    secrets:
+      - db-password
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=app
+      - POSTGRES_USER=user
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:6.2.5-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ai_app:
+    container_name: python_ai
+    profiles:
+      - ""
+      - python
+    build: 
+      context: ./apps/python
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./apps/frontend:/app
+    ports:
+      - 8000:8000 
+
+  backend_app:
+    profiles:
+      - ""
+      - backend
+    build:
+      context: ./apps/backend
+      dockerfile: dev.Dockerfile
+    env_file: apps/backend/.env
+    volumes:
+      - ./apps/backend:/app
+      - /app/apps/backend/node_modules
+    ports:
+      - 4000:4000 
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend_app:
+    profiles:
+      - ""
+      - frontend
+    build:
+      context: ./apps/frontend
+      dockerfile: dev.Dockerfile
+    env_file: apps/frontend/.env
+    labels:
+      - "traefik.http.routes.frontend_app.rule=Host(`customAI.cloud`)"
+    volumes:
+      - ./apps/frontend:/app
+      - /app/apps/frontend/node_modules
+      - /app/apps/frontend/.next
+    deploy:
+      mode: replicated
+      replicas: 3
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend_app
+
+secrets:
+  db-password:
+    file: db/password.txt
