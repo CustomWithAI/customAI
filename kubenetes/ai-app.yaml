@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-app
+  template:
+    metadata:
+      labels:
+        app: ai-app
+    spec:
+      containers:
+        - name: ai-app
+          image: python_ai:latest
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: ai-volume
+              mountPath: /app
+      volumes:
+        - name: ai-volume
+          hostPath:
+            path: ./apps/python
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-app
+spec:
+  ports:
+    - port: 8000
+  selector:
+    app: ai-app

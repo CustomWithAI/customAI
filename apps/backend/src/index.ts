@@ -9,29 +9,29 @@ import { betterAuthView } from "./lib/auth";
 import { shutdown } from "./utils/shutdown";
 
 try {
-  logger.info("🏃‍♀️ starting connection..");
-  await connectRedis();
-  await connectRabbitMQ();
-  await connectDatabase();
-  logger.info("🏃‍♀️ starting server..");
+	logger.info("🏃‍♀️ starting connection..");
+	await connectRedis();
+	await connectRabbitMQ();
+	await connectDatabase();
+	logger.info("🏃‍♀️ starting server..");
 
-  const app = new Elysia();
+	const app = new Elysia();
 
-  app.use(logger.into());
-  app.use(swaggerConfig()).all("/*", betterAuthView);
-  app.get("/", () => "hello world").post("/", () => "hello world");
+	app.use(logger.into());
+	app.use(swaggerConfig()).all("/*", betterAuthView);
+	app.get("/", () => "hello world").post("/", () => "hello world");
 
-  app.onStop(shutdown);
+	app.onStop(shutdown);
 
-  process.on("SIGINT", app.stop);
-  process.on("SIGTERM", app.stop);
+	process.on("SIGINT", app.stop);
+	process.on("SIGTERM", app.stop);
 
-  app.listen(config.APP_PORT);
+	app.listen(config.APP_PORT);
 
-  logger.info(
-    `🦊  Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-  );
+	logger.info(
+		`🦊  Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
+	);
 } catch (e) {
-  logger.error(e, "🚫  Error booting the server");
-  process.exit();
+	logger.error(e, "🚫  Error booting the server");
+	process.exit();
 }

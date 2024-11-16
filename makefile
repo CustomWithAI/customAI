@@ -18,10 +18,10 @@ dcup-build:
 	- docker-compose build
 
 dcup-prod:
-	- docker-compose -f ./docker-compose.prod.yaml up
+	- docker-compose -f ./docker-compose.prod.yml up
 
 dcup-prod-build:
-	- docker-compose -f ./docker-compose.prod.yaml build
+	- docker-compose -f ./docker-compose.prod.yml build
 
 dc-down:
 	- docker-compose down
