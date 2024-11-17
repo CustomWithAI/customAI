@@ -1,34 +1,35 @@
 {
-  "LocaleLayout": {
-    "title": "คัสตอมไอเอ",
-    "signup": "สมัครสมาชิก",
-    "login": "เข้าสู่ระบบ"
-  },
-  "HomePage": {
-    "login": "เข้าสู่ระบบ",
-    "get_started": "เริ่มใช้งาน",
-    "signup": "สมัครสมาชิก"
-  },
-  "SignUp": {
-    "signup_description": "เข้าร่วมกับเราได้แล้ววันนี้! สร้างบัญชีง่ายๆ รวดเร็ว",
-    "have_account": "มีบัญชีอยู่แล้ว? เข้าสู่ระบบที่นี่"
-  },
-  "Login": {
-    "signinwithgoogle": "เข้าสู่ระบบโดย Google",
-    "signinwithgithub": "เข้าสู่ระบบโดย Github",
-    "orsigninwithemail": "หรือใช้อีเมลและรหัสผ่าน",
-    "login_description": "ลงชื่อเข้าใช้บัญชีของคุณโดยใช้หนึ่งในวิธีต่อไปนี้",
-    "forgot_password": "",
-    "create_account": "สร้างบัญชีผู้ใช้งานใหม่"
-  },
-  "AuthForm": {
-    "email": "อีเมล",
-    "password": "รหัสผ่าน",
-    "name": "ชื่อผู้ใช้งาน",
-    "confirmpassword": "ยืนยันรหัสผ่าน"
-  },
-  "Button": {
-    "please_wait": "โปรดรอสักครู่..",
-    "submitted": "ยืนยันสำเร็จ"
-  }
+	"LocaleLayout": {
+		"title": "คัสตอมไอเอ",
+		"signup": "สมัครสมาชิก",
+		"login": "เข้าสู่ระบบ",
+		"home": "หน้าหลัก"
+	},
+	"HomePage": {
+		"login": "เข้าสู่ระบบ",
+		"get_started": "เริ่มใช้งาน",
+		"signup": "สมัครสมาชิก"
+	},
+	"SignUp": {
+		"signup_description": "เข้าร่วมกับเราได้แล้ววันนี้! สร้างบัญชีง่ายๆ รวดเร็ว",
+		"have_account": "มีบัญชีอยู่แล้ว? เข้าสู่ระบบที่นี่"
+	},
+	"Login": {
+		"signinwithgoogle": "เข้าสู่ระบบโดย Google",
+		"signinwithgithub": "เข้าสู่ระบบโดย Github",
+		"orsigninwithemail": "หรือใช้อีเมลและรหัสผ่าน",
+		"login_description": "ลงชื่อเข้าใช้บัญชีของคุณโดยใช้หนึ่งในวิธีต่อไปนี้",
+		"forgot_password": "",
+		"create_account": "สร้างบัญชีผู้ใช้งานใหม่"
+	},
+	"AuthForm": {
+		"email": "อีเมล",
+		"password": "รหัสผ่าน",
+		"name": "ชื่อผู้ใช้งาน",
+		"confirmpassword": "ยืนยันรหัสผ่าน"
+	},
+	"Button": {
+		"please_wait": "โปรดรอสักครู่..",
+		"submitted": "ยืนยันสำเร็จ"
+	}
 }

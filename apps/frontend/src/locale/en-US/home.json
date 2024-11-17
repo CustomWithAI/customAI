@@ -1,34 +1,35 @@
 {
-  "LocaleLayout": {
-    "title": "custom AI",
-    "signup": "sign up",
-    "login": "login"
-  },
-  "HomePage": {
-    "login": "login",
-    "get_started": "Get Started",
-    "signup": "Sign up"
-  },
-  "SignUp": {
-    "signup_description": "Join us today! Creating an account is quick and easy.",
-    "have_account": "Already have an account? Sign in here"
-  },
-  "Login": {
-    "signinwithgoogle": "Sign in with Google",
-    "signinwithgithub": "Sign in with Github",
-    "orsigninwithemail": "or sign in with email",
-    "login_description": "Sign in your account using one of the following methods",
-    "forgot_password": "",
-    "create_account": "create an account."
-  },
-  "AuthForm": {
-    "email": "Email",
-    "password": "Password",
-    "name": "Username",
-    "confirmpassword": "Comfirm password"
-  },
-  "Button": {
-    "please_wait": "Please wait..",
-    "submitted": "Submitted"
-  }
+	"LocaleLayout": {
+		"title": "custom AI",
+		"signup": "sign up",
+		"login": "login",
+		"home": "home"
+	},
+	"HomePage": {
+		"login": "login",
+		"get_started": "Get Started",
+		"signup": "Sign up"
+	},
+	"SignUp": {
+		"signup_description": "Join us today! Creating an account is quick and easy.",
+		"have_account": "Already have an account? Sign in here"
+	},
+	"Login": {
+		"signinwithgoogle": "Sign in with Google",
+		"signinwithgithub": "Sign in with Github",
+		"orsigninwithemail": "or sign in with email",
+		"login_description": "Sign in your account using one of the following methods",
+		"forgot_password": "",
+		"create_account": "create an account."
+	},
+	"AuthForm": {
+		"email": "Email",
+		"password": "Password",
+		"name": "Username",
+		"confirmpassword": "Comfirm password"
+	},
+	"Button": {
+		"please_wait": "Please wait..",
+		"submitted": "Submitted"
+	}
 }

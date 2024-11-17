@@ -3,7 +3,7 @@ import { ReactQueryProvider } from "@/libs/react-query-providers";
 import { cn } from "@/libs/utils";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { Inter, Prompt } from "next/font/google";
+import { Inter, Lexend, Prompt } from "next/font/google";
 import type { ReactNode } from "react";
 
 const prompt = Prompt({
@@ -15,6 +15,7 @@ const prompt = Prompt({
 const inter = Inter({
 	subsets: ["latin"],
 	display: "swap",
+	variable: "--font-inter",
 });
 
 type Props = {
@@ -24,12 +25,12 @@ type Props = {
 
 export default async function BaseLayout({ children, locale }: Props) {
 	const messages = await getMessages();
-
+	console.log(locale);
 	return (
 		<html suppressHydrationWarning className="h-full" lang={locale}>
 			<body
 				className={cn(
-					locale === "en" ? inter.className : prompt.className,
+					locale === "en-US" ? inter.className : prompt.className,
 					"flex h-full flex-col",
 				)}
 			>

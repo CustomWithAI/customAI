@@ -3,15 +3,17 @@ import { cn } from "@/libs/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 
+export type FilpWordProps = {
+	words: string[];
+	duration?: number;
+	className?: string;
+};
+
 export const FlipWords = ({
 	words,
 	duration = 3000,
 	className,
-}: {
-	words: string[];
-	duration?: number;
-	className?: string;
-}) => {
+}: FilpWordProps) => {
 	const [currentWord, setCurrentWord] = useState(words[0]);
 	const [isAnimating, setIsAnimating] = useState<boolean>(false);
 

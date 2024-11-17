@@ -95,11 +95,11 @@ function SignupPage() {
 	return (
 		<>
 			<HomeMenu />
-			<BackgroundBeams className="bg-zinc-50/10 dark:bg-zinc-700/20" />
+			<BackgroundBeams className="bg-zinc-50 dark:bg-zinc-700/20" />
 			<div className="flex z-0 flex-col justify-center pb-10 h-full w-full">
 				<div
 					className={cn(
-						"py-6 px-10 max-md:w-full dark:bg-white/10 bg-white/40 max-md:h-full",
+						"py-12 px-8 lg:px-20 lg:py-24 max-md:w-full dark:bg-white/10 bg-white/70 max-md:h-full",
 						"md:backdrop-blur-sm md:rounded-md md:shadow-sm w-fit mx-auto flex flex-col",
 						"justify-center text-center items-center",
 					)}
@@ -125,7 +125,7 @@ function SignupPage() {
 						<Form {...form}>
 							<form
 								onSubmit={form.handleSubmit(onSubmit)}
-								className="space-y-3 pb-3"
+								className="space-y-3 pb-3 text-left"
 							>
 								<FormField
 									control={form.control}

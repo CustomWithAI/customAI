@@ -14,13 +14,13 @@ import { ButtonLoading } from "@/components/ui/loading-button";
 import { useToast } from "@/hooks/use-toast";
 import { authClient } from "@/libs/auth-client";
 import { useRouter } from "@/libs/i18nNavigation";
+import { cn } from "@/libs/utils";
 import { SignUpSchema, type SignUpSchemaType } from "@/models/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
-import { cn } from "../../../../libs/utils";
 
 export default function Signup() {
 	return (
@@ -76,11 +76,11 @@ function SignupPage() {
 	return (
 		<>
 			<HomeMenu />
-			<BackgroundBeams className="bg-zinc-50/10 dark:bg-zinc-700/20" />
+			<BackgroundBeams className="bg-zinc-50 dark:bg-zinc-700/20" />
 			<div className="flex z-0 flex-col justify-center pb-10 h-full w-full">
 				<div
 					className={cn(
-						"py-6 px-10 max-md:w-full dark:bg-white/10 bg-white/40 max-md:h-full",
+						"py-12 px-8 lg:px-20 lg:py-24 max-md:w-full dark:bg-white/10 bg-white/40 max-md:h-full",
 						"md:backdrop-blur-sm md:rounded-md md:shadow-sm w-fit mx-auto flex flex-col",
 						"justify-center text-center items-center",
 					)}
@@ -93,7 +93,7 @@ function SignupPage() {
 						<Form {...form}>
 							<form
 								onSubmit={form.handleSubmit(onSubmit)}
-								className="space-y-3 pb-3"
+								className="space-y-3 pb-3 text-left"
 							>
 								<FormField
 									control={form.control}
