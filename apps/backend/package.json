@@ -1,40 +1,40 @@
 {
-  "name": "app",
-  "version": "1.0.50",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --hot src/index.ts",
-    "build": "bun build src/index.ts --target bun --outdir ./dist",
-    "migrate:auth": "bunx @better-auth/cli@latest generate",
-    "studio": "drizzle-kit studio",
-    "generate": "drizzle-kit generate",
-    "seed": "bun ./src/infrastructures/database/seed.ts",
-    "migrate": "drizzle-kit migrate"
-  },
-  "dependencies": {
-    "@bogeychan/elysia-logger": "^0.1.4",
-    "@elysiajs/cors": "^1.1.1",
-    "@elysiajs/static": "^1.1.1",
-    "@elysiajs/swagger": "^1.1.5",
-    "@neondatabase/serverless": "^0.9.5",
-    "amqplib": "^0.10.4",
-    "better-auth": "^0.4.13",
-    "drizzle-orm": "^0.35.3",
-    "drizzle-typebox": "^0.1.1",
-    "elysia": "latest",
-    "pg": "^8.13.1",
-    "pino-elasticsearch": "^8.1.0",
-    "pino-pretty": "^11.3.0",
-    "pino-roll": "^2.2.0",
-    "postgres": "^3.4.5",
-    "redis": "^4.7.0",
-    "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@types/amqplib": "^0.10.5",
-    "@types/pg": "^8.11.10",
-    "bun-types": "latest",
-    "drizzle-kit": "^0.26.2"
-  },
-  "module": "src/index.js"
+	"name": "app",
+	"version": "1.0.50",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "bun run --hot src/index.ts",
+		"build": "bun build src/index.ts --target bun --outdir ./dist",
+		"migrate:auth": "bunx @better-auth/cli@latest generate",
+		"studio": "drizzle-kit studio",
+		"generate": "drizzle-kit generate",
+		"seed": "bun ./src/infrastructures/database/seed.ts",
+		"migrate": "drizzle-kit migrate"
+	},
+	"dependencies": {
+		"@bogeychan/elysia-logger": "^0.1.4",
+		"@elysiajs/cors": "^1.1.1",
+		"@elysiajs/static": "^1.1.1",
+		"@elysiajs/swagger": "^1.1.6",
+		"@neondatabase/serverless": "^0.9.5",
+		"amqplib": "^0.10.4",
+		"better-auth": "^1.0.0",
+		"drizzle-orm": "^0.35.3",
+		"drizzle-typebox": "^0.1.1",
+		"elysia": "latest",
+		"pg": "^8.13.1",
+		"pino-elasticsearch": "^8.1.0",
+		"pino-pretty": "^11.3.0",
+		"pino-roll": "^2.2.0",
+		"postgres": "^3.4.5",
+		"redis": "^4.7.0",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@types/amqplib": "^0.10.5",
+		"@types/pg": "^8.11.10",
+		"bun-types": "latest",
+		"drizzle-kit": "^0.26.2"
+	},
+	"module": "src/index.js"
 }
