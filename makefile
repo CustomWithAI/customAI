@@ -25,3 +25,13 @@ dcup-prod-build:
 
 dc-down:
 	- docker-compose down
+
+dc-latex:
+	- docker run -itd \
+  --hostname texlive \
+  --name texlive \
+  -v ${PWD}/datas:/root/data \
+  mrchoke/texlive
+
+dc-latex-exec:
+ -

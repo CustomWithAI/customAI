@@ -45,7 +45,11 @@ export const Content = ({ children, className }: TextProps) => {
 };
 
 export const Subtle = ({ children, className }: TextProps) => {
-	return <p className={cn("text-sm text-gray-500", className)}>{children}</p>;
+	return (
+		<p className={cn("text-sm font-light text-gray-500", className)}>
+			{children}
+		</p>
+	);
 };
 
 export const Quote = ({ children, className }: TextProps) => {

@@ -1,5 +1,6 @@
 "use client";
 import { HomeMenu } from "@/components/layout/homeMenu";
+import { Subheading, Subtle } from "@/components/typography/text";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { Button } from "@/components/ui/button";
 import {
@@ -95,20 +96,18 @@ function SignupPage() {
 	return (
 		<>
 			<HomeMenu />
-			<BackgroundBeams className="bg-zinc-50 dark:bg-zinc-700/20" />
+			<BackgroundBeams className="bg-white dark:bg-zinc-700/20" />
 			<div className="flex z-0 flex-col justify-center pb-10 h-full w-full">
 				<div
 					className={cn(
-						"py-12 px-8 lg:px-20 lg:py-24 max-md:w-full dark:bg-white/10 bg-white/70 max-md:h-full",
-						"md:backdrop-blur-sm md:rounded-md md:shadow-sm w-fit mx-auto flex flex-col",
+						"p-12 2xl:px-20 2xl:py-24 max-md:w-full dark:bg-white/10 bg-transparent max-md:h-full",
+						"md:backdrop-blur-sm md:rounded-md md:shadow-lg w-fit mx-auto flex flex-col",
 						"justify-center text-center items-center",
 					)}
 				>
-					<h1 className="font-semibold text-xl">{t("HomePage.login")}</h1>
-					<p className=" text-zinc-600 font-light text-sm mb-4">
-						{t("Login.login_description")}
-					</p>
-					<div className="w-full max-w-xs flex flex-col space-y-3">
+					<Subheading>{t("HomePage.login")}</Subheading>
+					<Subtle className="mb-4">{t("Login.login_description")}</Subtle>
+					<div className="w-full mt-4 max-w-xs flex flex-col space-y-3">
 						<Button onClick={signinGoogle} className="w-full">
 							<IconBrandGoogle /> {t("Login.signinwithgoogle")}
 						</Button>
