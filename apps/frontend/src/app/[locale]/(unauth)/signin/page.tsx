@@ -1,6 +1,6 @@
 "use client";
 import { HomeMenu } from "@/components/layout/homeMenu";
-import { Subheading, Subtle } from "@/components/typography/text";
+import { SubHeader, Subtle } from "@/components/typography/text";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { Button } from "@/components/ui/button";
 import {
@@ -105,7 +105,7 @@ function SignupPage() {
 						"justify-center text-center items-center",
 					)}
 				>
-					<Subheading>{t("HomePage.login")}</Subheading>
+					<SubHeader>{t("HomePage.login")}</SubHeader>
 					<Subtle className="mb-4">{t("Login.login_description")}</Subtle>
 					<div className="w-full mt-4 max-w-xs flex flex-col space-y-3">
 						<Button onClick={signinGoogle} className="w-full">

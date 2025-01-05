@@ -1,6 +1,7 @@
 "use client";
 import { HomeMenu } from "@/components/layout/homeMenu";
 import { Header, Subtle } from "@/components/typography/text";
+import { SubHeader } from "@/components/typography/text";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import {
 	Form,
@@ -22,7 +23,6 @@ import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Subheading } from "../../../../components/typography/text";
 
 export default function Signup() {
 	return (
@@ -87,7 +87,7 @@ function SignupPage() {
 						"justify-center text-center items-center",
 					)}
 				>
-					<Subheading>{t("HomePage.signup")}</Subheading>
+					<SubHeader>{t("HomePage.signup")}</SubHeader>
 					<Subtle className="mt-1 mb-4">
 						{t("SignUp.signup_description")}
 					</Subtle>

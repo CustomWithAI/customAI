@@ -7,7 +7,7 @@ import {
 	type ListProps,
 	Primary,
 	Quote,
-	Subheading,
+	Subheader,
 	Subtle,
 	type TextProps,
 } from "@/components/typography/text";
@@ -43,10 +43,10 @@ export const HeaderStory: TextStory = {
 	},
 };
 
-export const SubheadingStory: TextStory = {
-	render: (args) => <Subheading {...args}>{args.children}</Subheading>,
+export const SubheaderStory: TextStory = {
+	render: (args) => <Subheader {...args}>{args.children}</Subheader>,
 	args: {
-		children: "Subheading Text Example",
+		children: "Subheader Text Example",
 	},
 };
 

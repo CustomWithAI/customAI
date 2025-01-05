@@ -3,7 +3,8 @@
 		"title": "custom AI",
 		"signup": "sign up",
 		"login": "login",
-		"home": "home"
+		"home": "home",
+		"dataset": "dataset"
 	},
 	"HomePage": {
 		"login": "login",

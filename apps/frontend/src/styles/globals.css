@@ -25,3 +25,34 @@
     --muted-background: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%}
 }
+
+@layer utilities {
+  .no-scroll::-webkit-scrollbar {
+      display: none;
+  }
+
+  .no-scroll {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+  }
+
+  .vertical-scroll::-webkit-scrollbar {
+      width: 2px;
+  }
+
+  .horizontal-scroll::-webkit-scrollbar {
+      height: 2px;
+  }
+
+  .vertical-scroll::-webkit-scrollbar-thumb,
+  .horizontal-scroll::-webkit-scrollbar-thumb {
+      background-color: grey;
+      border-radius: 9999px;
+  }
+
+  .vertical-scroll,
+  .horizontal-scroll {
+      scrollbar-color: grey transparent; 
+      scrollbar-width: thin; 
+  }
+}

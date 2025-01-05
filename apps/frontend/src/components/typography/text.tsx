@@ -32,7 +32,7 @@ export const Header = ({ children, className }: TextProps) => {
 	);
 };
 
-export const Subheading = ({ children, className }: TextProps) => {
+export const SubHeader = ({ children, className }: TextProps) => {
 	return (
 		<h2 className={cn("text-2xl font-semibold scroll-m-20", className)}>
 			{children}

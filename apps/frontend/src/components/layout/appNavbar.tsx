@@ -29,6 +29,7 @@ type AppNavbarProps = {
 	disabledTab: keyof typeof SidebarPage | undefined;
 	children: ReactNode;
 	contentClassName?: string;
+	PageTitle: string | null;
 } & ComponentProps<typeof Sidebar>;
 
 export const AppNavbar = ({
@@ -36,6 +37,7 @@ export const AppNavbar = ({
 	disabledTab,
 	contentClassName,
 	children,
+	PageTitle,
 	...props
 }: AppNavbarProps) => {
 	const navMainWithActive = sidebarConfig.navMain.map((item) => ({
@@ -68,7 +70,7 @@ export const AppNavbar = ({
 							<BreadcrumbList>
 								<BreadcrumbItem>
 									<BreadcrumbPage className="line-clamp-1">
-										Project Management & Task Tracking
+										{PageTitle}
 									</BreadcrumbPage>
 								</BreadcrumbItem>
 							</BreadcrumbList>
