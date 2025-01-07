@@ -24,8 +24,10 @@ services:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
   redis:
+    container_name: 'redis'
     image: redis:6.2.5-alpine
   elasticsearch:
+    container_name: 'elasticsearch'
     image: elasticsearch:8.8.0
     ports:
       - 9200:9200
@@ -39,7 +41,7 @@ services:
       - ""
       - python
     build: 
-      context: ./apps/python
+      context: ./apps/ai-service
       dockerfile: dev.Dockerfile
     volumes:
       - ./apps/frontend:/app
