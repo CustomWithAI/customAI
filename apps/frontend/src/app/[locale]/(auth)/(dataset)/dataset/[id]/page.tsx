@@ -1,6 +1,7 @@
 "use client";
 import { AppNavbar } from "@/components/layout/appNavbar";
 import { Menubar } from "@/components/ui/menubar";
+import UploadFile from "@/components/ui/uploadfile";
 import { useQueryParam } from "@/hooks/use-query-params";
 
 export default function Page() {
@@ -30,6 +31,7 @@ export default function Page() {
 				</Menubar.List>
 			</div>
 			{compareQueryParam({ value: "roles", allowNull: true }) ? <></> : null}
+			<UploadFile id="" onFileChange={() => {}} />
 		</AppNavbar>
 	);
 }
