@@ -5,7 +5,6 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin, openAPI } from "better-auth/plugins";
 import type { Context } from "elysia/context";
-
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
 		provider: "pg",
