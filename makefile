@@ -28,10 +28,10 @@ dc-down:
 
 dc-latex:
 	- docker run -itd \
-  --hostname texlive \
-  --name texlive \
-  -v ${PWD}/datas:/root/data \
-  mrchoke/texlive
+	  --hostname texlive \
+	  --name texlive \
+	  -v ${PWD}/datas:/root/data \
+	  mrchoke/texlive
 
 dc-latex-exec:
- -
+	@echo "No command specified for dc-latex-exec. Add your command here."
