@@ -44,7 +44,7 @@ export const FeatureBento = () => {
 
 	return (
 		<div className="bg-white">
-			<BentoGrid className="mx-auto max-w-screen-2xl md:auto-rows-[20rem] p-6 lg:p-10 shadow-md backdrop-blur-sm">
+			<BentoGrid className="mx-auto max-w-screen-2xl md:auto-rows-[20rem] p-6 lg:p-10 backdrop-blur-sm">
 				{items.map((item, i) => (
 					<BentoGridItem
 						key={`${item.title}-HomePage`}

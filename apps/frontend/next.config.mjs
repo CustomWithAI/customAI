@@ -1,11 +1,14 @@
-import createMDX from '@next/mdx';
+import createMDX from "@next/mdx";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+	images: {
+		domains: ["picsum.photos", "via.placeholder.com"],
+	},
 };
 
 const withMDX = createMDX({});

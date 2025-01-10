@@ -1,0 +1,18 @@
+{
+	"Tab": {
+		"Account": "บัญชี",
+		"Security": "ความปลอดภัย",
+		"Accessibility": "การเข้าถึง"
+	},
+	"Account": {
+		"ProfileInformation": "ข้อมูลโปรไฟล์",
+		"Update": "อัพเดท",
+		"Name": "ชื่อ",
+		"ProfileImg": "รูปโปรไฟล์"
+	},
+	"Security": {
+		"AccountSecurity": "ความปลอดภัยของบัญชี",
+		"TwoFactorAuthentication": "การยืนยันตัวตนสองขั้นตอน",
+		"LinkAccounts": "เชื่อมโยงบัญชี"
+	}
+}

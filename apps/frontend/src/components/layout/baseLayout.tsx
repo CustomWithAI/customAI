@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
+import UploadProgress from "@/features/dataset/components/uploadProgression";
 import { ReactQueryProvider } from "@/libs/react-query-providers";
 import { cn } from "@/libs/utils";
 import { NextIntlClientProvider } from "next-intl";
@@ -37,6 +38,7 @@ export default async function BaseLayout({ children, locale }: Props) {
 				<NextIntlClientProvider messages={messages}>
 					<ReactQueryProvider>
 						{children}
+						<UploadProgress />
 						<Toaster />
 					</ReactQueryProvider>
 				</NextIntlClientProvider>

@@ -39,7 +39,13 @@ export const SubHeader = ({ children, className }: TextProps) => {
 		</h2>
 	);
 };
-
+export const ContentHeader = ({ children, className }: TextProps) => {
+	return (
+		<h3 className={cn("text-lg font-medium scroll-m-16", className)}>
+			{children}
+		</h3>
+	);
+};
 export const Content = ({ children, className }: TextProps) => {
 	return <p className={cn("text-base", className)}>{children}</p>;
 };

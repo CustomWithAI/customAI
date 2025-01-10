@@ -4,7 +4,8 @@
 		"signup": "sign up",
 		"login": "login",
 		"home": "home",
-		"dataset": "dataset"
+		"dataset": "dataset",
+		"setting": "setting"
 	},
 	"HomePage": {
 		"login": "login",
@@ -16,9 +17,9 @@
 		"have_account": "Already have an account? Sign in here"
 	},
 	"Login": {
-		"signinwithgoogle": "Sign in with Google",
-		"signinwithgithub": "Sign in with Github",
-		"orsigninwithemail": "or sign in with email",
+		"signInWithGoogle": "Sign in with Google",
+		"signInWithGitHub": "Sign in with Github",
+		"orSignInWithEmail": "or sign in with email",
 		"login_description": "Sign in your account using one of the following methods",
 		"forgot_password": "",
 		"create_account": "create an account."
@@ -32,5 +33,15 @@
 	"Button": {
 		"please_wait": "Please wait..",
 		"submitted": "Submitted"
+	},
+	"Upload": {
+		"Popup": {
+			"Upload": "Upload"
+		},
+		"Dialog": {
+			"DropTheFileHere": "Drop the file here ...",
+			"fileIsTooBig": "These file is too big to be uploaded",
+			"DropFileHere": "Drop 'n drop file here, or click to select files"
+		}
 	}
 }

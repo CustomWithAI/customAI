@@ -109,15 +109,15 @@ function SignupPage() {
 					<Subtle className="mb-4">{t("Login.login_description")}</Subtle>
 					<div className="w-full mt-4 max-w-xs flex flex-col space-y-3">
 						<Button onClick={signinGoogle} className="w-full">
-							<IconBrandGoogle /> {t("Login.signinwithgoogle")}
+							<IconBrandGoogle /> {t("Login.signInWithGoogle")}
 						</Button>
 						<Button className="w-full">
-							<IconBrandGithub /> {t("Login.signinwithgithub")}
+							<IconBrandGithub /> {t("Login.signInWithGitHub")}
 						</Button>
 						<div className="inline-flex space-x-3 pt-3 pb-1 items-center">
 							<div className="border w-full h-0" />
 							<p className=" text-zinc-400 text-xs font-extralight w-max flex-1 text-nowrap">
-								{t("Login.orsigninwithemail")}
+								{t("Login.orSignInWithEmail")}
 							</p>
 							<div className="border w-full h-0" />
 						</div>

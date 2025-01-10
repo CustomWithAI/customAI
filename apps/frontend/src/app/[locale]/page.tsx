@@ -1,7 +1,7 @@
 "use client";
-import { SingleBeam } from "@/components/common/single-beam";
 import { HomeMenu } from "@/components/layout/homeMenu";
 import { FeatureBento } from "@/features/homepage/components/feature";
+import { Footer } from "@/features/homepage/components/footer";
 import { HeaderMain } from "@/features/homepage/components/header";
 import { useTranslations } from "next-intl";
 import { Suspense } from "react";
@@ -21,6 +21,7 @@ function HomePage() {
 			<HomeMenu />
 			<HeaderMain />
 			<FeatureBento />
+			<Footer />
 		</div>
 	);
 }

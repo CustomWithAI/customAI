@@ -1,0 +1,18 @@
+{
+	"Tab": {
+		"Account": "Account",
+		"Security": "Security",
+		"Accessibility": "Accessibility"
+	},
+	"Account": {
+		"ProfileInformation": "Profile Information",
+		"Update": "Update",
+		"Name": "Name",
+		"ProfileImg": "Profile Picture"
+	},
+	"Security": {
+		"AccountSecurity": "Account Security",
+		"TwoFactorAuthentication": "Two Factor Authentication",
+		"LinkAccounts": "Link Accounts"
+	}
+}

@@ -1,3 +1,4 @@
+import { useUploadFile } from "@/hooks/mutations/uploadfile-api";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/libs/utils";
 import {
@@ -513,7 +514,6 @@ const RenderInput = <T extends object>({
 										if (!file) return;
 										const response = await mutateUploadImage({
 											file,
-											progressCallbackFn: () => {},
 											purpose: "product",
 										});
 										if (!response?.url) {
@@ -588,23 +588,7 @@ const RenderInput = <T extends object>({
 				/>
 			);
 		case "date":
-			return (
-				<Field className={cn(className)}>
-					<Label className="font-medium">{label}</Label>
-					{description && <Description>{description}</Description>}
-					<Controller
-						name={name}
-						control={control}
-						render={({ field: { onChange, value } }) => (
-							<DatePickerWithPresets
-								onDateChange={onChange}
-								data-cy={cyName}
-								value={value}
-							/>
-						)}
-					/>
-				</Field>
-			);
+			return <></>;
 		default:
 			return null;
 	}

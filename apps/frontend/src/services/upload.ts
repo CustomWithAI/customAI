@@ -1,35 +1,46 @@
 import { axiosClient, axiosMediaClient } from "@/libs/api-client";
+import { useUploadStore } from "@/stores/uploadStore";
 import type { RequestUploadFileData } from "@/types/request/requestUploadFile";
 import type { ResponseError } from "@/types/response/common";
 import type { ResponseUploadFile } from "@/types/response/responseUploadFile";
 
 import type { AxiosProgressEvent, AxiosResponse } from "axios";
+import axios from "axios";
 
 class UploadService {
 	async uploadFile(data: RequestUploadFileData) {
-		const { file, progressCallbackFn, purpose } = data;
+		const { file, purpose } = data;
+		const id = Date.now().toString();
+		const abortController = new AbortController();
+		const uploadStore = useUploadStore.getState();
+		uploadStore.addUpload({ id, filename: file.name, file, abortController });
 		const formData = new FormData();
 		formData.append("purpose", purpose);
 		formData.append("file", file);
-		const response = await axiosMediaClient.post<
-			ResponseError,
-			AxiosResponse<ResponseUploadFile>,
-			FormData
-		>("/files", formData, {
-			onUploadProgress: (progressEvent: AxiosProgressEvent) => {
-				if (!progressCallbackFn) return;
-				const progress =
-					(progressEvent.loaded / (progressEvent?.total ?? 100)) * 50;
-				progressCallbackFn(progress);
-			},
-			onDownloadProgress: (progressEvent: AxiosProgressEvent) => {
-				if (!progressCallbackFn) return;
-				const progress =
-					50 + (progressEvent.loaded / (progressEvent?.total ?? 100)) * 50;
-				progressCallbackFn(progress);
-			},
-		});
-		return response.data;
+		try {
+			const response = await axiosMediaClient.post<
+				ResponseError,
+				AxiosResponse<ResponseUploadFile>,
+				FormData
+			>("/files", formData, {
+				signal: abortController.signal,
+				onUploadProgress: (event) => {
+					const progress = Math.round(
+						(event.loaded / (event.total || 1)) * 100,
+					);
+					uploadStore.updateProgress(id, progress);
+				},
+			});
+			uploadStore.completeUpload(id);
+			return response.data;
+		} catch (error) {
+			uploadStore.updateError(id);
+			if (axios.isCancel(error)) {
+				console.log(`Upload canceled for file: ${file.name}`);
+			} else {
+				console.error("Upload failed", error);
+			}
+		}
 	}
 
 	async getFile(id: string) {

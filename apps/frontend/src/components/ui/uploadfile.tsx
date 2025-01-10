@@ -2,6 +2,7 @@ import { Progress } from "@/components/ui/progress";
 import { useUploadFile } from "@/hooks/mutations/uploadfile-api";
 import { cn } from "@/libs/utils";
 import { CloudUpload, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { type ElementRef, useCallback, useRef, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
@@ -29,7 +30,7 @@ export default function UploadFile({
 	id,
 	onDelete,
 }: UploadFileType) {
-	const [files, setFiles] = useState<FileUpload[]>([]);
+	const t = useTranslations();
 	const [isFileTooBig, setIsFileTooBig] = useState(false);
 	const inputRef = useRef<ElementRef<"input">>(null);
 
@@ -46,55 +47,15 @@ export default function UploadFile({
 					file,
 					progress: 0,
 				};
-				setFiles((prev) => [...prev, newFile]);
 				try {
-					await uploadFile(
-						{
-							file,
-							progressCallbackFn: (value) => {
-								setFiles((prev) =>
-									prev.map((f) =>
-										f.file === file ? { ...f, progress: value } : f,
-									),
-								);
-							},
-							purpose: id,
-						},
-						{
-							onSuccess: (data) => {
-								setFiles((prev) =>
-									prev.map((f) =>
-										f.file === file ? { ...f, id: data.id, url: data.url } : f,
-									),
-								);
-								uploadedFiles.push({
-									id: data.id,
-									url: data.url,
-								});
-							},
-						},
-					);
+					await uploadFile({
+						file,
+						purpose: id,
+					});
 				} catch (error) {
 					console.error(error);
-					setFiles((prev) =>
-						prev.map((f) => (f.file === file ? { ...f, error: true } : f)),
-					);
 				}
 			}
-			for (const rejected of rejectedFiles) {
-				const { file, errors } = rejected;
-				console.warn(`File ${file.name} was rejected:`, errors);
-				setFiles((prev) => [
-					...prev,
-					{
-						file,
-						uid: `${file.name}-${file.lastModified}-${Math.random()}`,
-						progress: 0,
-						error: true,
-					},
-				]);
-			}
-
 			onFileChange(uploadedFiles);
 		},
 		[id, uploadFile, onFileChange],
@@ -111,16 +72,6 @@ export default function UploadFile({
 			onDropRejected: () => setIsFileTooBig(true),
 			onDropAccepted: () => setIsFileTooBig(false),
 		});
-
-	const handleDelete = (fileId?: string) => {
-		if (!fileId) {
-			return;
-		}
-		setFiles((prev) => prev.filter((f) => f.id !== fileId));
-		if (onDelete) {
-			onDelete(fileId);
-		}
-	};
 
 	return (
 		<>
@@ -148,66 +99,19 @@ export default function UploadFile({
 				/>
 				<CloudUpload width={32} />
 				{isDragActive ? (
-					<Content className="select-none">Drop the file here ...</Content>
+					<Content className="select-none">
+						{t("Upload.Dialog.DropTheFileHere")}
+					</Content>
 				) : isDragReject || isFileTooBig ? (
 					<Content className="px-4 Content-center select-none">
-						These file is too big to be uploaded
+						{t("Upload.Dialog.fileIsTooBig")}
 					</Content>
 				) : (
 					<Content className="px-4 Content-center select-none">
-						Drop &rsquo;n drop file here, or click to select files
+						{t("Upload.Dialog.DropFileHere")}
 					</Content>
 				)}
 			</button>
-			{files.length > 0 &&
-				files.map((uploadedFile) => (
-					<div
-						key={uploadedFile.id || uploadedFile.file.name}
-						className={cn(
-							"mt-2 flex w-full rounded-lg border p-4 pr-2 shadow-md max-sm:flex-col",
-							{ "border-red-500": uploadedFile.error },
-						)}
-					>
-						<Image
-							alt="imageUrl"
-							src={URL.createObjectURL(uploadedFile.file)}
-							width={36}
-							height={36}
-							className="mr-3 size-10 rounded-lg shadow-md"
-						/>
-						<div className="mr-4 flex-1 max-sm:flex-col">
-							<p className="flex-1 hyphens-auto break-all">
-								{uploadedFile.file.name}
-							</p>
-							<Content className="Content-nowrap">
-								{(uploadedFile.file.size / 1024 / 1024).toFixed(2)} MB
-							</Content>
-						</div>
-						<div className="my-auto flex flex-1 items-center justify-end">
-							<div className="w-32">
-								<Progress
-									value={uploadedFile.error ? 100 : uploadedFile.progress}
-									error={uploadedFile.error}
-									className={cn("h-2")}
-								/>
-							</div>
-							<button
-								type="button"
-								className="ml-1 rounded-full p-2 hover:bg-zinc-50 dark:hover:bg-zinc-700"
-								onClick={() => {
-									if (uploadedFile.error) {
-										setFiles((prev) =>
-											prev.filter((file) => file.uid !== uploadedFile.uid),
-										);
-									}
-									handleDelete(uploadedFile.id);
-								}}
-							>
-								<X width={12} />
-							</button>
-						</div>
-					</div>
-				))}
 		</>
 	);
 }

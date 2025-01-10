@@ -29,9 +29,7 @@ export function useQueryParam(defaultName?: { name?: string }) {
 	): string | (string | null)[] | null {
 		const effectiveQueryName = queryName ?? defaultName?.name;
 		if (!effectiveQueryName) {
-			throw new Error(
-				"No query name provided and defaultName.name is not set.",
-			);
+			throw new Error("No query name provided or defaultName.name is not set.");
 		}
 		if (Array.isArray(effectiveQueryName)) {
 			return effectiveQueryName.map((name, index) => {
@@ -60,7 +58,9 @@ export function useQueryParam(defaultName?: { name?: string }) {
 			allowNull?: boolean;
 		}) => {
 			if (!name) {
-				return;
+				throw new Error(
+					"No query name provided or defaultName.name is not set.",
+				);
 			}
 			const param = Params.get(name);
 			return param === value || (!param && allowNull);
