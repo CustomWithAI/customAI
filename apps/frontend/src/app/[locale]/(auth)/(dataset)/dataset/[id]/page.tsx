@@ -32,9 +32,7 @@ export default function Page() {
 			{compareQueryParam({ value: "images", allowNull: true }) ? (
 				<ImagesPage />
 			) : null}
-			{compareQueryParam({ value: "settings", allowNull: true }) ? (
-				<DatasetManagement />
-			) : null}
+			{compareQueryParam({ value: "settings" }) ? <DatasetManagement /> : null}
 		</AppNavbar>
 	);
 }
