@@ -29,13 +29,23 @@ services:
     image: redis:6.2.5-alpine
   elasticsearch:
     container_name: 'elasticsearch'
-    image: elasticsearch:8.8.0
+    image: elasticsearch:8.16.2
     ports:
       - 9200:9200
       - 9300:9300
+    labels:
+      co.elastic.logs/json.overwrite_keys: true 
+      co.elastic.logs/json.add_error_key: true 
+      co.elastic.logs/json.expand_keys: true
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
+  kibana:
+    image: kibana:8.16.2
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - 5601:5601
   ai_app:
     container_name: python_ai
     profiles:

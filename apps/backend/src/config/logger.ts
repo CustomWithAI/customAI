@@ -15,8 +15,8 @@ export const logger = createPinoLogger({
 				target: "pino-elasticsearch",
 				options: {
 					index: "app-log-index",
-					node: `${config.ELASTICSEARCH_URL}:${config.ELASTICSEARCH_PORT}`,
-					esVersion: 7,
+					node: "http://elasticsearch:9200",
+					esVersion: 8,
 					flushBytes: 1000,
 				},
 			},
