@@ -5,7 +5,8 @@
 		"login": "login",
 		"home": "home",
 		"dataset": "dataset",
-		"setting": "setting"
+		"setting": "setting",
+		"workflow": "workflow"
 	},
 	"HomePage": {
 		"login": "login",

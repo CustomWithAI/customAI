@@ -1,18 +1,26 @@
-import { Progress } from "@/components/ui/progress";
+"use client";
 import { useUploadFile } from "@/hooks/mutations/uploadfile-api";
 import { cn } from "@/libs/utils";
-import { CloudUpload, FileText, FileVideo2, ImageIcon, X } from "lucide-react";
+import { FileText, FileVideo2, ImageIcon, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 import {
 	type ElementRef,
+	type ReactNode,
 	createElement,
 	useCallback,
 	useRef,
 	useState,
 } from "react";
-import { type FileRejection, useDropzone } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 import { Content } from "../typography/text";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "./dialog";
 
 type UploadedFile = { id: string; url?: string }[];
 
@@ -22,22 +30,17 @@ type UploadFileType = {
 	onDelete?: (fileId: string) => void;
 };
 
-type FileUpload = {
-	uid: string;
-	file: File;
-	progress: number;
-	id?: string;
-	url?: string;
-	error?: boolean;
-};
+type UploadFileDialog = {
+	button: ReactNode;
+	dialog: {
+		title: ReactNode;
+		description: ReactNode;
+	};
+} & UploadFileType;
 
 const icons = [ImageIcon, FileText, FileVideo2];
 
-export default function UploadFile({
-	onFileChange,
-	id,
-	onDelete,
-}: UploadFileType) {
+const UploadFileBox = ({ onFileChange, id, onDelete }: UploadFileType) => {
 	const t = useTranslations();
 	const [isFileTooBig, setIsFileTooBig] = useState(false);
 	const inputRef = useRef<ElementRef<"input">>(null);
@@ -45,16 +48,9 @@ export default function UploadFile({
 	const { mutateAsync: uploadFile } = useUploadFile();
 
 	const onDrop = useCallback(
-		async (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
+		async (acceptedFiles: File[]) => {
 			const uploadedFiles: UploadedFile = [];
-			console.log(acceptedFiles.length);
 			for (const file of acceptedFiles) {
-				const newFile: FileUpload = {
-					uid: `${file.name}-${file.lastModified}-${Math.random()}`,
-					id: "",
-					file,
-					progress: 0,
-				};
 				try {
 					await uploadFile({
 						file,
@@ -91,7 +87,7 @@ export default function UploadFile({
 					inputRef.current?.click();
 				}}
 				className={cn(
-					"group flex aspect-video z-10 size-full flex-col items-center justify-center rounded-lg border",
+					"group flex aspect-square sm:aspect-video z-10 size-full flex-col items-center justify-center rounded-lg border",
 					"cursor-pointer border-dashed shadow-sm duration-150 hover:bg-zinc-50 active:bg-zinc-100/70 dark:bg-zinc-700",
 					"dark:bg-zinc-700",
 					{
@@ -158,4 +154,30 @@ export default function UploadFile({
 			</button>
 		</>
 	);
-}
+};
+
+const UploadFileDialog = ({
+	button,
+	dialog,
+	...uploadFileProps
+}: UploadFileDialog) => {
+	return (
+		<Dialog>
+			<DialogTrigger asChild>{button}</DialogTrigger>
+			<DialogContent className="w-full max-w-xl md:max-w-2xl lg:max-w-3xl bg-white">
+				<DialogHeader>
+					<DialogTitle>{dialog.title}</DialogTitle>
+					<DialogDescription>{dialog.description}</DialogDescription>
+				</DialogHeader>
+				<UploadFileBox {...uploadFileProps} />
+			</DialogContent>
+		</Dialog>
+	);
+};
+
+const UploadFile = {
+	box: UploadFileBox,
+	dialog: UploadFileDialog,
+};
+
+export default UploadFile;

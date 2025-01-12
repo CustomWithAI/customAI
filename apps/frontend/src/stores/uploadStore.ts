@@ -7,6 +7,7 @@ type UploadState = {
 		file: File;
 		progress: number;
 		error?: boolean;
+		canceled?: boolean;
 		completed: boolean;
 		abortController: AbortController;
 	}[];
@@ -18,6 +19,7 @@ type UploadState = {
 	}) => void;
 	resetUpload: () => void;
 	updateProgress: (id: string, progress: number) => void;
+	updateCanceled: (id: string) => void;
 	updateError: (id: string) => void;
 	completeUpload: (id: string) => void;
 	cancelUpload: (id: string) => void;
@@ -49,6 +51,12 @@ export const useUploadStore = create<UploadState>((set) => ({
 		set((state) => ({
 			uploads: state.uploads.map((upload) =>
 				upload.id === id ? { ...upload, error: true } : upload,
+			),
+		})),
+	updateCanceled: (id) =>
+		set((state) => ({
+			uploads: state.uploads.map((upload) =>
+				upload.id === id ? { ...upload, canceled: true } : upload,
 			),
 		})),
 	cancelUpload: (id) =>

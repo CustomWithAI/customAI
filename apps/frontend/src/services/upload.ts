@@ -4,13 +4,13 @@ import type { RequestUploadFileData } from "@/types/request/requestUploadFile";
 import type { ResponseError } from "@/types/response/common";
 import type { ResponseUploadFile } from "@/types/response/responseUploadFile";
 
-import type { AxiosProgressEvent, AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
 import axios from "axios";
 
 class UploadService {
 	async uploadFile(data: RequestUploadFileData) {
 		const { file, purpose } = data;
-		const id = Date.now().toString();
+		const id = `${file.name}-${Date.now().toString()}`;
 		const abortController = new AbortController();
 		const uploadStore = useUploadStore.getState();
 		uploadStore.addUpload({ id, filename: file.name, file, abortController });

@@ -3,6 +3,7 @@ import { OverviewBox } from "@/components/specific/panelBox";
 import {
 	Content,
 	Header,
+	Quote,
 	SubHeader,
 	Subtle,
 } from "@/components/typography/text";
@@ -54,9 +55,9 @@ export const MainWorkflowPage = () => {
 				</div>
 				<div>
 					<SubHeader>About</SubHeader>
-					<Content className="text-zinc-700 my-5">
+					<Quote className="text-zinc-700 my-5">
 						No description, website, or topics provided.
-					</Content>
+					</Quote>
 					<div className="space-y-3 text-zinc-700 pb-6 border-b">
 						<div className="flex space-x-4">
 							<Layers2 className="w-6 h-6" />

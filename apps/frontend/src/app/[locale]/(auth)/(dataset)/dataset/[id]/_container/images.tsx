@@ -20,12 +20,20 @@ export default function ImagesPage() {
 					<Button className="bg-indigo-900 hover:bg-indigo-950 dark:opacity-40 dark:bg-indigo-900 dark:hover:bg-indigo-950">
 						<Filter /> Filter
 					</Button>
-					<Button
-						variant="outline"
-						className="border-indigo-900 hover:border-indigo-950 dark:border-indigo-100 dark:hover:border-indigo-100 text-indigo-900 hover:text-indigo-950 dark:text-indigo-100 dark:hover:text-indigo-100"
-					>
-						<FileUp /> Upload Image
-					</Button>
+					<UploadFile.dialog
+						button=<Button
+							variant="outline"
+							className="border-indigo-900 hover:border-indigo-950 dark:border-indigo-100 dark:hover:border-indigo-100 text-indigo-900 hover:text-indigo-950 dark:text-indigo-100 dark:hover:text-indigo-100"
+						>
+							<FileUp /> Upload Image
+						</Button>
+						dialog={{
+							title: "Upload Images",
+							description: "",
+						}}
+						id=""
+						onFileChange={() => {}}
+					/>
 				</div>
 				<ViewList.Trigger />
 			</div>
