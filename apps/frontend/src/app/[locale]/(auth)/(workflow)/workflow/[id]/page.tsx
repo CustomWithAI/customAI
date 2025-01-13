@@ -3,6 +3,7 @@ import { AppNavbar } from "@/components/layout/appNavbar";
 import { Menubar } from "@/components/ui/menubar";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { MainWorkflowPage } from "./_container/main";
+import { VersionPage } from "./_container/version";
 
 export default function Page() {
 	const { compareQueryParam, setQueryParam } = useQueryParam({ name: "tab" });
@@ -55,6 +56,7 @@ export default function Page() {
 			{compareQueryParam({ value: "overview", allowNull: true }) ? (
 				<MainWorkflowPage />
 			) : null}
+			{compareQueryParam({ value: "versions" }) ? <VersionPage /> : null}
 		</AppNavbar>
 	);
 }

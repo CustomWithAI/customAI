@@ -3,6 +3,7 @@ import { HomeMenu } from "@/components/layout/homeMenu";
 import { FeatureBento } from "@/features/homepage/components/feature";
 import { Footer } from "@/features/homepage/components/footer";
 import { HeaderMain } from "@/features/homepage/components/header";
+import { Pricing } from "@/features/homepage/components/pricing";
 import { useTranslations } from "next-intl";
 import { Suspense } from "react";
 
@@ -21,6 +22,7 @@ function HomePage() {
 			<HomeMenu />
 			<HeaderMain />
 			<FeatureBento />
+			<Pricing />
 			<Footer />
 		</div>
 	);

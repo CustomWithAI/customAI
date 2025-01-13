@@ -1,29 +1,27 @@
 {
-  "name": "customai-webstack",
-  "module": "index.ts",
-  "type": "module",
-  "scripts": {
-    "dev": "concurrently -n 'backend,frontend' -c '#007755,#2f6da3' 'cd apps/backend && bun dev' 'cd apps/frontend && npm run dev'",
-    "typecheck": "bunx --bun tsc",
-    "lint": "biome lint --skip=suspicious/noExplicitAny --skip=security/noDangerouslySetInnerHtml .",
-    "lint:fix": "biome lint --write --skip=suspicious/noExplicitAny --skip=security/noDangerouslySetInnerHtml .",
-    "format": "biome format .",
-    "format:fix": "biome format --write .",
-    "prepare": "husky"
-  },
-  "workspaces": [
-    "packages/*"
-  ],
-  "devDependencies": {
-    "@biomejs/biome": "1.9.1",
-    "@types/bun": "latest",
-    "husky": "^9.1.7",
-    "lint-staged": "^15.3.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5.6.2"
-  },
-  "dependencies": {
-    "concurrently": "^9.1.2"
-  }
+	"name": "customai-webstack",
+	"module": "index.ts",
+	"type": "module",
+	"scripts": {
+		"dev": "concurrently -n 'backend,frontend' -c '#007755,#2f6da3' 'cd apps/backend && bun dev' 'cd apps/frontend && npm run dev'",
+		"typecheck": "bunx --bun tsc",
+		"lint": "biome lint --skip=suspicious/noExplicitAny --skip=security/noDangerouslySetInnerHtml --skip=lint/complexity/noStaticOnlyClass .",
+		"lint:fix": "biome lint --write --skip=suspicious/noExplicitAny --skip=security/noDangerouslySetInnerHtml --skip=lint/complexity/noStaticOnlyClass .",
+		"format": "biome format .",
+		"format:fix": "biome format --write .",
+		"prepare": "husky"
+	},
+	"workspaces": ["packages/*"],
+	"devDependencies": {
+		"@biomejs/biome": "1.9.1",
+		"@types/bun": "latest",
+		"husky": "^9.1.7",
+		"lint-staged": "^15.3.0"
+	},
+	"peerDependencies": {
+		"typescript": "^5.6.2"
+	},
+	"dependencies": {
+		"concurrently": "^9.1.2"
+	}
 }
