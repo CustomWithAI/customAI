@@ -40,6 +40,13 @@ const envSchema = z.object({
 	// elasticsearch
 	ELASTICSEARCH_URL: z.string().default("http://localhost"),
 	ELASTICSEARCH_PORT: z.coerce.number().default(9200),
+	ELASTICSEARCH_FULL_URL: z.string().optional(),
+
+	// S3 Bucket
+	AWS_ACCESS_KEY_ID: z.string().default("test"),
+	AWS_SECRET_ACCESS_KEY: z.string().default("test"),
+	AWS_REGION: z.string().default("us-east-1"),
+	S3_ENDPOINT: z.string().url().default("http://localstack:4566"),
 
 	APP_VERSION: z.string().default(packageJson.version),
 });

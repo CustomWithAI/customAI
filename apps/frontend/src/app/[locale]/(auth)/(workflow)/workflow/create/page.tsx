@@ -32,7 +32,11 @@ export default function Page() {
 	async function onSubmit(data: WorkflowDetails) {}
 
 	return (
-		<AppNavbar activeTab="Home" disabledTab={undefined}>
+		<AppNavbar
+			activeTab="Home"
+			PageTitle="Create Workflow"
+			disabledTab={undefined}
+		>
 			<Primary className="mb-4">Build a workflow</Primary>
 			<SelectiveBar
 				total={5}
