@@ -2,7 +2,7 @@ version: "3"
 services:
   postgres:
     image: postgres:17-alpine
-    container_name: 'postgres'
+    container_name: postgres
     ports:
       - 5432:5432
     volumes:
@@ -15,7 +15,7 @@ services:
       
   rabbitmq:
     image: rabbitmq:4-management-alpine
-    container_name: 'rabbitmq'
+    container_name: rabbitmq
     ports:
       - 5672:5672
       - 15672:15672
@@ -27,11 +27,11 @@ services:
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
 
   redis:
-    container_name: 'redis'
+    container_name: redis
     image: redis:6.2.5-alpine
 
   elasticsearch:
-    container_name: 'elasticsearch'
+    container_name: elasticsearch
     image: elasticsearch:8.16.2
     ports:
       - 9200:9200
