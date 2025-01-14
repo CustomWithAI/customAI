@@ -77,9 +77,8 @@ function SignupPage() {
 	}
 	return (
 		<>
-			<HomeMenu />
 			<BackgroundBeams className="bg-white dark:bg-zinc-700/20" />
-			<div className="flex z-0 flex-col justify-center pb-10 h-full w-full">
+			<div className="flex z-0 flex-col justify-center h-full w-full">
 				<div
 					className={cn(
 						"p-12 2xl:px-20 2xl:py-24 max-md:w-full dark:bg-white/10 bg-transparent max-md:h-full",

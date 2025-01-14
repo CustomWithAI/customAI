@@ -53,7 +53,7 @@ services:
 
   localstack:
     image: localstack/localstack:latest
-    container_name: localstack_main
+    container_name: localstack
     ports:
       - "4566:4566" 
       - "4510-4559:4510-4559"  
@@ -61,7 +61,7 @@ services:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - SERVICES=s3 
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ./volume:/var/lib/localstack"
       - localstack_data:/tmp/localstack
 
   ai_app:
@@ -116,3 +116,7 @@ services:
       - 3000:3000
     depends_on:
       - backend_app
+
+volumes:
+  localstack_data:
+    driver: local

@@ -4,5 +4,6 @@
 	"editor.tabSize": 2,
 	"[typescriptreact]": {
 		"editor.defaultFormatter": "biomejs.biome"
-	}
+	},
+	"cSpell.words": ["presign"]
 }

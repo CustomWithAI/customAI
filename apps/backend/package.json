@@ -8,6 +8,7 @@
 		"migrate:auth": "bunx @better-auth/cli@latest generate",
 		"studio": "drizzle-kit studio",
 		"generate": "drizzle-kit generate",
+		"db:setup": "drizzle-kit migrate && bun seed",
 		"seed": "bun ./src/infrastructures/database/seed.ts",
 		"migrate": "drizzle-kit migrate"
 	},

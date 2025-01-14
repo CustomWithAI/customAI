@@ -11,7 +11,7 @@ export const Footer = () => {
 	return (
 		<>
 			<div className="w-full border-t" />
-			<div className="grid grid-cols-4 max-sm:grid-cols-1 mx-auto max-w-screen-2xl p-6 lg:p-10 backdrop-blur-sm gap-4">
+			<div className="text-center grid grid-cols-4 max-sm:grid-cols-1 mx-auto max-w-screen-2xl p-6 lg:p-10 backdrop-blur-sm gap-4">
 				<SubHeader>CustomAI</SubHeader>
 				<div>
 					<Content className="font-semibold leading-8">GENERAL</Content>

@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/libs/utils";
 import { useUploadStore } from "@/stores/uploadStore";
 import { motion } from "framer-motion";
-import { ChevronDown, ChevronUp, X } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useState } from "react";
@@ -34,7 +34,12 @@ const UploadProgress = () => {
 	return (
 		<div className="fixed bottom-4 right-4 max-sm:w-screen z-[99] bg-white border border-gray-200 rounded-lg p-6 pt-5 shadow-md">
 			<div className="flex justify-between border-b pb-2">
-				<SubHeader>{t("Upload.Popup.Upload")}</SubHeader>
+				<SubHeader>
+					{t("Upload.Popup.Upload")}{" "}
+					<span className="text-zinc-400 text-base font-medium">
+						({uploads.length})
+					</span>
+				</SubHeader>
 				<div className="flex space-x-2">
 					<Button
 						type="button"
@@ -116,7 +121,7 @@ const UploadProgress = () => {
 									</div>
 								)}
 								{completed ? (
-									<span className="text-green-600">✅</span>
+									<Check className="text-green-600" />
 								) : (
 									<Button
 										type="button"

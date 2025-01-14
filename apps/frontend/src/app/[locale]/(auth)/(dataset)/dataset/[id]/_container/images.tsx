@@ -15,7 +15,7 @@ export default function ImagesPage() {
 			</Header>
 
 			<div className="flex justify-between mb-2">
-				<div className="flex space-x-4 w-full">
+				<div className="flex flex-wrap gap-y-4 space-x-4 w-full">
 					<Input placeholder="search images ..." className=" max-w-lg" />
 					<Button className="bg-indigo-900 hover:bg-indigo-950 dark:opacity-40 dark:bg-indigo-900 dark:hover:bg-indigo-950">
 						<Filter /> Filter
@@ -35,7 +35,9 @@ export default function ImagesPage() {
 						onFileChange={() => {}}
 					/>
 				</div>
-				<ViewList.Trigger />
+				<div>
+					<ViewList.Trigger />
+				</div>
 			</div>
 			<ContentImage />
 		</ViewList.Provider>
