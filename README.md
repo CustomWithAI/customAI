@@ -70,6 +70,14 @@ The **CustomAI Website** is a no-code platform designed to enable users to creat
 ### Sample Workflow
 - Step-by-step walkthrough to create and deploy a sample model.
 
+## Tech Stack
+
+**Client:** React, NextJS, TailwindCSS
+
+**Server:** Bun, Elysia
+
+**AI:** Python FastAPI
+
 ## Project Structure
 frontend
 ```
