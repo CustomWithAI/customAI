@@ -45,7 +45,7 @@ The **CustomAI Website** is a no-code platform designed to enable users to creat
    ```
    or
    **using docker** (Recommend):
-  ```bash
+   ```bash
    docker compose up -d
    ```
 3. **Access the application**: Open a browser and go to `http://localhost:3000`.
