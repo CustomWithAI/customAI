@@ -15,6 +15,7 @@ The **CustomAI Website** is a no-code platform designed to enable users to creat
 - [Getting Started](#getting-started)
 - [Configuration](#configuration)
 - [Usage](#usage)
+- [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [Contributing](#contributing)
 - [License](#license)
