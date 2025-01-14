@@ -32,6 +32,10 @@ The **CustomAI Website** is a no-code platform designed to enable users to creat
    ```bash
    bun install
    ```
+4. **Install Git Policy**:
+   ```bash
+   bun prepare
+   ```
 
 ## Getting Started
 1. **Set up the environment**: Copy the `.env.example` to `.env` and configure the necessary variables.
@@ -40,11 +44,12 @@ The **CustomAI Website** is a no-code platform designed to enable users to creat
    bun run dev
    ```
    or
-   **using docker**:
+   **using docker** (Recommend):
   ```bash
    docker compose up -d
    ```
 3. **Access the application**: Open a browser and go to `http://localhost:3000`.
+4. **Access Docs on backend**: Open a browser and go to `http://localhost:4000/docs`
 
 ## Configuration
 ### Environment Variables
@@ -103,13 +108,13 @@ backend
 📁 src
 ├── 📁 application
 │   ├── 📁 routes            # contain group routes
-│   ├── 📁 use_cases         # Business logic (use cases / interactors)
+│   ├── 📁 repositories      # Repository controls database system 
 │   ├── 📁 services          # Services or Domain services (business rules not bound to a use case)
 │   └── 📁 controllers       # Controllers controls group of services
 │
 ├── 📁 domain
 │   ├── 📁 models            # Core entities/models representing domain concepts
-│   ├── 📁 repositories      # Repository interfaces (e.g., IUserRepository)
+│   ├── 📁 interface         # Repository interfaces (e.g., IUserRepository)
 │   └── 📁 schema            # drizzle schema interfaces
 │
 ├── 📁 config                # Configuration files (e.g., .env, configuration modules)
