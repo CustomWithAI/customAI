@@ -49,8 +49,28 @@ The **CustomAI Website** is a no-code platform designed to enable users to creat
    ```bash
    docker compose up -d
    ```
-3. **Access the application**: Open a browser and go to `http://localhost:3000`.
-4. **Access Docs on backend**: Open a browser and go to `http://localhost:4000/docs`
+3. **Set up localstack in dev mode**:
+   ```bash
+   aws configure --profile default
+   ```
+   (enter variable in configuration)
+   ```bash
+   AWS Access Key ID [None]: test
+   AWS Secret Access Key [None]: test
+   Default region name [None]: us-east-1
+   Default output format [None]: json
+   ```
+3a. ***create bucket***:
+   ```bash
+   aws s3 mb s3://my-bucket --endpoint-url http://localhost:4566
+   ```
+3b. ***list bucket***:
+   ```bash
+   aws s3 ls --endpoint-url=localhost:4566 --recursive --human-readable
+   ```
+5. 
+6. **Access the application**: Open a browser and go to `http://localhost:3000`.
+7. **Access Docs on backend**: Open a browser and go to `http://localhost:4000/docs`
 
 ## Configuration
 ### Environment Variables
