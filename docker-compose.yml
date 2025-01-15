@@ -52,7 +52,7 @@ services:
       - 5601:5601
 
   localstack:
-    container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
+    container_name: localstack
     image: localstack/localstack:latest
     ports:
       - "4566:4566"            # LocalStack Gateway

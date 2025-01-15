@@ -46,6 +46,7 @@ const envSchema = z.object({
 	AWS_ACCESS_KEY_ID: z.string().default("test"),
 	AWS_SECRET_ACCESS_KEY: z.string().default("test"),
 	AWS_REGION: z.string().default("us-east-1"),
+	S3_BUCKET_NAME: z.string().default("my-bucket"),
 	S3_ENDPOINT: z.string().url().default("http://localstack:4566"),
 
 	APP_VERSION: z.string().default(packageJson.version),
