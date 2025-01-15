@@ -66,11 +66,10 @@ The **CustomAI Website** is a no-code platform designed to enable users to creat
       ```
    3b. ***list bucket***:
       ```bash
-      aws s3 ls --endpoint-url=localhost:4566 --recursive --human-readable
-      ```
-5. 
-6. **Access the application**: Open a browser and go to `http://localhost:3000`.
-7. **Access Docs on backend**: Open a browser and go to `http://localhost:4000/docs`
+      aws s3 ls --endpoint-url http://localhost:4566 --recursive --human-readable
+      ``` 
+4. **Access the application**: Open a browser and go to `http://localhost:3000`.
+5. **Access Docs on backend**: Open a browser and go to `http://localhost:4000/docs`
 
 ## Configuration
 ### Environment Variables
