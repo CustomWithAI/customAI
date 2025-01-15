@@ -52,17 +52,17 @@ services:
       - 5601:5601
 
   localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
     image: localstack/localstack:latest
-    container_name: localstack
     ports:
-      - "4566:4566" 
-      - "4510-4559:4510-4559"  
+      - "4566:4566"            # LocalStack Gateway
+      - "4510-4559:4510-4559"  # external services port range
     environment:
-      - DOCKER_HOST=unix:///var/run/docker.sock
-      - SERVICES=s3 
+      # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
+      - DEBUG=${DEBUG:-0}
     volumes:
-      - ./volume:/var/lib/localstack"
-      - localstack_data:/tmp/localstack
+      - "${LOCALSTACK_VOLUME_DIR:-./localstack}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
   ai_app:
     container_name: python_ai
@@ -116,7 +116,3 @@ services:
       - 3000:3000
     depends_on:
       - backend_app
-
-volumes:
-  localstack_data:
-    driver: local
