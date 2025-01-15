@@ -4,7 +4,7 @@ import { swaggerConfig } from "@/config/swagger";
 import { connectDatabase } from "@/infrastructures/database/connection";
 import { connectRabbitMQ } from "@/infrastructures/rabbitmq/connection";
 import { connectRedis } from "@/infrastructures/redis/connection";
-import { testS3Connection } from "@/infrastructures/s3/connection";
+import { connectS3 } from "@/infrastructures/s3/connection";
 import { betterAuthView } from "@/lib/auth";
 import { userMiddleware } from "@/middleware/authMiddleware";
 import { shutdown } from "@/utils/shutdown";
@@ -12,12 +12,12 @@ import { staticPlugin } from "@elysiajs/static";
 import { Elysia } from "elysia";
 
 try {
-  logger.info("🏃‍♀️ starting connection..");
+  logger.info("🏃‍♀️ Starting connection..");
   await connectRedis();
   await connectRabbitMQ();
   await connectDatabase();
-  await testS3Connection();
-  logger.info("🏃‍♀️ starting server..");
+  await connectS3();
+  logger.info("🏃‍♀️ Starting server..");
 
   const app = new Elysia()
     .derive(({ request }) => userMiddleware(request))
