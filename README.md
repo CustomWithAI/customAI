@@ -60,14 +60,14 @@ The **CustomAI Website** is a no-code platform designed to enable users to creat
    Default region name [None]: us-east-1
    Default output format [None]: json
    ```
-3a. ***create bucket***:
-   ```bash
-   aws s3 mb s3://my-bucket --endpoint-url http://localhost:4566
-   ```
-3b. ***list bucket***:
-   ```bash
-   aws s3 ls --endpoint-url=localhost:4566 --recursive --human-readable
-   ```
+   3a. ***create bucket***:
+      ```bash
+      aws s3 mb s3://my-bucket --endpoint-url http://localhost:4566
+      ```
+   3b. ***list bucket***:
+      ```bash
+      aws s3 ls --endpoint-url=localhost:4566 --recursive --human-readable
+      ```
 5. 
 6. **Access the application**: Open a browser and go to `http://localhost:3000`.
 7. **Access Docs on backend**: Open a browser and go to `http://localhost:4000/docs`
