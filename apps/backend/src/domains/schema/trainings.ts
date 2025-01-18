@@ -2,8 +2,9 @@ import {
   doublePrecision,
   jsonb,
   pgTable,
-  text,
   timestamp,
+  uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
 import { workflows } from "@/domains/schema/workflows";
 import { datasets } from "@/domains/schema/datasets";
@@ -14,25 +15,25 @@ import { augmentations } from "@/domains/schema/augmentations";
 import { structureModels } from "@/domains/schema/structureModels";
 
 export const trainings = pgTable("trainings", {
-  id: text("id").primaryKey(),
-  version: doublePrecision("version"),
+  id: uuid("id").defaultRandom().primaryKey(),
+  version: doublePrecision("version").default(0.0),
   hyperparameter: jsonb("hyperparameter"),
-  workflowId: text("workflowId").references(() => workflows.id),
+  workflowId: uuid("workflowId").references(() => workflows.id),
   pipeline: jsonb("pipeline"),
-  datasetId: text("datasetId").references(() => datasets.id),
-  imagePreprocessingId: text("imagePreprocessingId").references(
+  datasetId: uuid("datasetId").references(() => datasets.id),
+  imagePreprocessingId: uuid("imagePreprocessingId").references(
     () => imagePreprocessings.id
   ),
-  featureExtractionId: text("featureExtractionId").references(
+  featureExtractionId: uuid("featureExtractionId").references(
     () => featureExtractions.id
   ),
-  featureSelectionId: text("featureSelectionId").references(
+  featureSelectionId: uuid("featureSelectionId").references(
     () => featureSelections.id
   ),
-  augmentationId: text("augmentationId").references(() => augmentations.id),
-  structureModelId: text("structureModelId").references(
+  augmentationId: uuid("augmentationId").references(() => augmentations.id),
+  structureModelId: uuid("structureModelId").references(
     () => structureModels.id
   ),
-  trainedModelUrl: text("trainedModelUrl"),
+  trainedModelUrl: varchar("trainedModelUrl", { length: 255 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });

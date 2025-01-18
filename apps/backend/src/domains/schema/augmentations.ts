@@ -1,8 +1,9 @@
-import { jsonb, pgTable, text } from "drizzle-orm/pg-core";
+import { jsonb, pgTable, varchar, uuid, text } from "drizzle-orm/pg-core";
+import { user } from "@/domains/schema/auth";
 
 export const augmentations = pgTable("augmentations", {
-	id: text("id").primaryKey(),
-	name: text("name"),
-	data: jsonb("data"),
-	userId: text("userId"),
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name", { length: 255 }),
+  data: jsonb("data"),
+  userId: text("userId").references(() => user.id),
 });

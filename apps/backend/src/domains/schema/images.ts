@@ -1,7 +1,8 @@
-import { jsonb, pgTable, text } from "drizzle-orm/pg-core";
+import { jsonb, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
+import { datasets } from "@/domains/schema/datasets";
 
 export const images = pgTable("images", {
-	url: text("url").primaryKey(),
-	annotation: jsonb("annotation"),
-	datasetId: text("datasetId"),
+  url: varchar("url", { length: 255 }).primaryKey(),
+  annotation: jsonb("annotation"),
+  datasetId: uuid("datasetId").references(() => datasets.id),
 });

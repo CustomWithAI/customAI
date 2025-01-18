@@ -1,8 +1,10 @@
-import { jsonb, pgTable, text } from "drizzle-orm/pg-core";
+import { jsonb, pgTable, uuid, varchar, text } from "drizzle-orm/pg-core";
+import { user } from "@/domains/schema/auth";
 
 export const customModels = pgTable("custom_models", {
-	id: text("id").primaryKey(),
-	data: jsonb("data"),
-	name: text("name"),
-	hyperparameter: jsonb("hyperparameter"),
+  id: uuid("id").defaultRandom().primaryKey(),
+  data: jsonb("data"),
+  name: varchar("name", { length: 255 }),
+  hyperparameter: jsonb("hyperparameter"),
+  userId: text("userId").references(() => user.id),
 });
