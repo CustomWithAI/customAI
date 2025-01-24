@@ -2,7 +2,9 @@
 import { AppNavbar } from "@/components/layout/appNavbar";
 import { Menubar } from "@/components/ui/menubar";
 import { useQueryParam } from "@/hooks/use-query-params";
+import { InsightPage } from "./_container/insight";
 import { MainWorkflowPage } from "./_container/main";
+import { SettingPage } from "./_container/setting";
 import { VersionPage } from "./_container/version";
 
 export default function Page() {
@@ -57,6 +59,8 @@ export default function Page() {
 				<MainWorkflowPage />
 			) : null}
 			{compareQueryParam({ value: "versions" }) ? <VersionPage /> : null}
+			{compareQueryParam({ value: "insights" }) ? <InsightPage /> : null}
+			{compareQueryParam({ value: "settings" }) ? <SettingPage /> : null}
 		</AppNavbar>
 	);
 }

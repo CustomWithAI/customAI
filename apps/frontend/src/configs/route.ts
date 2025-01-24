@@ -6,4 +6,5 @@ export const guestRoutes: string[] = [
 	"/dataset",
 	"/workflow",
 	"/settings",
+	"/new-user",
 ] as const;

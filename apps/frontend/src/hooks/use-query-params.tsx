@@ -98,15 +98,23 @@ export function useQueryParam(defaultName?: { name?: string }) {
 		({
 			name = defaultName?.name,
 			value,
+			subfix,
 			resetParams,
 		}: {
 			name?: string;
 			value: string | null;
+			subfix?: string;
 			resetParams?: boolean;
 		}): void => {
 			if (!name) return;
+			if (!subfix) {
+				router.replace(
+					`${pathname}?${createQueryParam({ name, value, resetParams })}`,
+				);
+				return;
+			}
 			router.replace(
-				`${pathname}?${createQueryParam({ name, value, resetParams })}`,
+				`${pathname}?${createQueryParam({ name, value, resetParams })}${subfix}`,
 			);
 		},
 		[createQueryParam, pathname, router, defaultName],

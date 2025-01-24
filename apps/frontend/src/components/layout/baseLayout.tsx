@@ -4,15 +4,14 @@ import { ReactQueryProvider } from "@/libs/react-query-providers";
 import { cn } from "@/libs/utils";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { Inter, Lexend, Prompt } from "next/font/google";
+import { IBM_Plex_Sans_Thai, Inter, Lexend, Prompt } from "next/font/google";
 import type { ReactNode } from "react";
 
-const prompt = Prompt({
-	weight: ["200", "300", "400", "500", "600", "700"],
-	subsets: ["thai"],
+const ibm = IBM_Plex_Sans_Thai({
+	subsets: ["latin", "thai"],
 	display: "swap",
+	weight: ["200", "300", "400", "500", "600", "700"],
 });
-
 const inter = Inter({
 	subsets: ["latin"],
 	display: "swap",
@@ -31,7 +30,7 @@ export default async function BaseLayout({ children, locale }: Props) {
 		<html suppressHydrationWarning className="h-full" lang={locale}>
 			<body
 				className={cn(
-					locale === "en-US" ? inter.className : prompt.className,
+					locale === "en-US" ? inter.className : ibm.className,
 					"flex h-full flex-col",
 				)}
 			>

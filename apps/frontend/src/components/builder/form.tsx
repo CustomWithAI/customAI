@@ -18,7 +18,6 @@ import {
 import { type ElementRef, useRef } from "react";
 import {
 	type Control,
-	Controller,
 	type DefaultValues,
 	type FieldErrors,
 	type FieldValues,
@@ -54,16 +53,16 @@ import { Input } from "../ui/input";
 import { Selection } from "../ui/selection";
 import { Switch } from "../ui/switch";
 
-type SchemaType<T extends ZodRawShape | ZodDiscriminatedUnion<any, any>> =
+type SchemaType<T extends ZodRawShape | ZodDiscriminatedUnion<string, any>> =
 	| ZodObject<T extends ZodRawShape ? T : never>
 	| ZodEffects<ZodObject<T extends ZodRawShape ? T : never>>
-	| ZodDiscriminatedUnion<any, any>;
+	| ZodDiscriminatedUnion<string, any>;
 
-type InferSchema<T extends ZodRawShape | ZodDiscriminatedUnion<any, any>> =
+type InferSchema<T extends ZodRawShape | ZodDiscriminatedUnion<string, any>> =
 	z.infer<SchemaType<T>>;
 
 type FormProviderProps<
-	T extends ZodRawShape | ZodDiscriminatedUnion<any, any>,
+	T extends ZodRawShape | ZodDiscriminatedUnion<string, any>,
 > = {
 	schema: SchemaType<T>;
 	defaultValues?: DefaultValues<InferSchema<T>>;
@@ -164,12 +163,12 @@ type TemplateCustom<T extends object> = {
 	template: "custom";
 	element: {
 		testDataId: string;
-		renderCustomInput: (
-			control: Control<T, unknown>,
-			setValue: UseFormSetValue<T>,
-			getValues: UseFormGetValues<T>,
-			errors: FieldErrors<FieldValues>,
-		) => ReactNode;
+		renderCustomInput: (input: {
+			control: Control<T, unknown>;
+			setValue: UseFormSetValue<T>;
+			getValues: UseFormGetValues<T>;
+			errors: FieldErrors<FieldValues>;
+		}) => ReactNode;
 	};
 	config: TemplateConditional<T> & TemplateConfig;
 };
@@ -238,6 +237,8 @@ const FormBuilderProvider = <
 	);
 };
 
+const isEmptyObject = (obj: object): boolean => Object.keys(obj).length === 0;
+
 const Builder = <T extends ZodRawShape | ZodDiscriminatedUnion<any, any>>({
 	status = false,
 	formFields,
@@ -257,7 +258,7 @@ const Builder = <T extends ZodRawShape | ZodDiscriminatedUnion<any, any>>({
 		<>
 			{upper || null}
 			{formFields.map((field, fieldIndex) => {
-				if (field.config) {
+				if (field.config && !isEmptyObject(field.config)) {
 					const { conditionalField, conditionalValue, enabled } = field.config;
 					const fieldsArray = Array.isArray(conditionalField)
 						? conditionalField
@@ -280,25 +281,26 @@ const Builder = <T extends ZodRawShape | ZodDiscriminatedUnion<any, any>>({
 				if (field.template === "custom") {
 					return field.element.renderCustomInput ? (
 						<>
-							{field.element.renderCustomInput(
+							{field.element.renderCustomInput({
 								control,
 								setValue,
 								getValues,
 								errors,
-							)}
+							})}
 						</>
 					) : null;
 				}
 				const { name } = field.element;
 				return (
-					<div className="my-6" key={name as string}>
+					<div
+						className={cn(
+							{ "my-6": fieldIndex !== 0 },
+							{ "mb-6": fieldIndex === 0 },
+						)}
+						key={name as string}
+					>
 						<BaseSkeleton template="line1" loading={status}>
 							<RenderInput {...field} isFirstInput={fieldIndex === 0} />
-							{errors?.[name] && (
-								<p className="mt-1 text-xs font-semibold text-red-500">
-									*{(errors[name] as any).message}
-								</p>
-							)}
 						</BaseSkeleton>
 					</div>
 				);
@@ -345,6 +347,7 @@ const RenderInput = <T extends object>({
 		case "password": {
 			return (
 				<FormField
+					key={key}
 					control={control}
 					name={name}
 					render={({ field: { onChange, onBlur, value } }) => (
@@ -374,6 +377,7 @@ const RenderInput = <T extends object>({
 		case "number": {
 			return (
 				<FormField
+					key={key}
 					control={control}
 					name={name}
 					render={({ field: { onChange, onBlur, value } }) => (
@@ -403,6 +407,7 @@ const RenderInput = <T extends object>({
 		case "percent": {
 			return (
 				<FormField
+					key={key}
 					control={control}
 					name={name}
 					render={({ field: { onChange, onBlur, value } }) => (
@@ -440,6 +445,7 @@ const RenderInput = <T extends object>({
 		case "switch": {
 			return (
 				<FormField
+					key={key}
 					control={control}
 					name={name}
 					render={({ field: { onChange, onBlur, value } }) => (
@@ -475,6 +481,7 @@ const RenderInput = <T extends object>({
 		case "image":
 			return (
 				<FormField
+					key={key}
 					control={control}
 					name={name}
 					render={({ field: { onChange, onBlur, value } }) => (
@@ -535,6 +542,7 @@ const RenderInput = <T extends object>({
 		case "price":
 			return (
 				<FormField
+					key={key}
 					control={control}
 					name={name}
 					render={({ field: { onChange, onBlur, value } }) => (
@@ -567,6 +575,7 @@ const RenderInput = <T extends object>({
 		case "select":
 			return (
 				<FormField
+					key={key}
 					control={control}
 					name={name}
 					render={({ field: { onChange, onBlur, value } }) => (
@@ -590,6 +599,7 @@ const RenderInput = <T extends object>({
 		case "date":
 			return <></>;
 		default:
+			console.warn("not implemented function");
 			return null;
 	}
 };
@@ -599,4 +609,30 @@ const FormBuilder = {
 	Build: Builder,
 };
 
-export default FormBuilder;
+const useFormBuilder = <
+	T extends ZodRawShape | ZodDiscriminatedUnion<string, any>,
+>({
+	schema,
+	defaultValues,
+	onSubmit,
+	formName,
+}: Omit<FormProviderProps<T>, "children">) => {
+	const Provider = ({ children }: { children: React.ReactNode }) => (
+		<FormBuilderProvider
+			formName={formName}
+			schema={schema}
+			defaultValues={defaultValues}
+			onSubmit={onSubmit}
+		>
+			{children}
+		</FormBuilderProvider>
+	);
+
+	const Build = (
+		props: Omit<React.ComponentProps<typeof FormBuilder.Build>, "schema">,
+	) => <Builder schema={schema} {...props} />;
+
+	return { Provider, Build };
+};
+
+export { FormBuilder, useFormBuilder };

@@ -23,6 +23,7 @@ import { type SidebarPage, sidebarConfig } from "@/configs/sidebar";
 import { cn } from "@/libs/utils";
 import type * as React from "react";
 import type { ComponentProps, ReactNode } from "react";
+import { memo, useMemo } from "react";
 
 type AppNavbarProps = {
 	activeTab: keyof typeof SidebarPage;
@@ -32,63 +33,70 @@ type AppNavbarProps = {
 	PageTitle: string | null;
 } & ComponentProps<typeof Sidebar>;
 
-export const AppNavbar = ({
-	activeTab,
-	disabledTab,
-	contentClassName,
-	children,
-	PageTitle,
-	...props
-}: AppNavbarProps) => {
-	const navMainWithActive = sidebarConfig.navMain.map((item) => ({
-		...item,
-		isActive: item.title === activeTab,
-	}));
+export const AppNavbar = memo(
+	({
+		activeTab,
+		disabledTab,
+		contentClassName,
+		children,
+		PageTitle,
+		...props
+	}: AppNavbarProps) => {
+		const navMainWithActive = useMemo(
+			() =>
+				sidebarConfig.navMain.map((item) => ({
+					...item,
+					isActive: item.title === activeTab,
+				})),
+			[activeTab],
+		);
 
-	const navSecondaryWithActive = sidebarConfig.navSecondary.map((item) => ({
-		...item,
-		isActive: item.title === activeTab,
-	}));
-	return (
-		<SidebarProvider>
-			<Sidebar className="border-r-0" {...props}>
-				<SidebarHeader>
-					<TeamSwitcher teams={sidebarConfig.teams} />
-					<NavMain items={navMainWithActive} />
-				</SidebarHeader>
-				<SidebarContent>
-					<NavSecondary items={navSecondaryWithActive} className="mt-auto" />
-				</SidebarContent>
-				<SidebarRail />
-			</Sidebar>
-			<SidebarInset>
-				<header className="flex h-14 shrink-0 items-center gap-2">
-					<div className="flex flex-1 items-center gap-2 px-3">
-						<SidebarTrigger />
-						<Separator orientation="vertical" className="mr-2 h-4" />
-						<Breadcrumb>
-							<BreadcrumbList>
-								<BreadcrumbItem>
-									<BreadcrumbPage className="line-clamp-1">
-										{PageTitle}
-									</BreadcrumbPage>
-								</BreadcrumbItem>
-							</BreadcrumbList>
-						</Breadcrumb>
+		const navSecondaryWithActive = useMemo(
+			() =>
+				sidebarConfig.navSecondary.map((item) => ({
+					...item,
+					isActive: item.title === activeTab,
+				})),
+			[activeTab],
+		);
+		return (
+			<SidebarProvider>
+				<Sidebar className="border-r-0" {...props}>
+					<SidebarHeader>
+						<TeamSwitcher teams={sidebarConfig.teams} />
+						<NavMain items={navMainWithActive} />
+					</SidebarHeader>
+					<SidebarContent>
+						<NavSecondary items={navSecondaryWithActive} className="mt-auto" />
+					</SidebarContent>
+					<SidebarRail />
+				</Sidebar>
+				<SidebarInset>
+					<header className="flex h-14 shrink-0 items-center gap-2">
+						<div className="flex flex-1 items-center gap-2 px-3">
+							<SidebarTrigger />
+							<Separator orientation="vertical" className="mr-2 h-4" />
+							<Breadcrumb>
+								<BreadcrumbList>
+									<BreadcrumbItem>
+										<BreadcrumbPage className="line-clamp-1">
+											{PageTitle}
+										</BreadcrumbPage>
+									</BreadcrumbItem>
+								</BreadcrumbList>
+							</Breadcrumb>
+						</div>
+					</header>
+					<div
+						className={cn(
+							"flex flex-1 flex-col gap-4 px-8 py-10 w-full max-w-screen-2xl mx-auto",
+							contentClassName,
+						)}
+					>
+						{children}
 					</div>
-					<div className="ml-auto px-3">
-						<NavActions />
-					</div>
-				</header>
-				<div
-					className={cn(
-						"flex flex-1 flex-col gap-4 px-8 py-10 w-full max-w-screen-2xl mx-auto",
-						contentClassName,
-					)}
-				>
-					{children}
-				</div>
-			</SidebarInset>
-		</SidebarProvider>
-	);
-};
+				</SidebarInset>
+			</SidebarProvider>
+		);
+	},
+);

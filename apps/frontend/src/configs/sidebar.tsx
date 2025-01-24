@@ -2,6 +2,8 @@ import {
 	Blocks,
 	Calendar,
 	Command,
+	Database,
+	FileCog,
 	Home,
 	Inbox,
 	MessageCircleQuestion,
@@ -9,13 +11,14 @@ import {
 	Settings2,
 	Sparkles,
 	Trash2,
+	Workflow,
 } from "lucide-react";
 
 export enum SidebarPage {
-	Search = "Search",
-	AskAI = "Ask AI",
-	Home = "Home",
-	Inbox = "Inbox",
+	Home = "navbar.home",
+	Workflow = "navbar.workflow",
+	Dataset = "navbar.dataset",
+	Preset = "navbar.preset",
 	Calendar = "Calendar",
 	Settings = "Settings",
 	Templates = "Templates",
@@ -33,24 +36,24 @@ export const sidebarConfig = {
 	],
 	navMain: [
 		{
-			title: SidebarPage.Search,
-			url: "#",
-			icon: Search,
-		},
-		{
-			title: SidebarPage.AskAI,
-			url: "#",
-			icon: Sparkles,
-		},
-		{
 			title: SidebarPage.Home,
-			url: "#",
+			url: "/home",
 			icon: Home,
 		},
 		{
-			title: SidebarPage.Inbox,
+			title: SidebarPage.Dataset,
+			url: "/dataset",
+			icon: Database,
+		},
+		{
+			title: SidebarPage.Workflow,
+			url: "/workflow",
+			icon: Workflow,
+		},
+		{
+			title: SidebarPage.Preset,
 			url: "#",
-			icon: Inbox,
+			icon: FileCog,
 			badge: "10",
 		},
 	],

@@ -7,9 +7,9 @@ export type OnlyNumberKeys<T> = {
 /**
  * rewrite any level deeper than key
  */
-export type Beautify<TData> = {
-	[K in keyof TData]: TData[K];
-} & {};
+export type DebugType<T> = {
+	[K in keyof T]: T[K] extends object ? DebugType<T[K]> : T[K];
+};
 
 /**
  * type of any level nested of `key`

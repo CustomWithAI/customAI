@@ -168,7 +168,7 @@ const FormMessage = React.forwardRef<
 			)}
 			{...props}
 		>
-			{body}
+			*{body}
 		</p>
 	);
 });

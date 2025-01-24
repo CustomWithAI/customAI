@@ -22,25 +22,45 @@ const versionList: VersionSectionProps[] = [
 			{ value: "40", status: "changed" },
 		],
 	},
+	{
+		versionId: "1.2",
+		versionName: "fixed Models",
+		isDefault: false,
+		time: new Date(),
+		contributor: {
+			imageSrc: "",
+			name: "me",
+		},
+		changeInfo: [
+			"model epoch from",
+			{ value: "50", status: "default" },
+			"to",
+			{ value: "120", status: "changed" },
+		],
+	},
 ];
 
 export const VersionPage = () => {
-	const tags = [""];
 	return (
 		<>
-			<Header>version</Header>
+			<Header>Versions list</Header>
 			<div className="grid md:grid-cols-4 max-md:grid-cols-1 max-lg:gap-6 lg:gap-8">
-				<div className="col-span-1 md:col-span-3">
-					<VersionSection {...versionList[0]} />
+				<div className="col-span-1 md:col-span-3 space-y-5">
+					{versionList.map((version) => (
+						<VersionSection key={version.versionId} {...version} />
+					))}
 				</div>
 				<div>
 					<ScrollArea className="h-72 w-48 rounded-md border">
 						<div className="p-4">
 							<h4 className="mb-4 text-sm font-medium leading-none">Tags</h4>
-							{tags.map((tag) => (
+							{versionList.map((tag) => (
 								<>
-									<div key={tag} className="border-l text-sm">
-										{tag}
+									<div
+										key={tag.versionId}
+										className="border-l pl-3 py-1 text-sm hover:bg-zinc-100 duration-200"
+									>
+										{tag.versionId}
 									</div>
 								</>
 							))}

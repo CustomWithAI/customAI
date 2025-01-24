@@ -8,6 +8,12 @@
 		"setting": "setting",
 		"workflow": "workflow"
 	},
+	"navbar": {
+		"home": "Home",
+		"workflow": "Workflow",
+		"dataset": "Dataset",
+		"preset": "Preset"
+	},
 	"HomePage": {
 		"login": "login",
 		"get_started": "Get Started",

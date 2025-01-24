@@ -5,13 +5,27 @@ import { Primary } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ContentDataset } from "@/features/dataset/components/content";
-import { Filter } from "lucide-react";
-import { useState } from "react";
+import { useRouterAsync } from "@/libs/i18nNavigation";
+import { Filter, PackagePlus } from "lucide-react";
+import { useCallback, useState } from "react";
 
 export default function Page() {
+	const { asyncRoute } = useRouterAsync();
+	const handleCreate = useCallback(() => {
+		asyncRoute("/workflow/create");
+	}, [asyncRoute]);
 	return (
 		<AppNavbar activeTab="Home" PageTitle="home" disabledTab={undefined}>
-			<Primary className="mb-4">Workflow</Primary>
+			<div className="flex justify-between">
+				<Primary className="mb-4">Workflow</Primary>
+				<Button
+					onClick={handleCreate}
+					variant="outline"
+					className="text-indigo-700 mt-1.5 border-indigo-700 hover:text-indigo-950"
+				>
+					<PackagePlus /> Create
+				</Button>
+			</div>
 			<ViewList.Provider>
 				<div className="flex justify-between mb-2">
 					<div className="flex space-x-4 w-full">

@@ -26,57 +26,63 @@ export const VersionSection = ({
 }: VersionSectionProps) => {
 	const t = useTranslations();
 	return (
-		<div className="flex">
+		<div id={versionId} className="flex w-full">
 			<GitCommitVertical />
-			<div>
-				<div className="flex items-end">
+			<div className="space-y-1.5 flex-1">
+				<div className="flex items-center w-full space-x-2">
 					<ContentHeader>{versionId}</ContentHeader>
-					{isDefault && <Badge>default</Badge>}
+					{isDefault && <Badge variant="secondary">default</Badge>}
 				</div>
-				<div className="rounded-lg shadow-md border relative">
-					<div className="flex gap-x-4">
+				<div className="rounded-lg flex-1 w-full shadow-md border relative px-6 py-5">
+					<div className="flex flex-grow items-end gap-x-4 mb-4">
 						<ContentHeader>{versionName}</ContentHeader>
-						<Subtle>{formatDistanceToNow(time, { addSuffix: true })}</Subtle>
+						<Subtle className="mb-0.5">
+							{formatDistanceToNow(time, { addSuffix: true })}
+						</Subtle>
 					</div>
-					<Content className="font-medium">change info</Content>
-					{changeInfo.map((info, index) => (
-						<div key={`${versionId}${time}${index}`}>
-							{typeof info === "string" ? (
-								<Content>{info}</Content>
-							) : (
-								<Content
-									className={cn(
-										"rounded-md px-3 py-1.5",
-										{
-											"bg-[#747E90] text-[#747E90]": info.status === "default",
-										},
-										{
-											"bg-[#D8FADA] text-[#5B886C]": info.status === "changed",
-										},
-									)}
-								>
-									{info.value}
-								</Content>
-							)}
-						</div>
-					))}
-					<Button
-						variant="ghost"
-						className="font-semibold text-zinc-600 underline"
+					<Content className="font-medium mb-1">change info</Content>
+					<div className="flex items-end mb-3">
+						{changeInfo.map((info, index) => (
+							<Content className="text-sm" key={`${versionId}${time}${index}`}>
+								{typeof info === "string" ? (
+									<span>{info}</span>
+								) : (
+									<span
+										className={cn(
+											"rounded-md px-1.5 mx-1.5 py-0.5",
+											{
+												"bg-[#F0F1F8] text-[#747E90]":
+													info.status === "default",
+											},
+											{
+												"bg-[#D8FADA] text-[#5B886C]":
+													info.status === "changed",
+											},
+										)}
+									>
+										{info.value}
+									</span>
+								)}
+							</Content>
+						))}
+					</div>
+					<button
+						type="button"
+						className="font-semibold text-xs text-zinc-600 underline hover:text-blue-500 duration-200"
 					>
 						show more..
-					</Button>
+					</button>
 					<div className="w-full my-4 border-b" />
-					<Content className="font-medium">change info</Content>
-					<div className="flex">
-						<div className="relative max-w-64 max-h-64 aspect-square">
+					<Content className="font-medium mb-2">Contributor</Content>
+					<div className="flex items-center space-x-4">
+						<div className="relative max-w-16 max-h-16 aspect-square">
 							<div className="w-full h-full rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
 								{contributor.imageSrc ? (
 									<Image
 										src={contributor.imageSrc}
 										alt="Profile Picture"
-										width={128}
-										height={128}
+										width={64}
+										height={64}
 										className="object-cover"
 									/>
 								) : (

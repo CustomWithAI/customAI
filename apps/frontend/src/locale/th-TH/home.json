@@ -8,6 +8,12 @@
 		"setting": "ตั้งค่า",
 		"workflow": "การประมวลผล"
 	},
+	"navbar": {
+		"home": "หน้าหลัก",
+		"workflow": "การทำงาน",
+		"dataset": "ชุดข้อมูล",
+		"preset": "ชุดตั้งล่วงหน้า"
+	},
 	"HomePage": {
 		"login": "เข้าสู่ระบบ",
 		"get_started": "เริ่มใช้งาน",

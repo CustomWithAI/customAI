@@ -8,6 +8,7 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Link } from "@/libs/i18nNavigation";
+import { useTranslations } from "next-intl";
 
 export function NavMain({
 	items,
@@ -19,6 +20,7 @@ export function NavMain({
 		isActive?: boolean;
 	}[];
 }) {
+	const t = useTranslations();
 	return (
 		<SidebarMenu>
 			{items.map((item) => (
@@ -26,7 +28,7 @@ export function NavMain({
 					<SidebarMenuButton asChild isActive={item.isActive}>
 						<Link href={item.url}>
 							<item.icon />
-							<span>{item.title}</span>
+							<span>{t(item.title as any)}</span>
 						</Link>
 					</SidebarMenuButton>
 				</SidebarMenuItem>
