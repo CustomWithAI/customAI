@@ -12,28 +12,27 @@ import { imagePreprocessings } from "@/domains/schema/imagePreprocessings";
 import { featureExtractions } from "@/domains/schema/featureExtractions";
 import { featureSelections } from "@/domains/schema/featureSelections";
 import { augmentations } from "@/domains/schema/augmentations";
-import { structureModels } from "@/domains/schema/structureModels";
+import { customModels } from "@/domains/schema/customModels";
 
 export const trainings = pgTable("trainings", {
   id: uuid("id").defaultRandom().primaryKey(),
   version: doublePrecision("version").default(0.0),
   hyperparameter: jsonb("hyperparameter"),
-  workflowId: uuid("workflowId").references(() => workflows.id),
+  workflowId: uuid("workflow_id").references(() => workflows.id),
   pipeline: jsonb("pipeline"),
-  datasetId: uuid("datasetId").references(() => datasets.id),
-  imagePreprocessingId: uuid("imagePreprocessingId").references(
+  datasetId: uuid("dataset_id").references(() => datasets.id),
+  imagePreprocessingId: uuid("image_preprocessing_id").references(
     () => imagePreprocessings.id
   ),
-  featureExtractionId: uuid("featureExtractionId").references(
+  featureExtractionId: uuid("feature_extraction_id").references(
     () => featureExtractions.id
   ),
-  featureSelectionId: uuid("featureSelectionId").references(
+  featureSelectionId: uuid("feature_selection_id").references(
     () => featureSelections.id
   ),
-  augmentationId: uuid("augmentationId").references(() => augmentations.id),
-  structureModelId: uuid("structureModelId").references(
-    () => structureModels.id
-  ),
-  trainedModelUrl: varchar("trainedModelUrl", { length: 255 }),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  augmentationId: uuid("augmentation_id").references(() => augmentations.id),
+  preTrainedModel: jsonb("pre_trained_model"),
+  customModelId: uuid("custom_model_id").references(() => customModels.id),
+  trainedModelUrl: varchar("trained_model_url", { length: 255 }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });

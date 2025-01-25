@@ -1,0 +1,17 @@
+{
+  "current": "image_preprocessing",
+  "steps": [
+    {
+      "name": "image_preprocessing",
+      "index": 0
+    },
+    {
+      "name": "augmentation",
+      "index": 2
+    },
+    {
+      "name": "selection",
+      "index": 1
+    }
+  ]
+}

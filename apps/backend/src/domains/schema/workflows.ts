@@ -8,6 +8,6 @@ export const workflows = pgTable("workflows", {
   name: varchar("name", { length: 255 }),
   description: varchar("description", { length: 255 }),
   type: varchar("type", { length: 255 }),
-  defaultId: uuid("defaultId"),
-  userId: text("userId").references(() => user.id),
+  defaultId: uuid("default_id"),
+  userId: text("user_id").references(() => user.id),
 });
