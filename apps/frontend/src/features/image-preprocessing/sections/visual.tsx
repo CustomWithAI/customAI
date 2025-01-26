@@ -60,7 +60,7 @@ export const VisualPreprocessingSection = () => {
 		const inputNode = {
 			id: "input-1",
 			type: "custom",
-			position: { x: -300, y: 100 },
+			position: { x: -200, y: 100 },
 			data: {
 				title: "Input Node",
 				description: "This is the input node",
@@ -73,7 +73,7 @@ export const VisualPreprocessingSection = () => {
 		const outputNode = {
 			id: "output-1",
 			type: "custom",
-			position: { x: 200 + fields.length + 1 * 300, y: 100 },
+			position: { x: 200 + (fields.length + 1) * 300, y: 100 },
 			data: {
 				title: "Output Node",
 				description: "This is the output node",

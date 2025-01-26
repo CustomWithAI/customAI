@@ -8,40 +8,47 @@ import { connectS3 } from "@/infrastructures/s3/connection";
 import { betterAuthView } from "@/lib/auth";
 import { userMiddleware } from "@/middleware/authMiddleware";
 import { shutdown } from "@/utils/shutdown";
+import { cors } from "@elysiajs/cors";
 import { staticPlugin } from "@elysiajs/static";
 import { Elysia } from "elysia";
 
 try {
-  logger.info("🏃‍♀️ Starting connection..");
-  await connectRedis();
-  await connectRabbitMQ();
-  await connectDatabase();
-  await connectS3();
-  logger.info("🏃‍♀️ Starting server..");
+	logger.info("🏃‍♀️ Starting connection..");
+	await connectRedis();
+	await connectRabbitMQ();
+	await connectDatabase();
+	await connectS3();
+	logger.info("🏃‍♀️ Starting server..");
 
-  const app = new Elysia()
-    .derive(({ request }) => userMiddleware(request))
-    .use(logger.into())
-    .use(staticPlugin())
-    .use(swaggerConfig())
-    .all("/*", betterAuthView)
-    .get("/", () => "hello world")
-    .post("/", () => "hello world")
-    .get("/route-count", () => {
-      const routeCount = Object.keys(app.routes).length;
-      const routeLength = app.routes.length;
-      return { routes: routeCount, length: routeLength };
-    })
-    .onStop(shutdown)
-    .listen(config.APP_PORT);
+	const app = new Elysia()
+		.derive(({ request }) => userMiddleware(request))
+		.use(logger.into())
+		.use(cors())
+		.use(staticPlugin())
+		.use(swaggerConfig())
+		.onParse(({ request, route }) => {
+			if (route.startsWith("/api/auth")) {
+				return request.body;
+			}
+		})
+		.all("/api/auth/*", betterAuthView)
+		.get("/", () => "hello world")
+		.post("/", () => "hello world")
+		.get("/route-count", () => {
+			const routeCount = Object.keys(app.routes).length;
+			const routeLength = app.routes.length;
+			return { routes: routeCount, length: routeLength };
+		})
+		.onStop(shutdown)
+		.listen(config.APP_PORT);
 
-  process.on("SIGINT", app.stop);
-  process.on("SIGTERM", app.stop);
+	process.on("SIGINT", app.stop);
+	process.on("SIGTERM", app.stop);
 
-  logger.info(
-    `🦊  Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-  );
+	logger.info(
+		`🦊  Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
+	);
 } catch (e) {
-  logger.error(e, "🚫  Error booting the server");
-  process.exit();
+	logger.error(e, "🚫  Error booting the server");
+	process.exit();
 }

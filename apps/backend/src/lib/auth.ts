@@ -1,4 +1,5 @@
 import { config } from "@/config/env";
+import { account, session, user, verification } from "@/domains/schema/auth";
 import { db } from "@/infrastructures/database/connection";
 import { redis } from "@/infrastructures/redis/connection";
 import { betterAuth } from "better-auth";
@@ -8,7 +9,14 @@ import type { Context } from "elysia/context";
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
 		provider: "pg",
+		schema: {
+			user: user,
+			account: account,
+			session: session,
+			verification: verification,
+		},
 	}),
+	trustedOrigins: [...config.BETTER_AUTH_TRUSTED_ORIGINS.split(",")],
 	basePath: "/api/auth",
 	emailAndPassword: {
 		enabled: true,
@@ -52,14 +60,6 @@ export const auth = betterAuth({
 	},
 	user: {
 		additionalFields: {},
-	},
-	databaseHooks: {
-		user: {
-			create: {
-				before: async (user) => {},
-				after: async (user) => {},
-			},
-		},
 	},
 });
 
