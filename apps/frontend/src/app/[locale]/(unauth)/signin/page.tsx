@@ -46,7 +46,7 @@ function SignupPage() {
 		try {
 			const { data, error } = await authClient.signIn.social({
 				provider: "google",
-				callbackURL: `/${locale.split("-")[0]}/overview`,
+				callbackURL: `/${locale.split("-")[0]}/home`,
 			});
 			if (error) {
 				toast({
@@ -67,6 +67,7 @@ function SignupPage() {
 				{
 					email: data.email,
 					password: data.password,
+					callbackURL: `/${locale.split("-")[0]}/home`,
 				},
 				{
 					onRequest: () => {

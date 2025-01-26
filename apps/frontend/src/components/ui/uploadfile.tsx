@@ -52,10 +52,13 @@ const UploadFileBox = ({ onFileChange, id, onDelete }: UploadFileType) => {
 			const uploadedFiles: UploadedFile = [];
 			for (const file of acceptedFiles) {
 				try {
-					await uploadFile({
+					const response = await uploadFile({
 						file,
 						purpose: id,
 					});
+					if (response) {
+						uploadedFiles.push({ url: response?.url, id: response?.id });
+					}
 				} catch (error) {
 					console.error(error);
 				}

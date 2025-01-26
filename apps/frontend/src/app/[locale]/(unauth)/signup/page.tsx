@@ -20,7 +20,7 @@ import { cn } from "@/libs/utils";
 import { SignUpSchema, type SignUpSchemaType } from "@/models/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -35,6 +35,7 @@ function SignupPage() {
 	const t = useTranslations();
 	const { toast } = useToast();
 	const router = useRouter();
+	const locale = useLocale();
 	const [state, setState] = useState<"idle" | "loading" | "success">("idle");
 	const form = useForm<SignUpSchemaType>({
 		resolver: zodResolver(SignUpSchema),
@@ -48,18 +49,18 @@ function SignupPage() {
 					name: data.name,
 					email: data.email,
 					password: data.password,
+					callbackURL: `/${locale.split("-")[0]}/signin`,
 				},
 				{
 					onRequest: () => {
 						setState("loading");
 					},
-					onSuccess: () => {
+					onSuccess: (ctx) => {
 						setState("success");
 						toast({
 							title: "create account successfully",
-							description: `welcome back, ${authData?.user.email}`,
+							description: `welcome back, ${ctx.data.user.email}`,
 						});
-						router.push("/signin");
 					},
 					onError: (ctx) => {
 						setState("idle");
