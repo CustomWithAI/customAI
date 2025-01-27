@@ -6,5 +6,8 @@ export const datasets = pgTable("datasets", {
   name: varchar("name", { length: 255 }),
   annotationMethod: varchar("annotation_method", { length: 255 }),
   splitData: jsonb("split_data"),
-  userId: text("user_id").references(() => user.id),
+  userId: text("user_id").references(() => user.id, {
+    onDelete: "cascade",
+    onUpdate: "cascade",
+  }),
 });

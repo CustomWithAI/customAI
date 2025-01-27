@@ -5,5 +5,8 @@ export const imagePreprocessings = pgTable("image_preprocessings", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 255 }),
   data: jsonb("data"),
-  userId: text("user_id").references(() => user.id),
+  userId: text("user_id").references(() => user.id, {
+    onDelete: "cascade",
+    onUpdate: "cascade",
+  }),
 });

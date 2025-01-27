@@ -28,6 +28,8 @@ services:
 
   redis:
     container_name: redis
+    ports:
+      - 6379:6379
     image: redis:6.2.5-alpine
 
   elasticsearch:
