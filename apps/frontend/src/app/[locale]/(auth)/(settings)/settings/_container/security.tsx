@@ -2,13 +2,16 @@
 import { ContentHeader, Header } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { SocialAccount } from "@/features/settings/section/social";
+import { useRevokeOtherSession } from "@/hooks/queries/security-api";
 import { toast } from "@/hooks/use-toast";
 import { authClient } from "@/libs/auth-client";
+import { Network } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback } from "react";
 
 export default function SecurityPage() {
 	const t = useTranslations();
+	const { mutateAsync: revokeOtherSession } = useRevokeOtherSession();
 
 	const handleRevokeAllSession = useCallback(async () => {
 		const { data: status } = await authClient.revokeSessions({
@@ -23,18 +26,55 @@ export default function SecurityPage() {
 		});
 	}, []);
 
+	const handleRevokeOtherSession = useCallback(async () => {
+		const data = await revokeOtherSession(undefined, {
+			onSuccess: () =>
+				toast({
+					className: "bg-green-500 text-white",
+					title: "revoke other sessions successfully",
+				}),
+			onError: (err: Error) =>
+				toast({
+					variant: "destructive",
+					title: "failed to revoke other sessions",
+					description: err.message,
+				}),
+		});
+	}, [revokeOtherSession]);
+
 	return (
 		<div className="flex flex-col gap-y-6">
 			<Header className="w-full border-b">
 				{t("Security.AccountSecurity")}
 			</Header>
 			<>
-				<ContentHeader>change email and password</ContentHeader>
+				<ContentHeader>Change email and password</ContentHeader>
 				<div>
-					<Button variant="outline">change password</Button>
+					<Button variant="outline" className="text-gray-600">
+						change password
+					</Button>
 				</div>
 				<div>
-					<Button variant="outline">change email</Button>
+					<Button variant="outline" className="text-gray-600">
+						change email
+					</Button>
+				</div>
+				<ContentHeader className="flex gap-x-2">
+					<Network /> Sessions
+				</ContentHeader>
+				<div>
+					<Button variant="secondary" className="text-gray-600">
+						view session activity
+					</Button>
+				</div>
+				<div>
+					<Button
+						onClick={handleRevokeOtherSession}
+						variant="outline"
+						className="text-red-500"
+					>
+						revoke other sessions
+					</Button>
 				</div>
 				<div>
 					<Button
@@ -42,7 +82,7 @@ export default function SecurityPage() {
 						variant="outline"
 						className="text-red-500"
 					>
-						revoke all session
+						revoke all sessions
 					</Button>
 				</div>
 			</>

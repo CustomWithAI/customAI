@@ -3,6 +3,7 @@ import { Content, Subtle } from "@/components/typography/text";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { socials } from "@/configs/social";
+import { env } from "@/env.mjs";
 import { useSocialAccounts } from "@/hooks/queries/security-api";
 import { toast } from "@/hooks/use-toast";
 import { authClient } from "@/libs/auth-client";
@@ -22,15 +23,15 @@ export const SocialAccount = () => {
 			const { data: linkSocial } = await authClient.linkSocial(
 				{
 					provider: provider,
-					callbackURL: `${locale}/settings?tab=security`,
+					callbackURL: `${env.NEXT_PUBLIC_FRONTEND_URL}/${locale}/settings?tab=security`,
 				},
 				{
 					onSuccess: (ctx) => {
-						if (!linkSocial?.url) {
+						if (!ctx.data.url) {
 							toast({ title: "unable to link social", variant: "destructive" });
 							return;
 						}
-						router.push(linkSocial?.url);
+						router.push(ctx.data.url);
 					},
 					onError: (ctx) => {
 						toast({
