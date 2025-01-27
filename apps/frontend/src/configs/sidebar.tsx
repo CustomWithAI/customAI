@@ -19,11 +19,12 @@ export enum SidebarPage {
 	Workflow = "navbar.workflow",
 	Dataset = "navbar.dataset",
 	Preset = "navbar.preset",
-	Calendar = "Calendar",
-	Settings = "Settings",
-	Templates = "Templates",
-	Trash = "Trash",
-	Help = "Help",
+	ImagePreprocessing = "navbar.image-preprocessing",
+	DataAugmentation = "navbar.data-augmentation",
+	Model = "navbar.model",
+	FeatureConfig = "navbar.feature-config",
+	Settings = "navbar.settings",
+	Help = "navbar.help",
 }
 
 export const sidebarConfig = {
@@ -55,28 +56,31 @@ export const sidebarConfig = {
 			url: "#",
 			icon: FileCog,
 			badge: "10",
+			items: [
+				{
+					title: SidebarPage.ImagePreprocessing,
+					url: "/imagepreprocessing",
+				},
+				{
+					title: SidebarPage.DataAugmentation,
+					url: "/augmentation",
+				},
+				{
+					title: SidebarPage.Model,
+					url: "/model",
+				},
+				{
+					title: SidebarPage.FeatureConfig,
+					url: "/featureconfig",
+				},
+			],
 		},
 	],
 	navSecondary: [
 		{
-			title: SidebarPage.Calendar,
-			url: "#",
-			icon: Calendar,
-		},
-		{
 			title: SidebarPage.Settings,
-			url: "#",
+			url: "/settings",
 			icon: Settings2,
-		},
-		{
-			title: SidebarPage.Templates,
-			url: "#",
-			icon: Blocks,
-		},
-		{
-			title: SidebarPage.Trash,
-			url: "#",
-			icon: Trash2,
 		},
 		{
 			title: SidebarPage.Help,

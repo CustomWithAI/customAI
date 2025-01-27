@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { ButtonLoading } from "@/components/ui/loading-button";
 import { useToast } from "@/hooks/use-toast";
 import { authClient } from "@/libs/auth-client";
-import { useRouter } from "@/libs/i18nNavigation";
+import { useRouterAsync } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import { LoginSchema, type LoginSchemaType } from "@/models/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,7 +36,7 @@ function SignupPage() {
 	const t = useTranslations();
 	const { toast } = useToast();
 	const locale = useLocale();
-	const router = useRouter();
+	const { asyncRoute, isLoadingRoute } = useRouterAsync();
 	const [state, setState] = useState<"idle" | "loading" | "success">("idle");
 	const form = useForm<LoginSchemaType>({
 		resolver: zodResolver(LoginSchema),
@@ -63,21 +63,26 @@ function SignupPage() {
 
 	async function onSubmit(data: LoginSchemaType) {
 		try {
-			const { data: authData, error } = await authClient.signIn.email(
+			const { data: auth, error } = await authClient.signIn.email(
 				{
 					email: data.email,
 					password: data.password,
-					callbackURL: `/${locale.split("-")[0]}/home`,
 				},
 				{
 					onRequest: () => {
 						setState("loading");
 					},
-					onSuccess: () => {
+					onSuccess: async (ctx) => {
+						if (ctx.data.user?.experience) {
+							await asyncRoute("/home");
+						} else {
+							await asyncRoute("/new-user");
+						}
 						setState("success");
 						toast({
+							className: "bg-green-500 text-white",
 							title: "authenticate successfully",
-							description: `welcome back, ${authData?.user.email}`,
+							description: `welcome back, ${ctx.data.user.email}`,
 						});
 					},
 					onError: (ctx) => {
@@ -167,7 +172,8 @@ function SignupPage() {
 						</Form>
 						<button
 							type="button"
-							onClick={() => router.push("/signup")}
+							disabled={isLoadingRoute}
+							onClick={() => asyncRoute("/signup")}
 							className="hover:underline flex mx-auto mt-5 text-center"
 						>
 							<p className="text-nowrap mt-1 text-xs hover:text-blue-800">

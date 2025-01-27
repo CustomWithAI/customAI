@@ -32,7 +32,7 @@ export function NavSecondary({
 							<SidebarMenuButton asChild>
 								<a href={item.url}>
 									<item.icon />
-									<span>{item.title}</span>
+									<span>{t(item.title as any)}</span>
 								</a>
 							</SidebarMenuButton>
 							{item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}

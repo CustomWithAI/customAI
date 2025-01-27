@@ -13,6 +13,9 @@
 	"Security": {
 		"AccountSecurity": "Account Security",
 		"TwoFactorAuthentication": "Two Factor Authentication",
-		"LinkAccounts": "Link Accounts"
+		"LinkAccounts": "Link Accounts",
+		"connected": "Connected",
+		"unknown": "Unknown",
+		"linkWith": "Link with"
 	}
 }

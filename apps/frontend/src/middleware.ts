@@ -6,12 +6,19 @@ import { type NextRequest, NextResponse } from "next/server";
 import { guestRoutes } from "./configs/route";
 import { env } from "./env.mjs";
 
+const SUPPORTED_LANGUAGES = ["en", "th"];
+const DEFAULT_LANGUAGE = "en";
 const authAndLocaleMiddleware = createMiddleware(routing);
 
 export default async function middleware(request: NextRequest) {
 	const { nextUrl: url } = request;
-	const pathname = `/${url.pathname.split("/")?.[2] || ""}`;
-
+	const [, locale, ...segments] = url.pathname.split("/");
+	if (!SUPPORTED_LANGUAGES.includes(locale)) {
+		const newUrl = new URL(request.url);
+		newUrl.pathname = `/${DEFAULT_LANGUAGE}/${url.pathname.replace(/^\//, "")}`;
+		return NextResponse.redirect(newUrl);
+	}
+	const pathname = `/${segments[0] || ""}`;
 	if (guestRoutes.includes(pathname)) {
 		return authAndLocaleMiddleware(request);
 	}
@@ -19,7 +26,7 @@ export default async function middleware(request: NextRequest) {
 	const { data: session } = await betterFetch<Session>(
 		"/api/auth/get-session",
 		{
-			baseURL: env.NEXT_PUBLIC_BACKEND_URL,
+			baseURL: env.NEXT_SERVER_BACKEND_URL,
 			headers: {
 				cookie: request.headers.get("cookie") || "",
 			},
@@ -27,12 +34,12 @@ export default async function middleware(request: NextRequest) {
 	);
 
 	if (!session) {
-		return NextResponse.redirect(new URL(`${url.locale}/signin`, request.url));
+		request.nextUrl.pathname = `/${locale}/signin`;
 	}
 
 	return authAndLocaleMiddleware(request);
 }
 
 export const config = {
-	matcher: ["/(th|en)/:path*"],
+	matcher: ["/((?!_next|api|static|favicon.ico).*)"],
 };

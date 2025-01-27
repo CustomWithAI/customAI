@@ -46,6 +46,7 @@ export const auth = betterAuth({
 		},
 	},
 	rateLimit: {
+		storage: "secondary-storage",
 		customRules: {
 			"/sign-in/email": {
 				window: 10,
@@ -59,7 +60,17 @@ export const auth = betterAuth({
 		additionalFields: {},
 	},
 	user: {
-		additionalFields: {},
+		additionalFields: {
+			lang: {
+				type: "string",
+				required: false,
+				defaultValue: "en",
+			},
+			experience: {
+				type: "string",
+				required: false,
+			},
+		},
 	},
 });
 

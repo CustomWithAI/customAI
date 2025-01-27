@@ -5,6 +5,7 @@
 		"login": "login",
 		"home": "home",
 		"dataset": "dataset",
+		"create": "create",
 		"setting": "setting",
 		"workflow": "workflow"
 	},
@@ -12,11 +13,18 @@
 		"home": "Home",
 		"workflow": "Workflow",
 		"dataset": "Dataset",
-		"preset": "Preset"
+		"preset": "Preset",
+		"image-preprocessing": "Pre-processing",
+		"data-augmentation": "Augmentation",
+		"model": "Model",
+		"help": "Help",
+		"settings": "Settings",
+		"feature-config": "Feature Configuration"
 	},
 	"HomePage": {
-		"login": "login",
+		"login": "Login",
 		"get_started": "Get Started",
+		"GoToMain": "Go To Main",
 		"signup": "Sign up"
 	},
 	"SignUp": {

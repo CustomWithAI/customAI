@@ -12,7 +12,7 @@ export const ContentDataset = () => {
 			title: "Cat and Dog",
 			description: "High-performance image classifier.",
 			imagesCount: 14,
-			href: "",
+			href: "/dataset/5",
 			images: [
 				"https://picsum.photos/200/300",
 				"https://via.placeholder.com/150/f8d7da",
@@ -23,7 +23,7 @@ export const ContentDataset = () => {
 			title: "Wildlife",
 			description: "Dataset featuring wildlife animals.",
 			imagesCount: 20,
-			href: "",
+			href: "/dataset/6",
 			images: [
 				"https://via.placeholder.com/150/6bc6ff",
 				"https://via.placeholder.com/150/009688",
@@ -34,7 +34,7 @@ export const ContentDataset = () => {
 			title: "Urban Scenes",
 			description: "A collection of urban scene images.",
 			imagesCount: 30,
-			href: "",
+			href: "/dataset/7",
 			images: [
 				"https://via.placeholder.com/150/ffc107",
 				"https://via.placeholder.com/150/03a9f4",

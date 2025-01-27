@@ -46,7 +46,7 @@ export const AppNavbar = memo(
 			() =>
 				sidebarConfig.navMain.map((item) => ({
 					...item,
-					isActive: item.title === activeTab,
+					isActive: String(item.title) === activeTab,
 				})),
 			[activeTab],
 		);
@@ -55,7 +55,7 @@ export const AppNavbar = memo(
 			() =>
 				sidebarConfig.navSecondary.map((item) => ({
 					...item,
-					isActive: item.title === activeTab,
+					isActive: String(item.title) === activeTab,
 				})),
 			[activeTab],
 		);

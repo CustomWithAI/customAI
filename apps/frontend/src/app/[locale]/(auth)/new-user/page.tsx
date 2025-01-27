@@ -6,6 +6,7 @@ import {
 	Subtle,
 } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/libs/auth-client";
 import { useRouterAsync } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import { Check, Earth, Leaf, Plane, Rocket, Sprout, Wind } from "lucide-react";
@@ -17,9 +18,14 @@ const NewUserPage = () => {
 		"beginner" | "intermediate" | "expert" | null
 	>(null);
 
-	const handleSubmit = useCallback(() => {
-		asyncRoute("/home");
-	}, [asyncRoute]);
+	const handleSubmit = useCallback(async () => {
+		if (selected === null) return;
+		await authClient.updateUser({
+			experience: selected as string,
+		});
+		await asyncRoute("/home");
+	}, [asyncRoute, selected]);
+
 	return (
 		<div className="p-6 md:w-3/4 m-auto max-w-screen-2xl h-3/4 space-y-6">
 			<SubHeader>Get Started in Just a Few Steps</SubHeader>

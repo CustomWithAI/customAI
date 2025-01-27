@@ -3,6 +3,7 @@ import { AppNavbar } from "@/components/layout/appNavbar";
 import { Menubar } from "@/components/ui/menubar";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useTranslations } from "next-intl";
+import { AccessibilityPage } from "./_container/accessibility";
 import AccountPage from "./_container/account";
 import SecurityPage from "./_container/security";
 
@@ -31,9 +32,9 @@ export default function Page() {
 					</Menubar.Item>
 					<Menubar.Item
 						onClick={() =>
-							setQueryParam({ value: "Accessibility", resetParams: true })
+							setQueryParam({ value: "accessibility", resetParams: true })
 						}
-						current={compareQueryParam({ value: "Accessibility" })}
+						current={compareQueryParam({ value: "accessibility" })}
 					>
 						{t("Tab.Accessibility")}
 					</Menubar.Item>
@@ -43,6 +44,9 @@ export default function Page() {
 				<AccountPage />
 			) : null}
 			{compareQueryParam({ value: "security" }) ? <SecurityPage /> : null}
+			{compareQueryParam({ value: "accessibility" }) ? (
+				<AccessibilityPage />
+			) : null}
 		</AppNavbar>
 	);
 }

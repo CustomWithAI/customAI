@@ -9,6 +9,7 @@
 		"studio": "drizzle-kit studio",
 		"generate": "drizzle-kit generate",
 		"db:setup": "drizzle-kit migrate && bun seed",
+		"push": "drizzle-kit push",
 		"seed": "bun ./src/infrastructures/database/seed.ts",
 		"migrate": "drizzle-kit migrate"
 	},

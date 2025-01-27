@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { ButtonLoading } from "@/components/ui/loading-button";
 import { useToast } from "@/hooks/use-toast";
 import { authClient } from "@/libs/auth-client";
-import { useRouter } from "@/libs/i18nNavigation";
+import { useRouter, useRouterAsync } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import { SignUpSchema, type SignUpSchemaType } from "@/models/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,6 +34,7 @@ export default function Signup() {
 function SignupPage() {
 	const t = useTranslations();
 	const { toast } = useToast();
+	const { asyncRoute } = useRouterAsync();
 	const router = useRouter();
 	const locale = useLocale();
 	const [state, setState] = useState<"idle" | "loading" | "success">("idle");
@@ -49,17 +50,17 @@ function SignupPage() {
 					name: data.name,
 					email: data.email,
 					password: data.password,
-					callbackURL: `/${locale.split("-")[0]}/signin`,
 				},
 				{
 					onRequest: () => {
 						setState("loading");
 					},
-					onSuccess: (ctx) => {
+					onSuccess: async (ctx) => {
+						await asyncRoute("/signin");
 						setState("success");
 						toast({
+							className: "bg-green-500 text-white",
 							title: "create account successfully",
-							description: `welcome back, ${ctx.data.user.email}`,
 						});
 					},
 					onError: (ctx) => {

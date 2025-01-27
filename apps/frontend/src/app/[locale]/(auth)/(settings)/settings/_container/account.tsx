@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ButtonLoading } from "@/components/ui/loading-button";
+import UploadFile from "@/components/ui/uploadfile";
 import { type AccountSchema, accountSchema } from "@/models/account";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eraser, Pencil, Trash2 } from "lucide-react";
@@ -38,10 +39,10 @@ export default function AccountPage() {
 	const onSubmit = async (data: AccountSchema) => {};
 	return (
 		<>
-			<Header className="w-full border-b">
+			<Header className="w-full border-b mb-1">
 				{t("Account.ProfileInformation")}
 			</Header>
-			<div className="grid grid-cols-4 max-lg:grid-cols-2 max-md:grid-cols-1 gap-y-4 gap-x-6 xl:gap-x-8">
+			<div className="md:w-11/12 grid grid-cols-4 max-lg:grid-cols-2 max-md:grid-cols-1 gap-y-4 gap-x-6 xl:gap-x-8">
 				<div className="lg:col-span-3">
 					<div className="max-w-md">
 						<Form {...form}>
@@ -78,7 +79,7 @@ export default function AccountPage() {
 						</Form>
 					</div>
 				</div>
-				<div>
+				<div className="md:mt-3">
 					<Content className="text-sm">{t("Account.ProfileImg")}</Content>
 					<div className="relative max-w-64 max-h-64 aspect-square">
 						<div className="w-full h-full rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
@@ -95,12 +96,18 @@ export default function AccountPage() {
 							)}
 						</div>
 						<div className="absolute bottom-2 right-2 flex">
-							<button
-								onClick={handleEdit}
-								className="bg-white rounded-l-full shadow-md p-2 pl-4 pr-3 hover:bg-gray-100 border-r"
-							>
-								<Pencil className="w-4 h-4" strokeWidth="2.5" />
-							</button>
+							<UploadFile.dialog
+								button=<button className="bg-white rounded-l-full shadow-md p-2 pl-4 pr-3 hover:bg-gray-100 border-r">
+									<Pencil className="w-4 h-4" strokeWidth="2.5" />
+								</button>
+								dialog={{
+									title: "Upload Images",
+									description: "",
+								}}
+								id=""
+								onFileChange={() => {}}
+							/>
+
 							<button
 								onClick={handleDelete}
 								className="bg-white rounded-r-full shadow-md p-2 pl-3 pr-4 hover:bg-gray-100 text-red-500"
