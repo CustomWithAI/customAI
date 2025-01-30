@@ -2,49 +2,40 @@
 
 import { ContentHeader, Italic, SubHeader } from "@/components/typography/text";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowDownUp, ChevronsLeftRightEllipsis, Cog } from "lucide-react";
-import Image from "next/image";
-import { type DragEvent, type ReactElement, cloneElement } from "react";
+import { node } from "@/configs/image-preprocessing";
+import { useDragStore } from "@/contexts/dragContext";
+import { type DragEvent, type ReactElement, cloneElement, use } from "react";
 
-const nodeTypes = [
-	{
-		type: "condition",
-		title: "Condition Node",
-		description: "Evaluates a condition and routes the flow",
-		icon: <ArrowDownUp />,
-	},
-	{
-		type: "process",
-		title: "Process Node",
-		description: "Processes the input value",
-		icon: <Cog />,
-	},
-	{
-		type: "output",
-		title: "Output Node",
-		description: "Displays the final output",
-		icon: <ChevronsLeftRightEllipsis />,
-	},
-];
-
-export default function NodePalette() {
+type NodePaletteProps = {
+	noTitle?: boolean;
+	onPickUp?: () => void;
+};
+export default function NodePalette({
+	noTitle = false,
+	onPickUp,
+}: NodePaletteProps) {
+	const fields = useDragStore((state) => state.fields);
+	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
 	const onDragStart = (event: DragEvent<HTMLDivElement>, nodeType: string) => {
 		event.dataTransfer.setData("application/reactflow", nodeType);
 		event.dataTransfer.effectAllowed = "move";
+		onPickUp ? onPickUp() : undefined;
 	};
 
 	return (
 		<Card className="h-full">
-			<CardHeader>
-				<CardTitle>Node Palette</CardTitle>
-			</CardHeader>
+			{!noTitle && (
+				<CardHeader>
+					<CardTitle>Node Palette</CardTitle>
+				</CardHeader>
+			)}
 			<CardContent className="space-y-4">
-				{nodeTypes.map((node) => (
+				{node(fields, onUpdateMetadata).map((node) => (
 					<div
 						key={node.type}
 						className="p-4 border rounded-lg cursor-move hover:bg-accent"
 						draggable
-						onDragStart={(e) => onDragStart(e, node.type)}
+						onDragStart={(e) => onDragStart(e, node.type as string)}
 					>
 						<div className="flex items-start space-x-4">
 							<div className="relative mt-2 p-1 w-8 h-8 rounded-lg bg-blue-50 flex-shrink-0">

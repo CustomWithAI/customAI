@@ -1,9 +1,5 @@
-export const guestRoutes: string[] = [
+export const guestRoutes: readonly string[] = [
 	"/",
 	"/signin",
 	"/signup",
-	"/dataset",
-	"/workflow",
-	"/settings",
-	"/new-user",
 ] as const;

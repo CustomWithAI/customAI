@@ -39,7 +39,7 @@ export function ButtonLoading({
 			case "success":
 				return t("submitted");
 			default:
-				return commont(name);
+				return commont(name as any);
 		}
 	};
 

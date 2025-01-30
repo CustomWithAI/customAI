@@ -1,5 +1,10 @@
 "use client";
 
+import {
+	FormBuilder,
+	type FormFields,
+	type SchemaType,
+} from "@/components/builder/form";
 import { Card } from "@/components/ui/card";
 import {
 	ContextMenu,
@@ -9,17 +14,33 @@ import {
 } from "@/components/ui/context-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { node } from "@/configs/image-preprocessing";
+import { useDragStore } from "@/contexts/dragContext";
 import usePreviousNodesData from "@/hooks/useRootNode";
+import { generateId } from "@/utils/generate-id";
 import { RefreshCw, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { Handle, Position, useEdges, useNodes } from "reactflow";
+import { useMemo } from "react";
+import { Handle, Position } from "reactflow";
+import type { ZodDiscriminatedUnion, ZodObject, ZodRawShape, z } from "zod";
+import { useShallow } from "zustand/react/shallow";
 
-export type CustomNodeData = {
+export type CustomNodeData<
+	T extends ZodDiscriminatedUnion<string, any> | ZodRawShape = z.ZodRawShape,
+> = {
+	id: string;
 	title: string;
 	description: string;
 	image: string;
 	value: string;
 	type: string;
+	inputSchema?: SchemaType<T>;
+	inputField?: FormFields<
+		z.infer<
+			| ZodObject<T extends ZodRawShape ? T : never>
+			| ZodDiscriminatedUnion<any, any>
+		>
+	>[];
 	onChange: (value: string) => void;
 	onDelete?: () => void;
 	onReset?: () => void;
@@ -40,22 +61,29 @@ export default function CustomNode({
 		onReset,
 	} = data;
 	const previousNodesData = usePreviousNodesData(id);
+	const fields = useDragStore(useShallow((state) => state.fields));
+	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
+	const input = useMemo(() => {
+		return node(fields, onUpdateMetadata).find((field) => field.id === id);
+	}, [fields, onUpdateMetadata, id]);
 	return (
 		<ContextMenu>
 			<ContextMenuTrigger>
-				<Card className="w-[280px] p-4">
-					<Handle
-						type="target"
-						position={Position.Left}
-						className="w-2 h-2 p-1.5"
-					/>
+				<Card className="w-[280px] p-4 group group-hover:border-blue-400">
+					{type !== "input" && (
+						<Handle
+							type="target"
+							position={Position.Left}
+							className="w-2 h-2 p-1.5"
+						/>
+					)}
 					<div className="space-y-4">
 						<div className="relative w-full h-32">
 							<Image
 								src={image || "/placeholder.svg"}
 								alt={title}
 								fill
-								className="object-cover rounded-md"
+								className="object-cover rounded-md border border-gray-50"
 							/>
 						</div>
 						<div>
@@ -71,14 +99,27 @@ export default function CustomNode({
 									</pre>
 								</div>
 							)}
-							<div>
-								<Label>Current Value</Label>
-								<Input
-									value={value}
-									onChange={(e) => onChange(e.target.value)}
-									placeholder="Enter value..."
-								/>
-							</div>
+							{input?.inputField && input?.inputSchema ? (
+								<FormBuilder.Provider
+									key={`form-${input.title}`}
+									formName={`form-${input.title}`}
+									schema={input.inputSchema}
+								>
+									<FormBuilder.Build
+										formFields={input.inputField}
+										schema={input.inputSchema}
+									/>
+								</FormBuilder.Provider>
+							) : (
+								<div>
+									<Label>Current Value</Label>
+									<Input
+										value={value}
+										onChange={(e) => onChange(e.target.value)}
+										placeholder="Enter value..."
+									/>
+								</div>
+							)}
 						</div>
 						{type === "condition" && (
 							<div className="text-sm text-muted-foreground">
@@ -87,11 +128,13 @@ export default function CustomNode({
 							</div>
 						)}
 					</div>
-					<Handle
-						type="source"
-						position={Position.Right}
-						className="w-2 h-2 p-1.5"
-					/>
+					{type !== "output" && (
+						<Handle
+							type="source"
+							position={Position.Right}
+							className="w-2 h-2 p-1.5"
+						/>
+					)}
 				</Card>
 			</ContextMenuTrigger>
 			<ContextMenuContent className="bg-white">
@@ -104,6 +147,7 @@ export default function CustomNode({
 				</ContextMenuItem>
 				<ContextMenuItem
 					onClick={onDelete}
+					disabled={type === "output" || type === "input"}
 					className="text-red-600 hover:cursor-pointer hover:bg-red-50 duration-150"
 				>
 					<Trash2 className="mr-2 h-4 w-4" />

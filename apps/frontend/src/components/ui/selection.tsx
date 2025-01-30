@@ -1,6 +1,6 @@
 import { cn } from "@/libs/utils";
 import { defineString } from "@/utils/define";
-import { Fragment, type ReactNode } from "react";
+import { Fragment, type ReactNode, useCallback } from "react";
 import {
 	Select,
 	SelectContent,
@@ -10,6 +10,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../ui/select";
+import { FormControl } from "./form";
 
 type OptionValue = boolean | number | string;
 
@@ -63,21 +64,24 @@ export const Selection = ({
 	placeholder,
 	onChange,
 }: SelectionPropsType) => {
-	const getDisplayValue = (value: OptionValue | null): string | ReactNode => {
-		if (value === null) return placeholder;
-		const findOptionInArray = (optArray: Option[]) =>
-			optArray.find((opt) => opt.value === value);
-		let option: Option | undefined;
-		if (Array.isArray(options)) {
-			option = findOptionInArray(options);
-		} else {
-			for (const key in options) {
-				option = findOptionInArray(options[key]);
-				if (option) break;
+	const getDisplayValue = useCallback(
+		(value: OptionValue | null): string | ReactNode => {
+			if (value === null) return placeholder;
+			const findOptionInArray = (optArray: Option[]) =>
+				optArray.find((opt) => opt.value === value);
+			let option: Option | undefined;
+			if (Array.isArray(options)) {
+				option = findOptionInArray(options);
+			} else {
+				for (const key in options) {
+					option = findOptionInArray(options[key]);
+					if (option) break;
+				}
 			}
-		}
-		return option ? option.label : String(value);
-	};
+			return option ? option.label : String(value);
+		},
+		[options, placeholder],
+	);
 	return (
 		<Select
 			value={String(value)}
@@ -88,25 +92,27 @@ export const Selection = ({
 				onChange ? onChange(defineString(e)) : undefined;
 			}}
 		>
-			<SelectTrigger
-				className={cn(
-					"my-3 w-full",
-					{
-						"text-zinc-500 dark:text-zinc-500":
-							value === null || value === undefined,
-					},
-					className,
-				)}
-			>
-				<SelectValue
-					data-cy={`${cyName}_button`}
-					autoFocus={autoFocus}
-					placeholder={placeholder}
+			<FormControl>
+				<SelectTrigger
+					className={cn(
+						"my-3 w-full",
+						{
+							"text-zinc-500 dark:text-zinc-500":
+								value === null || value === undefined,
+						},
+						className,
+					)}
 				>
-					{getDisplayValue(value ?? null)}
-				</SelectValue>
-			</SelectTrigger>
-			<SelectContent>
+					<SelectValue
+						data-cy={`${cyName}_button`}
+						autoFocus={autoFocus}
+						placeholder={placeholder}
+					>
+						{getDisplayValue(value ?? null)}
+					</SelectValue>
+				</SelectTrigger>
+			</FormControl>
+			<SelectContent className="bg-white">
 				{group && Boolean(options)
 					? Object.keys(options).map((group) => (
 							<SelectGroup key={group}>

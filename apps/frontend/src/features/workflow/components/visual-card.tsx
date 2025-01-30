@@ -36,7 +36,7 @@ export const VisualCard = ({
 		<div
 			key={`preprocessing-${id}`}
 			className={cn(
-				"flex relative space-x-8 border group pb-4 pt-5 my-0.5 pl-3 hover:bg-zinc-50 duration-150",
+				"flex relative space-x-8 border group pb-4 pt-5 my-1 pl-3 hover:bg-zinc-50 duration-150",
 				" active:border-zinc-300 shadow-sm rounded-lg",
 			)}
 			ref={setNodeRef}

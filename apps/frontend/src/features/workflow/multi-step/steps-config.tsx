@@ -87,18 +87,7 @@ export const stepConfig: Record<string, StepConfig> = {
 		description: null,
 		icon: <Blend />,
 		component: () => (
-			<DragStoreProvider
-				initial={[
-					{
-						title: "Image Pre-processing",
-						id: "1",
-						metadata: {
-							stretch: { type: "Object", value: { x: "416", y: "416" } },
-						},
-						description: "",
-					},
-				]}
-			>
+			<DragStoreProvider initial={[]}>
 				<ImagePreprocessingPage />
 			</DragStoreProvider>
 		),

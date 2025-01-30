@@ -1,7 +1,5 @@
 import { authClient } from "@/libs/auth-client";
-import authService from "@/services/auth";
-import type { AppQueryOptions } from "@/types/tanstack-type";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export const useSocialAccounts = () =>
 	useQuery({
@@ -11,13 +9,18 @@ export const useSocialAccounts = () =>
 		},
 	});
 
-export const useRevokeOtherSession = () => {
-	const queryClient = useQueryClient();
-	return useMutation({
-		mutationFn: authService.revokeOtherSession,
-		onSuccess: () => {
-			queryClient.cancelQueries({ queryKey: ["sessions"] });
-			queryClient.invalidateQueries({ queryKey: ["sessions"] });
+export const useActivitySessions = () =>
+	useQuery({
+		queryKey: ["sessions-activity"],
+		queryFn: async () => {
+			return authClient.listSessions();
 		},
 	});
-};
+
+export const useRetrieveSession = () =>
+	useQuery({
+		queryKey: ["retrieve-session"],
+		queryFn: async () => {
+			return authClient.getSession();
+		},
+	});

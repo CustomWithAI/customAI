@@ -1,5 +1,11 @@
 "use client";
-import { type ReactNode, createContext, useContext, useRef } from "react";
+import {
+	type ReactNode,
+	createContext,
+	useContext,
+	useRef,
+	useState,
+} from "react";
 import { type StoreApi, useStore } from "zustand";
 
 import {
@@ -7,8 +13,11 @@ import {
 	type DragStore,
 	createDragStore,
 } from "@/stores/dragStore";
+import type { Draft } from "immer";
 
-export const DragStoreContext = createContext<StoreApi<DragStore> | null>(null);
+export const DragStoreContext = createContext<ReturnType<
+	typeof createDragStore
+> | null>(null);
 
 export interface DragStoreProviderProps {
 	initial?: Array<DragColumn>;
@@ -19,13 +28,9 @@ export const DragStoreProvider = ({
 	initial,
 	children,
 }: DragStoreProviderProps) => {
-	const DragRef = useRef<StoreApi<DragStore>>();
-	if (!DragRef.current) {
-		DragRef.current = createDragStore(initial);
-	}
-
+	const [store] = useState(() => createDragStore(initial));
 	return (
-		<DragStoreContext.Provider value={DragRef.current}>
+		<DragStoreContext.Provider value={store}>
 			{children}
 		</DragStoreContext.Provider>
 	);

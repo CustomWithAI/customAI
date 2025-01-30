@@ -2,7 +2,7 @@
 	"Tab": {
 		"Account": "Account",
 		"Security": "Security",
-		"Accessibility": "Accessibility"
+		"Appearance": "Appearance"
 	},
 	"Account": {
 		"ProfileInformation": "Profile Information",
@@ -17,5 +17,8 @@
 		"connected": "Connected",
 		"unknown": "Unknown",
 		"linkWith": "Link with"
+	},
+	"Appearance": {
+		"Language": "Language"
 	}
 }

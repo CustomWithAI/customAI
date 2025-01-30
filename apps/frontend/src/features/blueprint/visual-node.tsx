@@ -1,27 +1,35 @@
 "use client";
 
+import { FormBuilder } from "@/components/builder/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { node } from "@/configs/image-preprocessing";
+import { useDragStore } from "@/contexts/dragContext";
 import { X } from "lucide-react";
 import Image from "next/image";
+import { useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
 import type { CustomNodeData } from "./node";
 
 interface VisualBoxProps {
 	onClose: () => void;
-	node: {
+	selectedNode: {
 		data: CustomNodeData;
 	} | null;
 }
 
-export default function VisualBox({ node, onClose }: VisualBoxProps) {
-	if (!node) {
+export default function VisualBox({ selectedNode, onClose }: VisualBoxProps) {
+	if (!selectedNode) {
 		return null;
 	}
-
-	const { title, description, image, value, type } = node.data;
-
+	const { id, title, description, image, value, type } = selectedNode.data;
+	const fields = useDragStore(useShallow((state) => state.fields));
+	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
+	const input = useMemo(() => {
+		return node(fields, onUpdateMetadata).find((field) => field.id === id);
+	}, [fields, onUpdateMetadata, id]);
 	return (
 		<Card className="h-full">
 			<CardHeader className="relative">
@@ -40,7 +48,7 @@ export default function VisualBox({ node, onClose }: VisualBoxProps) {
 						src={image || "/placeholder.svg"}
 						alt={title}
 						fill
-						className="object-cover rounded-md"
+						className="object-cover rounded-md border border-gray-50"
 					/>
 				</div>
 				<div className="space-y-2">
@@ -59,10 +67,23 @@ export default function VisualBox({ node, onClose }: VisualBoxProps) {
 						<Label>Description</Label>
 						<Textarea value={description} readOnly />
 					</div>
-					<div>
-						<Label>Current Value</Label>
-						<Input value={value} readOnly />
-					</div>
+					{input?.inputField && input?.inputSchema ? (
+						<FormBuilder.Provider
+							key={`form-${id}-visual`}
+							formName={title}
+							schema={input.inputSchema}
+						>
+							<FormBuilder.Build
+								formFields={input.inputField}
+								schema={input.inputSchema}
+							/>
+						</FormBuilder.Provider>
+					) : (
+						<div>
+							<Label>Current Value</Label>
+							<Input value={value} readOnly />
+						</div>
+					)}
 				</div>
 			</CardContent>
 		</Card>

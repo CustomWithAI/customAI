@@ -1,8 +1,11 @@
+import type { FormFields, SchemaType } from "@/components/builder/form";
+import { deepMerge } from "@/utils/deepMerge";
 import { generateId } from "@/utils/generate-id";
 import type { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import type { ReactNode } from "react";
 import type { Connection, Edge, XYPosition } from "reactflow";
+import type { ZodDiscriminatedUnion, ZodObject, ZodRawShape, z } from "zod";
 import { immer } from "zustand/middleware/immer";
 import { createStore } from "zustand/vanilla";
 
@@ -11,13 +14,25 @@ export type Metadata = Record<
 	| { type: "Boolean"; value: boolean }
 	| { type: "String"; value: string }
 	| { type: "Number"; value: number }
-	| { type: "Object"; value: Record<string, unknown> }
+	| { type: "Object"; value: Record<string, Metadata[string]> }
 	| { type: "Position"; value: XYPosition }
 >;
-export type DragColumn = {
+export type DragColumn<
+	T extends ZodDiscriminatedUnion<string, any> | ZodRawShape = z.ZodRawShape,
+> = {
 	id: string;
 	title: string;
 	description: string | null;
+	previewClassName?: string;
+	imagePreviewUrl?: string;
+	inputSchema?: SchemaType<T>;
+	inputField?: FormFields<
+		z.infer<
+			| ZodObject<T extends ZodRawShape ? T : never>
+			| ZodDiscriminatedUnion<any, any>
+		>
+	>[];
+	type?: string;
 	source?: string;
 	target?: string;
 	icon?: ReactNode;
@@ -29,7 +44,7 @@ export type DragColumn = {
 
 type DragAction = {
 	onReset: () => void;
-	onAdd: (data: DragColumn | null) => void;
+	onAdd: (data: DragColumn[] | DragColumn | null) => void;
 	onRemove: (id: string) => void;
 	onUpdate: (data: Partial<DragColumn>) => void;
 	onUpdateValue: (data: {
@@ -51,7 +66,7 @@ type DragAction = {
 	) => void;
 	onUpdateMetadata: (payload: {
 		id: string;
-		metadata: Record<string, any>;
+		metadata: Metadata;
 	}) => void;
 	onDeleteNode: (nodeId: string) => void;
 	onResetNode: (nodeId: string) => void;
@@ -75,11 +90,18 @@ export const createDragStore = (initState = defaultState) => {
 			onReset: () => set({ fields: initState }),
 
 			// Add a new field
-			onAdd: (data) =>
+			onAdd: (data: DragColumn[] | DragColumn | null) => {
+				if (!data) return;
+
 				set((state) => {
-					if (!data) return;
-					state.fields.push({ ...data, id: generateId() });
-				}),
+					const itemsToAdd = Array.isArray(data) ? data : [data];
+					for (const item of itemsToAdd) {
+						if (!state.fields.some((field) => field.id === item.id)) {
+							state.fields.push({ ...item, id: item.id || generateId() });
+						}
+					}
+				});
+			},
 
 			// Remove a field by ID
 			onRemove: (id) =>
@@ -100,7 +122,10 @@ export const createDragStore = (initState = defaultState) => {
 					const field = state.fields.find((field) => field.id === data.id);
 					if (field && data.metadata) {
 						for (const key of Object.keys(data.metadata)) {
-							if (field.metadata[key] && data.metadata[key]) {
+							if (
+								field.metadata[key]?.value !== undefined &&
+								data.metadata[key]?.value !== undefined
+							) {
 								field.metadata[key].value = data.metadata[key].value;
 							}
 						}
@@ -175,21 +200,18 @@ export const createDragStore = (initState = defaultState) => {
 				set((state) => {
 					const updatedFields = state.fields.map((field) => {
 						if (!field.source && !field.target) {
-							// This is a node
 							const change = changes.find((c) => c.id === field.id);
 							if (change) {
 								if (change.type === "position" && change.position) {
-									// Update node position in metadata
 									return {
 										...field,
 										metadata: {
 											...field.metadata,
-											position: { type: "Object", value: change.position },
+											position: { type: "Position", value: change.position },
 										},
 									};
 								}
 								if (change.type === "data" && change.data) {
-									// Update node data in metadata
 									return {
 										...field,
 										metadata: {
@@ -209,11 +231,9 @@ export const createDragStore = (initState = defaultState) => {
 				set((state) => {
 					const updatedFields = state.fields.map((field) => {
 						if (field.source && field.target) {
-							// This is an edge
 							const change = changes.find((c) => c.id === field.id);
 							if (change) {
 								if (change.type === "data" && change.data) {
-									// Update edge data in metadata
 									return {
 										...field,
 										metadata: {
@@ -248,10 +268,7 @@ export const createDragStore = (initState = defaultState) => {
 						if (field.id === payload.id) {
 							return {
 								...field,
-								metadata: {
-									...field.metadata,
-									...payload.metadata,
-								},
+								metadata: deepMerge(field.metadata, payload.metadata),
 							};
 						}
 						return field;

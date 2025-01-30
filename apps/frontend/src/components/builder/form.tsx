@@ -12,6 +12,7 @@ import {
 	type Key,
 	type ReactElement,
 	type ReactNode,
+	memo,
 	useCallback,
 	useEffect,
 } from "react";
@@ -53,7 +54,9 @@ import { Input } from "../ui/input";
 import { Selection } from "../ui/selection";
 import { Switch } from "../ui/switch";
 
-type SchemaType<T extends ZodRawShape | ZodDiscriminatedUnion<string, any>> =
+export type SchemaType<
+	T extends ZodRawShape | ZodDiscriminatedUnion<string, any>,
+> =
 	| ZodObject<T extends ZodRawShape ? T : never>
 	| ZodEffects<ZodObject<T extends ZodRawShape ? T : never>>
 	| ZodDiscriminatedUnion<string, any>;
@@ -66,7 +69,7 @@ type FormProviderProps<
 > = {
 	schema: SchemaType<T>;
 	defaultValues?: DefaultValues<InferSchema<T>>;
-	onSubmit: SubmitHandler<InferSchema<T>>;
+	onSubmit?: SubmitHandler<InferSchema<T>>;
 	formName: string;
 	children: ReactNode;
 };
@@ -93,6 +96,8 @@ type TemplateElement<T extends object> = {
 
 type TemplateConfig = {
 	enabled?: boolean;
+	setValue?: unknown;
+	setOnChange?: (value: unknown) => void;
 	disabled?: boolean;
 };
 
@@ -119,7 +124,7 @@ type TemplateSwitchOptions = {
 
 type UngroupedOptions = {
 	options: {
-		group?: false;
+		group: false;
 		list?: Array<{ value: string | boolean | number; label: string }>;
 	};
 };
@@ -225,7 +230,7 @@ const FormBuilderProvider = <
 	const handleSubmit = methods.handleSubmit(
 		(data) => {
 			deleteSaveData(formName);
-			onSubmit(data);
+			onSubmit?.(data);
 		},
 		(error) => console.log(error),
 	);
@@ -258,7 +263,7 @@ const Builder = <T extends ZodRawShape | ZodDiscriminatedUnion<any, any>>({
 		<>
 			{upper || null}
 			{formFields.map((field, fieldIndex) => {
-				if (field.config && !isEmptyObject(field.config)) {
+				if (field.config.conditionalField || field.config.enabled) {
 					const { conditionalField, conditionalValue, enabled } = field.config;
 					const fieldsArray = Array.isArray(conditionalField)
 						? conditionalField
@@ -290,17 +295,20 @@ const Builder = <T extends ZodRawShape | ZodDiscriminatedUnion<any, any>>({
 						</>
 					) : null;
 				}
-				const { name } = field.element;
+				const { name, key } = field.element;
 				return (
 					<div
 						className={cn(
 							{ "my-6": fieldIndex !== 0 },
 							{ "mb-6": fieldIndex === 0 },
 						)}
-						key={name as string}
+						key={((name as string) + key) as string}
 					>
 						<BaseSkeleton template="line1" loading={status}>
-							<RenderInput {...field} isFirstInput={fieldIndex === 0} />
+							<RenderInput
+								{...(field as TemplateForm<object>)}
+								isFirstInput={fieldIndex === 0}
+							/>
 						</BaseSkeleton>
 					</div>
 				);
@@ -310,112 +318,92 @@ const Builder = <T extends ZodRawShape | ZodDiscriminatedUnion<any, any>>({
 	);
 };
 
-const RenderInput = <T extends object>({
-	template,
-	element: {
-		label,
-		key,
-		description,
-		placeholder,
-		name,
-		testDataId,
-		valueType,
-		className,
-		required,
-	},
-	config: { enabled, disabled, options },
-	isFirstInput,
-}: TemplateForm<T> & {
-	isFirstInput: boolean;
-}) => {
-	const hiddenFileInput = useRef<ElementRef<"input">>(null);
-	const {
-		control,
-		formState: { errors },
-	} = useFormContext<T>();
-	const { toast } = useToast();
-	const { mutateAsync: mutateUploadImage, isPending } = useUploadFile();
-	const inputRef = useRef<HTMLInputElement>(null);
-	useEffect(() => {
-		if (isFirstInput && inputRef.current) {
-			inputRef.current.focus();
-		}
-	}, [isFirstInput]);
+const RenderInput = memo(
+	<T extends object>({
+		template,
+		element: {
+			label,
+			key,
+			description,
+			placeholder,
+			name,
+			testDataId,
+			valueType,
+			className,
+			required,
+		},
+		config: { enabled, disabled, options, setValue, setOnChange },
+		isFirstInput,
+	}: TemplateForm<T> & {
+		isFirstInput: boolean;
+	}) => {
+		const hiddenFileInput = useRef<ElementRef<"input">>(null);
+		const {
+			control,
+			formState: { errors },
+		} = useFormContext<T>();
+		const { toast } = useToast();
+		const { mutateAsync: mutateUploadImage, isPending } = useUploadFile();
+		const inputRef = useRef<HTMLInputElement>(null);
+		useEffect(() => {
+			if (isFirstInput && inputRef.current) {
+				inputRef.current.focus();
+			}
+		}, [isFirstInput]);
 
-	switch (template) {
-		case "text":
-		case "password": {
-			return (
-				<FormField
-					key={key}
-					control={control}
-					name={name}
-					render={({ field: { onChange, onBlur, value } }) => (
-						<FormItem className={cn(className)}>
-							<FormLabel>{label}</FormLabel>
-							{description && <FormDescription>{description}</FormDescription>}
-							<FormControl>
-								<Input
-									aria-invalid={Boolean((errors as any)?.[String(name)])}
-									required={required}
-									data-cy={testDataId}
-									disabled={disabled}
-									autoFocus={isFirstInput}
-									type={template}
-									onChange={onChange}
-									onBlur={onBlur}
-									value={value ? String(value) : undefined}
-									placeholder={placeholder}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-			);
-		}
-		case "number": {
-			return (
-				<FormField
-					key={key}
-					control={control}
-					name={name}
-					render={({ field: { onChange, onBlur, value } }) => (
-						<FormItem className={cn(className)}>
-							<FormLabel>{label}</FormLabel>
-							{description && <FormDescription>{description}</FormDescription>}
-							<FormControl>
-								<Input
-									aria-invalid={Boolean((errors as any)?.[String(name)])}
-									required={required}
-									data-cy={testDataId}
-									disabled={disabled}
-									autoFocus={isFirstInput}
-									type="number"
-									onChange={(e) => onChange(e.target.valueAsNumber)}
-									onBlur={onBlur}
-									value={!Number.isNaN(value) ? value : undefined}
-									placeholder={placeholder}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-			);
-		}
-		case "percent": {
-			return (
-				<FormField
-					key={key}
-					control={control}
-					name={name}
-					render={({ field: { onChange, onBlur, value } }) => (
-						<FormItem className={cn(className)}>
-							<FormLabel>{label}</FormLabel>
-							{description && <FormDescription>{description}</FormDescription>}
-							<FormControl>
-								<div className="relative w-full max-w-[200px]">
+		switch (template) {
+			case "text":
+			case "password": {
+				return (
+					<FormField
+						key={key}
+						control={control}
+						name={name}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<FormItem className={cn(className)}>
+								<FormLabel>{label}</FormLabel>
+								{description && (
+									<FormDescription>{description}</FormDescription>
+								)}
+								<FormControl>
+									<Input
+										aria-invalid={Boolean((errors as any)?.[String(name)])}
+										required={required}
+										data-cy={testDataId}
+										disabled={disabled}
+										autoFocus={isFirstInput}
+										type={template}
+										onChange={setOnChange ? setOnChange : onChange}
+										onBlur={onBlur}
+										value={
+											setValue
+												? (setValue as string | number)
+												: value
+													? String(value)
+													: undefined
+										}
+										placeholder={placeholder}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+			}
+			case "number": {
+				return (
+					<FormField
+						key={key}
+						control={control}
+						name={name}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<FormItem className={cn(className)}>
+								<FormLabel>{label}</FormLabel>
+								{description && (
+									<FormDescription>{description}</FormDescription>
+								)}
+								<FormControl>
 									<Input
 										aria-invalid={Boolean((errors as any)?.[String(name)])}
 										required={required}
@@ -423,186 +411,265 @@ const RenderInput = <T extends object>({
 										disabled={disabled}
 										autoFocus={isFirstInput}
 										type="number"
-										onChange={(e) => onChange(e.target.valueAsNumber)}
-										placeholder={placeholder}
-										min={0}
-										max={100}
-										onBlur={onBlur}
-										value={!Number.isNaN(value) ? value : undefined}
-										className="pr-7"
-									/>
-									<span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-										%
-									</span>
-								</div>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-			);
-		}
-		case "switch": {
-			return (
-				<FormField
-					key={key}
-					control={control}
-					name={name}
-					render={({ field: { onChange, onBlur, value } }) => (
-						<FormItem
-							className={cn(className, {
-								"flex flex-row items-center justify-between rounded-lg border p-4":
-									options && ("box" in options ? options?.box : false),
-							})}
-						>
-							{description && label && (
-								<div className="space-y-0.5">
-									<FormLabel>{label}</FormLabel>
-									{description && (
-										<FormDescription>{description}</FormDescription>
-									)}
-								</div>
-							)}
-							<FormControl>
-								<Switch
-									checked={value}
-									onCheckedChange={onChange}
-									onBlur={onBlur}
-									disabled={disabled}
-									data-cy={testDataId}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-			);
-		}
-		case "image":
-			return (
-				<FormField
-					key={key}
-					control={control}
-					name={name}
-					render={({ field: { onChange, onBlur, value } }) => (
-						<FormItem className={cn(className)}>
-							<FormLabel>{label}</FormLabel>
-							<FormDescription className="mb-3">
-								Accept Image Link or JPEG, PNG, WEBP under 5MB
-							</FormDescription>
-							<div className="flex w-full">
-								<Input
-									aria-invalid={Boolean((errors as any)?.[String(name)])}
-									value={typeof value === "string" ? value : undefined}
-									type="text"
-									onBlur={onBlur}
-									disabled={disabled}
-									className="w-full"
-									data-cy={`${testDataId}-input`}
-									placeholder="https://example.com/images"
-									onChange={(e) => onChange(e.target.value)}
-								/>
-								<div className="my-auto h-full px-4">or</div>
-								<Button
-									disabled={isPending}
-									variant="outline"
-									onClick={() => hiddenFileInput.current?.click()}
-								>
-									<ArrowUpFromLine width={12} /> Upload
-								</Button>
-								<input
-									ref={hiddenFileInput}
-									type="file"
-									hidden
-									data-cy={`${testDataId}-upload`}
-									accept="image/png, image/jpeg, image/webp"
-									onChange={async (e) => {
-										const file = e?.target?.files?.[0];
-										if (!file) return;
-										const response = await mutateUploadImage({
-											file,
-											purpose: "product",
-										});
-										if (!response?.url) {
-											return toast({
-												title: "invalid upload image url",
-												description: "",
-												variant: "destructive",
-											});
+										onChange={(e) =>
+											setOnChange
+												? setOnChange(e.target.valueAsNumber)
+												: onChange(e.target.valueAsNumber)
 										}
-										onChange(response?.url);
-										return toast({ title: "successfully uploaded image" });
-									}}
-								/>
-							</div>
-						</FormItem>
-					)}
-				/>
-			);
-		case "price":
-			return (
-				<FormField
-					key={key}
-					control={control}
-					name={name}
-					render={({ field: { onChange, onBlur, value } }) => (
-						<FormItem className={cn(className)}>
-							<FormLabel>{label}</FormLabel>
-							<FormDescription className="mb-3">{description}</FormDescription>
-							<div className="mt-3 inline-flex w-full gap-x-4">
-								<Input
-									aria-invalid={Boolean((errors as any)?.[String(name)])}
-									type="number"
-									data-cy={testDataId}
+										onBlur={onBlur}
+										value={
+											setValue
+												? !Number.isNaN(setValue)
+													? (setValue as number)
+													: undefined
+												: !Number.isNaN(value)
+													? value
+													: undefined
+										}
+										placeholder={placeholder}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+			}
+			case "percent": {
+				return (
+					<FormField
+						key={key}
+						control={control}
+						name={name}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<FormItem className={cn(className)}>
+								<FormLabel>{label}</FormLabel>
+								{description && (
+									<FormDescription>{description}</FormDescription>
+								)}
+								<FormControl>
+									<div className="relative w-full max-w-[200px]">
+										<Input
+											aria-invalid={Boolean((errors as any)?.[String(name)])}
+											required={required}
+											data-cy={testDataId}
+											disabled={disabled}
+											autoFocus={isFirstInput}
+											type="number"
+											onChange={(e) =>
+												setOnChange
+													? setOnChange(e.target.valueAsNumber)
+													: onChange(e.target.valueAsNumber)
+											}
+											placeholder={placeholder}
+											min={0}
+											max={100}
+											onBlur={onBlur}
+											value={
+												setValue
+													? !Number.isNaN(setValue)
+														? (setValue as number)
+														: undefined
+													: !Number.isNaN(value)
+														? value
+														: undefined
+											}
+											className="pr-7"
+										/>
+										<span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+											%
+										</span>
+									</div>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+			}
+			case "switch": {
+				return (
+					<FormField
+						key={key}
+						control={control}
+						name={name}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<FormItem
+								className={cn(className, {
+									"flex flex-row items-center justify-between rounded-lg border p-4":
+										options && ("box" in options ? options?.box : false),
+								})}
+							>
+								{description && label && (
+									<div className="space-y-0.5">
+										<FormLabel>{label}</FormLabel>
+										{description && (
+											<FormDescription>{description}</FormDescription>
+										)}
+									</div>
+								)}
+								<FormControl>
+									<Switch
+										checked={setValue ? (setValue as boolean) : value}
+										onCheckedChange={setOnChange ? setOnChange : onChange}
+										onBlur={onBlur}
+										disabled={disabled}
+										data-cy={testDataId}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+			}
+			case "image": {
+				return (
+					<FormField
+						key={key}
+						control={control}
+						name={name}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<FormItem className={cn(className)}>
+								<FormLabel>{label}</FormLabel>
+								<FormDescription className="mb-3">
+									Accept Image Link or JPEG, PNG, WEBP under 5MB
+								</FormDescription>
+								<div className="flex w-full">
+									<Input
+										aria-invalid={Boolean((errors as any)?.[String(name)])}
+										value={typeof value === "string" ? value : undefined}
+										type="text"
+										onBlur={onBlur}
+										disabled={disabled}
+										className="w-full"
+										data-cy={`${testDataId}-input`}
+										placeholder="https://example.com/images"
+										onChange={(e) => onChange(e.target.value)}
+									/>
+									<div className="my-auto h-full px-4">or</div>
+									<Button
+										disabled={isPending}
+										variant="outline"
+										onClick={() => hiddenFileInput.current?.click()}
+									>
+										<ArrowUpFromLine width={12} /> Upload
+									</Button>
+									<input
+										ref={hiddenFileInput}
+										type="file"
+										hidden
+										data-cy={`${testDataId}-upload`}
+										accept="image/png, image/jpeg, image/webp"
+										onChange={async (e) => {
+											const file = e?.target?.files?.[0];
+											if (!file) return;
+											const response = await mutateUploadImage({
+												file,
+												purpose: "product",
+											});
+											if (!response?.url) {
+												return toast({
+													title: "invalid upload image url",
+													description: "",
+													variant: "destructive",
+												});
+											}
+											onChange(response?.url);
+											return toast({ title: "successfully uploaded image" });
+										}}
+									/>
+								</div>
+							</FormItem>
+						)}
+					/>
+				);
+			}
+			case "price": {
+				return (
+					<FormField
+						key={key}
+						control={control}
+						name={name}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<FormItem className={cn(className)}>
+								<FormLabel>{label}</FormLabel>
+								<FormDescription className="mb-3">
+									{description}
+								</FormDescription>
+								<div className="mt-3 inline-flex w-full gap-x-4">
+									<Input
+										aria-invalid={Boolean((errors as any)?.[String(name)])}
+										type="number"
+										data-cy={testDataId}
+										disabled={disabled}
+										pattern="^\\d+([.,]\\d+)?$"
+										step={0.01}
+										min={0}
+										autoFocus={isFirstInput}
+										placeholder={placeholder}
+										onChange={(e) =>
+											setOnChange
+												? setOnChange(e.target.valueAsNumber)
+												: onChange(e.target.valueAsNumber)
+										}
+										onBlur={onBlur}
+										value={
+											setValue
+												? !Number.isNaN(setValue)
+													? (setValue as number)
+													: undefined
+												: !Number.isNaN(value)
+													? value
+													: undefined
+										}
+									/>
+									<Content className="my-auto">
+										{(options as TemplatePriceOptions["options"])?.price || ""}
+									</Content>
+								</div>
+							</FormItem>
+						)}
+					/>
+				);
+			}
+			case "select": {
+				return (
+					<FormField
+						key={key}
+						control={control}
+						name={name}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<FormItem className={cn(className)}>
+								<FormLabel>{label}</FormLabel>
+								<FormDescription className="mb-3">
+									{description}
+								</FormDescription>
+								<Selection
+									className="my-3"
+									group={options && "group" in options ? options?.group : false}
+									value={
+										setValue ? (setValue as string | number | boolean) : value
+									}
+									cyName={testDataId}
 									disabled={disabled}
-									pattern="^\\d+([.,]\\d+)?$"
-									step={0.01}
-									min={0}
-									autoFocus={isFirstInput}
 									placeholder={placeholder}
-									onChange={(e) => onChange(e.target.valueAsNumber)}
-									onBlur={onBlur}
-									value={Number.isNaN(value) ? undefined : value}
+									onChange={setOnChange ? setOnChange : onChange}
+									options={options && "list" in options ? options?.list : {}}
 								/>
-								<Content className="my-auto">
-									{(options as TemplatePriceOptions["options"])?.price || ""}
-								</Content>
-							</div>
-						</FormItem>
-					)}
-				/>
-			);
-		case "select":
-			return (
-				<FormField
-					key={key}
-					control={control}
-					name={name}
-					render={({ field: { onChange, onBlur, value } }) => (
-						<FormItem className={cn(className)}>
-							<FormLabel>{label}</FormLabel>
-							<FormDescription className="mb-3">{description}</FormDescription>
-							<Selection
-								className="my-3"
-								group={options && "group" in options ? options?.group : false}
-								value={value}
-								cyName={testDataId}
-								disabled={disabled}
-								placeholder={placeholder}
-								onChange={onChange}
-								options={options && "list" in options ? options?.list : {}}
-							/>
-						</FormItem>
-					)}
-				/>
-			);
-		case "date":
-			return <></>;
-		default:
-			console.warn("not implemented function");
-			return null;
-	}
-};
+							</FormItem>
+						)}
+					/>
+				);
+			}
+			case "date":
+				return <></>;
+			default:
+				console.warn("not implemented function");
+				return null;
+		}
+	},
+);
 
 const FormBuilder = {
 	Provider: FormBuilderProvider,

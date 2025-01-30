@@ -10,12 +10,15 @@ export function formatMetadata(metadata: Metadata): string {
 					return `${key}:${value.value}`;
 				case "Object":
 					if ("x" in value.value && "y" in value.value) {
-						return `${key}:${value.value.x}x${value.value.y}px`;
+						return `${key}: (${formatMetadata(value.value)})`;
 					}
 					return `${key}:${JSON.stringify(value.value)}`;
+				case "Position":
+					return "";
 				default:
 					return `${key}:unknown`;
 			}
 		})
-		.join(",");
+		.filter((entry) => entry !== "")
+		.join(", ");
 }

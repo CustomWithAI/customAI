@@ -1,16 +1,19 @@
 import { Content } from "@/components/typography/text";
+import { Button } from "@/components/ui/button";
 import { TablePreprocessingSection } from "@/features/image-preprocessing/sections/table";
 import { VisualPreprocessingSection } from "@/features/image-preprocessing/sections/visual";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { cn } from "@/libs/utils";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 
 export const ImagePreprocessingPage = () => {
 	const { getQueryParam, setQueryParam, compareQueryParam } = useQueryParam({
 		name: "view",
 	});
 	const viewParam = getQueryParam();
+	const handleSubmit = useCallback(() => {}, []);
 	return (
 		<>
 			<div id="tab" className="flex p-1 bg-zinc-100 w-fit space-x-1 rounded-lg">
@@ -57,6 +60,12 @@ export const ImagePreprocessingPage = () => {
 			{compareQueryParam({ value: "blueprint" }) ? (
 				<VisualPreprocessingSection />
 			) : null}
+			<div className="flex justify-end w-full space-x-4 mt-6">
+				<Button variant="ghost">Previous</Button>
+				<Button onClick={handleSubmit} type="submit">
+					Next
+				</Button>
+			</div>
 		</>
 	);
 };

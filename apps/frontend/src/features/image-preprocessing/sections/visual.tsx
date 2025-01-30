@@ -1,6 +1,6 @@
 "use client";
 
-import { type DragEvent, useCallback, useMemo, useState } from "react";
+import { type DragEvent, useCallback, useMemo, useRef, useState } from "react";
 import ReactFlow, {
 	type Node,
 	type Edge,
@@ -14,39 +14,51 @@ import ReactFlow, {
 	type XYPosition,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import {
+	DialogBuilder,
+	type DialogBuilderRef,
+} from "@/components/builder/dialog";
+import { node } from "@/configs/image-preprocessing";
 import { useDragStore } from "@/contexts/dragContext";
 import CustomNode from "@/features/blueprint/node";
 import NodePalette from "@/features/blueprint/node-palette";
 import VisualEdge from "@/features/blueprint/visual-edge";
 import VisualBox from "@/features/blueprint/visual-node";
+import { useSizeScreen } from "@/hooks/useSizeScreen";
 import { generateId } from "@/utils/generate-id";
+import { SwatchBook } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 const nodeTypes: NodeTypes = {
 	custom: CustomNode,
 };
-
 export const VisualPreprocessingSection = () => {
+	const dialogRef = useRef<DialogBuilderRef>(null);
+	const { isLessThan } = useSizeScreen();
 	const fields = useDragStore(useShallow((state) => state.fields));
 	const onDeleteNodeStore = useDragStore((state) => state.onDeleteNode);
 	const onResetNodeStore = useDragStore((state) => state.onResetNode);
 	const onAddNode = useDragStore((state) => state.onAddNode);
 	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
+
 	const initialNodes: Node[] = useMemo(() => {
 		const processNode = fields.map((field, index) => ({
 			id: field.id,
 			type: "custom",
 			position: (field.metadata.position?.value as unknown as XYPosition) || {
-				x: 100 + index * 300,
+				x: 100 + index * 320,
 				y: 100,
 			},
 			data: {
+				id: field.id,
 				title: field.title,
 				description: field.description,
 				image: "/placeholder.svg?height=200&width=200",
 				value: "",
-				type: "input",
+				type: "custom",
 				metadata: field.metadata,
+				inputSchema: field.inputSchema,
+				inputField: field.inputField,
 				onChange: (value: string) => {
 					updateNodeValue(field.id, value);
 				},
@@ -62,6 +74,7 @@ export const VisualPreprocessingSection = () => {
 			type: "custom",
 			position: { x: -200, y: 100 },
 			data: {
+				id: "input-1",
 				title: "Input Node",
 				description: "This is the input node",
 				image: "/placeholder.svg?height=200&width=200",
@@ -73,8 +86,9 @@ export const VisualPreprocessingSection = () => {
 		const outputNode = {
 			id: "output-1",
 			type: "custom",
-			position: { x: 200 + (fields.length + 1) * 300, y: 100 },
+			position: { x: 150 + fields.length * 320, y: 100 },
 			data: {
+				id: "output-1",
 				title: "Output Node",
 				description: "This is the output node",
 				image: "/placeholder.svg?height=200&width=200",
@@ -110,7 +124,6 @@ export const VisualPreprocessingSection = () => {
 				type: "default",
 			});
 		}
-
 		if (fields.length > 0) {
 			edges.push({
 				id: `edge-${fields[fields.length - 1].id}-output-1`,
@@ -119,7 +132,6 @@ export const VisualPreprocessingSection = () => {
 				type: "default",
 			});
 		}
-
 		return edges;
 	}, [fields]);
 	const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -158,10 +170,13 @@ export const VisualPreprocessingSection = () => {
 		event.dataTransfer.dropEffect = "move";
 	}, []);
 
+	const mainNode = useMemo(() => {
+		return node(fields, onUpdateMetadata);
+	}, [fields, onUpdateMetadata]);
+
 	const onDrop = useCallback(
 		(event: DragEvent<HTMLDivElement>) => {
 			event.preventDefault();
-
 			if (!reactFlowInstance) return;
 
 			const type = event.dataTransfer.getData("application/reactflow");
@@ -169,12 +184,14 @@ export const VisualPreprocessingSection = () => {
 				x: event.clientX,
 				y: event.clientY,
 			}) as XYPosition;
+			const node = mainNode.find((node) => node.type === type);
 			const id = generateId();
 			const newNode = {
-				id: id,
+				id: node?.id || id,
 				type: "custom",
 				position,
 				data: {
+					id: node?.id || id,
 					title: `${type.charAt(0).toUpperCase() + type.slice(1)} Node`,
 					description: `This is a ${type} node`,
 					image: "/placeholder.svg?height=200&width=200",
@@ -182,19 +199,19 @@ export const VisualPreprocessingSection = () => {
 					type: type,
 					metadata: {
 						position: { type: "Position" as const, value: position },
-						value: { type: "String" as const, value: "" },
+						...(node?.metadata || { value: { type: "String", value: "" } }),
 					},
 					onChange: (value: string) => {
 						onUpdateMetadata({
-							id: id,
+							id: node?.id || id,
 							metadata: { value: { type: "String", value } },
 						});
 					},
 					onDelete: () => {
 						setNodes((nds) => nds.filter((node) => node.id !== id));
-						onDeleteNodeStore(id);
+						onDeleteNodeStore(node?.id || id);
 					},
-					onReset: () => onResetNodeStore(id),
+					onReset: () => onResetNodeStore(node?.id || id),
 				},
 			};
 
@@ -202,6 +219,7 @@ export const VisualPreprocessingSection = () => {
 			onAddNode({ ...newNode.data, id: newNode.id });
 		},
 		[
+			mainNode,
 			reactFlowInstance,
 			setNodes,
 			onAddNode,
@@ -220,8 +238,8 @@ export const VisualPreprocessingSection = () => {
 	}));
 
 	return (
-		<div id="main" className="flex w-full h-[95vh]">
-			<div className="w-3/4 h-full">
+		<div id="main" className="relative flex w-full h-[95vh]">
+			<div className="w-full lg:w-3/4 h-full">
 				<ReactFlow
 					nodes={nodesWithHandlers}
 					edges={edges}
@@ -241,10 +259,33 @@ export const VisualPreprocessingSection = () => {
 					<Controls />
 				</ReactFlow>
 			</div>
-			<div className="w-1/4 h-full p-4 border-l">
-				{selectedNode ? (
+			<div className="lg:w-1/4 h-full lg:border-l border-collapse">
+				{isLessThan("xl") ? (
+					<DialogBuilder
+						ref={dialogRef}
+						config={{
+							trigger: (
+								<button
+									className="absolute top-3 right-3 rounded-lg border hover:bg-zinc-50"
+									type="button"
+								>
+									<SwatchBook className="w-5 h-5 m-2" />
+								</button>
+							),
+							title: "Node Palette",
+							body: (
+								<NodePalette
+									noTitle
+									onPickUp={() => {
+										dialogRef.current?.close();
+									}}
+								/>
+							),
+						}}
+					/>
+				) : selectedNode ? (
 					<VisualBox
-						node={selectedNode}
+						selectedNode={selectedNode}
 						onClose={() => setSelectedNode(null)}
 					/>
 				) : selectedEdge ? (

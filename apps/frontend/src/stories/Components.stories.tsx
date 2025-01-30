@@ -16,7 +16,7 @@ const meta: Meta = {
 export default meta;
 
 export const SingleBeamStory: StoryObj = {
-	render: (args) => <SingleBeam {...args} />,
+	render: (args) => <SingleBeam path={""} {...args} />,
 };
 
 export const backgroundBeamStory: StoryObj = {

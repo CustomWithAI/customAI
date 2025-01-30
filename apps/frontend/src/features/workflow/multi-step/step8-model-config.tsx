@@ -56,7 +56,9 @@ const workflowDetailsFormField: FormFieldInput<ModelConfigurationSchema> = [
 			name: "loss_function",
 		},
 		config: {
-			options: {},
+			options: {
+				group: false,
+			},
 		},
 	},
 ];
