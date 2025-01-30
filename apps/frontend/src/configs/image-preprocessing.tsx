@@ -16,6 +16,7 @@ import {
 	RotateCcw,
 	Scaling,
 } from "lucide-react";
+import { type ChangeEvent, EventHandler } from "react";
 import { z } from "zod";
 
 export const node = (
@@ -299,7 +300,23 @@ export const node = (
 						key: "angle-1",
 						testDataId: "angle-rotation-1",
 					},
-					config: {},
+					config: {
+						setValue: fields.find((fields) => fields.id === "rotation-1")
+							?.metadata.angle.value,
+						setOnChange: (value) => {
+							onUpdateMetadata({
+								id: "rotation-1",
+								metadata: {
+									angle: {
+										type: "String",
+										value: String(
+											(value as ChangeEvent<HTMLInputElement>).target.value,
+										),
+									},
+								},
+							});
+						},
+					},
 				},
 			],
 			inputSchema: z.object({
@@ -324,7 +341,23 @@ export const node = (
 						name: "direction",
 						testDataId: "direction-test",
 					},
-					config: {},
+					config: {
+						setValue: fields.find((fields) => fields.id === "flipping-1")
+							?.metadata.direction.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "flipping-1",
+								metadata: {
+									direction: {
+										type: "String",
+										value: String(
+											(value as ChangeEvent<HTMLInputElement>).target.value,
+										),
+									},
+								},
+							});
+						},
+					},
 				},
 			],
 			inputSchema: z.object({
