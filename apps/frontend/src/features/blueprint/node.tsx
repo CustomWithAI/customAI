@@ -17,34 +17,13 @@ import { Label } from "@/components/ui/label";
 import { node } from "@/configs/image-preprocessing";
 import { useDragStore } from "@/contexts/dragContext";
 import usePreviousNodesData from "@/hooks/useRootNode";
-import { generateId } from "@/utils/generate-id";
+import type { CustomNodeData } from "@/types/node";
 import { RefreshCw, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useMemo } from "react";
 import { Handle, Position } from "reactflow";
 import type { ZodDiscriminatedUnion, ZodObject, ZodRawShape, z } from "zod";
 import { useShallow } from "zustand/react/shallow";
-
-export type CustomNodeData<
-	T extends ZodDiscriminatedUnion<string, any> | ZodRawShape = z.ZodRawShape,
-> = {
-	id: string;
-	title: string;
-	description: string;
-	image: string;
-	value: string;
-	type: string;
-	inputSchema?: SchemaType<T>;
-	inputField?: FormFields<
-		z.infer<
-			| ZodObject<T extends ZodRawShape ? T : never>
-			| ZodDiscriminatedUnion<any, any>
-		>
-	>[];
-	onChange: (value: string) => void;
-	onDelete?: () => void;
-	onReset?: () => void;
-};
 
 export default function CustomNode({
 	data,
@@ -90,11 +69,11 @@ export default function CustomNode({
 							<h3 className="font-semibold">{title}</h3>
 							<p className="text-sm text-muted-foreground">{description}</p>
 						</div>
-						<div className="space-y-2">
+						<div className="space-y-2 ">
 							{previousNodesData.length > 0 && (
 								<div>
 									<Label>All Nodes Data</Label>
-									<pre className="p-2 bg-muted rounded-md text-xs overflow-auto max-h-32">
+									<pre className="p-2 bg-muted rounded-md text-xs overflow-scroll max-h-32">
 										{JSON.stringify(previousNodesData, null, 2)}
 									</pre>
 								</div>

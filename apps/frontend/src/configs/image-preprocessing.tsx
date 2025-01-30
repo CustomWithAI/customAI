@@ -80,7 +80,7 @@ export const node = (
 																fields.find(
 																	(fields) => fields.id === "resizing-1",
 																)?.metadata as any
-															).size.value.x.value
+															)?.size?.value?.x?.value
 														}
 														placeholder="0"
 													/>
@@ -113,7 +113,7 @@ export const node = (
 																fields.find(
 																	(fields) => fields.id === "resizing-1",
 																)?.metadata as any
-															).size.value.y.value
+															)?.size?.value?.y?.value
 														}
 														placeholder="0"
 													/>
@@ -191,7 +191,7 @@ export const node = (
 																fields.find(
 																	(fields) => fields.id === "cropping-1",
 																)?.metadata as any
-															).size.value.x.value
+															)?.size?.value?.x?.value
 														}
 														placeholder="0"
 													/>
@@ -224,7 +224,7 @@ export const node = (
 																fields.find(
 																	(fields) => fields.id === "cropping-1",
 																)?.metadata as any
-															).size.value.y.value
+															)?.size?.value?.y?.value
 														}
 														placeholder="0"
 													/>
@@ -250,7 +250,7 @@ export const node = (
 					},
 					config: {
 						setValue: fields.find((fields) => fields.id === "cropping-1")
-							?.metadata.position.value,
+							?.metadata?.position?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "cropping-1",
@@ -302,7 +302,7 @@ export const node = (
 					},
 					config: {
 						setValue: fields.find((fields) => fields.id === "rotation-1")
-							?.metadata.angle.value,
+							?.metadata?.angle?.value,
 						setOnChange: (value) => {
 							onUpdateMetadata({
 								id: "rotation-1",
@@ -343,7 +343,7 @@ export const node = (
 					},
 					config: {
 						setValue: fields.find((fields) => fields.id === "flipping-1")
-							?.metadata.direction.value,
+							?.metadata?.direction?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "flipping-1",
@@ -444,7 +444,8 @@ export const node = (
 																	fields.find(
 																		(fields) => fields.id === "perspective-1",
 																	)?.metadata as any
-																).source.value["top-left"].value || undefined
+																)?.source?.value?.["top-left"]?.value ||
+																undefined
 															}
 															placeholder="0"
 														/>
@@ -477,7 +478,8 @@ export const node = (
 																	fields.find(
 																		(fields) => fields.id === "perspective-1",
 																	)?.metadata as any
-																).source.value["top-right"].value || undefined
+																)?.source?.value?.["top-right"]?.value ||
+																undefined
 															}
 															placeholder="0"
 														/>
@@ -512,7 +514,8 @@ export const node = (
 																	fields.find(
 																		(fields) => fields.id === "perspective-1",
 																	)?.metadata as any
-																).source.value["bottom-left"].value || undefined
+																)?.source?.value?.["bottom-left"]?.value ||
+																undefined
 															}
 															placeholder="0"
 														/>
@@ -545,7 +548,7 @@ export const node = (
 																	fields.find(
 																		(fields) => fields.id === "perspective-1",
 																	)?.metadata as any
-																).source.value["bottom-right"].value ||
+																)?.source?.value?.["bottom-right"]?.value ||
 																undefined
 															}
 															placeholder="0"
@@ -601,7 +604,7 @@ export const node = (
 																	fields.find(
 																		(fields) => fields.id === "perspective-1",
 																	)?.metadata as any
-																).destination.value["top-left"].value ||
+																)?.destination?.value?.["top-left"]?.value ||
 																undefined
 															}
 															placeholder="0"
@@ -635,7 +638,7 @@ export const node = (
 																	fields.find(
 																		(fields) => fields.id === "perspective-1",
 																	)?.metadata as any
-																).destination.value["top-right"].value ||
+																)?.destination?.value?.["top-right"]?.value ||
 																undefined
 															}
 															placeholder="0"
@@ -672,7 +675,7 @@ export const node = (
 																	fields.find(
 																		(fields) => fields.id === "perspective-1",
 																	)?.metadata as any
-																).destination.value["bottom-left"].value ||
+																)?.destination?.value?.["bottom-left"]?.value ||
 																undefined
 															}
 															placeholder="0"
@@ -706,8 +709,8 @@ export const node = (
 																	fields.find(
 																		(fields) => fields.id === "perspective-1",
 																	)?.metadata as any
-																).destination.value["bottom-right"].value ||
-																undefined
+																)?.destination?.value?.["bottom-right"]
+																	?.value || undefined
 															}
 															placeholder="0"
 														/>

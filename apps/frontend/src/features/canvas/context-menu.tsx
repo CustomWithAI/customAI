@@ -1,23 +1,29 @@
-import { type SquareStyle, squarePresets } from "@/types/square";
-import { useEffect, useRef, useState } from "react";
+import type { Square } from "@/types/square";
+import { Lock, MoveDown, MoveUp, Unlock } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 interface ContextMenuProps {
 	x: number;
 	y: number;
-	onDelete: () => void;
-	onUpdateStyle: (style: Partial<SquareStyle>) => void;
+	square?: Square;
 	onClose: () => void;
+	onDelete: () => void;
+	onUpdate: (square: Partial<Square>) => void;
+	onMoveForward: () => void;
+	onMoveBackward: () => void;
 }
 
 export function ContextMenu({
 	x,
 	y,
-	onDelete,
-	onUpdateStyle,
+	square,
 	onClose,
+	onDelete,
+	onUpdate,
+	onMoveForward,
+	onMoveBackward,
 }: ContextMenuProps) {
-	const menuRef = useRef<HTMLDivElement>(null);
-	const [showStyleMenu, setShowStyleMenu] = useState(false);
+	const menuRef = useRef<HTMLButtonElement>(null);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -30,40 +36,57 @@ export function ContextMenu({
 		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, [onClose]);
 
+	const handleClick = (e: React.MouseEvent) => {
+		e.stopPropagation();
+	};
+
+	if (!square) return;
 	return (
-		<div
+		<button
+			type="button"
 			ref={menuRef}
-			className="absolute bg-white border border-gray-200 rounded shadow-lg py-1 z-50"
+			className="absolute bg-white border border-gray-200 rounded-lg shadow-lg py-2 min-w-[200px] z-50"
 			style={{ left: x, top: y }}
+			onClick={handleClick}
 		>
-			<div className="relative">
+			<div className="px-1">
 				<button
-					className="w-full px-4 py-2 text-left hover:bg-gray-100 text-sm flex items-center justify-between"
-					onClick={() => setShowStyleMenu(!showStyleMenu)}
+					className="w-full px-3 py-2 text-left hover:bg-gray-100 text-sm flex items-center gap-2"
+					onClick={() => onMoveForward()}
 				>
-					<span>Style</span>
-					<span className="ml-1.5">→</span>
+					<MoveUp className="w-4 h-4" />
+					Bring Forward
 				</button>
-				{showStyleMenu && (
-					<div className="absolute w-48 left-full top-0 bg-white border border-gray-200 rounded shadow-lg py-1 ml-1">
-						{Object.entries(squarePresets).map(([name, style]) => (
-							<button
-								key={name}
-								className="w-full px-4 py-2 text-left hover:bg-gray-100 text-sm"
-								onClick={() => onUpdateStyle(style)}
-							>
-								{name.charAt(0).toUpperCase() + name.slice(1)}
-							</button>
-						))}
-					</div>
-				)}
+				<button
+					className="w-full px-3 py-2 text-left hover:bg-gray-100 text-sm flex items-center gap-2"
+					onClick={() => onMoveBackward()}
+				>
+					<MoveDown className="w-4 h-4" />
+					Send Backward
+				</button>
+				<button
+					className="w-full px-3 py-2 text-left hover:bg-gray-100 text-sm flex items-center gap-2"
+					onClick={() => onUpdate({ isLocked: !square.isLocked })}
+				>
+					{square.isLocked ? (
+						<>
+							<Unlock className="w-4 h-4" />
+							Unlock
+						</>
+					) : (
+						<>
+							<Lock className="w-4 h-4" />
+							Lock
+						</>
+					)}
+				</button>
+				<button
+					className="w-full px-3 py-2 text-left hover:bg-gray-100 text-red-600 text-sm"
+					onClick={onDelete}
+				>
+					Delete Square
+				</button>
 			</div>
-			<button
-				className="w-full px-4 py-2 text-left hover:bg-gray-100 text-sm text-red-600"
-				onClick={onDelete}
-			>
-				Delete
-			</button>
-		</div>
+		</button>
 	);
 }

@@ -1,28 +1,18 @@
-import type { Position, Square, SquareStyle } from "@/types/square";
+import type { Position, Square } from "@/types/square";
 import { useCallback, useState } from "react";
 
 interface DragState {
-	type: "create" | "move" | "resize" | "rotate";
+	type: "create" | "move" | "resize";
 	squareId?: string;
 	startPos: Position;
 	corner?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
-	currentSquare?: Square;
-	startRotation?: number;
+	originalSquare?: Square;
 }
-
-const DEFAULT_STYLE: SquareStyle = {
-	backgroundColor: "#ffffff",
-	borderColor: "#000000",
-	borderWidth: 2,
-	borderRadius: 0,
-	opacity: 1,
-};
 
 export function useSquares(onChange?: (change: Square) => void) {
 	const [squares, setSquares] = useState<Square[]>([]);
 	const [dragState, setDragState] = useState<DragState | null>(null);
 	const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
-	const [hoveredSquare, setHoveredSquare] = useState<string | null>(null);
 
 	const startDrag = useCallback(
 		(
@@ -30,35 +20,34 @@ export function useSquares(onChange?: (change: Square) => void) {
 			y: number,
 			existingSquare?: Square,
 			corner?: DragState["corner"],
-			isRotating?: boolean,
 		) => {
 			if (existingSquare) {
 				setDragState({
-					type: isRotating ? "rotate" : corner ? "resize" : "move",
+					type: corner ? "resize" : "move",
 					squareId: existingSquare.id,
 					startPos: { x, y },
 					corner,
-					startRotation: existingSquare.rotation,
+					originalSquare: { ...existingSquare },
 				});
-				return;
+			} else {
+				const newSquare: Square = {
+					id: Date.now().toString(),
+					x,
+					y,
+					width: 0,
+					height: 0,
+					zIndex: squares.length,
+					labelId: undefined,
+				};
+				setDragState({
+					type: "create",
+					startPos: { x, y },
+					originalSquare: newSquare,
+				});
+				setSquares((prev) => [...prev, newSquare]);
 			}
-			const newSquare: Square = {
-				id: Date.now().toString(),
-				x,
-				y,
-				width: 0,
-				height: 0,
-				rotation: 0,
-				style: { ...DEFAULT_STYLE },
-			};
-			setSquares((prev) => [...prev, newSquare]);
-			setDragState({
-				type: "create",
-				startPos: { x, y },
-				currentSquare: newSquare,
-			});
 		},
-		[],
+		[squares.length],
 	);
 
 	const updateDrag = useCallback(
@@ -76,10 +65,10 @@ export function useSquares(onChange?: (change: Square) => void) {
 					if (squareIndex >= 0) {
 						const updatedSquare = {
 							...newSquares[squareIndex],
-							x: width < 0 ? currentX : dragState.startPos.x,
-							y: height < 0 ? currentY : dragState.startPos.y,
-							width: Math.abs(width),
-							height: Math.abs(height),
+							x: dragState.startPos.x,
+							y: dragState.startPos.y,
+							width,
+							height,
 						};
 						newSquares[squareIndex] = updatedSquare;
 						onChange?.(updatedSquare);
@@ -91,52 +80,40 @@ export function useSquares(onChange?: (change: Square) => void) {
 				const squareIndex = newSquares.findIndex(
 					(s) => s.id === dragState.squareId,
 				);
-				if (squareIndex === -1) return prev;
+				if (squareIndex === -1 || !dragState.originalSquare) return prev;
 
 				const square = { ...newSquares[squareIndex] };
-				switch (dragState.type) {
-					case "move": {
-						const dx = currentX - dragState.startPos.x;
-						const dy = currentY - dragState.startPos.y;
-						square.x += dx;
-						square.y += dy;
-						dragState.startPos = { x: currentX, y: currentY };
-						break;
-					}
-					case "resize": {
-						switch (dragState.corner) {
-							case "top-left":
-								square.width += square.x - currentX;
-								square.height += square.y - currentY;
-								square.x = currentX;
-								square.y = currentY;
-								break;
-							case "top-right":
-								square.width = currentX - square.x;
-								square.height += square.y - currentY;
-								square.y = currentY;
-								break;
-							case "bottom-left":
-								square.width += square.x - currentX;
-								square.height = currentY - square.y;
-								square.x = currentX;
-								break;
-							case "bottom-right":
-								square.width = currentX - square.x;
-								square.height = currentY - square.y;
-								break;
-						}
-						break;
-					}
-					case "rotate": {
-						const centerX = square.x + square.width / 2;
-						const centerY = square.y + square.height / 2;
-						const angle = Math.atan2(currentY - centerY, currentX - centerX);
-						const degrees = (angle + 90) * (180 / Math.PI);
-						square.rotation = degrees;
-						break;
+				const dx = currentX - dragState.startPos.x;
+				const dy = currentY - dragState.startPos.y;
+
+				if (dragState.type === "move") {
+					square.x = dragState.originalSquare.x + dx;
+					square.y = dragState.originalSquare.y + dy;
+				} else if (dragState.type === "resize") {
+					switch (dragState.corner) {
+						case "top-left":
+							square.width = dragState.originalSquare.width - dx;
+							square.height = dragState.originalSquare.height - dy;
+							square.x = dragState.originalSquare.x + dx;
+							square.y = dragState.originalSquare.y + dy;
+							break;
+						case "top-right":
+							square.width = dragState.originalSquare.width + dx;
+							square.height = dragState.originalSquare.height - dy;
+							square.y = dragState.originalSquare.y + dy;
+							break;
+						case "bottom-left":
+							square.width = dragState.originalSquare.width - dx;
+							square.height = dragState.originalSquare.height + dy;
+							square.x = dragState.originalSquare.x + dx;
+							break;
+						case "bottom-right":
+							square.width = dragState.originalSquare.width + dx;
+							square.height = dragState.originalSquare.height + dy;
+							break;
 					}
 				}
+
 				onChange?.(square);
 				newSquares[squareIndex] = square;
 				return newSquares;
@@ -145,90 +122,89 @@ export function useSquares(onChange?: (change: Square) => void) {
 		[dragState, onChange],
 	);
 
-	const updateSquareStyle = useCallback(
-		(id: string, style: Partial<SquareStyle>) => {
-			setSquares((prev) => {
-				const index = prev.findIndex((s) => s.id === id);
-				if (index === -1) return prev;
-
-				const newSquares = [...prev];
-				newSquares[index] = {
-					...newSquares[index],
-					style: {
-						...newSquares[index].style,
-						...style,
-					},
-				};
-				return newSquares;
-			});
-		},
-		[],
-	);
-
-	const toggleSelect = useCallback(
-		(id: string, event: React.MouseEvent) => {
-			setSelectedSquare((prev) => {
-				if (prev === id) {
-					const index = squares.findIndex((s) => s.id === id);
-					const squaresAtPoint = squares
-						.filter((_, i) => i < index)
-						.filter((s) =>
-							isPointInSquare(
-								{ x: event.nativeEvent.offsetX, y: event.nativeEvent.offsetY },
-								s,
-							),
-						);
-					return squaresAtPoint.length > 0
-						? squaresAtPoint[squaresAtPoint.length - 1].id
-						: null;
-				}
-				return id;
-			});
-		},
-		[squares],
-	);
-
-	const isPointInSquare = useCallback(
-		(point: Position, square: Square, offset?: number) => {
-			const adjustedPoint = {
-				x: point.x + (offset || 0),
-				y: point.y + (offset || 0),
-			};
-			const dx =
-				adjustedPoint.x - (square.x + square.width / 2 + (offset || 0));
-			const dy =
-				adjustedPoint.y - (square.y + square.height / 2 + (offset || 0));
-			const angle = -square.rotation * (Math.PI / 180);
-			const rotatedX = dx * Math.cos(angle) - dy * Math.sin(angle);
-			const rotatedY = dx * Math.sin(angle) + dy * Math.cos(angle);
-			return (
-				Math.abs(rotatedX) <= square.width / 2 &&
-				Math.abs(rotatedY) <= square.height / 2
-			);
-		},
-		[],
-	);
-
 	const endDrag = useCallback(() => {
+		if (dragState?.type === "create") {
+			setSquares((prev) => {
+				const lastSquare = prev[prev.length - 1];
+				if (
+					lastSquare &&
+					(Math.abs(lastSquare.width) < 5 || Math.abs(lastSquare.height) < 5)
+				) {
+					return prev.slice(0, -1);
+				}
+				return prev;
+			});
+		}
 		setDragState(null);
-	}, []);
+	}, [dragState]);
 
 	const deleteSquare = useCallback((id: string) => {
-		setSquares((prev) => prev.filter((s) => s.id !== id));
+		setSquares((prev) => prev.filter((square) => square.id !== id));
+		setSelectedSquare(null);
+	}, []);
+
+	const updateSquare = useCallback((id: string, updates: Partial<Square>) => {
+		setSquares((prev) =>
+			prev.map((square) =>
+				square.id === id ? { ...square, ...updates } : square,
+			),
+		);
+	}, []);
+
+	const moveSquareForward = useCallback((id: string) => {
+		setSquares((prev) => {
+			const index = prev.findIndex((s) => s.id === id);
+			if (index === -1 || index === prev.length - 1) return prev;
+
+			const newSquares = [...prev];
+			const square = newSquares[index];
+			const nextSquare = newSquares[index + 1];
+
+			// Swap z-indices
+			const tempZIndex = square.zIndex;
+			square.zIndex = nextSquare.zIndex;
+			nextSquare.zIndex = tempZIndex;
+
+			// Swap positions in array
+			newSquares[index] = nextSquare;
+			newSquares[index + 1] = square;
+
+			return newSquares;
+		});
+	}, []);
+
+	const moveSquareBackward = useCallback((id: string) => {
+		setSquares((prev) => {
+			const index = prev.findIndex((s) => s.id === id);
+			if (index <= 0) return prev;
+
+			const newSquares = [...prev];
+			const square = newSquares[index];
+			const prevSquare = newSquares[index - 1];
+
+			// Swap z-indices
+			const tempZIndex = square.zIndex;
+			square.zIndex = prevSquare.zIndex;
+			prevSquare.zIndex = tempZIndex;
+
+			// Swap positions in array
+			newSquares[index] = prevSquare;
+			newSquares[index - 1] = square;
+
+			return newSquares;
+		});
 	}, []);
 
 	return {
 		squares,
 		selectedSquare,
-		hoveredSquare,
 		setSelectedSquare,
-		setHoveredSquare,
 		startDrag,
 		updateDrag,
 		endDrag,
 		deleteSquare,
-		updateSquareStyle,
-		toggleSelect,
-		isPointInSquare,
+		updateSquare,
+		moveSquareForward,
+		moveSquareBackward,
 	};
 }

@@ -5,22 +5,34 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { node } from "@/configs/image-preprocessing";
 import { useDragStore } from "@/contexts/dragContext";
+import type { DragColumn, Metadata } from "@/stores/dragStore";
+import type { CustomNodeData } from "@/types/node";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useMemo } from "react";
+import type { ZodRawShape } from "zod";
 import { useShallow } from "zustand/react/shallow";
-import type { CustomNodeData } from "./node";
 
 interface VisualBoxProps {
 	onClose: () => void;
 	selectedNode: {
 		data: CustomNodeData;
 	} | null;
+	node: (
+		fields: DragColumn<ZodRawShape>[],
+		onUpdateMetadata: (payload: {
+			id: string;
+			metadata: Metadata;
+		}) => void,
+	) => DragColumn[];
 }
 
-export default function VisualBox({ selectedNode, onClose }: VisualBoxProps) {
+export default function VisualBox({
+	selectedNode,
+	onClose,
+	node,
+}: VisualBoxProps) {
 	if (!selectedNode) {
 		return null;
 	}
@@ -29,7 +41,7 @@ export default function VisualBox({ selectedNode, onClose }: VisualBoxProps) {
 	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
 	const input = useMemo(() => {
 		return node(fields, onUpdateMetadata).find((field) => field.id === id);
-	}, [fields, onUpdateMetadata, id]);
+	}, [fields, onUpdateMetadata, id, node]);
 	return (
 		<Card className="h-full">
 			<CardHeader className="relative">

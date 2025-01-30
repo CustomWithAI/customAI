@@ -2,17 +2,32 @@
 
 import { ContentHeader, Italic, SubHeader } from "@/components/typography/text";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { node } from "@/configs/image-preprocessing";
 import { useDragStore } from "@/contexts/dragContext";
-import { type DragEvent, type ReactElement, cloneElement, use } from "react";
+import type { DragColumn, Metadata } from "@/stores/dragStore";
+import {
+	type DragEvent,
+	type ReactElement,
+	cloneElement,
+	use,
+	useMemo,
+} from "react";
+import type { ZodRawShape } from "zod";
 
 type NodePaletteProps = {
 	noTitle?: boolean;
 	onPickUp?: () => void;
+	node: (
+		fields: DragColumn<ZodRawShape>[],
+		onUpdateMetadata: (payload: {
+			id: string;
+			metadata: Metadata;
+		}) => void,
+	) => DragColumn[];
 };
 export default function NodePalette({
 	noTitle = false,
 	onPickUp,
+	node,
 }: NodePaletteProps) {
 	const fields = useDragStore((state) => state.fields);
 	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
@@ -21,6 +36,9 @@ export default function NodePalette({
 		event.dataTransfer.effectAllowed = "move";
 		onPickUp ? onPickUp() : undefined;
 	};
+	const input = useMemo(() => {
+		return node(fields, onUpdateMetadata);
+	}, [fields, onUpdateMetadata, node]);
 
 	return (
 		<Card className="h-full">
@@ -30,7 +48,7 @@ export default function NodePalette({
 				</CardHeader>
 			)}
 			<CardContent className="space-y-4">
-				{node(fields, onUpdateMetadata).map((node) => (
+				{input.map((node) => (
 					<div
 						key={node.type}
 						className="p-4 border rounded-lg cursor-move hover:bg-accent"
