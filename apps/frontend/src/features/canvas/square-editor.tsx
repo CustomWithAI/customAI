@@ -11,10 +11,10 @@ import { darkenColor } from "@/utils/color-utils";
 import { generateRandomLabel } from "@/utils/random";
 import { Download, Upload } from "lucide-react";
 import { Lock } from "lucide-react";
-import { Ewert } from "next/font/google";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ContextMenu } from "./context-menu";
 import { LabelSidebar } from "./label-sidebar";
+import { removeLabelFromShapes, updateLabel } from "./label-utils";
 import { ModeSelector } from "./mode-selector";
 import { ShapeContextMenu } from "./shape-context-menu";
 import { ShapeRenderer } from "./shape-render";
@@ -471,6 +471,34 @@ export default function SquareEditor({
 					isLocked,
 				}),
 			),
+			polygon: polygons.map(
+				({ id, points, color, labelId, zIndex, isLocked, transform }) => ({
+					id,
+					points: points.map(({ x, y }) => ({
+						x: Math.round(x),
+						y: Math.round(y),
+					})),
+					color,
+					transform,
+					labelId,
+					zIndex,
+					isLocked,
+				}),
+			),
+			path: freehandPaths.map(
+				({ id, points, color, labelId, zIndex, isLocked, transform }) => ({
+					id,
+					points: points.map(({ x, y }) => ({
+						x: Math.round(x),
+						y: Math.round(y),
+					})),
+					color,
+					transform,
+					labelId,
+					zIndex,
+					isLocked,
+				}),
+			),
 			labels,
 		};
 
@@ -485,7 +513,7 @@ export default function SquareEditor({
 		link.click();
 		document.body.removeChild(link);
 		URL.revokeObjectURL(url);
-	}, [squares, labels]);
+	}, [squares, labels, polygons, freehandPaths]);
 
 	const handleImport = useCallback(
 		(json: string | object) => {
@@ -540,21 +568,10 @@ export default function SquareEditor({
 				return updated;
 			});
 			setSelectedLabel((prev) => (prev === labelId ? null : prev));
-			for (const square of squares) {
-				if (square.labelId === labelId) {
-					updateSquare(square.id, { labelId: undefined });
-				}
-			}
-			for (const polygon of polygons) {
-				if (polygon.labelId === labelId) {
-					updatePolygon(polygon.id, { labelId: undefined });
-				}
-			}
-			for (const path of freehandPaths) {
-				if (path.labelId === labelId) {
-					updatePath(path.id, { labelId: undefined });
-				}
-			}
+
+			removeLabelFromShapes(squares, labelId, updateSquare);
+			removeLabelFromShapes(polygons, labelId, updatePolygon);
+			removeLabelFromShapes(freehandPaths, labelId, updatePath);
 		},
 		[
 			squares,
@@ -595,15 +612,10 @@ export default function SquareEditor({
 				}
 				return;
 			}
-			if (selectedSquare) {
-				updateSquare(selectedSquare, { labelId: labelId });
-			}
-			if (selectedPolygon) {
-				updatePolygon(selectedPolygon, { labelId: labelId });
-			}
-			if (selectedPath) {
-				updatePath(selectedPath, { labelId: labelId });
-			}
+
+			updateLabel(selectedSquare, labelId, updateSquare);
+			updateLabel(selectedPolygon, labelId, updatePolygon);
+			updateLabel(selectedPath, labelId, updatePath);
 		},
 		[
 			selectedSquare,
