@@ -1,32 +1,33 @@
-import type { Label, Square } from "@/types/square";
-import { Lock, MoveDown, MoveUp, Tag, Unlock } from "lucide-react";
+import type { FreehandPath, Label, Polygon } from "@/types/square";
+import { Lock, MoveDown, MoveUp, Tag, Trash2, Unlock } from "lucide-react";
+import type React from "react";
 import { useEffect, useRef } from "react";
 
-interface ContextMenuProps {
+interface ShapeContextMenuProps {
 	x: number;
 	y: number;
-	square?: Square;
+	shape: Polygon | FreehandPath | undefined;
 	labels: Label[];
 	onClose: () => void;
 	onDelete: () => void;
-	onUpdate: (square: Partial<Square>) => void;
+	onUpdate: (updates: Partial<Polygon | FreehandPath>) => void;
 	onMoveForward: () => void;
 	onMoveBackward: () => void;
 }
-
 const X_OFFSET = 40;
 const Y_OFFSET = 120;
-export function ContextMenu({
+
+export function ShapeContextMenu({
 	x,
 	y,
-	square,
-	onClose,
+	shape,
 	labels,
+	onClose,
 	onDelete,
 	onUpdate,
 	onMoveForward,
 	onMoveBackward,
-}: ContextMenuProps) {
+}: ShapeContextMenuProps) {
 	const menuRef = useRef<HTMLButtonElement>(null);
 
 	useEffect(() => {
@@ -43,8 +44,10 @@ export function ContextMenu({
 	const handleClick = (e: React.MouseEvent) => {
 		e.stopPropagation();
 	};
-
-	if (!square) return;
+	if (!shape) {
+		console.log("unable to find shape");
+		return;
+	}
 	return (
 		<button
 			type="button"
@@ -61,13 +64,13 @@ export function ContextMenu({
 						className="w-full px-3 py-2 text-left hover:bg-gray-100 text-sm flex items-center gap-2"
 						onClick={() =>
 							onUpdate({
-								labelId: label.id === square.labelId ? undefined : label.id,
+								labelId: label.id === shape.labelId ? undefined : label.id,
 							})
 						}
 					>
 						<Tag className="w-4 h-4" style={{ color: label.color }} />
 						{label.name}
-						{label.id === square.labelId && <span className="ml-auto">✓</span>}
+						{label.id === shape.labelId && <span className="ml-auto">✓</span>}
 					</button>
 				))}
 				<div className="h-px bg-gray-200 my-2" />
@@ -87,9 +90,9 @@ export function ContextMenu({
 				</button>
 				<button
 					className="w-full px-3 py-2 text-left hover:bg-gray-100 text-sm flex items-center gap-2"
-					onClick={() => onUpdate({ isLocked: !square.isLocked })}
+					onClick={() => onUpdate({ isLocked: !shape.isLocked })}
 				>
-					{square.isLocked ? (
+					{shape.isLocked ? (
 						<>
 							<Unlock className="w-4 h-4" />
 							Unlock
@@ -102,10 +105,11 @@ export function ContextMenu({
 					)}
 				</button>
 				<button
-					className="w-full px-3 py-2 text-left hover:bg-gray-100 text-red-600 text-sm"
+					className="w-full px-3 py-2 text-left hover:bg-gray-100 text-red-600 text-sm flex items-center gap-2"
 					onClick={onDelete}
 				>
-					Delete Square
+					<Trash2 className="w-4 h-4" />
+					Delete Shape
 				</button>
 			</div>
 		</button>

@@ -1,3 +1,4 @@
+import { TextFormItem } from "@/components/builder/form-utils";
 import { ContentHeader } from "@/components/typography/text";
 import {
 	FormControl,
@@ -9,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/libs/utils";
 import type { DragColumn, Metadata } from "@/stores/dragStore";
+import { findById } from "@/utils/findId";
 import {
 	Axis3d,
 	Crop,
@@ -54,72 +56,54 @@ export const node = (
 									name="size.x"
 									render={({ field: { onChange, value } }) => (
 										<div className="flex gap-x-3">
-											<FormItem className={cn("w-1/2")}>
-												<FormLabel>X</FormLabel>
-												<FormControl>
-													<Input
-														type="text"
-														onChange={(e) => {
-															onUpdateMetadata({
-																id: "resizing-1",
-																metadata: {
-																	size: {
-																		type: "Object",
-																		value: {
-																			x: {
-																				type: "Number",
-																				value: Number(e.target.value),
-																			},
-																		},
+											<TextFormItem
+												className="w-1/2"
+												label="X"
+												onChange={(e) => {
+													onUpdateMetadata({
+														id: "resizing-1",
+														metadata: {
+															size: {
+																type: "Object",
+																value: {
+																	x: {
+																		type: "Number",
+																		value: Number(e.target.value),
 																	},
 																},
-															});
-														}}
-														value={
-															(
-																fields.find(
-																	(fields) => fields.id === "resizing-1",
-																)?.metadata as any
-															)?.size?.value?.x?.value
-														}
-														placeholder="0"
-													/>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-											<FormItem className={cn("w-1/2")}>
-												<FormLabel>Y</FormLabel>
-												<FormControl>
-													<Input
-														type="text"
-														onChange={(e) =>
-															onUpdateMetadata({
-																id: "resizing-1",
-																metadata: {
-																	size: {
-																		type: "Object",
-																		value: {
-																			y: {
-																				type: "Number",
-																				value: Number(e.target.value),
-																			},
-																		},
+															},
+														},
+													});
+												}}
+												value={
+													(findById(fields, "resizing-1")?.metadata as any)
+														?.size?.value?.x?.value
+												}
+											/>
+											<TextFormItem
+												className="w-1/2"
+												label="Y"
+												onChange={(e) => {
+													onUpdateMetadata({
+														id: "resizing-1",
+														metadata: {
+															size: {
+																type: "Object",
+																value: {
+																	y: {
+																		type: "Number",
+																		value: Number(e.target.value),
 																	},
 																},
-															})
-														}
-														value={
-															(
-																fields.find(
-																	(fields) => fields.id === "resizing-1",
-																)?.metadata as any
-															)?.size?.value?.y?.value
-														}
-														placeholder="0"
-													/>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
+															},
+														},
+													});
+												}}
+												value={
+													(findById(fields, "resizing-1")?.metadata as any)
+														?.size?.value?.y?.value
+												}
+											/>
 										</div>
 									)}
 								/>
@@ -187,11 +171,8 @@ export const node = (
 															});
 														}}
 														value={
-															(
-																fields.find(
-																	(fields) => fields.id === "cropping-1",
-																)?.metadata as any
-															)?.size?.value?.x?.value
+															(findById(fields, "cropping-1")?.metadata as any)
+																?.size?.value?.x?.value
 														}
 														placeholder="0"
 													/>
@@ -220,11 +201,8 @@ export const node = (
 															})
 														}
 														value={
-															(
-																fields.find(
-																	(fields) => fields.id === "cropping-1",
-																)?.metadata as any
-															)?.size?.value?.y?.value
+															(findById(fields, "cropping-1")?.metadata as any)
+																?.size?.value?.y?.value
 														}
 														placeholder="0"
 													/>
@@ -249,8 +227,7 @@ export const node = (
 						name: "position",
 					},
 					config: {
-						setValue: fields.find((fields) => fields.id === "cropping-1")
-							?.metadata?.position?.value,
+						setValue: findById(fields, "cropping-1")?.metadata?.position?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "cropping-1",
@@ -261,7 +238,6 @@ export const node = (
 									},
 								},
 							});
-							console.log(fields, value);
 						},
 						options: {
 							group: false,
@@ -301,8 +277,7 @@ export const node = (
 						testDataId: "angle-rotation-1",
 					},
 					config: {
-						setValue: fields.find((fields) => fields.id === "rotation-1")
-							?.metadata?.angle?.value,
+						setValue: findById(fields, "rotation-1")?.metadata?.angle?.value,
 						setOnChange: (value) => {
 							onUpdateMetadata({
 								id: "rotation-1",
@@ -342,8 +317,8 @@ export const node = (
 						testDataId: "direction-test",
 					},
 					config: {
-						setValue: fields.find((fields) => fields.id === "flipping-1")
-							?.metadata?.direction?.value,
+						setValue: findById(fields, "flipping-1")?.metadata?.direction
+							?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "flipping-1",
@@ -418,40 +393,31 @@ export const node = (
 										<div className="flex flex-col">
 											<ContentHeader>Source Point</ContentHeader>
 											<div className="flex gap-x-3">
-												<FormItem className={cn("w-1/2")}>
-													<FormLabel>Top-left</FormLabel>
-													<FormControl>
-														<Input
-															type="text"
-															onChange={(e) => {
-																onUpdateMetadata({
-																	id: "perspective-1",
-																	metadata: {
-																		source: {
-																			type: "Object",
-																			value: {
-																				"top-left": {
-																					type: "Number",
-																					value: Number(e.target.value),
-																				},
-																			},
+												<TextFormItem
+													label="Top-left"
+													className="w-1/2"
+													onChange={(e) => {
+														onUpdateMetadata({
+															id: "perspective-1",
+															metadata: {
+																source: {
+																	type: "Object",
+																	value: {
+																		"top-left": {
+																			type: "Number",
+																			value: Number(e.target.value),
 																		},
 																	},
-																});
-															}}
-															value={
-																(
-																	fields.find(
-																		(fields) => fields.id === "perspective-1",
-																	)?.metadata as any
-																)?.source?.value?.["top-left"]?.value ||
-																undefined
-															}
-															placeholder="0"
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
+																},
+															},
+														});
+													}}
+													value={
+														(findById(fields, "perspective-1")?.metadata as any)
+															?.source?.value?.["top-left"]?.value || undefined
+													}
+													placeholder="0"
+												/>
 												<FormItem className={cn("w-1/2")}>
 													<FormLabel>Top-right</FormLabel>
 													<FormControl>
@@ -475,9 +441,8 @@ export const node = (
 															}
 															value={
 																(
-																	fields.find(
-																		(fields) => fields.id === "perspective-1",
-																	)?.metadata as any
+																	findById(fields, "perspective-1")
+																		?.metadata as any
 																)?.source?.value?.["top-right"]?.value ||
 																undefined
 															}
@@ -511,9 +476,8 @@ export const node = (
 															}}
 															value={
 																(
-																	fields.find(
-																		(fields) => fields.id === "perspective-1",
-																	)?.metadata as any
+																	findById(fields, "perspective-1")
+																		?.metadata as any
 																)?.source?.value?.["bottom-left"]?.value ||
 																undefined
 															}
@@ -545,9 +509,8 @@ export const node = (
 															}
 															value={
 																(
-																	fields.find(
-																		(fields) => fields.id === "perspective-1",
-																	)?.metadata as any
+																	findById(fields, "perspective-1")
+																		?.metadata as any
 																)?.source?.value?.["bottom-right"]?.value ||
 																undefined
 															}
@@ -601,9 +564,8 @@ export const node = (
 															}}
 															value={
 																(
-																	fields.find(
-																		(fields) => fields.id === "perspective-1",
-																	)?.metadata as any
+																	findById(fields, "perspective-1")
+																		?.metadata as any
 																)?.destination?.value?.["top-left"]?.value ||
 																undefined
 															}
@@ -635,9 +597,8 @@ export const node = (
 															}
 															value={
 																(
-																	fields.find(
-																		(fields) => fields.id === "perspective-1",
-																	)?.metadata as any
+																	findById(fields, "perspective-1")
+																		?.metadata as any
 																)?.destination?.value?.["top-right"]?.value ||
 																undefined
 															}
@@ -672,9 +633,8 @@ export const node = (
 															}}
 															value={
 																(
-																	fields.find(
-																		(fields) => fields.id === "perspective-1",
-																	)?.metadata as any
+																	findById(fields, "perspective-1")
+																		?.metadata as any
 																)?.destination?.value?.["bottom-left"]?.value ||
 																undefined
 															}
@@ -706,9 +666,8 @@ export const node = (
 															}
 															value={
 																(
-																	fields.find(
-																		(fields) => fields.id === "perspective-1",
-																	)?.metadata as any
+																	findById(fields, "perspective-1")
+																		?.metadata as any
 																)?.destination?.value?.["bottom-right"]
 																	?.value || undefined
 															}

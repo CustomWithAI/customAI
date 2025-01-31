@@ -182,12 +182,10 @@ export function useSquares(onChange?: (change: Square) => void) {
 			const square = newSquares[index];
 			const prevSquare = newSquares[index - 1];
 
-			// Swap z-indices
 			const tempZIndex = square.zIndex;
 			square.zIndex = prevSquare.zIndex;
 			prevSquare.zIndex = tempZIndex;
 
-			// Swap positions in array
 			newSquares[index] = prevSquare;
 			newSquares[index - 1] = square;
 
@@ -197,6 +195,7 @@ export function useSquares(onChange?: (change: Square) => void) {
 
 	return {
 		squares,
+		setSquares,
 		selectedSquare,
 		setSelectedSquare,
 		startDrag,
