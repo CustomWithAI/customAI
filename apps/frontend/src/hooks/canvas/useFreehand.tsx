@@ -18,7 +18,7 @@ export function useFreehand({
 	const [dragState, setDragState] = useState<{
 		type: "move" | "resize";
 		startPos: Point;
-		originalTransform: Transform;
+		originalPos: Point[];
 		pathId: string;
 	} | null>(null);
 
@@ -28,7 +28,6 @@ export function useFreehand({
 				id: Date.now().toString(),
 				points: [point],
 				color: "#000000",
-				transform: { x: 0, y: 0, scaleX: 1, scaleY: 1 },
 				labelId,
 			};
 			setActivePath(newPath);
@@ -57,6 +56,11 @@ export function useFreehand({
 
 	const endPath = useCallback(() => {
 		if (activePath) {
+			if (activePath.points.length < 16) {
+				setPaths((prev) => prev.slice(0, -1));
+				setActivePath(null);
+				return;
+			}
 			const updatedPath = {
 				...activePath,
 				points: [...activePath.points, activePath.points[0]],
@@ -77,12 +81,9 @@ export function useFreehand({
 			setDragState({
 				type,
 				startPos: point,
-				originalTransform: path.transform || {
-					x: 0,
-					y: 0,
-					scaleX: 1,
-					scaleY: 1,
-				},
+				originalPos:
+					paths.find((p) => p.id === pathId)?.points.map((p) => ({ ...p })) ||
+					[],
 				pathId,
 			});
 		},
@@ -103,22 +104,19 @@ export function useFreehand({
 					if (dragState.type === "move") {
 						return {
 							...path,
-							transform: {
-								...dragState.originalTransform,
-								x: dragState.originalTransform.x + dx,
-								y: dragState.originalTransform.y + dy,
-							},
+							points: dragState.originalPos.map((p) => ({
+								x: p.x + dx,
+								y: p.y + dy,
+							})),
 						};
 					}
-					const scaleX = 1 + dx / 100;
-					const scaleY = 1 + dy / 100;
+					const firstPoint = dragState.originalPos[0];
 					return {
 						...path,
-						transform: {
-							...dragState.originalTransform,
-							scaleX: dragState.originalTransform.scaleX * scaleX,
-							scaleY: dragState.originalTransform.scaleY * scaleY,
-						},
+						points: dragState.originalPos.map((p) => ({
+							x: firstPoint.x + (p.x - firstPoint.x) * (1 + dx / 100),
+							y: firstPoint.y + (p.y - firstPoint.y) * (1 + dy / 100),
+						})),
 					};
 				}),
 			);

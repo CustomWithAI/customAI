@@ -19,7 +19,7 @@ export function usePolygon({
 	const [dragState, setDragState] = useState<{
 		type: "move" | "resize";
 		startPos: Point;
-		originalTransform: Transform;
+		originalPoints: Point[];
 		polygonId: string;
 	} | null>(null);
 
@@ -30,8 +30,7 @@ export function usePolygon({
 				points: [point],
 				color: "#000000",
 				isComplete: false,
-				transform: { x: 0, y: 0, scaleX: 1, scaleY: 1 },
-				labelId, // Add labelId
+				labelId,
 			};
 			setActivePolygon(newPolygon);
 			setPolygons((prev) => [...prev, newPolygon]);
@@ -82,12 +81,7 @@ export function usePolygon({
 			setDragState({
 				type,
 				startPos: point,
-				originalTransform: polygon.transform || {
-					x: 0,
-					y: 0,
-					scaleX: 1,
-					scaleY: 1,
-				},
+				originalPoints: polygon.points.map((p) => ({ ...p })),
 				polygonId,
 			});
 		},
@@ -108,22 +102,19 @@ export function usePolygon({
 					if (dragState.type === "move") {
 						return {
 							...polygon,
-							transform: {
-								...dragState.originalTransform,
-								x: dragState.originalTransform.x + dx,
-								y: dragState.originalTransform.y + dy,
-							},
+							points: dragState.originalPoints.map((p) => ({
+								x: p.x + dx,
+								y: p.y + dy,
+							})),
 						};
 					}
-					const scaleX = 1 + dx / 100;
-					const scaleY = 1 + dy / 100;
+					const firstPoint = dragState.originalPoints[0];
 					return {
 						...polygon,
-						transform: {
-							...dragState.originalTransform,
-							scaleX: dragState.originalTransform.scaleX * scaleX,
-							scaleY: dragState.originalTransform.scaleY * scaleY,
-						},
+						points: dragState.originalPoints.map((p) => ({
+							x: firstPoint.x + (p.x - firstPoint.x) * (1 + dx / 100),
+							y: firstPoint.y + (p.y - firstPoint.y) * (1 + dy / 100),
+						})),
 					};
 				}),
 			);

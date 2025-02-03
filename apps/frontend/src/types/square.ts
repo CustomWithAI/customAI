@@ -40,7 +40,6 @@ export interface Polygon {
 	labelId?: string;
 	zIndex?: number;
 	isLocked?: boolean;
-	transform?: Transform;
 }
 
 export interface FreehandPath {
@@ -50,7 +49,6 @@ export interface FreehandPath {
 	labelId?: string;
 	zIndex?: number;
 	isLocked?: boolean;
-	transform?: Transform;
 }
 
 export interface Editor {

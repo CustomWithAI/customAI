@@ -11,7 +11,14 @@ import { darkenColor } from "@/utils/color-utils";
 import { generateRandomLabel } from "@/utils/random";
 import { Download, Upload } from "lucide-react";
 import { Lock } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+	type MouseEvent,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 import { ContextMenu } from "./context-menu";
 import { LabelSidebar } from "./label-sidebar";
 import { removeLabelFromShapes, updateLabel } from "./label-utils";
@@ -209,30 +216,25 @@ export default function SquareEditor({
 		[getMousePosition, startPolygonDrag, startPathDrag],
 	);
 
-	const handleShapeDragEnd = useCallback(
-		(type: "polygon" | "path", id: string, event: React.MouseEvent) => {
-			setSelectedShape(null);
-		},
-		[],
-	);
-
 	const handleShapeClick = useCallback(
 		(type: "polygon" | "path", id: string, event: React.MouseEvent) => {
 			event.stopPropagation();
 			if (event.button === 2 && event.type === "contextmenu") {
 				setSelectedShape({ type, id });
 				setShapeContextMenu({ x: event.clientX, y: event.clientY });
+			} else if (selectedShape) {
+				setSelectedShape(null);
 			} else {
 				setSelectedShape((prev) => (prev?.id === id ? null : { type, id }));
 			}
 		},
-		[],
+		[selectedShape],
 	);
 
 	const handleMouseDown = useCallback(
 		(event: React.MouseEvent) => {
 			if (event.button !== 0) return;
-
+			console.log(event.button);
 			const unusedLabel = getUnusedLabel() || handleAddLabel();
 			const { x, y } = getMousePosition(event);
 
@@ -280,7 +282,6 @@ export default function SquareEditor({
 							return;
 						}
 					}
-
 					setSelectedSquare(null);
 					handleStartDrag(x, y);
 					break;
@@ -330,39 +331,73 @@ export default function SquareEditor({
 				case "delete": {
 					const deleteTarget = event.target as Element;
 					const deleteElement = deleteTarget.closest("[data-square-id], path");
-
-					if (deleteElement) {
-						if (deleteElement.hasAttribute("data-square-id")) {
-							const squareId = deleteElement.getAttribute("data-square-id");
-							if (squareId) deleteSquare(squareId);
-						} else {
-							const pathData = deleteElement.getAttribute("data-shape-id");
-							if (pathData) {
-								const [type, id] = pathData.split("-");
-								if (type === "polygon") {
-									deletePolygon(id);
-								} else if (type === "path") {
-									deletePath(id);
-								}
-							}
+					if (!deleteElement) return;
+					if (deleteElement.hasAttribute("data-square-id")) {
+						const squareId = deleteElement.getAttribute("data-square-id");
+						if (squareId) deleteSquare(squareId);
+					} else {
+						const pathData = deleteElement.getAttribute("data-shape-id");
+						if (!pathData) return;
+						const [type, id] = pathData.split("-");
+						if (type === "polygon") {
+							deletePolygon(id);
+						} else if (type === "path") {
+							deletePath(id);
 						}
 					}
 					break;
 				}
 				case "polygon": {
+					if ((event.target as Element).closest("[data-shape-id]")) {
+						const shapeElement = (event.target as Element).closest(
+							"[data-shape-id]",
+						);
+						if (!shapeElement?.hasAttribute("data-shape-id")) return;
+						const shapeId = shapeElement.getAttribute("data-shape-id");
+						if (!shapeId) return;
+						const [type, id] = shapeId.split("-");
+						const polygon = polygons.find((p) => p.id === id);
+						if (polygon) {
+							setSelectedShape({ type: type as "polygon" | "path", id });
+							if (!polygon.isLocked) {
+								startPolygonDrag(id, { x, y });
+							}
+							return;
+						}
+					}
 					if (!selectedShape && !activePolygon) {
 						if (!unusedLabel) return;
 						startPolygon({ x, y }, unusedLabel.id);
 					} else if (activePolygon) {
 						addPoint({ x, y });
 					}
+					setSelectedShape(null);
 					break;
 				}
 				case "freehand": {
+					if ((event.target as Element).closest("[data-path-id]")) {
+						const pathElement = (event.target as Element).closest(
+							"[data-path-id]",
+						);
+						if (!pathElement?.hasAttribute("data-path-id")) return;
+						const pathId = pathElement.getAttribute("data-path-id");
+						if (!pathId) return;
+						const [type, id] = pathId.split("-");
+						const path = freehandPaths.find((p) => p.id === id);
+						if (path) {
+							setSelectedShape({ type: type as "path" | "path", id });
+							if (!path.isLocked) {
+								startPathDrag(id, { x, y });
+							}
+							return;
+						}
+						return;
+					}
 					if (!selectedShape) {
 						if (!unusedLabel) return;
 						startPath({ x, y }, unusedLabel.id);
 					}
+					setSelectedShape(null);
 					break;
 				}
 				default: {
@@ -374,8 +409,12 @@ export default function SquareEditor({
 			mode,
 			deletePolygon,
 			deleteSquare,
+			freehandPaths,
+			startPolygonDrag,
+			polygons,
 			squares,
 			activePolygon,
+			startPathDrag,
 			addPoint,
 			deletePath,
 			selectedShape,
@@ -387,49 +426,6 @@ export default function SquareEditor({
 			getUnusedLabel,
 		],
 	);
-	const handleEditorChange = useCallback(
-		(
-			editorId: string,
-			updates: Partial<{
-				squares: Square[];
-				labels: Label[];
-				polygons: { id: string; points: { x: number; y: number }[] }[];
-				freehandPaths: { id: string; points: { x: number; y: number }[] }[];
-			}>,
-		) => {
-			onChange?.(
-				[...squares, ...(updates.squares || [])],
-				[...labels, ...(updates.labels || [])],
-			);
-		},
-		[onChange, squares, labels],
-	);
-
-	const handleKeyDown = useCallback(
-		(event: KeyboardEvent) => {
-			const target = event.target as HTMLElement;
-			if (
-				event.key === "Backspace" &&
-				!["INPUT", "TEXTAREA"].includes(target.tagName)
-			) {
-				event.preventDefault();
-				if (!selectedSquare) return;
-				deleteSquare(selectedSquare);
-				setContextMenu(null);
-			}
-			if (event.key === "Escape") {
-				if (mode === "polygon") {
-					cancelPolygon();
-				}
-			}
-		},
-		[deleteSquare, selectedSquare, cancelPolygon, mode],
-	);
-
-	useEffect(() => {
-		document.addEventListener("keydown", handleKeyDown);
-		return () => document.removeEventListener("keydown", handleKeyDown);
-	}, [handleKeyDown]);
 
 	const handleMouseMove = useCallback(
 		(event: React.MouseEvent) => {
@@ -440,16 +436,13 @@ export default function SquareEditor({
 					updateDrag(x, y);
 					break;
 				case "polygon":
-					if (selectedShape) {
+					updatePreview({ x, y });
+					if (!activePolygon) {
 						updatePolygonDrag({ x, y });
-					} else if (activePolygon) {
-						updatePreview({ x, y });
 					}
 					break;
 				case "freehand":
-					if (selectedShape) {
-						updatePathDrag({ x, y });
-					} else if (activePath) {
+					if (activePath) {
 						addFreehandPoint({ x, y });
 					}
 					break;
@@ -459,45 +452,56 @@ export default function SquareEditor({
 			updateDrag,
 			updatePreview,
 			activePath,
-			activePolygon,
-			selectedShape,
-			updatePathDrag,
-			updatePolygonDrag,
 			mode,
+			activePolygon,
+			updatePolygonDrag,
 			addFreehandPoint,
 			getMousePosition,
 		],
 	);
 
-	const handleMouseUp = useCallback(() => {
-		switch (mode) {
-			case "square":
-			case "select":
-				endDrag();
-				break;
-			case "polygon":
-				if (selectedPolygon) {
+	const handleMouseUp = useCallback(
+		(event: MouseEvent) => {
+			if (event.button === 2) return;
+			switch (mode) {
+				case "square":
+				case "select":
+					endDrag();
+					if (contextMenu) {
+						setContextMenu(null);
+					}
+					break;
+				case "polygon":
 					endPolygonDrag();
-				}
-				break;
-			case "freehand":
-				if (activePath) {
-					endPath();
-				} else if (selectedPath) {
+					if (shapeContextMenu) {
+						setShapeContextMenu(null);
+						break;
+					}
+					break;
+				case "freehand":
+					if (activePath) {
+						endPath();
+						break;
+					}
 					endPathDrag();
-				}
-				break;
-		}
-	}, [
-		mode,
-		endDrag,
-		selectedPolygon,
-		endPolygonDrag,
-		activePath,
-		endPath,
-		selectedPath,
-		endPathDrag,
-	]);
+					if (shapeContextMenu) {
+						setShapeContextMenu(null);
+						break;
+					}
+					break;
+			}
+		},
+		[
+			mode,
+			endDrag,
+			shapeContextMenu,
+			endPolygonDrag,
+			contextMenu,
+			activePath,
+			endPath,
+			endPathDrag,
+		],
+	);
 
 	const handleContextMenu = useCallback(
 		(event: React.MouseEvent) => {
@@ -507,13 +511,25 @@ export default function SquareEditor({
 				event.clientY,
 			);
 			const squareElement = targetElement?.closest("[data-square-id]");
-
 			if (squareElement) {
 				const squareId = squareElement.getAttribute("data-square-id");
 				if (squareId) {
 					setSelectedSquare(squareId);
 					setContextMenu({ x: event.clientX, y: event.clientY });
 				}
+				return;
+			}
+
+			const shapeElement = targetElement?.closest("[data-shape-id]");
+			if (shapeElement) {
+				const shapeId = shapeElement.getAttribute("data-shape-id");
+				if (shapeId) {
+					event.stopPropagation();
+					const [type, id] = shapeId.split("-");
+					setSelectedShape({ type: type as "polygon" | "path", id: id });
+					setShapeContextMenu({ x: event.clientX, y: event.clientY });
+				}
+				return;
 			}
 		},
 		[setSelectedSquare],
@@ -534,28 +550,26 @@ export default function SquareEditor({
 				}),
 			),
 			polygon: polygons.map(
-				({ id, points, color, labelId, zIndex, isLocked, transform }) => ({
+				({ id, points, color, labelId, zIndex, isLocked }) => ({
 					id,
 					points: points.map(({ x, y }) => ({
 						x: Math.round(x),
 						y: Math.round(y),
 					})),
 					color,
-					transform,
 					labelId,
 					zIndex,
 					isLocked,
 				}),
 			),
 			path: freehandPaths.map(
-				({ id, points, color, labelId, zIndex, isLocked, transform }) => ({
+				({ id, points, color, labelId, zIndex, isLocked }) => ({
 					id,
 					points: points.map(({ x, y }) => ({
 						x: Math.round(x),
 						y: Math.round(y),
 					})),
 					color,
-					transform,
 					labelId,
 					zIndex,
 					isLocked,
@@ -606,6 +620,32 @@ export default function SquareEditor({
 		},
 		[updateSquare, onChange],
 	);
+
+	const handleKeyDown = useCallback(
+		(event: KeyboardEvent) => {
+			const target = event.target as HTMLElement;
+			if (
+				event.key === "Backspace" &&
+				!["INPUT", "TEXTAREA"].includes(target.tagName)
+			) {
+				event.preventDefault();
+				if (!selectedSquare) return;
+				deleteSquare(selectedSquare);
+				setContextMenu(null);
+			}
+			if (event.key === "Escape") {
+				if (mode === "polygon") {
+					cancelPolygon();
+				}
+			}
+		},
+		[deleteSquare, selectedSquare, cancelPolygon, mode],
+	);
+
+	useEffect(() => {
+		document.addEventListener("keydown", handleKeyDown);
+		return () => document.removeEventListener("keydown", handleKeyDown);
+	}, [handleKeyDown]);
 
 	const handleAddLabel = useCallback(() => {
 		const { name, color } = generateRandomLabel();
@@ -706,6 +746,24 @@ export default function SquareEditor({
 		[onChange, squares],
 	);
 
+	const handleEditorChange = useCallback(
+		(
+			editorId: string,
+			updates: Partial<{
+				squares: Square[];
+				labels: Label[];
+				polygons: { id: string; points: { x: number; y: number }[] }[];
+				freehandPaths: { id: string; points: { x: number; y: number }[] }[];
+			}>,
+		) => {
+			onChange?.(
+				[...squares, ...(updates.squares || [])],
+				[...labels, ...(updates.labels || [])],
+			);
+		},
+		[onChange, squares, labels],
+	);
+
 	const visibleSquares = squares.filter((square) => {
 		if (!selectedLabel) return true;
 		return square.labelId === selectedLabel;
@@ -713,9 +771,10 @@ export default function SquareEditor({
 
 	return (
 		<div className="flex w-full h-full">
+			<ModeSelector mode={mode} onChange={onModeChange} />
+
 			<div className="flex-1 space-y-4">
 				<div className="flex justify-between items-center px-6">
-					<ModeSelector mode={mode} onChange={onModeChange} />
 					<div className="flex gap-2">
 						<Button onClick={handleExport} variant="outline" size="sm">
 							<Download className="w-4 h-4 mr-2" />
@@ -827,9 +886,9 @@ export default function SquareEditor({
 							activePolygon={activePolygon}
 							previewPoint={previewPoint}
 							selectedShape={selectedShape}
+							onContextMenu={handleContextMenu}
 							labels={labels}
 							onShapeClick={handleShapeClick}
-							onShapeDragEnd={handleShapeDragEnd}
 							onShapeDragStart={handleShapeDragStart}
 						/>
 					</div>

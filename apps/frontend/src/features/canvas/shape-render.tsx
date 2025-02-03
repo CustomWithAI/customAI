@@ -8,7 +8,7 @@ import type {
 } from "@/types/square";
 import { Lock } from "lucide-react";
 import type React from "react";
-import { useState } from "react";
+import { type MouseEvent, useState } from "react";
 
 interface ShapeRendererProps {
 	polygons: Polygon[];
@@ -27,11 +27,7 @@ interface ShapeRendererProps {
 		id: string,
 		event: React.MouseEvent,
 	) => void;
-	onShapeDragEnd: (
-		type: "polygon" | "path",
-		id: string,
-		event: React.MouseEvent,
-	) => void;
+	onContextMenu: (mouse: MouseEvent) => void;
 }
 
 export function ShapeRenderer({
@@ -42,8 +38,8 @@ export function ShapeRenderer({
 	selectedShape,
 	labels,
 	onShapeClick,
+	onContextMenu,
 	onShapeDragStart,
-	onShapeDragEnd,
 }: ShapeRendererProps) {
 	const [hover, setHover] = useState<string | undefined>(undefined);
 
@@ -53,17 +49,6 @@ export function ShapeRenderer({
 			.slice(1)
 			.map((p) => `L ${p.x} ${p.y}`)
 			.join(" ")}`;
-	};
-
-	const applyTransform = (transform?: {
-		x: number;
-		y: number;
-		scaleX: number;
-		scaleY: number;
-	}) => {
-		if (!transform) return "";
-		const { x, y, scaleX, scaleY } = transform;
-		return `translate(${x} ${y}) scale(${scaleX} ${scaleY})`;
 	};
 
 	const isSelected = (type: "polygon" | "path", id: string) => {
@@ -98,7 +83,6 @@ export function ShapeRenderer({
 					<g
 						onKeyDown={handleKeyDown}
 						key={polygon.id}
-						transform={applyTransform(polygon.transform)}
 						style={{
 							cursor: polygon.isLocked
 								? "not-allowed"
@@ -106,19 +90,11 @@ export function ShapeRenderer({
 									? "move"
 									: "pointer",
 						}}
-						onClick={(e) => onShapeClick("polygon", polygon.id, e)}
-						onContextMenu={(e) => {
-							e.preventDefault();
-							e.stopPropagation();
-							onShapeClick("polygon", polygon.id, e);
-						}}
+						onContextMenu={onContextMenu}
 						onMouseDown={(e) => {
 							if (selected && !polygon.isLocked) {
 								onShapeDragStart("polygon", polygon.id, e);
 							}
-						}}
-						onMouseUp={(e) => {
-							onShapeDragEnd("polygon", polygon.id, e);
 						}}
 						className={selected ? "selected" : ""}
 					>
@@ -137,10 +113,10 @@ export function ShapeRenderer({
 							strokeWidth={selected ? "3" : "2"}
 							onMouseEnter={() => setHover(label?.id)}
 							onMouseLeave={() => setHover(undefined)}
-							strokeDasharray={hover === label?.id ? undefined : 3}
+							strokeDasharray={hover === label?.id || selected ? undefined : 3}
 						/>
-						{activePolygon &&
-							(selectedShape?.id === polygon.id || previewPoint) &&
+						{(activePolygon || selected) &&
+							previewPoint &&
 							!polygon.isLocked &&
 							polygon.points.map((point, index) => (
 								<circle
@@ -209,7 +185,6 @@ export function ShapeRenderer({
 					<g
 						onKeyDown={handleKeyDown}
 						key={path.id}
-						transform={applyTransform(path.transform)}
 						style={{
 							cursor: path.isLocked
 								? "not-allowed"
@@ -217,7 +192,6 @@ export function ShapeRenderer({
 									? "move"
 									: "pointer",
 						}}
-						onClick={(e) => onShapeClick("path", path.id, e)}
 						onContextMenu={(e) => {
 							e.preventDefault();
 							e.stopPropagation();
@@ -227,10 +201,6 @@ export function ShapeRenderer({
 							if (selected && !path.isLocked) {
 								onShapeDragStart("path", path.id, e);
 							}
-						}}
-						onMouseUp={(e) => {
-              console.log("drag end")
-							onShapeDragEnd("path", path.id, e);
 						}}
 						className={selected ? "selected" : ""}
 					>

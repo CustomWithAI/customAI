@@ -365,6 +365,11 @@ export const node = (
 					},
 				},
 			},
+			/*
+    { source: {
+     top-left: 0}
+     }
+      */
 			inputSchema: z.object({
 				source: z.object({
 					"top-left": z.string(),
