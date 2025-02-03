@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ButtonLoading } from "@/components/ui/loading-button";
+import { env } from "@/env.mjs";
 import { useToast } from "@/hooks/use-toast";
 import { authClient } from "@/libs/auth-client";
 import { useRouterAsync } from "@/libs/i18nNavigation";
@@ -46,7 +47,7 @@ function SignupPage() {
 		try {
 			const { data, error } = await authClient.signIn.social({
 				provider: "google",
-				callbackURL: `/${locale.split("-")[0]}/home`,
+				callbackURL: `${env.NEXT_PUBLIC_FRONTEND_URL}/${locale.split("-")[0]}/home`,
 			});
 			if (error) {
 				toast({

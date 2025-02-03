@@ -1,3 +1,4 @@
+import type { Metadata } from "@/stores/dragStore";
 import { useEdges, useNodes } from "reactflow";
 
 type NodeData = {

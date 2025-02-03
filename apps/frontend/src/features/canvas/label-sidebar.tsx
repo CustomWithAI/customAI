@@ -39,12 +39,25 @@ export function LabelSidebar({
 			</div>
 			<ScrollArea className="flex-1">
 				<div className="p-4 space-y-2">
-					{labels.map((label) => {
+					{labels.map((label, index) => {
 						const isUsed = usedLabels.includes(label.id);
 						return (
-							<button
-								type="button"
+							<div
+								onKeyDown={(e) => {
+									if (e.key === "ArrowDown") {
+										const nextElement = document.querySelector(
+											`[data-index="${index + 1}"]`,
+										) as HTMLElement | null;
+										nextElement?.focus();
+									} else if (e.key === "ArrowUp") {
+										const prevElement = document.querySelector(
+											`[data-index="${index - 1}"]`,
+										) as HTMLElement | null;
+										prevElement?.focus();
+									}
+								}}
 								key={label.id}
+								data-index={index}
 								onClick={() => onLabelClick(label.id)}
 								className={cn(
 									"group flex items-center justify-between p-2 rounded-md gap-x-3",
@@ -85,7 +98,7 @@ export function LabelSidebar({
 										<X className="w-4 h-4" />
 									</Button>
 								</div>
-							</button>
+							</div>
 						);
 					})}
 				</div>

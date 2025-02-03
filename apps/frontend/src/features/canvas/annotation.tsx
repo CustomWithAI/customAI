@@ -1,6 +1,6 @@
 "use client";
 
-import type { DrawingMode, Editor } from "@/types/square";
+import type { Editor, Mode } from "@/types/square";
 import { useState } from "react";
 import { EditorNavigation } from "./editor-navigation";
 import SquareEditor from "./square-editor";
@@ -11,7 +11,7 @@ export default function Page() {
 			id: "1",
 			squares: [],
 			labels: [],
-			mode: "square" as DrawingMode,
+			mode: "square" as Mode,
 			polygons: [],
 			freehandPaths: [],
 		},
@@ -19,7 +19,7 @@ export default function Page() {
 			id: "2",
 			squares: [],
 			labels: [],
-			mode: "square" as DrawingMode,
+			mode: "square" as Mode,
 			polygons: [],
 			freehandPaths: [],
 		},
@@ -44,7 +44,6 @@ export default function Page() {
 			),
 		);
 	};
-
 	const currentEditor = editors[currentEditorIndex];
 
 	return (

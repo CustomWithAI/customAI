@@ -92,7 +92,7 @@ services:
     env_file: apps/backend/.env
     volumes:
       - ./apps/backend:/app
-      - /app/apps/backend/node_modules
+      - /app/node_modules
     ports:
       - 4000:4000 
     depends_on:
@@ -112,8 +112,7 @@ services:
     env_file: apps/frontend/.env
     volumes:
       - ./apps/frontend:/app
-      - /app/apps/frontend/node_modules
-      - /app/apps/frontend/.next
+      - /app/node_modules
     ports:
       - 3000:3000
     depends_on:

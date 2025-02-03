@@ -57,12 +57,12 @@ export interface Editor {
 	id: string;
 	squares: Square[];
 	labels: Label[];
-	mode: DrawingMode;
+	mode: Mode;
 	polygons: Polygon[];
 	freehandPaths: FreehandPath[];
 }
 
-export type DrawingMode = "square" | "polygon" | "freehand";
+export type Mode = "square" | "polygon" | "freehand" | "select" | "delete";
 
 export type ShapeType = Square | Polygon | FreehandPath;
 

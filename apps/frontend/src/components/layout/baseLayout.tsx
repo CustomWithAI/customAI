@@ -25,7 +25,6 @@ type Props = {
 
 export default async function BaseLayout({ children, locale }: Props) {
 	const messages = await getMessages();
-	console.log(locale);
 	return (
 		<html suppressHydrationWarning className="h-full" lang={locale}>
 			<body

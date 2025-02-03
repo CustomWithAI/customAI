@@ -27,6 +27,11 @@ interface ShapeRendererProps {
 		id: string,
 		event: React.MouseEvent,
 	) => void;
+	onShapeDragEnd: (
+		type: "polygon" | "path",
+		id: string,
+		event: React.MouseEvent,
+	) => void;
 }
 
 export function ShapeRenderer({
@@ -38,6 +43,7 @@ export function ShapeRenderer({
 	labels,
 	onShapeClick,
 	onShapeDragStart,
+	onShapeDragEnd,
 }: ShapeRendererProps) {
 	const [hover, setHover] = useState<string | undefined>(undefined);
 
@@ -111,6 +117,9 @@ export function ShapeRenderer({
 								onShapeDragStart("polygon", polygon.id, e);
 							}
 						}}
+						onMouseUp={(e) => {
+							onShapeDragEnd("polygon", polygon.id, e);
+						}}
 						className={selected ? "selected" : ""}
 					>
 						<path
@@ -123,6 +132,7 @@ export function ShapeRenderer({
 									? `${label?.color || polygon.color}40`
 									: "none"
 							}
+							data-shape-id={`polygon-${polygon.id}`}
 							stroke={selected ? "#2563eb" : label?.color || polygon.color}
 							strokeWidth={selected ? "3" : "2"}
 							onMouseEnter={() => setHover(label?.id)}
@@ -130,7 +140,7 @@ export function ShapeRenderer({
 							strokeDasharray={hover === label?.id ? undefined : 3}
 						/>
 						{activePolygon &&
-							previewPoint &&
+							(selectedShape?.id === polygon.id || previewPoint) &&
 							!polygon.isLocked &&
 							polygon.points.map((point, index) => (
 								<circle
@@ -218,12 +228,17 @@ export function ShapeRenderer({
 								onShapeDragStart("path", path.id, e);
 							}
 						}}
+						onMouseUp={(e) => {
+              console.log("drag end")
+							onShapeDragEnd("path", path.id, e);
+						}}
 						className={selected ? "selected" : ""}
 					>
 						<path
 							d={createPathFromPoints(path.points)}
 							fill={path ? `${label?.color || path.color}40` : "none"}
 							stroke={selected ? "#2563eb" : label?.color || path.color}
+							data-shape-id={`path-${path.id}`}
 							strokeWidth={selected ? "3" : "2"}
 							onMouseEnter={() => setHover(label?.id)}
 							onMouseLeave={() => setHover(undefined)}

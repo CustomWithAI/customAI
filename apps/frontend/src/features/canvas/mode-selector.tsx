@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import type { DrawingMode } from "@/types/square";
-import { Hexagon, Pencil, Square } from "lucide-react";
+import type { Mode } from "@/types/square";
+import { Hexagon, MousePointer2, Pencil, Square, Trash2 } from "lucide-react";
 
 interface ModeSelectorProps {
-	mode: DrawingMode;
-	onChange: (mode: DrawingMode) => void;
+	mode: Mode;
+	onChange: (mode: Mode) => void;
 }
 
 export function ModeSelector({ mode, onChange }: ModeSelectorProps) {
@@ -33,6 +33,23 @@ export function ModeSelector({ mode, onChange }: ModeSelectorProps) {
 			>
 				<Pencil className="w-4 h-4 mr-2" />
 				Freehand
+			</Button>
+			<Button
+				variant={mode === "select" ? "default" : "outline"}
+				size="sm"
+				onClick={() => onChange("select")}
+			>
+				<MousePointer2 className="w-4 h-4 mr-2" />
+				Select
+			</Button>
+			<Button
+				variant={mode === "delete" ? "default" : "outline"}
+				size="sm"
+				onClick={() => onChange("delete")}
+				className="text-red-600"
+			>
+				<Trash2 className="w-4 h-4 mr-2" />
+				Delete
 			</Button>
 		</div>
 	);
