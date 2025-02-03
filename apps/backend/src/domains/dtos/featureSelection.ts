@@ -2,7 +2,7 @@ import { t } from "elysia";
 
 export const createFeatureSelectionDto = t.Object({
   name: t.String({ maxLength: 255 }),
-  data: t.Object({}, { additionalProperties: true }),
+  data: t.Record(t.String(), t.Any()),
 });
 
 export const updateFeatureSelectionDto = t.Partial(createFeatureSelectionDto);

@@ -2,7 +2,7 @@ import { t } from "elysia";
 
 export const createImagePreprocessingDto = t.Object({
   name: t.String({ maxLength: 255 }),
-  data: t.Object({}, { additionalProperties: true }),
+  data: t.Record(t.String(), t.Any()),
 });
 
 export const updateImagePreprocessingDto = t.Partial(

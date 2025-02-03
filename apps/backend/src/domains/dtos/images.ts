@@ -2,7 +2,7 @@ import { t } from "elysia";
 
 export const createImageDto = t.Object({
   file: t.File(),
-  annotation: t.Optional(t.Object({}, { additionalProperties: true })),
+  annotation: t.Optional(t.Record(t.String(), t.Any())),
   datasetId: t.Optional(t.String({ maxLength: 255 })),
 });
 

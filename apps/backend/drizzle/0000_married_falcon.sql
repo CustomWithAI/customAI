@@ -2,6 +2,8 @@ CREATE TABLE IF NOT EXISTS "augmentations" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(255),
 	"data" jsonb,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
 	"user_id" text NOT NULL
 );
 --> statement-breakpoint
@@ -65,6 +67,8 @@ CREATE TABLE IF NOT EXISTS "custom_models" (
 	"data" jsonb,
 	"name" varchar(255),
 	"hyperparameter" jsonb,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
 	"user_id" text
 );
 --> statement-breakpoint
@@ -73,6 +77,8 @@ CREATE TABLE IF NOT EXISTS "datasets" (
 	"name" varchar(255),
 	"annotation_method" varchar(255),
 	"split_data" jsonb,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
 	"user_id" text
 );
 --> statement-breakpoint
@@ -80,6 +86,8 @@ CREATE TABLE IF NOT EXISTS "feature_extractions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(255),
 	"data" jsonb,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
 	"user_id" text
 );
 --> statement-breakpoint
@@ -87,6 +95,8 @@ CREATE TABLE IF NOT EXISTS "feature_selections" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(255),
 	"data" jsonb,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
 	"user_id" text
 );
 --> statement-breakpoint
@@ -94,12 +104,16 @@ CREATE TABLE IF NOT EXISTS "image_preprocessings" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(255),
 	"data" jsonb,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
 	"user_id" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "images" (
 	"url" varchar(255) PRIMARY KEY NOT NULL,
 	"annotation" jsonb,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
 	"dataset_id" uuid
 );
 --> statement-breakpoint
@@ -127,6 +141,8 @@ CREATE TABLE IF NOT EXISTS "workflows" (
 	"description" varchar(255),
 	"type" varchar(255),
 	"default_id" uuid,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
 	"user_id" text
 );
 --> statement-breakpoint
