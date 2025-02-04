@@ -1,15 +1,21 @@
-import { Elysia, t } from "elysia";
-import { AugmentationService } from "@/applications/services/augmentationService";
-import { createAugmentationDto } from "@/domains/dtos/augmentation";
+import { Elysia } from "elysia";
+import { augmentationService } from "@/config/dependencies";
+import {
+  createAugmentationDto,
+  updateAugmentationDto,
+} from "@/domains/dtos/augmentation";
 import { userMiddleware } from "@/middleware/authMiddleware";
 import { paginationDto } from "@/domains/dtos/pagination";
 
 export const augmentation = new Elysia({
   name: "augmentation-controller",
   prefix: "augmentations",
+  detail: {
+    tags: ["Augmentation"],
+  },
 })
   .derive(({ request }) => userMiddleware(request))
-  .decorate("augmentationService", new AugmentationService())
+  .decorate("augmentationService", augmentationService)
   .post(
     "/",
     async ({ user, body, augmentationService }) => {
@@ -24,21 +30,20 @@ export const augmentation = new Elysia({
   .get(
     "/",
     async ({ user, query, augmentationService }) => {
-      return augmentationService.getAugmentationsByUserId(user.id, {
-        ...query,
-      });
+      return augmentationService.getAugmentationsByUserId(user.id, query);
     },
     { query: paginationDto }
-  );
-// .get("/note", ({ note }) => note.data)
-// .get(
-//   "/note/:index",
-//   ({ note, params: { index }, error }) => {
-//     return note.data[index] ?? error(404, "oh no :(");
-//   },
-//   {
-//     params: t.Object({
-//       index: t.Number(),
-//     }),
-//   }
-// );
+  )
+  .get("/:id", async ({ params, augmentationService }) => {
+    return augmentationService.getAugmentationById(params.id);
+  })
+  .put(
+    "/:id",
+    async ({ params, body, augmentationService }) => {
+      return augmentationService.updateAugmentation(params.id, body);
+    },
+    { body: updateAugmentationDto }
+  )
+  .delete("/:id", async ({ params, augmentationService }) => {
+    return augmentationService.deleteAugmentation(params.id);
+  });

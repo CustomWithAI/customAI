@@ -1,35 +1,33 @@
+import { AugmentationRepository } from "@/applications/repositories/augmentationRepository";
 import { augmentations } from "@/domains/schema/augmentations";
-import { db as connection } from "@/infrastructures/database/connection";
-import { DatabaseType, PaginationParams } from "@/utils/db-type";
-import withPagination from "@/utils/pagination";
-import { eq } from "drizzle-orm";
+import { PaginationParams } from "@/utils/db-type";
 
 export class AugmentationService {
-  public constructor(public db: DatabaseType = connection) {}
+  public constructor(private repository: AugmentationRepository) {}
 
-  public async createAugmentation(
-    augmentation: typeof augmentations.$inferInsert
-  ) {
-    return this.db.insert(augmentations).values(augmentation).returning();
+  public async createAugmentation(data: typeof augmentations.$inferInsert) {
+    return this.repository.create(data);
   }
+
   public async getAugmentationsByUserId(
     userId: string,
     pagination: PaginationParams
   ) {
-    const query = this.db
-      .select()
-      .from(augmentations)
-      .where(eq(augmentations.userId, userId))
-      .$dynamic();
+    return this.repository.findByUserId(userId, pagination);
+  }
 
-    return withPagination(query, {
-      mode: "cursor",
-      options: {
-        table: augmentations,
-        primaryKey: "id",
-        cursor: pagination.cursor ? { id: pagination.cursor } : undefined,
-        limit: pagination.limit,
-      },
-    });
+  public async getAugmentationById(id: string) {
+    return this.repository.findById(id);
+  }
+
+  public async updateAugmentation(
+    id: string,
+    data: Partial<typeof augmentations.$inferInsert>
+  ) {
+    return this.repository.updateById(id, data);
+  }
+
+  public async deleteAugmentation(id: string) {
+    return this.repository.deleteById(id);
   }
 }
