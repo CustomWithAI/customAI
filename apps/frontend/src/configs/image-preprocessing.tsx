@@ -544,6 +544,7 @@ export const node = (
 								<FormField
 									control={control}
 									name="destination"
+									key="perspective-form"
 									render={({ field: { onChange, value } }) => (
 										<div className="flex flex-col mt-5">
 											<ContentHeader>Destination Point</ContentHeader>

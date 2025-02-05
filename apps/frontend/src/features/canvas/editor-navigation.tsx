@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { memo } from "react";
 
 interface EditorNavigationProps {
 	currentIndex: number;
@@ -8,12 +9,12 @@ interface EditorNavigationProps {
 	onNext: () => void;
 }
 
-export function EditorNavigation({
+export const EditorNavigation = ({
 	currentIndex,
 	totalEditors,
 	onPrevious,
 	onNext,
-}: EditorNavigationProps) {
+}: EditorNavigationProps) => {
 	return (
 		<div className="flex items-center gap-4">
 			<Button
@@ -37,4 +38,4 @@ export function EditorNavigation({
 			</Button>
 		</div>
 	);
-}
+};

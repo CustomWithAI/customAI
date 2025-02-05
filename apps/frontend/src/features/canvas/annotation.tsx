@@ -1,7 +1,8 @@
 "use client";
 
+import { Content, Header } from "@/components/typography/text";
 import type { Editor, Mode } from "@/types/square";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { EditorNavigation } from "./editor-navigation";
 import SquareEditor from "./square-editor";
 
@@ -26,13 +27,13 @@ export default function Page() {
 	]);
 	const [currentEditorIndex, setCurrentEditorIndex] = useState(0);
 
-	const handlePrevious = () => {
+	const handlePrevious = useCallback(() => {
 		setCurrentEditorIndex((prev) => Math.max(0, prev - 1));
-	};
+	}, []);
 
-	const handleNext = () => {
+	const handleNext = useCallback(() => {
 		setCurrentEditorIndex((prev) => Math.min(editors.length - 1, prev + 1));
-	};
+	}, [editors.length]);
 
 	const handleEditorChange = (
 		editorId: string,
@@ -44,12 +45,18 @@ export default function Page() {
 			),
 		);
 	};
-	const currentEditor = editors[currentEditorIndex];
+	const currentEditor = useMemo(
+		() => editors[currentEditorIndex],
+		[editors, currentEditorIndex],
+	);
 
 	return (
-		<div className="p-4">
+		<div className="p-6">
 			<div className="flex justify-between items-center">
-				<h1 className="text-2xl font-bold">Interactive Square Editor</h1>
+				<div className="mb-4">
+					<Header className=" text-blue-600">Annotation</Header>
+					<Content className="text-gray-400">xxx.jpg</Content>
+				</div>
 				<EditorNavigation
 					currentIndex={currentEditorIndex}
 					totalEditors={editors.length}
@@ -57,14 +64,7 @@ export default function Page() {
 					onNext={handleNext}
 				/>
 			</div>
-			<div className="mb-4">
-				<p className="text-xs text-gray-600">
-					Click and drag to create squares. Right-click to delete. Drag squares
-					to move them. Drag corners to resize.
-				</p>
-			</div>
 			<SquareEditor
-				key={currentEditor.id}
 				editorId={currentEditor.id}
 				initialSquares={currentEditor.squares}
 				initialLabels={currentEditor.labels}

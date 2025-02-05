@@ -57,8 +57,6 @@ export default function SquareEditor({
 	const [selectedShape, setSelectedShape] = useState<SelectedShape | null>(
 		null,
 	);
-	const [selectionStart, setSelectionStart] = useState<Point | null>(null);
-	const [selectionEnd, setSelectionEnd] = useState<Point | null>(null);
 	const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
 	const [shapeContextMenu, setShapeContextMenu] = useState<{
 		x: number;
@@ -120,7 +118,6 @@ export default function SquareEditor({
 		updateDrag: updatePathDrag,
 		endDrag: endPathDrag,
 		updatePath,
-		setSelectedPath,
 		deletePath,
 	} = useFreehand({
 		onChange: (path) => {
@@ -375,23 +372,22 @@ export default function SquareEditor({
 					break;
 				}
 				case "freehand": {
-					if ((event.target as Element).closest("[data-path-id]")) {
-						const pathElement = (event.target as Element).closest(
-							"[data-path-id]",
+					if ((event.target as Element).closest("[data-shape-id]")) {
+						const shapeElement = (event.target as Element).closest(
+							"[data-shape-id]",
 						);
-						if (!pathElement?.hasAttribute("data-path-id")) return;
-						const pathId = pathElement.getAttribute("data-path-id");
-						if (!pathId) return;
-						const [type, id] = pathId.split("-");
+						if (!shapeElement?.hasAttribute("data-shape-id")) return;
+						const shapeId = shapeElement.getAttribute("data-shape-id");
+						if (!shapeId) return;
+						const [type, id] = shapeId.split("-");
 						const path = freehandPaths.find((p) => p.id === id);
 						if (path) {
-							setSelectedShape({ type: type as "path" | "path", id });
+							setSelectedShape({ type: type as "polygon" | "path", id });
 							if (!path.isLocked) {
 								startPathDrag(id, { x, y });
 							}
 							return;
 						}
-						return;
 					}
 					if (!selectedShape) {
 						if (!unusedLabel) return;
@@ -467,16 +463,9 @@ export default function SquareEditor({
 				case "square":
 				case "select":
 					endDrag();
-					if (contextMenu) {
-						setContextMenu(null);
-					}
 					break;
 				case "polygon":
 					endPolygonDrag();
-					if (shapeContextMenu) {
-						setShapeContextMenu(null);
-						break;
-					}
 					break;
 				case "freehand":
 					if (activePath) {
@@ -484,23 +473,10 @@ export default function SquareEditor({
 						break;
 					}
 					endPathDrag();
-					if (shapeContextMenu) {
-						setShapeContextMenu(null);
-						break;
-					}
 					break;
 			}
 		},
-		[
-			mode,
-			endDrag,
-			shapeContextMenu,
-			endPolygonDrag,
-			contextMenu,
-			activePath,
-			endPath,
-			endPathDrag,
-		],
+		[mode, endDrag, endPolygonDrag, activePath, endPath, endPathDrag],
 	);
 
 	const handleContextMenu = useCallback(
@@ -629,6 +605,16 @@ export default function SquareEditor({
 				!["INPUT", "TEXTAREA"].includes(target.tagName)
 			) {
 				event.preventDefault();
+				if (selectedShape) {
+					if (selectedShape.type === "polygon") {
+						deletePolygon(selectedShape.id);
+					}
+					if (selectedShape.type === "path") {
+						deletePath(selectedShape.id);
+					}
+					setShapeContextMenu(null);
+					setSelectedShape(null);
+				}
 				if (!selectedSquare) return;
 				deleteSquare(selectedSquare);
 				setContextMenu(null);
@@ -637,9 +623,21 @@ export default function SquareEditor({
 				if (mode === "polygon") {
 					cancelPolygon();
 				}
+				if (mode === "freehand") {
+					endPath();
+				}
 			}
 		},
-		[deleteSquare, selectedSquare, cancelPolygon, mode],
+		[
+			deleteSquare,
+			selectedSquare,
+			deletePath,
+			deletePolygon,
+			selectedShape,
+			cancelPolygon,
+			endPath,
+			mode,
+		],
 	);
 
 	useEffect(() => {
@@ -773,34 +771,14 @@ export default function SquareEditor({
 
 	return (
 		<div className="flex w-full h-full">
-			<ModeSelector mode={mode} onChange={onModeChange} />
-
+			<ModeSelector
+				mode={mode}
+				onChange={onModeChange}
+				editorId={editorId}
+				handleExport={handleExport}
+				handleImport={handleImport}
+			/>
 			<div className="flex-1 space-y-4">
-				<div className="flex justify-between items-center px-6">
-					<div className="flex gap-2">
-						<Button onClick={handleExport} variant="outline" size="sm">
-							<Download className="w-4 h-4 mr-2" />
-							Export JSON
-						</Button>
-						<Button
-							onClick={() =>
-								document.getElementById(`import-json-${editorId}`)?.click()
-							}
-							variant="outline"
-							size="sm"
-						>
-							<Upload className="w-4 h-4 mr-2" />
-							Import JSON
-						</Button>
-						<input
-							id={`import-json-${editorId}`}
-							type="file"
-							accept=".json"
-							onChange={handleImport}
-							className="hidden"
-						/>
-					</div>
-				</div>
 				<div className="relative w-full h-full flex dark:bg-dot-white/[0.2] bg-dot-black/[0.2] items-center justify-center">
 					<div
 						ref={containerRef}

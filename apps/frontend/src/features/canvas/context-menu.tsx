@@ -1,3 +1,4 @@
+import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import type { Label, Square } from "@/types/square";
 import { Lock, MoveDown, MoveUp, Tag, Unlock } from "lucide-react";
 import { useEffect, useRef } from "react";
@@ -29,16 +30,7 @@ export function ContextMenu({
 }: ContextMenuProps) {
 	const menuRef = useRef<HTMLButtonElement>(null);
 
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-				onClose();
-			}
-		};
-
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, [onClose]);
+	useOnClickOutside(menuRef, () => onClose());
 
 	const handleClick = (e: React.MouseEvent) => {
 		e.stopPropagation();

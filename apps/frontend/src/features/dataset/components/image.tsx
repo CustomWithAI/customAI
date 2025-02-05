@@ -52,7 +52,7 @@ export const ContentImage = () => {
 							/>
 							<div className="mt-2">
 								<h3 className="font-medium">{image.title}</h3>
-								<p className="text-xs">{image.description}</p>
+								<p className="text-xs text-gray-400">{image.description}</p>
 							</div>
 						</div>
 					))}
@@ -73,7 +73,7 @@ export const ContentImage = () => {
 							/>
 							<div className="mt-2">
 								<h3 className="font-medium">{image.title}</h3>
-								<p className="text-xs">{image.description}</p>
+								<p className="text-xs text-gray-500">{image.description}</p>
 							</div>
 						</div>
 					))}
