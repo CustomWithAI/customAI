@@ -1,22 +1,17 @@
 import { user } from "@/domains/schema/auth";
-import { sql } from "drizzle-orm";
-import {
-  jsonb,
-  pgTable,
-  text,
-  timestamp,
-  uuid,
-  varchar,
-} from "drizzle-orm/pg-core";
+import { v7 } from "uuid";
+import { jsonb, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const augmentations = pgTable("augmentations", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: varchar("id", { length: 255 })
+    .primaryKey()
+    .$defaultFn(() => v7()),
   name: varchar("name", { length: 255 }),
   data: jsonb("data"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
-    .$onUpdate(() => sql`(CURRENT_TIMESTAMP)`),
+    .$onUpdate(() => new Date()),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, {

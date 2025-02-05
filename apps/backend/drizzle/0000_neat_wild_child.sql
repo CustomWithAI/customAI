@@ -1,5 +1,5 @@
-CREATE TABLE IF NOT EXISTS "augmentations" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+CREATE TABLE "augmentations" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"name" varchar(255),
 	"data" jsonb,
 	"created_at" timestamp DEFAULT now(),
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS "augmentations" (
 	"user_id" text NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "account" (
+CREATE TABLE "account" (
 	"id" text PRIMARY KEY NOT NULL,
 	"account_id" text NOT NULL,
 	"provider_id" text NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS "account" (
 	"updated_at" timestamp NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "session" (
+CREATE TABLE "session" (
 	"id" text PRIMARY KEY NOT NULL,
 	"expires_at" timestamp NOT NULL,
 	"token" text NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS "session" (
 	CONSTRAINT "session_token_unique" UNIQUE("token")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "user" (
+CREATE TABLE "user" (
 	"id" text PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"email" text NOT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	CONSTRAINT "user_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "verification" (
+CREATE TABLE "verification" (
 	"id" text PRIMARY KEY NOT NULL,
 	"identifier" text NOT NULL,
 	"value" text NOT NULL,
@@ -62,8 +62,8 @@ CREATE TABLE IF NOT EXISTS "verification" (
 	"updated_at" timestamp
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "custom_models" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+CREATE TABLE "custom_models" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"data" jsonb,
 	"name" varchar(255),
 	"hyperparameter" jsonb,
@@ -72,8 +72,8 @@ CREATE TABLE IF NOT EXISTS "custom_models" (
 	"user_id" text
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "datasets" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+CREATE TABLE "datasets" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"name" varchar(255),
 	"annotation_method" varchar(255),
 	"split_data" jsonb,
@@ -82,8 +82,8 @@ CREATE TABLE IF NOT EXISTS "datasets" (
 	"user_id" text
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "feature_extractions" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+CREATE TABLE "feature_extractions" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"name" varchar(255),
 	"data" jsonb,
 	"created_at" timestamp DEFAULT now(),
@@ -91,8 +91,8 @@ CREATE TABLE IF NOT EXISTS "feature_extractions" (
 	"user_id" text
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "feature_selections" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+CREATE TABLE "feature_selections" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"name" varchar(255),
 	"data" jsonb,
 	"created_at" timestamp DEFAULT now(),
@@ -100,8 +100,8 @@ CREATE TABLE IF NOT EXISTS "feature_selections" (
 	"user_id" text
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "image_preprocessings" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+CREATE TABLE "image_preprocessings" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"name" varchar(255),
 	"data" jsonb,
 	"created_at" timestamp DEFAULT now(),
@@ -109,46 +109,46 @@ CREATE TABLE IF NOT EXISTS "image_preprocessings" (
 	"user_id" text
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "images" (
+CREATE TABLE "images" (
 	"url" varchar(255) PRIMARY KEY NOT NULL,
 	"annotation" jsonb,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
-	"dataset_id" uuid
+	"dataset_id" varchar(255)
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "trainings" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+CREATE TABLE "trainings" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"version" double precision DEFAULT 0,
 	"hyperparameter" jsonb,
-	"workflow_id" uuid,
+	"workflow_id" varchar(255),
 	"pipeline" jsonb,
-	"dataset_id" uuid,
-	"image_preprocessing_id" uuid,
-	"feature_extraction_id" uuid,
-	"feature_selection_id" uuid,
-	"augmentation_id" uuid,
+	"dataset_id" varchar(255),
+	"image_preprocessing_id" varchar(255),
+	"feature_extraction_id" varchar(255),
+	"feature_selection_id" varchar(255),
+	"augmentation_id" varchar(255),
 	"pre_trained_model" jsonb,
-	"custom_model_id" uuid,
+	"custom_model_id" varchar(255),
 	"trained_model_url" varchar(255),
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "workflows" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+CREATE TABLE "workflows" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"name" varchar(255),
 	"description" varchar(255),
 	"type" varchar(255),
-	"default_id" uuid,
+	"default_id" varchar(255),
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
 	"user_id" text
 );
 --> statement-breakpoint
 ALTER TABLE "augmentations" ADD CONSTRAINT "augmentations_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
-ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
+ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "custom_models" ADD CONSTRAINT "custom_models_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "datasets" ADD CONSTRAINT "datasets_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "feature_extractions" ADD CONSTRAINT "feature_extractions_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
