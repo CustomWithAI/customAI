@@ -38,6 +38,10 @@ export const swaggerConfig = () => (app: Elysia) => {
               name: "Augmentation",
               description: "CRUD for data augmentation",
             },
+            dataset: {
+              name: "Dataset",
+              description: "CRUD for datasets",
+            },
           }),
           components: {
             securitySchemes: {

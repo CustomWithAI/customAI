@@ -1,12 +1,13 @@
 import { t } from "elysia";
 
-export const createImageDto = t.Object({
-  file: t.File(),
-  annotation: t.Optional(t.Record(t.String(), t.Any())),
-  datasetId: t.Optional(t.String({ maxLength: 255 })),
+export const createImagesDto = t.Object({
+  files: t.Files(),
 });
 
-export const updateImageDto = t.Partial(createImageDto);
+export const updateImageDto = t.Object({
+  file: t.Optional(t.File()),
+  annotation: t.Optional(t.Record(t.String(), t.Any())),
+});
 
-export type CreateImageDto = typeof createImageDto.static;
+export type CreateImageDto = typeof createImagesDto.static;
 export type UpdateImageDto = typeof updateImageDto.static;
