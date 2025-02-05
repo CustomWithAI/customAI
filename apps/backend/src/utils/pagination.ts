@@ -1,4 +1,15 @@
-import { and, asc, desc, eq, gt, lt, or } from "drizzle-orm";
+import {
+	type SQL,
+	and,
+	asc,
+	desc,
+	eq,
+	gt,
+	ilike,
+	lt,
+	or,
+	sql,
+} from "drizzle-orm";
 import type {
 	PgSelectQueryBuilder,
 	PgTableWithColumns,
@@ -25,17 +36,22 @@ type CursorOptions<TTable extends PgTableWithColumns<TableConfig>> = {
 	limit?: number;
 	direction?: DirectionCursor;
 	cursor?: string;
+	filters?: Record<string, string>;
+	search?: { fields: Array<keyof TableColumns<TTable>>; term: string };
 };
 
-type OffsetOptions = {
+type OffsetOptions<TTable extends PgTableWithColumns<TableConfig>> = {
+	table: TTable;
 	page?: number;
 	limit?: number;
+	filters?: Record<string, string>;
+	search?: { fields: Array<keyof TableColumns<TTable>>; term: string };
 };
 
 type withPaginationProperties<TTable extends PgTableWithColumns<TableConfig>> =
 	| {
 			mode: "offset";
-			options: OffsetOptions;
+			options: OffsetOptions<TTable>;
 	  }
 	| {
 			mode: "cursor";
@@ -54,7 +70,7 @@ const decodeCursor = (cursor: string) => {
 };
 
 function compare<T, K>(a: T, aValue: T, b: K, bValue: K | undefined): boolean {
-	return (a === aValue) === (b === bValue || b === undefined);
+	return (a === aValue) === (b === bValue || bValue === undefined);
 }
 
 // Main functions
@@ -68,11 +84,27 @@ async function withPagination<
 	| { data: TTable["$inferInsert"]; nextCursor?: string; prevCursor?: string }
 	| undefined
 > {
+	const optionsCause: (SQL | undefined)[] = [];
+	if (options.filters) {
+		for (const [key, value] of Object.entries(options.filters)) {
+			optionsCause.push(eq(options.table[key], value));
+		}
+	}
+	if (options.search) {
+		const { fields, term } = options.search;
+		const searchConditions = fields.map((field) =>
+			ilike(options.table[field], `%${term}%`),
+		);
+		optionsCause.push(or(...searchConditions));
+	}
 	switch (mode) {
 		case "offset": {
 			const { limit = 10, page = 1 } = options;
 			const data = await (
-				qb.limit(limit).offset((page - 1) * limit) as any
+				qb
+					.where(and(...optionsCause))
+					.limit(limit)
+					.offset((page - 1) * limit) as any
 			).execute();
 			return { data };
 		}
@@ -90,6 +122,7 @@ async function withPagination<
 				compare("forward", direction, "next", decodedCursorFields?.direction)
 					? [gt, lt, asc, desc]
 					: [lt, gt, desc, asc];
+			const isNext = decodedCursorFields?.direction !== "before";
 
 			const generateConditions = (
 				comparator: typeof comparatorFn,
@@ -120,10 +153,19 @@ async function withPagination<
 					),
 				);
 			};
-
 			const nextQuery = qb
 				.where(
-					decodedCursorFields ? generateConditions(comparatorFn) : undefined,
+					and(
+						decodedCursorFields
+							? or(
+									cursorFields.length === 0
+										? eq(table[primaryKey], decodedCursorFields[primaryKey])
+										: undefined,
+									generateConditions(comparatorFn),
+								)
+							: undefined,
+						...optionsCause,
+					),
 				)
 				.limit(limit + 1)
 				.orderBy(
@@ -141,7 +183,7 @@ async function withPagination<
 									acc[field as string] = data[data.length - 1][field];
 									return acc;
 								},
-								{} as Record<string, any>,
+								{} as Record<string, unknown>,
 							),
 							[primaryKey]: data[data.length - 1][primaryKey],
 							direction: "next",
@@ -149,7 +191,14 @@ async function withPagination<
 					: undefined;
 
 			const prevQuery = qb
-				.where(generateConditions(inverseComparatorFn, data[0]))
+				.where(
+					and(
+						data.length > 0
+							? generateConditions(inverseComparatorFn, data[0])
+							: undefined,
+						...optionsCause,
+					),
+				)
 				.limit(1)
 				.orderBy(
 					...cursorFields.map((field) => inverseOrderFn(table[field])),
@@ -174,12 +223,9 @@ async function withPagination<
 					: undefined;
 
 			return {
-				data:
-					decodedCursorFields?.direction !== "before"
-						? data.slice(0, limit)
-						: data.reverse().slice(0, limit),
-				nextCursor,
-				prevCursor,
+				data: isNext ? data.slice(0, limit) : data.reverse().slice(0, limit),
+				nextCursor: isNext ? nextCursor : prevCursor,
+				prevCursor: isNext ? prevCursor : nextCursor,
 			};
 		}
 	}

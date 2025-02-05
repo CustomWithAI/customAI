@@ -1,5 +1,4 @@
 import { createPinoLogger, pino } from "@bogeychan/elysia-logger";
-import { config } from "./env";
 
 export const logger = createPinoLogger({
 	transport: {
@@ -8,11 +7,10 @@ export const logger = createPinoLogger({
 				target: "pino-pretty",
 				options: {
 					colorize: true,
-					translateTime: "SYS:standard",
+					translateTime: "dd/mm/yyyy HH:MM:ss",
 					ignore: "pid,hostname",
 				},
 			},
-			{ target: "pino/file" },
 			{
 				target: "pino-elasticsearch",
 				options: {
@@ -24,12 +22,6 @@ export const logger = createPinoLogger({
 			},
 		],
 	},
-	// FOR: print all information about api
-	// formatters: {
-	//   log: (object) => ({
-	//     ...object,
-	//   }),
-	// },
 	level: "debug",
 	timestamp: pino.stdTimeFunctions.isoTime,
 });
