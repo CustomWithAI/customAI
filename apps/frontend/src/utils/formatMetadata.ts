@@ -10,7 +10,7 @@ export function formatMetadata(metadata: Metadata): string {
 					return `${key}:${value.value}`;
 				case "Object":
 					if ("x" in value.value && "y" in value.value) {
-						return `${key}: ${value.value.x.value}x ${value.value.y.value}px`;
+						return `${key}: ${value.value.x.value}x${value.value.y.value} px`;
 					}
 					return `${key}: [${formatMetadata(value.value)}]`;
 				case "Position":

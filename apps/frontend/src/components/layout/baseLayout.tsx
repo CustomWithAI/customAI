@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
+import { node } from "@/configs/image-preprocessing";
 import UploadProgress from "@/features/dataset/components/uploadProgression";
 import { ReactQueryProvider } from "@/libs/react-query-providers";
 import { cn } from "@/libs/utils";
@@ -27,6 +28,14 @@ export default async function BaseLayout({ children, locale }: Props) {
 	const messages = await getMessages();
 	return (
 		<html suppressHydrationWarning className="h-full" lang={locale}>
+			<head>
+				{process.env.NODE_ENV !== "production" && (
+					<script
+						crossOrigin="anonymous"
+						src="//unpkg.com/react-scan/dist/auto.global.js"
+					/>
+				)}
+			</head>
 			<body
 				className={cn(
 					locale === "en-US" ? inter.className : ibm.className,

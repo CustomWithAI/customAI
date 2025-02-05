@@ -135,7 +135,7 @@ export function ShapeRenderer({
 									<foreignObject
 										x={polygon.points[0].x + 8}
 										y={polygon.points[0].y - 24}
-										width="100"
+										width={label.name.length * 7.4 + 24}
 										height="30"
 									>
 										<Badge

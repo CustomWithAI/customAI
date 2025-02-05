@@ -20,7 +20,7 @@ export const DatasetCard: React.FC<CardProps> = ({
 	return (
 		<button
 			type="button"
-			className="min-w-64 hover:shadow-yellow-700 hover:shadow-lg duration-200 border rounded-lg shadow-md overflow-hidden"
+			className="min-w-64 hover:shadow-yellow-500 hover:shadow-sm duration-200 border rounded-lg shadow-md overflow-hidden"
 			onClick={() => router.push(href)}
 		>
 			<div className="flex h-36 relative overflow-hidden">

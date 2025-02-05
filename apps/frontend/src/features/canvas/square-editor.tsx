@@ -694,6 +694,7 @@ export default function SquareEditor({
 					case "square": {
 						if (shape?.id) {
 							setSelectedSquare(shape?.id);
+							setSelectedShape(null);
 							setContextMenu(null);
 							setShapeContextMenu(null);
 						}
@@ -706,6 +707,7 @@ export default function SquareEditor({
 								type: mode === "freehand" ? "path" : "polygon",
 								id: shape?.id,
 							});
+							setSelectedSquare(null);
 							setContextMenu(null);
 							setShapeContextMenu(null);
 						}

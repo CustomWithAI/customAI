@@ -15,6 +15,7 @@ import { Step1 } from "./step1-details";
 import { Step3Page } from "./step2-preset";
 import { Step2 } from "./step3-dataset";
 import { ImagePreprocessingPage } from "./step4-preprocessing";
+import { ModelConfigPage } from "./step8-model-config";
 
 type StepConfig = {
 	readonly title: string;
@@ -91,5 +92,12 @@ export const stepConfig: Record<string, StepConfig> = {
 				<ImagePreprocessingPage />
 			</DragStoreProvider>
 		),
+	},
+	modelconfig: {
+		title: "Model Configuration",
+		stepTitle: "Model Configuration",
+		description: null,
+		icon: <FileSliders />,
+		component: () => <ModelConfigPage />,
 	},
 };

@@ -13,8 +13,8 @@ const users = pgTable(
 		createdAt: timestamp("created_at").notNull(),
 	},
 	(t) => [
-		index("first_name_index").on(t.name),
-		index("first_name_and_id_index").on(t.name, t.id),
+		index("created_at_index").on(t.createdAt),
+		index("created_at_and_id_index").on(t.createdAt, t.id),
 	],
 );
 /*
@@ -25,25 +25,21 @@ CREATE INDEX IF NOT EXISTS "first_name_and_id_index" ON "users" ("first_name" AS
 
 const query = db.select().from(users).$dynamic();
 
-withPagination(query, {
+/* result: {
+  data: T[]
+  nextCursor?: string;
+  prevCursor?: string;
+}
+*/
+const result = await withPagination(query, {
 	mode: "cursor",
 	options: {
 		table: user,
 		primaryKey: "id", // Primary key for tie-breaking
-		cursor: { name: "Alex", id: 2 }, // Cursor values
+		cursorFields: ["createdAt"], // Columns for cursor sorting
+		cursor:
+			"eyJjcmVhdGVkQXQiOiIyMDI1LTAyLTA1VDA0OjM5OjQ3LjYxM1oiLCJpZCI6ImQwZTgwNmRjLTkyZTktNDNjMy05ZmIxLTIwNjcxOTU1MTE5OSJ9",
 		limit: 3, // Limit the results to 3 rows
-		orderBy: [
-			{ field: "name", direction: "asc" }, // Order by first_name ascending
-			{ field: "id", direction: "asc" }, // Then order by id ascending
-		],
+		direction: "forward",
 	},
 });
-
-const result = await query.execute();
-/*
-result: {
-    id: string;
-    name: string;
-    createdAt: Date;
-}[] 
-*/

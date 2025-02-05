@@ -7,7 +7,7 @@ import { cn } from "@/libs/utils";
 import { motion } from "framer-motion";
 import { useCallback } from "react";
 
-export const ImagePreprocessingPage = () => {
+export const AugmentationPage = () => {
 	const { getQueryParam, setQueryParam, compareQueryParam } = useQueryParam({
 		name: "view",
 	});

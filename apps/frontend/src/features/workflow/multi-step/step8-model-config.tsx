@@ -62,7 +62,7 @@ const workflowDetailsFormField: FormFieldInput<ModelConfigurationSchema> = [
 		},
 	},
 ];
-export const Step1 = () => {
+export const ModelConfigPage = () => {
 	const { setQueryParam } = useQueryParam({ name: "step" });
 	const onSubmitData = (data: ModelConfigurationSchema) => {
 		setQueryParam({ value: encodeBase64("preset"), resetParams: true });

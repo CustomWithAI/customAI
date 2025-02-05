@@ -12,9 +12,11 @@ import { cn } from "@/libs/utils";
 import type { DragColumn, Metadata } from "@/stores/dragStore";
 import { findById } from "@/utils/findId";
 import {
+	ArrowDownWideNarrow,
 	Axis3d,
 	Crop,
 	FlipHorizontal2,
+	Percent,
 	RotateCcw,
 	Scaling,
 } from "lucide-react";
@@ -543,7 +545,7 @@ export const node = (
 									control={control}
 									name="destination"
 									render={({ field: { onChange, value } }) => (
-										<div className="flex flex-col">
+										<div className="flex flex-col mt-5">
 											<ContentHeader>Destination Point</ContentHeader>
 											<div className="flex gap-x-3">
 												<FormItem className={cn("w-1/2")}>
@@ -691,6 +693,235 @@ export const node = (
 					config: {},
 				},
 			],
+		},
+		{
+			type: "percentage",
+			title: "Percentage Tresholding",
+			description: "Displays the final output",
+			icon: <Percent />,
+			id: "percentage-1",
+			metadata: {
+				percentage: { type: "Number", value: 0 },
+			},
+			inputField: [
+				{
+					template: "percent",
+					element: {
+						label: "Percentage",
+						key: "percentage-input-1",
+						name: "percentage",
+						testDataId: "percentage-test",
+					},
+					config: {
+						setValue: findById(fields, "percentage-1")?.metadata?.percentage
+							?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "percentage-1",
+								metadata: {
+									percentage: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				percentage: z.number().min(0).max(100),
+			}),
+		},
+		{
+			type: "mean-filtering",
+			title: "Mean Filtering",
+			description: "Evaluates a condition and routes the flow",
+			icon: <ArrowDownWideNarrow />,
+			id: "mean-filtering-1",
+			metadata: {
+				kernel_size: {
+					type: "Object",
+					value: {
+						x: { type: "Number", value: 1 },
+						y: { type: "Number", value: 1 },
+					},
+				},
+			},
+			inputField: [
+				{
+					template: "custom",
+					element: {
+						testDataId: "mean-filtering-form",
+						renderCustomInput({ control }) {
+							return (
+								<FormField
+									control={control}
+									name="kernel_size.x"
+									render={({ field: { onChange, value } }) => (
+										<div className="flex gap-x-3">
+											<TextFormItem
+												className="w-1/2"
+												label="X"
+												onChange={(e) => {
+													onUpdateMetadata({
+														id: "mean-filtering-1",
+														metadata: {
+															kernel_size: {
+																type: "Object",
+																value: {
+																	x: {
+																		type: "Number",
+																		value: Number(e.target.value),
+																	},
+																},
+															},
+														},
+													});
+												}}
+												value={
+													(
+														findById(fields, "mean-filtering-1")
+															?.metadata as any
+													)?.kernel_size?.value?.x?.value
+												}
+											/>
+											<TextFormItem
+												className="w-1/2"
+												label="Y"
+												onChange={(e) => {
+													onUpdateMetadata({
+														id: "mean-filtering-1",
+														metadata: {
+															kernel_size: {
+																type: "Object",
+																value: {
+																	y: {
+																		type: "Number",
+																		value: Number(e.target.value),
+																	},
+																},
+															},
+														},
+													});
+												}}
+												value={
+													(
+														findById(fields, "mean-filtering-1")
+															?.metadata as any
+													)?.kernel_size?.value?.y?.value
+												}
+											/>
+										</div>
+									)}
+								/>
+							);
+						},
+					},
+					config: {},
+				},
+			],
+			inputSchema: z.object({
+				kernel_size: z.object({
+					x: z.string(),
+					y: z.string(),
+				}),
+			}),
+		},
+		{
+			type: "median-filtering",
+			title: "Median Filtering",
+			description: "Evaluates a condition and routes the flow",
+			icon: <ArrowDownWideNarrow />,
+			id: "median-filtering-1",
+			metadata: {
+				kernel_size: {
+					type: "Object",
+					value: {
+						x: { type: "Number", value: 1 },
+						y: { type: "Number", value: 1 },
+					},
+				},
+			},
+			inputField: [
+				{
+					template: "custom",
+					element: {
+						testDataId: "median-filtering-form",
+						renderCustomInput({ control }) {
+							return (
+								<FormField
+									control={control}
+									name="kernel_size.x"
+									render={({ field: { onChange, value } }) => (
+										<div className="flex gap-x-3">
+											<TextFormItem
+												className="w-1/2"
+												label="X"
+												onChange={(e) => {
+													onUpdateMetadata({
+														id: "median-filtering-1",
+														metadata: {
+															kernel_size: {
+																type: "Object",
+																value: {
+																	x: {
+																		type: "Number",
+																		value: Number(e.target.value),
+																	},
+																},
+															},
+														},
+													});
+												}}
+												value={
+													(
+														findById(fields, "median-filtering-1")
+															?.metadata as any
+													)?.kernel_size?.value?.x?.value
+												}
+											/>
+											<TextFormItem
+												className="w-1/2"
+												label="Y"
+												onChange={(e) => {
+													onUpdateMetadata({
+														id: "median-filtering-1",
+														metadata: {
+															kernel_size: {
+																type: "Object",
+																value: {
+																	y: {
+																		type: "Number",
+																		value: Number(e.target.value),
+																	},
+																},
+															},
+														},
+													});
+												}}
+												value={
+													(
+														findById(fields, "median-filtering-1")
+															?.metadata as any
+													)?.kernel_size?.value?.y?.value
+												}
+											/>
+										</div>
+									)}
+								/>
+							);
+						},
+					},
+					config: {},
+				},
+			],
+			inputSchema: z.object({
+				kernel_size: z.object({
+					x: z.string(),
+					y: z.string(),
+				}),
+			}),
 		},
 	];
 };

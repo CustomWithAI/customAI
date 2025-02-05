@@ -1,15 +1,17 @@
+import { Tiny } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/libs/utils";
 import type { Mode } from "@/types/square";
 import { motion } from "framer-motion";
 import { Hexagon, MousePointer2, Pencil, Square, Trash2 } from "lucide-react";
+import { cloneElement, useCallback, useEffect } from "react";
 
-const MODES: { id: Mode; icon: JSX.Element; color?: string }[] = [
-	{ id: "square", icon: <Square className="w-4 h-4" /> },
-	{ id: "polygon", icon: <Hexagon className="w-4 h-4" /> },
-	{ id: "freehand", icon: <Pencil className="w-4 h-4" /> },
-	{ id: "select", icon: <MousePointer2 className="w-4 h-4" /> },
-	{ id: "delete", icon: <Trash2 className="w-4 h-4" />, color: "text-red-600" },
+const MODES: { id: Mode; icon: JSX.Element; color?: string; key: string }[] = [
+	{ id: "square", icon: <Square />, key: "1" },
+	{ id: "polygon", icon: <Hexagon />, key: "2" },
+	{ id: "freehand", icon: <Pencil />, key: "3" },
+	{ id: "select", icon: <MousePointer2 />, key: "S" },
+	{ id: "delete", icon: <Trash2 />, color: "text-red-600", key: "D" },
 ];
 
 interface ModeSelectorProps {
@@ -17,16 +19,33 @@ interface ModeSelectorProps {
 	onChange: (mode: Mode) => void;
 }
 export function ModeSelector({ mode, onChange }: ModeSelectorProps) {
+	const handleKeyDown = useCallback(
+		(event: KeyboardEvent) => {
+			const target = event.target as HTMLElement;
+			if (["INPUT", "TEXTAREA"].includes(target.tagName)) return;
+			const id = MODES.find((m) => m.key.toLocaleLowerCase() === event.key)?.id;
+			if (id) {
+				onChange(id);
+			}
+		},
+		[onChange],
+	);
+
+	useEffect(() => {
+		document.addEventListener("keydown", handleKeyDown);
+		return () => document.removeEventListener("keydown", handleKeyDown);
+	}, [handleKeyDown]);
+
 	return (
-		<div className="fixed top-1/2 left-4 z-40 flex flex-col gap-2 -translate-y-1/2 bg-white shadow-lg rounded-lg p-2">
-			{MODES.map(({ id, icon, color }) => (
+		<div className="fixed top-1/2 left-4 z-40 flex flex-col gap-1 -translate-y-1/2 border border-gray-200 bg-white shadow-lg rounded-lg p-1">
+			{MODES.map(({ id, icon, color, key }) => (
 				<Button
 					key={id}
 					variant="outline"
 					size="sm"
 					onClick={() => onChange(id)}
 					className={cn(
-						"relative flex items-center justify-center border-0",
+						"relative flex items-center justify-center border-0 size-10",
 						color,
 					)}
 				>
@@ -37,7 +56,19 @@ export function ModeSelector({ mode, onChange }: ModeSelectorProps) {
 							transition={{ type: "spring", stiffness: 300, damping: 20 }}
 						/>
 					)}
-					<span className="relative">{icon}</span>
+					<span className={cn("relative z-[60]", { "": mode === id })}>
+						{cloneElement(icon, {
+							className: cn("w-4 h-4"),
+							fill: mode === id ? "white" : "transparent",
+						})}
+					</span>
+					<Tiny
+						className={cn("absolute right-1 bottom-0.5 z-[60] text-gray-400", {
+							"text-gray-900": mode === id,
+						})}
+					>
+						{key}
+					</Tiny>
 				</Button>
 			))}
 		</div>

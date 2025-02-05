@@ -5,6 +5,7 @@ import {
 	type FormFields,
 	type SchemaType,
 } from "@/components/builder/form";
+import { Subtle } from "@/components/typography/text";
 import { Card } from "@/components/ui/card";
 import {
 	ContextMenu,
@@ -70,14 +71,16 @@ export default function CustomNode({
 							<p className="text-sm text-muted-foreground">{description}</p>
 						</div>
 						<div className="space-y-2 ">
-							{previousNodesData.length > 0 && (
+							{/** Debug */}
+							{/* {previousNodesData.length > 0 && (
 								<div>
 									<Label>All Nodes Data</Label>
 									<pre className="p-2 bg-muted rounded-md text-xs overflow-scroll max-h-32">
 										{JSON.stringify(previousNodesData, null, 2)}
 									</pre>
 								</div>
-							)}
+							)} */}
+							<Subtle className="w-full border-b py-2">Config</Subtle>
 							{input?.inputField && input?.inputSchema ? (
 								<FormBuilder.Provider
 									key={`form-${input.title}`}

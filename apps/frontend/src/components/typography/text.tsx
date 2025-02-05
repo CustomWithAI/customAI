@@ -58,6 +58,14 @@ export const Subtle = ({ children, className }: TextProps) => {
 	);
 };
 
+export const Tiny = ({ children, className }: TextProps) => {
+	return (
+		<p className={cn("text-[10px] font-light text-gray-500", className)}>
+			{children}
+		</p>
+	);
+};
+
 export const Italic = ({ children, className }: TextProps) => {
 	return (
 		<p className={cn("text-sm italic font-light text-gray-500", className)}>

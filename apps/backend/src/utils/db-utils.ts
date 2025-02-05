@@ -16,6 +16,9 @@ export async function cleanupDB<T extends TableConfig>(
 	await schema.delete(table);
 }
 
+export const generateTestId = () =>
+	`test_schema_${Math.random().toString(36).substring(7)}`;
+
 export const customCount = (column?: AnyColumn) => {
 	if (column) {
 		return sql<number>`cast(count(${column}) as integer)`;

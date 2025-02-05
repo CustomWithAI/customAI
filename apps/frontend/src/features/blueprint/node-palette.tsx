@@ -41,17 +41,17 @@ export default function NodePalette({
 	}, [fields, onUpdateMetadata, node]);
 
 	return (
-		<Card className="h-full">
+		<Card className="flex flex-col h-full">
 			{!noTitle && (
 				<CardHeader>
 					<CardTitle>Node Palette</CardTitle>
 				</CardHeader>
 			)}
-			<CardContent className="space-y-4">
+			<CardContent className="flex-1 space-y-4 h-full overflow-scroll">
 				{input.map((node) => (
 					<div
 						key={node.type}
-						className="p-4 border rounded-lg cursor-move hover:bg-accent"
+						className="p-4 border rounded-lg cursor-move hover:bg-accent hover:shadow-md duration-150"
 						draggable
 						onDragStart={(e) => onDragStart(e, node.type as string)}
 					>
