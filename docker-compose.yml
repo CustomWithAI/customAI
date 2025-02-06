@@ -62,10 +62,30 @@ services:
     environment:
       # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
       - DEBUG=${DEBUG:-0}
+    healthcheck:
+      test: ["CMD", "curl", "-s", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./localstack}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
-
+  aws-cli:
+    image: amazon/aws-cli
+    depends_on:
+     localstack:
+        condition: service_healthy
+    volumes:
+      - ./testbucket:/aws
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+    entrypoint: /bin/sh -c
+    command: >
+      "
+        aws --endpoint-url=http://localstack:4566 s3api create-bucket --bucket my-bucket --region us-east-1
+      "
   ai_app:
     container_name: python_ai
     profiles:
