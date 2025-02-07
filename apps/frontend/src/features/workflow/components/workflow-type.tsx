@@ -48,6 +48,7 @@ export const WorkflowTypeSection = ({
 				<WorkflowCard
 					onClick={() => onChange("Object Detection")}
 					name="Object Detection"
+					current={value}
 					description="localize and classify objects in images."
 					imageUrl={""}
 					tags={["Counting", "Locate", "Identify"]}

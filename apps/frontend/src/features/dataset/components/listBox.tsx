@@ -21,7 +21,7 @@ export const DatasetList: React.FC<CardProps> = ({
 	return (
 		<button
 			type="button"
-			className="min-w-64 grid grid-cols-3 hover:shadow-yellow-100 hover:shadow-xl duration-200 border rounded-lg shadow-md overflow-hidden"
+			className="min-w-64 grid grid-cols-3 hover:shadow-yellow-100 hover:shadow-md duration-200 border rounded-lg shadow-sm overflow-hidden"
 			onClick={() => router.push(href)}
 		>
 			<div className="text-left p-6 pt-4 min-h-24 bg-white z-10">

@@ -1,7 +1,6 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { useFreehand } from "@/hooks/canvas/useFreehand";
 import { usePolygon } from "@/hooks/canvas/usePolygon";
 import { useSquares } from "@/hooks/canvas/useSquare";
@@ -9,7 +8,6 @@ import { cn } from "@/libs/utils";
 import type { Label, Mode, Point, SelectedShape, Square } from "@/types/square";
 import { darkenColor } from "@/utils/color-utils";
 import { generateRandomLabel } from "@/utils/random";
-import { Download, Upload } from "lucide-react";
 import { Lock } from "lucide-react";
 import {
 	type MouseEvent,
@@ -23,7 +21,6 @@ import { ContextMenu } from "./context-menu";
 import { LabelSidebar } from "./label-sidebar";
 import { removeLabelFromShapes, updateLabel } from "./label-utils";
 import { ModeSelector } from "./mode-selector";
-import { SelectionArea } from "./selecting-area";
 import { ShapeContextMenu } from "./shape-context-menu";
 import { ShapeRenderer } from "./shape-render";
 

@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { TablePreprocessingSection } from "@/features/image-preprocessing/sections/table";
 import { VisualPreprocessingSection } from "@/features/image-preprocessing/sections/visual";
 import { useQueryParam } from "@/hooks/use-query-params";
+import { encodeBase64 } from "@/libs/base64";
+import { useRouterAsync } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import { motion } from "framer-motion";
 import { useCallback } from "react";
@@ -12,7 +14,9 @@ export const ImagePreprocessingPage = () => {
 		name: "view",
 	});
 	const viewParam = getQueryParam();
-	const handleSubmit = useCallback(() => {}, []);
+	const handleSubmit = useCallback(() => {
+		setQueryParam({ value: encodeBase64("augmentation"), resetParams: true });
+	}, [setQueryParam]);
 	return (
 		<>
 			<div id="tab" className="flex p-1 bg-zinc-100 w-fit space-x-1 rounded-lg">
@@ -39,12 +43,12 @@ export const ImagePreprocessingPage = () => {
 					type="button"
 					onClick={() => setQueryParam({ value: "table" })}
 					className={cn("px-4 py-1.5 rounded-md relative", {
-						"text-zinc-900": viewParam === "table",
-						"text-zinc-500": viewParam !== "table",
+						"text-zinc-900": viewParam === "table" || viewParam === null,
+						"text-zinc-500": viewParam !== "table" || viewParam !== null,
 					})}
 				>
 					<Content className="text-sm relative z-10">Table</Content>
-					{viewParam === "table" && (
+					{(viewParam === "table" || viewParam === null) && (
 						<motion.div
 							layoutId="activeTab"
 							className="absolute inset-0 bg-white rounded-md"

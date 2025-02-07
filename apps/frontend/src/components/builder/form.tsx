@@ -52,6 +52,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Selection } from "../ui/selection";
+import { Slider } from "../ui/slider";
 import { Switch } from "../ui/switch";
 
 export type SchemaType<
@@ -78,6 +79,7 @@ type TemplateType =
 	| "text"
 	| "number"
 	| "percent"
+	| "slider"
 	| "image"
 	| "date"
 	| "password";
@@ -122,6 +124,13 @@ type TemplateSwitchOptions = {
 	};
 };
 
+type TemplateSliderOptions = {
+	options?: {
+		max: number;
+		step: number;
+	};
+};
+
 type UngroupedOptions = {
 	options: {
 		group: false;
@@ -157,6 +166,11 @@ type TemplateForm<T extends object> =
 			template: "switch";
 			element: TemplateElement<T>;
 			config: TemplateConfig & TemplateSwitchOptions & TemplateConditional<T>;
+	  }
+	| {
+			template: "slider";
+			element: TemplateElement<T>;
+			config: TemplateConfig & TemplateSliderOptions & TemplateConditional<T>;
 	  }
 	| {
 			template: "select";
@@ -500,7 +514,7 @@ const RenderInput = memo(
 										options && ("box" in options ? options?.box : false),
 								})}
 							>
-								{description && label && (
+								{label && (
 									<div className="space-y-0.5">
 										<FormLabel>{label}</FormLabel>
 										{description && (
@@ -510,7 +524,12 @@ const RenderInput = memo(
 								)}
 								<FormControl>
 									<Switch
-										checked={setValue ? (setValue as boolean) : value}
+										defaultChecked={setValue as boolean}
+										checked={
+											setValue !== undefined || setValue !== null
+												? (setValue as boolean)
+												: value
+										}
 										onCheckedChange={setOnChange ? setOnChange : onChange}
 										onBlur={onBlur}
 										disabled={disabled}
@@ -656,6 +675,44 @@ const RenderInput = memo(
 									placeholder={placeholder}
 									onChange={setOnChange ? setOnChange : onChange}
 									options={options && "list" in options ? options?.list : {}}
+								/>
+							</FormItem>
+						)}
+					/>
+				);
+			}
+			case "slider": {
+				return (
+					<FormField
+						key={key}
+						control={control}
+						name={name}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<FormItem className={cn(className)}>
+								<div className="flex items-center justify-between">
+									<>
+										<FormLabel>{label}</FormLabel>
+										<FormDescription className="mb-3">
+											{description}
+										</FormDescription>
+									</>
+									<span className="text-sm text-muted-foreground w-12 text-right">
+										{setValue ? (setValue as number) : value || 0}
+									</span>
+								</div>
+								<Slider
+									max={options && "max" in options ? options?.max : 100}
+									min={options && "min" in options ? options?.min : 0}
+									step={options && "step" in options ? options?.step : 1}
+									value={setValue ? [setValue as number] : [value || 0]}
+									data-cyName={testDataId}
+									disabled={disabled}
+									onValueChange={(v) =>
+										setOnChange ? setOnChange(v[0]) : onChange(v[0])
+									}
+									id="slider"
+									className="cursor-pointer"
+									aria-label="Percentage value"
 								/>
 							</FormItem>
 						)}

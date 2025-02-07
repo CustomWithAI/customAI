@@ -48,7 +48,12 @@ export const ContentDataset = () => {
 			<Subtle className="text-xs mb-3 font-medium">
 				Found {datasets.length} {datasets.length > 1 ? "datasets" : "dataset"}
 			</Subtle>
-			<div className={cn({ "grid grid-cols-4 gap-4": viewList === "Grid" })}>
+			<div
+				className={cn(
+					{ "grid grid-cols-4 gap-4": viewList === "Grid" },
+					{ "flex flex-col gap-y-4": viewList === "Vertical" },
+				)}
+			>
 				{datasets.map((dataset, index) => (
 					<ContentCard
 						key={index}

@@ -1,4 +1,6 @@
 import { ContentHeader, Subtle } from "@/components/typography/text";
+import { cn } from "@/libs/utils";
+import { Check } from "lucide-react";
 import Image from "next/image";
 import { memo } from "react";
 
@@ -6,15 +8,26 @@ type WorkflowCardProps = {
 	name: string;
 	description: string;
 	imageUrl: string;
+	current: string;
 	onClick: (type: string) => void;
 	tags: string[];
 };
 export const WorkflowCard = memo(
-	({ name, description, onClick, imageUrl, tags }: WorkflowCardProps) => (
+	({
+		name,
+		description,
+		onClick,
+		imageUrl,
+		tags,
+		current,
+	}: WorkflowCardProps) => (
 		<button
 			type="button"
 			onClick={() => onClick(name)}
-			className="hover:bg-zinc-50 text-start shadow-md rounded-lg p-6 border max-w-sm space-y-4"
+			className={cn(
+				"relative hover:bg-zinc-50 text-start shadow-md rounded-lg p-6 border max-w-sm space-y-4",
+				{ "border-green-500": current === name },
+			)}
 		>
 			<div className="space-y-0.5">
 				<ContentHeader>{name}</ContentHeader>

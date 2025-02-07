@@ -13,7 +13,7 @@ export type Metadata = Record<
 	string,
 	| { type: "Boolean"; value: boolean }
 	| { type: "String"; value: string }
-	| { type: "Number"; value: number }
+	| { type: "Number"; value: number | null }
 	| { type: "Object"; value: Record<string, Metadata[string]> }
 	| { type: "Position"; value: XYPosition }
 >;

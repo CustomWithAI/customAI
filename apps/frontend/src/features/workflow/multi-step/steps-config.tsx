@@ -7,6 +7,7 @@ import {
 	FileSliders,
 	Image,
 	PackageSearch,
+	Shuffle,
 	SquareDashedMousePointer,
 } from "lucide-react";
 import type React from "react";
@@ -15,6 +16,7 @@ import { Step1 } from "./step1-details";
 import { Step3Page } from "./step2-preset";
 import { Step2 } from "./step3-dataset";
 import { ImagePreprocessingPage } from "./step4-preprocessing";
+import { AugmentationPage } from "./step5-augmentation";
 import { ModelConfigPage } from "./step8-model-config";
 
 type StepConfig = {
@@ -90,6 +92,17 @@ export const stepConfig: Record<string, StepConfig> = {
 		component: () => (
 			<DragStoreProvider initial={[]}>
 				<ImagePreprocessingPage />
+			</DragStoreProvider>
+		),
+	},
+	augmentation: {
+		title: "Data Augmentation",
+		stepTitle: "Setup Augmentation",
+		description: "Let create variant sample of data",
+		icon: <Shuffle />,
+		component: () => (
+			<DragStoreProvider initial={[]}>
+				<AugmentationPage />
 			</DragStoreProvider>
 		),
 	},

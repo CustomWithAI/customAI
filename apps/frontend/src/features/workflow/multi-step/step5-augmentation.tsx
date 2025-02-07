@@ -1,7 +1,7 @@
 import { Content } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
-import { TablePreprocessingSection } from "@/features/image-preprocessing/sections/table";
-import { VisualPreprocessingSection } from "@/features/image-preprocessing/sections/visual";
+import { TableAugmentationSection } from "@/features/augmentation/section/table";
+import { VisualAugmentationSection } from "@/features/augmentation/section/visual";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { cn } from "@/libs/utils";
 import { motion } from "framer-motion";
@@ -54,10 +54,10 @@ export const AugmentationPage = () => {
 				</button>
 			</div>
 			{compareQueryParam({ value: "table", allowNull: true }) ? (
-				<TablePreprocessingSection />
+				<TableAugmentationSection />
 			) : null}
 			{compareQueryParam({ value: "blueprint" }) ? (
-				<VisualPreprocessingSection />
+				<VisualAugmentationSection />
 			) : null}
 			<div className="flex justify-end w-full space-x-4 mt-6">
 				<Button variant="ghost">Previous</Button>
