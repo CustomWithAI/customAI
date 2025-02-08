@@ -23,7 +23,7 @@ export class ImageRepository {
       mode: "cursor",
       options: {
         table: images,
-        primaryKey: "url",
+        primaryKey: "path",
         cursorFields: [],
         cursor: pagination.cursor,
         limit: pagination.limit,
@@ -35,7 +35,7 @@ export class ImageRepository {
     return db
       .select()
       .from(images)
-      .where(and(eq(images.datasetId, datasetId), eq(images.url, filePath)))
+      .where(and(eq(images.datasetId, datasetId), eq(images.path, filePath)))
       .limit(1);
   }
 
@@ -47,14 +47,14 @@ export class ImageRepository {
     return db
       .update(images)
       .set(data)
-      .where(and(eq(images.datasetId, datasetId), eq(images.url, filePath)))
+      .where(and(eq(images.datasetId, datasetId), eq(images.path, filePath)))
       .returning();
   }
 
   public async deleteByPath(datasetId: string, filePath: string) {
     return db
       .delete(images)
-      .where(and(eq(images.datasetId, datasetId), eq(images.url, filePath)))
+      .where(and(eq(images.datasetId, datasetId), eq(images.path, filePath)))
       .returning();
   }
 }

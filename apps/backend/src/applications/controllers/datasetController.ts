@@ -63,22 +63,28 @@ export const dataset = new Elysia({
         },
         { query: paginationDto }
       )
-      .get("/:url", async ({ params, imageService }) => {
-        return imageService.getImageByPath(params.id, params.url);
+      .get("/:path", async ({ params, imageService }) => {
+        return imageService.getImageByPath(
+          params.id,
+          decodeURIComponent(params.path)
+        );
       })
       .put(
-        "/:url",
+        "/:path",
         async ({ params, body, imageService }) => {
           return imageService.updateImage(
             params.id,
-            params.url,
+            decodeURIComponent(params.path),
             body,
             body.file
           );
         },
         { body: updateImageDto }
       )
-      .delete("/:url", async ({ params, imageService }) => {
-        return imageService.deleteImage(params.id, params.url);
+      .delete("/:path", async ({ params, imageService }) => {
+        return imageService.deleteImage(
+          params.id,
+          decodeURIComponent(params.path)
+        );
       })
   );

@@ -1,3 +1,4 @@
+import { config } from "@/config/env";
 import { client } from "@/infrastructures/s3/connection";
 
 export const uploadFile = async (
@@ -36,8 +37,17 @@ export const generatePresignedUrl = (
   expiresIn = 3600
 ): string => {
   const file = client.file(filePath);
-  return file.presign({
+  let presignedUrl = file.presign({
     acl: "public-read",
     expiresIn,
   });
+
+  if (process.env.NODE_ENV === "development") {
+    presignedUrl = presignedUrl.replace(
+      config.S3_ENDPOINT,
+      config.S3_DEVELOPMENT_ENDPOINT
+    );
+  }
+
+  return presignedUrl;
 };

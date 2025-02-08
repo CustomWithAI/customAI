@@ -26,10 +26,14 @@ export class ImageService {
 
       await uploadFile(filePath, buffer, file.type);
 
-      imageRecords.push({ url: filePath, datasetId });
+      imageRecords.push({ path: filePath, datasetId });
     }
 
-    return this.repository.create(imageRecords);
+    const result = await this.repository.create(imageRecords);
+    return result.map((image) => ({
+      ...image,
+      url: generatePresignedUrl(image.path),
+    }));
   }
 
   public async getImagesByDatasetId(
@@ -37,10 +41,16 @@ export class ImageService {
     pagination: PaginationParams
   ) {
     const result = await this.repository.findByDatasetId(datasetId, pagination);
-    const images = result.data;
-    return images.map((image) => ({
-      filePath: image.url,
-      presignedUrl: generatePresignedUrl(image.url),
+    if (!result.data || result.data.length === 0) {
+      return [];
+    }
+
+    console.log(result);
+
+    return result.data.map((image) => ({
+      ...image,
+      path: encodeURIComponent(image.path),
+      url: generatePresignedUrl(image.path),
     }));
   }
 
@@ -51,8 +61,9 @@ export class ImageService {
     }
 
     return {
-      filePath: result[0].url,
-      presignedUrl: generatePresignedUrl(result[0].url),
+      ...result[0],
+      path: encodeURIComponent(result[0].path),
+      url: generatePresignedUrl(result[0].path),
     };
   }
 
@@ -67,14 +78,15 @@ export class ImageService {
       throw HttpError.NotFound(`Image not found: ${filePath}`);
     }
 
+    let updatedFilePath = filePath;
     if (file) {
       await deleteFile(filePath);
-      const newFilePath = `datasets/${datasetId}/${crypto.randomUUID()}-${
+      updatedFilePath = `datasets/${datasetId}/${crypto.randomUUID()}-${
         file.name
       }`;
       const buffer = await file.arrayBuffer();
-      await uploadFile(newFilePath, buffer, file.type);
-      data.url = newFilePath;
+      await uploadFile(updatedFilePath, buffer, file.type);
+      data.path = updatedFilePath;
     }
 
     const result = await this.repository.updateByPath(
@@ -87,8 +99,8 @@ export class ImageService {
     }
 
     return {
-      filePath: result[0].url,
-      presignedUrl: generatePresignedUrl(result[0].url),
+      ...result[0],
+      url: generatePresignedUrl(result[0].path || updatedFilePath),
     };
   }
 

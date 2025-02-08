@@ -1,5 +1,5 @@
 {
-  "id": "71197a24-533a-483f-93c0-972aeca0ed1c",
+  "id": "302a3b6d-1147-4ed1-ab8f-bd31e81e2f43",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -752,8 +752,8 @@
       "name": "images",
       "schema": "",
       "columns": {
-        "url": {
-          "name": "url",
+        "path": {
+          "name": "path",
           "type": "varchar(255)",
           "primaryKey": true,
           "notNull": true

@@ -2,7 +2,7 @@ import { jsonb, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { datasets } from "@/domains/schema/datasets";
 
 export const images = pgTable("images", {
-  url: varchar("url", { length: 255 }).primaryKey(),
+  path: varchar("path", { length: 255 }).primaryKey(),
   annotation: jsonb("annotation"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at")

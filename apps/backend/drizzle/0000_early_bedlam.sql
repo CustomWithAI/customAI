@@ -110,7 +110,7 @@ CREATE TABLE "image_preprocessings" (
 );
 --> statement-breakpoint
 CREATE TABLE "images" (
-	"url" varchar(255) PRIMARY KEY NOT NULL,
+	"path" varchar(255) PRIMARY KEY NOT NULL,
 	"annotation" jsonb,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
