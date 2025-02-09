@@ -4,10 +4,11 @@ import { account, session, user, verification } from "@/domains/schema/auth";
 import { cleanupDB } from "@/utils/db-utils";
 import { drizzle } from "drizzle-orm/node-postgres";
 
+const db = drizzle(
+	`postgresql://${config.POSTGRES_USER}:${config.POSTGRES_PASSWORD}@${config.POSTGRES_LOCAL_HOST}:${config.POSTGRES_PORT}/${config.POSTGRES_DB}`,
+);
+
 export async function seedAuth(): Promise<void> {
-	const db = drizzle(
-		`postgresql://${config.POSTGRES_USER}:${config.POSTGRES_PASSWORD}@${config.POSTGRES_LOCAL_HOST}:${config.POSTGRES_PORT}/${config.POSTGRES_DB}`,
-	);
 	logger.info("🌱 Seeding auth data...");
 	await db.transaction(async (context) => {
 		await cleanupDB(context, session);
