@@ -1,6 +1,7 @@
 import { user } from "@/domains/schema/auth";
 import { db } from "@/infrastructures/database/connection";
 import withPagination from "@/utils/pagination";
+import { eq } from "drizzle-orm";
 import { index, text, timestamp } from "drizzle-orm/pg-core";
 import { pgTable } from "drizzle-orm/pg-core/table";
 
@@ -33,6 +34,7 @@ const query = db.select().from(users).$dynamic();
 */
 const result = await withPagination(query, {
 	mode: "cursor",
+	where: eq(users.id, "id"),
 	options: {
 		table: user,
 		primaryKey: "id", // Primary key for tie-breaking
