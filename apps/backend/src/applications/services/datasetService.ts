@@ -21,8 +21,8 @@ export class DatasetService {
     return this.repository.findByUserId(userId, pagination);
   }
 
-  public async getDatasetById(id: string) {
-    const result = await this.repository.findById(id);
+  public async getDatasetById(userId: string, id: string) {
+    const result = await this.repository.findById(userId, id);
     if (result.length === 0) {
       throw HttpError.NotFound(`Dataset not found: ${id}`);
     }
@@ -30,18 +30,19 @@ export class DatasetService {
   }
 
   public async updateDataset(
+    userId: string,
     id: string,
     data: Partial<typeof datasets.$inferInsert>
   ) {
-    const result = await this.repository.updateById(id, data);
+    const result = await this.repository.updateById(userId, id, data);
     if (result.length === 0) {
       throw HttpError.NotFound(`Dataset not found: ${id}`);
     }
     return result[0];
   }
 
-  public async deleteDataset(id: string) {
-    const result = await this.repository.deleteById(id);
+  public async deleteDataset(userId: string, id: string) {
+    const result = await this.repository.deleteById(userId, id);
     if (result.length === 0) {
       throw HttpError.NotFound(`Dataset not found: ${id}`);
     }

@@ -21,8 +21,8 @@ export class AugmentationService {
     return this.repository.findByUserId(userId, pagination);
   }
 
-  public async getAugmentationById(id: string) {
-    const result = await this.repository.findById(id);
+  public async getAugmentationById(userId: string, id: string) {
+    const result = await this.repository.findById(userId, id);
     if (result.length === 0) {
       throw HttpError.NotFound(`Augmentation not found: ${id}`);
     }
@@ -30,18 +30,19 @@ export class AugmentationService {
   }
 
   public async updateAugmentation(
+    userId: string,
     id: string,
     data: Partial<typeof augmentations.$inferInsert>
   ) {
-    const result = await this.repository.updateById(id, data);
+    const result = await this.repository.updateById(userId, id, data);
     if (result.length === 0) {
       throw HttpError.NotFound(`Augmentation not found: ${id}`);
     }
     return result[0];
   }
 
-  public async deleteAugmentation(id: string) {
-    const result = await this.repository.deleteById(id);
+  public async deleteAugmentation(userId: string, id: string) {
+    const result = await this.repository.deleteById(userId, id);
     if (result.length === 0) {
       throw HttpError.NotFound(`Augmentation not found: ${id}`);
     }

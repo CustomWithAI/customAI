@@ -7,6 +7,7 @@ import {
   deleteFile,
   generatePresignedUrl,
 } from "@/infrastructures/s3/s3";
+import { v7 } from "uuid";
 
 export class ImageService {
   public constructor(private repository: ImageRepository) {}
@@ -19,14 +20,12 @@ export class ImageService {
     const imageRecords = [];
 
     for (const file of files) {
-      const filePath = `datasets/${datasetId}/${crypto.randomUUID()}-${
-        file.name
-      }`;
+      const filePath = `datasets/${datasetId}/${v7()}-${file.name}`;
       const buffer = await file.arrayBuffer();
 
       await uploadFile(filePath, buffer, file.type);
 
-      imageRecords.push({ path: filePath, datasetId });
+      imageRecords.push({ path: filePath, datasetId, annotation: {} });
     }
 
     const result = await this.repository.create(imageRecords);
@@ -41,17 +40,15 @@ export class ImageService {
     pagination: PaginationParams
   ) {
     const result = await this.repository.findByDatasetId(datasetId, pagination);
-    if (!result.data || result.data.length === 0) {
-      return [];
-    }
 
-    console.log(result);
-
-    return result.data.map((image) => ({
-      ...image,
-      path: encodeURIComponent(image.path),
-      url: generatePresignedUrl(image.path),
-    }));
+    return {
+      ...result,
+      data: result.data.map((image) => ({
+        ...image,
+        path: encodeURIComponent(image.path),
+        url: generatePresignedUrl(image.path),
+      })),
+    };
   }
 
   public async getImageByPath(datasetId: string, filePath: string) {

@@ -40,7 +40,11 @@ export const swaggerConfig = () => (app: Elysia) => {
             },
             dataset: {
               name: "Dataset",
-              description: "CRUD for datasets",
+              description: "CRUD for dataset",
+            },
+            imagePreprocessing: {
+              name: "Image Preprocessing",
+              description: "CRUD for image preprocessing",
             },
           }),
           components: {

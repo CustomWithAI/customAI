@@ -1,6 +1,8 @@
 import { Elysia } from "elysia";
 import { augmentationService } from "@/config/dependencies";
 import {
+  augmentationResponseDto,
+  augmentationsResponseDto,
   createAugmentationDto,
   updateAugmentationDto,
 } from "@/domains/dtos/augmentation";
@@ -16,34 +18,40 @@ export const augmentation = new Elysia({
 })
   .derive(({ request }) => userMiddleware(request))
   .decorate("augmentationService", augmentationService)
-  .post(
-    "/",
-    async ({ user, body, augmentationService }) => {
-      return augmentationService.createAugmentation({
-        name: body.name,
-        data: body.data,
-        userId: user.id,
-      });
-    },
-    { body: createAugmentationDto }
-  )
-  .get(
-    "/",
-    async ({ user, query, augmentationService }) => {
-      return augmentationService.getAugmentationsByUserId(user.id, query);
-    },
-    { query: paginationDto }
-  )
-  .get("/:id", async ({ params, augmentationService }) => {
-    return augmentationService.getAugmentationById(params.id);
-  })
-  .put(
-    "/:id",
-    async ({ params, body, augmentationService }) => {
-      return augmentationService.updateAugmentation(params.id, body);
-    },
-    { body: updateAugmentationDto }
-  )
-  .delete("/:id", async ({ params, augmentationService }) => {
-    return augmentationService.deleteAugmentation(params.id);
-  });
+  .guard({ response: augmentationResponseDto }, (app) =>
+    app
+      .post(
+        "/",
+        async ({ user, body, augmentationService }) => {
+          return augmentationService.createAugmentation({
+            ...body,
+            userId: user.id,
+          });
+        },
+        { body: createAugmentationDto }
+      )
+      .get(
+        "/",
+        async ({ user, query, augmentationService }) => {
+          return augmentationService.getAugmentationsByUserId(user.id, query);
+        },
+        { query: paginationDto, response: augmentationsResponseDto }
+      )
+      .get("/:id", async ({ user, params, augmentationService }) => {
+        return augmentationService.getAugmentationById(user.id, params.id);
+      })
+      .put(
+        "/:id",
+        async ({ user, params, body, augmentationService }) => {
+          return augmentationService.updateAugmentation(
+            user.id,
+            params.id,
+            body
+          );
+        },
+        { body: updateAugmentationDto }
+      )
+      .delete("/:id", async ({ user, params, augmentationService }) => {
+        return augmentationService.deleteAugmentation(user.id, params.id);
+      })
+  );

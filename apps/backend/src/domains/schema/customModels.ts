@@ -6,15 +6,18 @@ export const customModels = pgTable("custom_models", {
   id: varchar("id", { length: 255 })
     .primaryKey()
     .$defaultFn(() => v7()),
-  data: jsonb("data"),
-  name: varchar("name", { length: 255 }),
-  hyperparameter: jsonb("hyperparameter"),
-  createdAt: timestamp("created_at").defaultNow(),
+  data: jsonb("data").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  hyperparameter: jsonb("hyperparameter").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
+    .notNull()
     .$onUpdate(() => new Date()),
-  userId: text("user_id").references(() => user.id, {
-    onDelete: "cascade",
-    onUpdate: "cascade",
-  }),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
 });

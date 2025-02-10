@@ -36,8 +36,7 @@ export const generatePresignedUrl = (
   filePath: string,
   expiresIn = 3600
 ): string => {
-  const file = client.file(filePath);
-  let presignedUrl = file.presign({
+  let presignedUrl = client.presign(filePath, {
     acl: "public-read",
     expiresIn,
   });

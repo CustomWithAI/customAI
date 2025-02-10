@@ -3,16 +3,16 @@ import { datasets } from "@/domains/schema/datasets";
 
 export const images = pgTable("images", {
   path: varchar("path", { length: 255 }).primaryKey(),
-  annotation: jsonb("annotation"),
-  createdAt: timestamp("created_at").defaultNow(),
+  annotation: jsonb("annotation").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
+    .notNull()
     .$onUpdate(() => new Date()),
-  datasetId: varchar("dataset_id", { length: 255 }).references(
-    () => datasets.id,
-    {
+  datasetId: varchar("dataset_id", { length: 255 })
+    .notNull()
+    .references(() => datasets.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
-    }
-  ),
+    }),
 });

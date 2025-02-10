@@ -1,3 +1,4 @@
+import { toMultipleResponse } from "@/utils/dto";
 import { t } from "elysia";
 
 export const createAugmentationDto = t.Object({
@@ -7,5 +8,20 @@ export const createAugmentationDto = t.Object({
 
 export const updateAugmentationDto = t.Partial(createAugmentationDto);
 
+export const augmentationResponseDto = t.Object({
+  ...createAugmentationDto.properties,
+  id: t.String(),
+  createdAt: t.Date(),
+  updatedAt: t.Date(),
+  userId: t.String(),
+  data: t.Unknown(),
+});
+
+export const augmentationsResponseDto = toMultipleResponse(
+  augmentationResponseDto
+);
+
 export type CreateAugmentationDto = typeof createAugmentationDto.static;
 export type UpdateAugmentationDto = typeof updateAugmentationDto.static;
+export type AugmentationResponseDto = typeof augmentationResponseDto.static;
+export type AugmentationsResponseDto = typeof augmentationsResponseDto.static;

@@ -1,3 +1,4 @@
+import { toMultipleResponse } from "@/utils/dto";
 import { t } from "elysia";
 
 export const createDatasetDto = t.Object({
@@ -9,5 +10,19 @@ export const createDatasetDto = t.Object({
 
 export const updateDatasetDto = t.Partial(createDatasetDto);
 
+export const datasetResponseDto = t.Object({
+  ...createDatasetDto.properties,
+  id: t.String(),
+  createdAt: t.Date(),
+  updatedAt: t.Date(),
+  userId: t.String(),
+  splitData: t.Unknown(),
+  imageCount: t.Optional(t.Integer()),
+});
+
+export const datasetsResponseDto = toMultipleResponse(datasetResponseDto);
+
 export type CreateDatasetDto = typeof createDatasetDto.static;
 export type UpdateDatasetDto = typeof updateDatasetDto.static;
+export type DatasetResponseDto = typeof datasetResponseDto.static;
+export type DatasetsResponseDto = typeof datasetsResponseDto.static;
