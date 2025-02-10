@@ -35,7 +35,7 @@ export const Step3Page = () => {
 	);
 
 	const handleSubmit = useCallback(() => {
-		setQueryParam({ value: encodeBase64("preprocessing"), resetParams: true });
+		setQueryParam({ value: encodeBase64("dataset"), resetParams: true });
 	}, [setQueryParam]);
 
 	return (

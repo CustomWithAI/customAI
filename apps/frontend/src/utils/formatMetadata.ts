@@ -1,7 +1,7 @@
 import type { Metadata } from "@/stores/dragStore";
 
-export function formatMetadata(metadata: Metadata): string {
-	return Object.entries(metadata)
+export const formatMetadata = (metadata: Metadata): string =>
+	Object.entries(metadata)
 		.map(([key, value]) => {
 			switch (value.type) {
 				case "Boolean":
@@ -21,4 +21,22 @@ export function formatMetadata(metadata: Metadata): string {
 		})
 		.filter((entry) => entry !== "")
 		.join(", ");
+
+export function metadataToJSON(metadata: Metadata): Record<string, unknown> {
+	return Object.fromEntries(
+		Object.entries(metadata).map(([key, value]) => {
+			switch (value.type) {
+				case "Boolean":
+				case "String":
+				case "Number":
+					return [key, value.value];
+				case "Object":
+					return [key, metadataToJSON(value.value)];
+				case "Position":
+					return [key, { x: value.value.x, y: value.value.y }];
+				default:
+					return [key, null];
+			}
+		}),
+	);
 }

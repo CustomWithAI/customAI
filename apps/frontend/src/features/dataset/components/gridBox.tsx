@@ -20,14 +20,14 @@ export const DatasetCard: React.FC<CardProps> = ({
 	return (
 		<button
 			type="button"
-			className="min-w-64 hover:shadow-yellow-500 hover:shadow-sm duration-200 border rounded-lg shadow-md overflow-hidden"
+			className="min-w-64 hover:shadow-blue-500 hover:shadow-sm duration-200 border rounded-lg shadow-md overflow-hidden"
 			onClick={() => router.push(href)}
 		>
-			<div className="flex h-36 relative overflow-hidden">
+			<div className="flex h-28 relative overflow-hidden">
 				{images.map((image, index) => (
 					<div className="w-full" key={`dataset-${title + String(index)}`}>
 						<div
-							className="flex-1 h-36 shadow-md"
+							className="flex-1 h-28 shadow-md"
 							style={{
 								backgroundImage: `url(${image})`,
 								backgroundSize: "cover",

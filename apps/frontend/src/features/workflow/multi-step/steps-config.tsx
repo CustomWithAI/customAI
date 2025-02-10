@@ -14,7 +14,7 @@ import type React from "react";
 import type { ReactNode } from "react";
 import { Step1 } from "./step1-details";
 import { Step3Page } from "./step2-preset";
-import { Step2 } from "./step3-dataset";
+import { DatasetPage } from "./step3-dataset";
 import { ImagePreprocessingPage } from "./step4-preprocessing";
 import { AugmentationPage } from "./step5-augmentation";
 import { ModelConfigPage } from "./step8-model-config";
@@ -40,7 +40,7 @@ export const stepConfig: Record<string, StepConfig> = {
 		stepTitle: "Import or create a dataset",
 		description: null,
 		icon: <FileDown />,
-		component: () => <Step2 />,
+		component: () => <DatasetPage />,
 	},
 	preset: {
 		title: "Workflow preset",

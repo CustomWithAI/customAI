@@ -1,5 +1,6 @@
 import type { FormFields, SchemaType } from "@/components/builder/form";
 import { deepMerge } from "@/utils/deepMerge";
+import { metadataToJSON } from "@/utils/formatMetadata";
 import { generateId } from "@/utils/generate-id";
 import type { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
@@ -17,6 +18,7 @@ export type Metadata = Record<
 	| { type: "Object"; value: Record<string, Metadata[string]> }
 	| { type: "Position"; value: XYPosition }
 >;
+
 export type DragColumn<
 	T extends ZodDiscriminatedUnion<string, any> | ZodRawShape = z.ZodRawShape,
 > = {
@@ -56,6 +58,7 @@ type DragAction = {
 	onSwap: (mode: "previous" | "next", id: string) => void;
 	onDrag: (event: DragEndEvent) => void;
 	onGet: () => Array<DragColumn> | null;
+	onGetMetadata: () => Record<string, unknown>;
 	onSet: (data: Array<DragColumn>) => void;
 	onValidate: () => [error: true, msg: string] | [error: false, msg?: never];
 	onNodesChange: (changes: any[]) => void;
@@ -186,6 +189,17 @@ export const createDragStore = (initState = defaultState) => {
 
 			// Get all fields
 			onGet: () => get().fields,
+
+			onGetMetadata: () => {
+				const data = get().fields.reduce(
+					(acc, current) => {
+						acc[current.title] = metadataToJSON(current.metadata);
+						return acc;
+					},
+					{} as Record<string, unknown>,
+				);
+				return data;
+			},
 
 			// Set all fields
 			onSet: (data) => set({ fields: data }),
