@@ -31,6 +31,7 @@ export class ImageService {
     const result = await this.repository.create(imageRecords);
     return result.map((image) => ({
       ...image,
+      path: encodeURIComponent(image.path),
       url: generatePresignedUrl(image.path),
     }));
   }
