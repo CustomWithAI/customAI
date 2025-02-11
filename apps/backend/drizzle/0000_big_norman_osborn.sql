@@ -1,10 +1,13 @@
 CREATE TABLE "augmentations" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
-	"name" varchar(255),
-	"data" jsonb,
-	"created_at" timestamp DEFAULT now(),
-	"updated_at" timestamp DEFAULT now(),
-	"user_id" text NOT NULL
+	"name" varchar(255) NOT NULL,
+	"data" jsonb NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"user_id" text NOT NULL,
+	"search" "tsvector" GENERATED ALWAYS AS (setweight(to_tsvector('english', "augmentations"."name"), 'A')
+           ||
+           setweight(to_tsvector('english', "augmentations"."data"), 'B')) STORED NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "account" (
@@ -64,86 +67,87 @@ CREATE TABLE "verification" (
 --> statement-breakpoint
 CREATE TABLE "custom_models" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
-	"data" jsonb,
-	"name" varchar(255),
-	"hyperparameter" jsonb,
-	"created_at" timestamp DEFAULT now(),
-	"updated_at" timestamp DEFAULT now(),
-	"user_id" text
+	"data" jsonb NOT NULL,
+	"name" varchar(255) NOT NULL,
+	"hyperparameter" jsonb NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"user_id" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "datasets" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
-	"name" varchar(255),
-	"annotation_method" varchar(255),
-	"split_data" jsonb,
-	"created_at" timestamp DEFAULT now(),
-	"updated_at" timestamp DEFAULT now(),
-	"user_id" text
+	"name" varchar(255) NOT NULL,
+	"description" varchar(255) NOT NULL,
+	"annotation_method" varchar(255) NOT NULL,
+	"split_data" jsonb NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"user_id" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "feature_extractions" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
-	"name" varchar(255),
-	"data" jsonb,
-	"created_at" timestamp DEFAULT now(),
-	"updated_at" timestamp DEFAULT now(),
-	"user_id" text
+	"name" varchar(255) NOT NULL,
+	"data" jsonb NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"user_id" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "feature_selections" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
-	"name" varchar(255),
-	"data" jsonb,
-	"created_at" timestamp DEFAULT now(),
-	"updated_at" timestamp DEFAULT now(),
-	"user_id" text
+	"name" varchar(255) NOT NULL,
+	"data" jsonb NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"user_id" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "image_preprocessings" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
-	"name" varchar(255),
-	"data" jsonb,
-	"created_at" timestamp DEFAULT now(),
-	"updated_at" timestamp DEFAULT now(),
-	"user_id" text
+	"name" varchar(255) NOT NULL,
+	"data" jsonb NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"user_id" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "images" (
 	"path" varchar(255) PRIMARY KEY NOT NULL,
-	"annotation" jsonb,
-	"created_at" timestamp DEFAULT now(),
-	"updated_at" timestamp DEFAULT now(),
-	"dataset_id" varchar(255)
+	"annotation" jsonb NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"dataset_id" varchar(255) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "trainings" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
-	"version" double precision DEFAULT 0,
-	"hyperparameter" jsonb,
-	"workflow_id" varchar(255),
-	"pipeline" jsonb,
-	"dataset_id" varchar(255),
-	"image_preprocessing_id" varchar(255),
-	"feature_extraction_id" varchar(255),
-	"feature_selection_id" varchar(255),
-	"augmentation_id" varchar(255),
-	"pre_trained_model" jsonb,
-	"custom_model_id" varchar(255),
-	"trained_model_url" varchar(255),
-	"created_at" timestamp DEFAULT now(),
-	"updated_at" timestamp DEFAULT now()
+	"version" double precision DEFAULT 0 NOT NULL,
+	"hyperparameter" jsonb NOT NULL,
+	"workflow_id" varchar(255) NOT NULL,
+	"pipeline" jsonb NOT NULL,
+	"dataset_id" varchar(255) NOT NULL,
+	"image_preprocessing_id" varchar(255) NOT NULL,
+	"feature_extraction_id" varchar(255) NOT NULL,
+	"feature_selection_id" varchar(255) NOT NULL,
+	"augmentation_id" varchar(255) NOT NULL,
+	"pre_trained_model" jsonb NOT NULL,
+	"custom_model_id" varchar(255) NOT NULL,
+	"trained_model_url" varchar(255) NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "workflows" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
-	"name" varchar(255),
-	"description" varchar(255),
-	"type" varchar(255),
+	"name" varchar(255) NOT NULL,
+	"description" varchar(255) NOT NULL,
+	"type" varchar(255) NOT NULL,
 	"default_id" varchar(255),
-	"created_at" timestamp DEFAULT now(),
-	"updated_at" timestamp DEFAULT now(),
-	"user_id" text
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"user_id" text NOT NULL
 );
 --> statement-breakpoint
 ALTER TABLE "augmentations" ADD CONSTRAINT "augmentations_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
@@ -162,4 +166,6 @@ ALTER TABLE "trainings" ADD CONSTRAINT "trainings_feature_extraction_id_feature_
 ALTER TABLE "trainings" ADD CONSTRAINT "trainings_feature_selection_id_feature_selections_id_fk" FOREIGN KEY ("feature_selection_id") REFERENCES "public"."feature_selections"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "trainings" ADD CONSTRAINT "trainings_augmentation_id_augmentations_id_fk" FOREIGN KEY ("augmentation_id") REFERENCES "public"."augmentations"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "trainings" ADD CONSTRAINT "trainings_custom_model_id_custom_models_id_fk" FOREIGN KEY ("custom_model_id") REFERENCES "public"."custom_models"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
-ALTER TABLE "workflows" ADD CONSTRAINT "workflows_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;
+ALTER TABLE "workflows" ADD CONSTRAINT "workflows_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
+CREATE UNIQUE INDEX "id_idx" ON "augmentations" USING btree ("id");--> statement-breakpoint
+CREATE INDEX "idx_name_search" ON "augmentations" USING gin ("search");

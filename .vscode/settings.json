@@ -5,5 +5,13 @@
 	"[typescriptreact]": {
 		"editor.defaultFormatter": "biomejs.biome"
 	},
-	"cSpell.words": ["dtos", "ILIKE", "presign", "reactflow", "Tresholding"]
+	"cSpell.words": [
+		"dtos",
+		"ILIKE",
+		"presign",
+		"reactflow",
+		"setweight",
+		"Tresholding",
+		"tsvector"
+	]
 }

@@ -85,6 +85,7 @@ services:
     command: >
       "
         aws --endpoint-url=http://localstack:4566 s3api create-bucket --bucket my-bucket --region us-east-1
+        aws --endpoint-url=http://localstack:4566 s3api ls s3://my-bucket --recursive --human-readable --summarize
       "
   ai_app:
     container_name: python_ai

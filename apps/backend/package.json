@@ -10,6 +10,8 @@
 		"generate": "drizzle-kit generate",
 		"setup": "drizzle-kit migrate && bun seed",
 		"push": "drizzle-kit push",
+		"check": "drizzle-kit check",
+		"up": "drizzle-kit up",
 		"clean": "bun ./src/infrastructures/database/clean.ts",
 		"seed": "bun ./src/infrastructures/database/seed.ts",
 		"migrate": "drizzle-kit migrate"
@@ -21,7 +23,8 @@
 		"@elysiajs/swagger": "^1.2.0",
 		"@neondatabase/serverless": "^0.9.5",
 		"amqplib": "^0.10.5",
-		"better-auth": "^1.1.15",
+		"better-auth": "^1.1.16",
+		"drizzle-kit": "^0.30.4",
 		"drizzle-orm": "^0.38.4",
 		"drizzle-typebox": "^0.1.1",
 		"elysia": "latest",
@@ -38,8 +41,7 @@
 	"devDependencies": {
 		"@types/amqplib": "^0.10.6",
 		"@types/pg": "^8.11.11",
-		"bun-types": "latest",
-		"drizzle-kit": "^0.30.4"
+		"bun-types": "latest"
 	},
 	"module": "src/index.js"
 }
