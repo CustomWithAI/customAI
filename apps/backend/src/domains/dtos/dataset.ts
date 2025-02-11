@@ -11,13 +11,14 @@ export const createDatasetDto = t.Object({
 export const updateDatasetDto = t.Partial(createDatasetDto);
 
 export const datasetResponseDto = t.Object({
-  ...createDatasetDto.properties,
-  id: t.String(),
-  createdAt: t.Date(),
-  updatedAt: t.Date(),
-  userId: t.String(),
-  splitData: t.Unknown(),
-  imageCount: t.Optional(t.Integer()),
+	...createDatasetDto.properties,
+	id: t.String(),
+	createdAt: t.Date(),
+	updatedAt: t.Date(),
+	userId: t.String(),
+	images: t.Optional(t.Array(t.String())),
+	splitData: t.Unknown(),
+	imageCount: t.Optional(t.Integer()),
 });
 
 export const datasetsResponseDto = toMultipleResponse(datasetResponseDto);

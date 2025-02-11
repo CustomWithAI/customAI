@@ -9,20 +9,19 @@ import axios from "axios";
 
 class UploadService {
 	async uploadFile(data: RequestUploadFileData) {
-		const { file, purpose } = data;
+		const { file, datasetId } = data;
 		const id = `${file.name}-${Date.now().toString()}`;
 		const abortController = new AbortController();
 		const uploadStore = useUploadStore.getState();
 		uploadStore.addUpload({ id, filename: file.name, file, abortController });
 		const formData = new FormData();
-		formData.append("purpose", purpose);
-		formData.append("file", file);
+		formData.append("files", file);
 		try {
 			const response = await axiosMediaClient.post<
 				ResponseError,
 				AxiosResponse<ResponseUploadFile>,
 				FormData
-			>("/files", formData, {
+			>(`/datasets/${datasetId}/images`, formData, {
 				signal: abortController.signal,
 				onUploadProgress: (event) => {
 					const progress = Math.round(

@@ -1,9 +1,11 @@
 import { datasets } from "@/domains/schema/datasets";
 import { images } from "@/domains/schema/images";
 import { db } from "@/infrastructures/database/connection";
+import { generatePresignedUrl } from "@/infrastructures/s3/s3";
 import type { PaginationParams } from "@/utils/db-type";
 import withPagination from "@/utils/pagination";
-import { and, eq, getTableColumns } from "drizzle-orm";
+import { and, eq, getTableColumns, sql } from "drizzle-orm";
+import type { DatasetResponseDto } from "../../domains/dtos/dataset";
 
 export class DatasetRepository {
 	public async create(data: typeof datasets.$inferInsert) {
@@ -19,11 +21,23 @@ export class DatasetRepository {
 			.select({
 				...getTableColumns(datasets),
 				imageCount: db.$count(images, eq(images.datasetId, datasets.id)),
+				images: sql<string[]>`
+        COALESCE(
+          ARRAY_AGG(${images.path}) FILTER (WHERE ${images.path} IS NOT NULL), 
+          '{}'::text[]
+        )
+      `,
 			})
 			.from(datasets)
+			.leftJoin(images, eq(datasets.id, images.datasetId))
+			.groupBy(datasets.id)
 			.$dynamic();
 
-		const paginatedData = await withPagination(query, {
+		const paginatedData = await withPagination<
+			typeof query,
+			typeof datasets,
+			DatasetResponseDto
+		>(query, {
 			mode: "cursor",
 			where: eq(datasets.userId, userId),
 			options: {
@@ -37,7 +51,12 @@ export class DatasetRepository {
 
 		return {
 			total,
-			...paginatedData,
+			data: paginatedData.data.map((data) => ({
+				...data,
+				images: data.images?.map((image: string) =>
+					generatePresignedUrl(image),
+				),
+			})),
 		};
 	}
 

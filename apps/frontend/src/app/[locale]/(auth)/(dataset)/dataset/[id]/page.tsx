@@ -5,7 +5,9 @@ import { useQueryParam } from "@/hooks/use-query-params";
 import ImagesPage from "./_container/images";
 import DatasetManagement from "./_container/management";
 
-export default function Page() {
+export default async function Page({
+	params: { id },
+}: { params: { id: string } }) {
 	const { compareQueryParam, setQueryParam } = useQueryParam({ name: "tab" });
 	return (
 		<AppNavbar activeTab="Home" PageTitle="" disabledTab={undefined}>
@@ -30,7 +32,7 @@ export default function Page() {
 				</Menubar.List>
 			</div>
 			{compareQueryParam({ value: "images", allowNull: true }) ? (
-				<ImagesPage />
+				<ImagesPage id={id} />
 			) : null}
 			{compareQueryParam({ value: "settings" }) ? <DatasetManagement /> : null}
 		</AppNavbar>

@@ -5,15 +5,19 @@ import { Primary } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ContentDataset } from "@/features/dataset/components/content";
+import { useGetDatasets } from "@/hooks/queries/dataset-api";
 import { useRouterAsync } from "@/libs/i18nNavigation";
 import { Filter, PackagePlus } from "lucide-react";
 import { useCallback, useState } from "react";
 
 export default function Page() {
 	const { asyncRoute } = useRouterAsync();
+	const { data: datasets, isPending: datasetsPending } = useGetDatasets();
+
 	const handleCreate = useCallback(() => {
 		asyncRoute("/dataset/create");
 	}, [asyncRoute]);
+
 	return (
 		<AppNavbar activeTab="Home" PageTitle="home" disabledTab={undefined}>
 			<div className="flex justify-between">
@@ -36,7 +40,7 @@ export default function Page() {
 					</div>
 					<ViewList.Trigger />
 				</div>
-				<ContentDataset />
+				<ContentDataset datasets={datasets?.data} total={datasets?.total} />
 			</ViewList.Provider>
 		</AppNavbar>
 	);

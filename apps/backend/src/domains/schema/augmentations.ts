@@ -31,17 +31,9 @@ export const augmentations = pgTable(
 				onDelete: "cascade",
 				onUpdate: "cascade",
 			}),
-		search: tsvector("search")
-			.notNull()
-			.generatedAlwaysAs(
-				(): SQL =>
-					sql`setweight(to_tsvector('english', ${augmentations.name}), 'A')
-           ||
-           setweight(to_tsvector('english', ${augmentations.data}), 'B')`,
-			),
 	},
 	(table) => [
 		uniqueIndex("id_idx").on(table.id),
-		index("idx_name_search").using("gin", table.search),
+		index("user_idx").on(table.userId),
 	],
 );

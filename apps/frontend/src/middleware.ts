@@ -29,6 +29,7 @@ export default async function middleware(request: NextRequest) {
 		headers: {
 			cookie: request.headers.get("cookie") || "",
 		},
+		cache: "no-store",
 	});
 
 	if (!session && !url.pathname.startsWith(`/${DEFAULT_LANGUAGE}/signin`)) {

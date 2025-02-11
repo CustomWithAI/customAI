@@ -5,9 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UploadFile from "@/components/ui/uploadfile";
 import { ContentImage } from "@/features/dataset/components/image";
+import { useGetImages } from "@/hooks/queries/dataset-api";
+import { useQueryClient } from "@tanstack/react-query";
 import { FileUp, Filter, Image } from "lucide-react";
 
-export default function ImagesPage() {
+export default function ImagesPage({ id }: { id: string }) {
+	const { data: images } = useGetImages(id);
+	const queryClient = useQueryClient();
 	return (
 		<ViewList.Provider>
 			<Header className=" inline-flex items-center gap-x-2">
@@ -31,15 +35,20 @@ export default function ImagesPage() {
 							title: "Upload Images",
 							description: "",
 						}}
+						datasetId={id}
 						id=""
-						onFileChange={() => {}}
+						onFileChange={() => {
+							queryClient.invalidateQueries({
+								queryKey: ["datasets", "images", id],
+							});
+						}}
 					/>
 				</div>
 				<div>
 					<ViewList.Trigger />
 				</div>
 			</div>
-			<ContentImage />
+			<ContentImage images={images?.data} total={images?.total} />
 		</ViewList.Provider>
 	);
 }

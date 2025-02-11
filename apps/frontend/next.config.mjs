@@ -7,7 +7,14 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig = {
 	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 	images: {
-		domains: ["picsum.photos", "via.placeholder.com"],
+		remotePatterns: [
+			{
+				protocol: "http",
+				hostname: "localhost",
+				port: "4566",
+				pathname: "/my-bucket/**",
+			},
+		],
 	},
 };
 

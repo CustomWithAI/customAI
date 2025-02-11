@@ -4,10 +4,7 @@ CREATE TABLE "augmentations" (
 	"data" jsonb NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
-	"user_id" text NOT NULL,
-	"search" "tsvector" GENERATED ALWAYS AS (setweight(to_tsvector('english', "augmentations"."name"), 'A')
-           ||
-           setweight(to_tsvector('english', "augmentations"."data"), 'B')) STORED NOT NULL
+	"user_id" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "account" (
@@ -168,4 +165,7 @@ ALTER TABLE "trainings" ADD CONSTRAINT "trainings_augmentation_id_augmentations_
 ALTER TABLE "trainings" ADD CONSTRAINT "trainings_custom_model_id_custom_models_id_fk" FOREIGN KEY ("custom_model_id") REFERENCES "public"."custom_models"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "workflows" ADD CONSTRAINT "workflows_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 CREATE UNIQUE INDEX "id_idx" ON "augmentations" USING btree ("id");--> statement-breakpoint
-CREATE INDEX "idx_name_search" ON "augmentations" USING gin ("search");
+CREATE INDEX "user_idx" ON "augmentations" USING btree ("user_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "id_dataset_idx" ON "datasets" USING btree ("id");--> statement-breakpoint
+CREATE INDEX "idx_dataset_created_at" ON "datasets" USING btree ("created_at");--> statement-breakpoint
+CREATE INDEX "user_dataset_idx" ON "datasets" USING btree ("user_id");

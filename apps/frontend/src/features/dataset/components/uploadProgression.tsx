@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { Check, ChevronDown, ChevronUp, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const UploadProgress = () => {
 	const t = useTranslations();
@@ -30,6 +30,16 @@ const UploadProgress = () => {
 			updateCanceled(id);
 		}
 	};
+
+	useEffect(() => {
+		if (uploads.some((file) => !file.completed)) {
+			return;
+		}
+		setTimeout(() => {
+			resetUpload();
+		}, 7 * 1000);
+	}, [resetUpload, uploads]);
+
 	if (uploads.length === 0) return null;
 	return (
 		<div className="fixed bottom-4 right-4 max-sm:w-screen z-[99] bg-white border border-gray-200 rounded-lg p-6 pt-5 shadow-md">

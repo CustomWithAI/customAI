@@ -26,6 +26,7 @@ type UploadedFile = { id: string; url?: string }[];
 
 type UploadFileType = {
 	id: string;
+	datasetId: string;
 	onFileChange: (files: UploadedFile) => void;
 	onDelete?: (fileId: string) => void;
 };
@@ -40,7 +41,12 @@ type UploadFileDialog = {
 
 const icons = [ImageIcon, FileText, FileVideo2];
 
-const UploadFileBox = ({ onFileChange, id, onDelete }: UploadFileType) => {
+const UploadFileBox = ({
+	onFileChange,
+	id,
+	datasetId,
+	onDelete,
+}: UploadFileType) => {
 	const t = useTranslations();
 	const [isFileTooBig, setIsFileTooBig] = useState(false);
 	const inputRef = useRef<ElementRef<"input">>(null);
@@ -54,7 +60,7 @@ const UploadFileBox = ({ onFileChange, id, onDelete }: UploadFileType) => {
 				try {
 					const response = await uploadFile({
 						file,
-						purpose: id,
+						datasetId,
 					});
 					if (response) {
 						uploadedFiles.push({ url: response?.url, id: response?.id });
@@ -65,7 +71,7 @@ const UploadFileBox = ({ onFileChange, id, onDelete }: UploadFileType) => {
 			}
 			onFileChange(uploadedFiles);
 		},
-		[id, uploadFile, onFileChange],
+		[uploadFile, onFileChange, datasetId],
 	);
 
 	const { getRootProps, getInputProps, isDragActive, isDragReject } =

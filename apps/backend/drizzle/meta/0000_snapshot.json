@@ -1,5 +1,5 @@
 {
-  "id": "4159e12d-ba6e-4bcb-9499-599c1fd7d84c",
+  "id": "cc9fad1b-1c08-442e-9df6-6a9d92ae228c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -45,16 +45,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "search": {
-          "name": "search",
-          "type": "tsvector",
-          "primaryKey": false,
-          "notNull": true,
-          "generated": {
-            "as": "setweight(to_tsvector('english', \"augmentations\".\"name\"), 'A')\n           ||\n           setweight(to_tsvector('english', \"augmentations\".\"data\"), 'B')",
-            "type": "stored"
-          }
         }
       },
       "indexes": {
@@ -73,11 +63,11 @@
           "method": "btree",
           "with": {}
         },
-        "idx_name_search": {
-          "name": "idx_name_search",
+        "user_idx": {
+          "name": "user_idx",
           "columns": [
             {
-              "expression": "search",
+              "expression": "user_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -85,7 +75,7 @@
           ],
           "isUnique": false,
           "concurrently": false,
-          "method": "gin",
+          "method": "btree",
           "with": {}
         }
       },
@@ -578,7 +568,53 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "id_dataset_idx": {
+          "name": "id_dataset_idx",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_dataset_created_at": {
+          "name": "idx_dataset_created_at",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "user_dataset_idx": {
+          "name": "user_dataset_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "datasets_user_id_user_id_fk": {
           "name": "datasets_user_id_user_id_fk",
