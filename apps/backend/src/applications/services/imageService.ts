@@ -1,4 +1,5 @@
 import type { ImageRepository } from "@/applications/repositories/imageRepository";
+import type { DatasetRepository } from "@/applications/repositories/datasetRepository";
 import { HttpError } from "@/config/error";
 import type { images } from "@/domains/schema/images";
 import type { PaginationParams } from "@/utils/db-type";
@@ -10,9 +11,21 @@ import {
 import { v7 } from "uuid";
 
 export class ImageService {
-  public constructor(private repository: ImageRepository) {}
+  public constructor(
+    private repository: ImageRepository,
+    private datasetRepository: DatasetRepository
+  ) {}
 
-  public async uploadImages(datasetId: string, files: File[]) {
+  private async ensureDatasetExists(userId: string, datasetId: string) {
+    const dataset = await this.datasetRepository.findById(userId, datasetId);
+    if (!dataset.length) {
+      throw HttpError.NotFound(`Dataset not found: ${datasetId}`);
+    }
+  }
+
+  public async uploadImages(userId: string, datasetId: string, files: File[]) {
+    await this.ensureDatasetExists(userId, datasetId);
+
     if (!files || files.length === 0) {
       throw HttpError.BadRequest("No files provided");
     }
@@ -37,9 +50,12 @@ export class ImageService {
   }
 
   public async getImagesByDatasetId(
+    userId: string,
     datasetId: string,
     pagination: PaginationParams
   ) {
+    await this.ensureDatasetExists(userId, datasetId);
+
     const result = await this.repository.findByDatasetId(datasetId, pagination);
 
     return {
@@ -52,7 +68,13 @@ export class ImageService {
     };
   }
 
-  public async getImageByPath(datasetId: string, filePath: string) {
+  public async getImageByPath(
+    userId: string,
+    datasetId: string,
+    filePath: string
+  ) {
+    await this.ensureDatasetExists(userId, datasetId);
+
     const result = await this.repository.findByPath(datasetId, filePath);
     if (result.length === 0) {
       throw HttpError.NotFound(`Image not found: ${filePath}`);
@@ -66,11 +88,14 @@ export class ImageService {
   }
 
   public async updateImage(
+    userId: string,
     datasetId: string,
     filePath: string,
     data: Partial<typeof images.$inferInsert>,
     file?: File
   ) {
+    await this.ensureDatasetExists(userId, datasetId);
+
     const existingImage = await this.repository.findByPath(datasetId, filePath);
     if (existingImage.length === 0) {
       throw HttpError.NotFound(`Image not found: ${filePath}`);
@@ -102,7 +127,13 @@ export class ImageService {
     };
   }
 
-  public async deleteImage(datasetId: string, filePath: string) {
+  public async deleteImage(
+    userId: string,
+    datasetId: string,
+    filePath: string
+  ) {
+    await this.ensureDatasetExists(userId, datasetId);
+
     const existingImage = await this.repository.findByPath(datasetId, filePath);
     if (existingImage.length === 0) {
       throw HttpError.NotFound(`Image not found: ${filePath}`);

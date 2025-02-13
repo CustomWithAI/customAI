@@ -18,7 +18,10 @@ export const augmentationService = new AugmentationService(
   augmentationRepository
 );
 export const datasetService = new DatasetService(datasetRepository);
-export const imageService = new ImageService(imageRepository);
+export const imageService = new ImageService(
+  imageRepository,
+  datasetRepository
+);
 export const imagePreprocessingService = new ImagePreprocessingService(
   imagePreprocessingRepository
 );
