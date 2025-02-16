@@ -1,7 +1,7 @@
 import type { DatasetRepository } from "@/applications/repositories/datasetRepository";
-import { HttpError } from "@/config/error";
 import type { datasets } from "@/domains/schema/datasets";
 import type { PaginationParams } from "@/utils/db-type";
+import { InternalServerError, NotFoundError } from "elysia";
 
 export class DatasetService {
   public constructor(private repository: DatasetRepository) {}
@@ -9,7 +9,7 @@ export class DatasetService {
   public async createDataset(data: typeof datasets.$inferInsert) {
     const result = await this.repository.create(data);
     if (result.length === 0) {
-      throw HttpError.Internal("Failed to create dataset");
+      throw new InternalServerError("Failed to create dataset");
     }
     return result[0];
   }
@@ -24,7 +24,7 @@ export class DatasetService {
   public async getDatasetById(userId: string, id: string) {
     const result = await this.repository.findById(userId, id);
     if (result.length === 0) {
-      throw HttpError.NotFound(`Dataset not found: ${id}`);
+      throw new NotFoundError(`Dataset not found: ${id}`);
     }
     return result[0];
   }
@@ -36,7 +36,7 @@ export class DatasetService {
   ) {
     const result = await this.repository.updateById(userId, id, data);
     if (result.length === 0) {
-      throw HttpError.NotFound(`Dataset not found: ${id}`);
+      throw new NotFoundError(`Dataset not found: ${id}`);
     }
     return result[0];
   }
@@ -44,7 +44,7 @@ export class DatasetService {
   public async deleteDataset(userId: string, id: string) {
     const result = await this.repository.deleteById(userId, id);
     if (result.length === 0) {
-      throw HttpError.NotFound(`Dataset not found: ${id}`);
+      throw new NotFoundError(`Dataset not found: ${id}`);
     }
     return result[0];
   }

@@ -11,7 +11,7 @@ export class ImagePreprocessingService {
   ) {
     const result = await this.repository.create(data);
     if (result.length === 0) {
-      throw HttpError.Internal("Failed to create image preprocessing");
+      throw new InternalServerError("Failed to create image preprocessing");
     }
     return result[0];
   }
@@ -26,7 +26,7 @@ export class ImagePreprocessingService {
   public async getImagePreprocessingById(userId: string, id: string) {
     const result = await this.repository.findById(userId, id);
     if (result.length === 0) {
-      throw HttpError.NotFound(`Image Preprocessing not found: ${id}`);
+      throw new NotFoundError(`Image Preprocessing not found: ${id}`);
     }
     return result[0];
   }
@@ -38,7 +38,7 @@ export class ImagePreprocessingService {
   ) {
     const result = await this.repository.updateById(userId, id, data);
     if (result.length === 0) {
-      throw HttpError.NotFound(`Image Preprocessing not found: ${id}`);
+      throw new NotFoundError(`Image Preprocessing not found: ${id}`);
     }
     return result[0];
   }
@@ -46,7 +46,7 @@ export class ImagePreprocessingService {
   public async deleteImagePreprocessing(userId: string, id: string) {
     const result = await this.repository.deleteById(userId, id);
     if (result.length === 0) {
-      throw HttpError.NotFound(`Image Preprocessing not found: ${id}`);
+      throw new NotFoundError(`Image Preprocessing not found: ${id}`);
     }
     return result[0];
   }

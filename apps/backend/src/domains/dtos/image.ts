@@ -2,7 +2,10 @@ import { toMultipleResponse } from "@/utils/dto";
 import { t } from "elysia";
 
 export const createImagesDto = t.Object({
-  files: t.Files(),
+  files: t.Files({
+    minItems: 1,
+    type: ["image/jpeg", "image/png", "image/svg", "image/webp"],
+  }),
 });
 
 export const updateImageDto = t.Object({

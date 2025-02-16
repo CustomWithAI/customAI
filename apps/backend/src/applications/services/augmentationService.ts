@@ -1,7 +1,7 @@
 import type { AugmentationRepository } from "@/applications/repositories/augmentationRepository";
-import { HttpError } from "@/config/error";
 import type { augmentations } from "@/domains/schema/augmentations";
 import type { PaginationParams } from "@/utils/db-type";
+import { InternalServerError, NotFoundError } from "elysia";
 
 export class AugmentationService {
   public constructor(private repository: AugmentationRepository) {}
@@ -9,7 +9,7 @@ export class AugmentationService {
   public async createAugmentation(data: typeof augmentations.$inferInsert) {
     const result = await this.repository.create(data);
     if (result.length === 0) {
-      throw HttpError.Internal("Failed to create augmentation");
+      throw new InternalServerError("Failed to create Augmentation");
     }
     return result[0];
   }
@@ -24,7 +24,7 @@ export class AugmentationService {
   public async getAugmentationById(userId: string, id: string) {
     const result = await this.repository.findById(userId, id);
     if (result.length === 0) {
-      throw HttpError.NotFound(`Augmentation not found: ${id}`);
+      throw new NotFoundError(`Augmentation not found: ${id}`);
     }
     return result[0];
   }
@@ -36,7 +36,7 @@ export class AugmentationService {
   ) {
     const result = await this.repository.updateById(userId, id, data);
     if (result.length === 0) {
-      throw HttpError.NotFound(`Augmentation not found: ${id}`);
+      throw new NotFoundError(`Augmentation not found: ${id}`);
     }
     return result[0];
   }
@@ -44,7 +44,7 @@ export class AugmentationService {
   public async deleteAugmentation(userId: string, id: string) {
     const result = await this.repository.deleteById(userId, id);
     if (result.length === 0) {
-      throw HttpError.NotFound(`Augmentation not found: ${id}`);
+      throw new NotFoundError(`Augmentation not found: ${id}`);
     }
     return result[0];
   }
