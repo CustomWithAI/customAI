@@ -46,6 +46,10 @@ export const swaggerConfig = () => (app: Elysia) => {
               name: "Image Preprocessing",
               description: "CRUD for image preprocessing",
             },
+            featureExtraction: {
+              name: "Feature Extraction",
+              description: "CRUD for feature extraction",
+            },
           }),
           components: {
             securitySchemes: {

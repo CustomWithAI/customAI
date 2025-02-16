@@ -1,9 +1,11 @@
 import { AugmentationRepository } from "@/applications/repositories/augmentationRepository";
 import { DatasetRepository } from "@/applications/repositories/datasetRepository";
+import { FeatureExtractionRepository } from "@/applications/repositories/featureExtractionRepository";
 import { ImagePreprocessingRepository } from "@/applications/repositories/imagePreprocessingRepository";
 import { ImageRepository } from "@/applications/repositories/imageRepository";
 import { AugmentationService } from "@/applications/services/augmentationService";
 import { DatasetService } from "@/applications/services/datasetService";
+import { FeatureExtractionService } from "@/applications/services/featureExtractionService";
 import { ImagePreprocessingService } from "@/applications/services/imageProprocessingService";
 import { ImageService } from "@/applications/services/imageService";
 
@@ -12,6 +14,7 @@ export const augmentationRepository = new AugmentationRepository();
 export const datasetRepository = new DatasetRepository();
 export const imageRepository = new ImageRepository();
 export const imagePreprocessingRepository = new ImagePreprocessingRepository();
+export const featureExtractionRepository = new FeatureExtractionRepository();
 
 // Services
 export const augmentationService = new AugmentationService(
@@ -24,4 +27,7 @@ export const imageService = new ImageService(
 );
 export const imagePreprocessingService = new ImagePreprocessingService(
   imagePreprocessingRepository
+);
+export const featureExtractionService = new FeatureExtractionService(
+  featureExtractionRepository
 );
