@@ -2,6 +2,7 @@ import { augmentation } from "@/applications/controllers/augmentationController"
 import { dataset } from "@/applications/controllers/datasetController";
 import { imagePreprocessing } from "@/applications/controllers/imagePreprocessingController";
 import { featureExtraction } from "@/applications/controllers/featureExtractionController";
+import { featureSelection } from "@/applications/controllers/featureSelectionController";
 import { config } from "@/config/env";
 import { logger } from "@/config/logger";
 import { swaggerConfig } from "@/config/swagger";
@@ -33,6 +34,7 @@ try {
     .use(dataset)
     .use(imagePreprocessing)
     .use(featureExtraction)
+    .use(featureSelection)
     .onParse(({ request, route }) => {
       if (route.startsWith("/api/auth")) {
         return request.body;
