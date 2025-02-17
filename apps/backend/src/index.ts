@@ -3,6 +3,7 @@ import { dataset } from "@/applications/controllers/datasetController";
 import { imagePreprocessing } from "@/applications/controllers/imagePreprocessingController";
 import { featureExtraction } from "@/applications/controllers/featureExtractionController";
 import { featureSelection } from "@/applications/controllers/featureSelectionController";
+import { customModel } from "@/applications/controllers/customModelController";
 import { config } from "@/config/env";
 import { logger } from "@/config/logger";
 import { swaggerConfig } from "@/config/swagger";
@@ -35,6 +36,7 @@ try {
     .use(imagePreprocessing)
     .use(featureExtraction)
     .use(featureSelection)
+    .use(customModel)
     .onParse(({ request, route }) => {
       if (route.startsWith("/api/auth")) {
         return request.body;

@@ -8,7 +8,6 @@ export const customModels = pgTable("custom_models", {
     .$defaultFn(() => v7()),
   data: jsonb("data").notNull(),
   name: varchar("name", { length: 255 }).notNull(),
-  hyperparameter: jsonb("hyperparameter").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
