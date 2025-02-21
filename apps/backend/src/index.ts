@@ -4,6 +4,7 @@ import { imagePreprocessing } from "@/applications/controllers/imagePreprocessin
 import { featureExtraction } from "@/applications/controllers/featureExtractionController";
 import { featureSelection } from "@/applications/controllers/featureSelectionController";
 import { customModel } from "@/applications/controllers/customModelController";
+import { workflow } from "@/applications/controllers/workflowController";
 import { config } from "@/config/env";
 import { logger } from "@/config/logger";
 import { swaggerConfig } from "@/config/swagger";
@@ -37,6 +38,7 @@ try {
     .use(featureExtraction)
     .use(featureSelection)
     .use(customModel)
+    .use(workflow)
     .onParse(({ request, route }) => {
       if (route.startsWith("/api/auth")) {
         return request.body;

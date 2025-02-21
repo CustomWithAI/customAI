@@ -2,6 +2,8 @@ import { Elysia } from "elysia";
 import { featureSelectionService } from "@/config/dependencies";
 import {
   createFeatureSelectionDto,
+  featureSelectionResponseDto,
+  featureSelectionsResponseDto,
   updateFeatureSelectionDto,
 } from "@/domains/dtos/featureSelection";
 import { userMiddleware } from "@/middleware/authMiddleware";
@@ -16,40 +18,49 @@ export const featureSelection = new Elysia({
 })
   .derive(({ request }) => userMiddleware(request))
   .decorate("featureSelectionService", featureSelectionService)
-  .post(
-    "/",
-    async ({ user, body, featureSelectionService }) => {
-      return featureSelectionService.createFeatureSelection({
-        ...body,
-        userId: user.id,
-      });
-    },
-    { body: createFeatureSelectionDto }
-  )
-  .get(
-    "/",
-    async ({ user, query, featureSelectionService }) => {
-      return featureSelectionService.getFeatureSelectionsByUserId(
-        user.id,
-        query
-      );
-    },
-    { query: paginationDto }
-  )
-  .get("/:id", async ({ user, params, featureSelectionService }) => {
-    return featureSelectionService.getFeatureSelectionById(user.id, params.id);
-  })
-  .put(
-    "/:id",
-    async ({ user, params, body, featureSelectionService }) => {
-      return featureSelectionService.updateFeatureSelection(
-        user.id,
-        params.id,
-        body
-      );
-    },
-    { body: updateFeatureSelectionDto }
-  )
-  .delete("/:id", async ({ user, params, featureSelectionService }) => {
-    return featureSelectionService.deleteFeatureSelection(user.id, params.id);
-  });
+  .guard({ response: featureSelectionResponseDto }, (app) =>
+    app
+      .post(
+        "/",
+        async ({ user, body, featureSelectionService }) => {
+          return featureSelectionService.createFeatureSelection({
+            ...body,
+            userId: user.id,
+          });
+        },
+        { body: createFeatureSelectionDto }
+      )
+      .get(
+        "/",
+        async ({ user, query, featureSelectionService }) => {
+          return featureSelectionService.getFeatureSelectionsByUserId(
+            user.id,
+            query
+          );
+        },
+        { query: paginationDto, response: featureSelectionsResponseDto }
+      )
+      .get("/:id", async ({ user, params, featureSelectionService }) => {
+        return featureSelectionService.getFeatureSelectionById(
+          user.id,
+          params.id
+        );
+      })
+      .put(
+        "/:id",
+        async ({ user, params, body, featureSelectionService }) => {
+          return featureSelectionService.updateFeatureSelection(
+            user.id,
+            params.id,
+            body
+          );
+        },
+        { body: updateFeatureSelectionDto }
+      )
+      .delete("/:id", async ({ user, params, featureSelectionService }) => {
+        return featureSelectionService.deleteFeatureSelection(
+          user.id,
+          params.id
+        );
+      })
+  );

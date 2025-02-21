@@ -31,6 +31,7 @@ const envSchema = z.object({
   RABBITMQ_PORT: z.coerce.number().default(5672),
   RABBITMQ_USER: z.string().optional(),
   RABBITMQ_PASSWORD: z.string().optional(),
+  RABBITMQ_TRAINING_QUEUE_NAME: z.string().default("training_queue"),
 
   // Redis Configuration
   REDIS_HOST: z.string().default("redis"),
@@ -50,6 +51,9 @@ const envSchema = z.object({
   S3_BUCKET_NAME: z.string().default("my-bucket"),
   S3_ENDPOINT: z.string().url().default("http://localstack:4566"),
   S3_DEVELOPMENT_ENDPOINT: z.string().url().default("http://localhost:4566"),
+
+  // Python Server
+  MAX_RETRY_COUNT: z.number().default(3),
 
   APP_VERSION: z.string().default(packageJson.version),
 });

@@ -1,8 +1,13 @@
 import {
+  boolean,
   doublePrecision,
+  integer,
   jsonb,
+  pgEnum,
   pgTable,
+  text,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 import { workflows } from "@/domains/schema/workflows";
@@ -14,66 +19,90 @@ import { augmentations } from "@/domains/schema/augmentations";
 import { customModels } from "@/domains/schema/customModels";
 import { v7 } from "uuid";
 
-export const trainings = pgTable("trainings", {
-  id: varchar("id", { length: 255 })
-    .primaryKey()
-    .$defaultFn(() => v7()),
-  version: doublePrecision("version").default(0.0).notNull(),
-  hyperparameter: jsonb("hyperparameter").notNull(),
-  workflowId: varchar("workflow_id", { length: 255 })
-    .notNull()
-    .references(() => workflows.id, {
+export const trainingStatusEnum = pgEnum("training_status", [
+  "created",
+  "pending",
+  "running",
+  "completed",
+  "failed",
+]);
+
+export type TrainingStatusEnum =
+  | "created"
+  | "pending"
+  | "running"
+  | "completed"
+  | "failed";
+
+export const trainings = pgTable(
+  "trainings",
+  {
+    id: varchar("id", { length: 255 })
+      .primaryKey()
+      .$defaultFn(() => v7()),
+    isDefault: boolean("is_default").default(false).notNull(),
+    version: doublePrecision("version"),
+    hyperparameter: jsonb("hyperparameter").notNull(),
+    pipeline: jsonb("pipeline").notNull(),
+    status: trainingStatusEnum("status").default("created").notNull(),
+    queueId: varchar("queue_id", { length: 255 }),
+    retryCount: integer("retry_count").default(0).notNull(),
+    errorMessage: text("error_message"),
+    trainedModelpath: varchar("trained_model_path", { length: 255 }),
+    workflowId: varchar("workflow_id", { length: 255 })
+      .notNull()
+      .references(() => workflows.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    datasetId: varchar("dataset_id", { length: 255 })
+      .notNull()
+      .references(() => datasets.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    imagePreprocessingId: varchar("image_preprocessing_id", {
+      length: 255,
+    }).references(() => imagePreprocessings.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
-  pipeline: jsonb("pipeline").notNull(),
-  datasetId: varchar("dataset_id", { length: 255 })
-    .notNull()
-    .references(() => datasets.id, {
+    featureExtractionId: varchar("feature_extraction_id", {
+      length: 255,
+    }).references(() => featureExtractions.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
-  imagePreprocessingId: varchar("image_preprocessing_id", {
-    length: 255,
-  })
-    .notNull()
-    .references(() => imagePreprocessings.id, {
+    featureSelectionId: varchar("feature_selection_id", {
+      length: 255,
+    }).references(() => featureSelections.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
-  featureExtractionId: varchar("feature_extraction_id", {
-    length: 255,
-  })
-    .notNull()
-    .references(() => featureExtractions.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
-  featureSelectionId: varchar("feature_selection_id", {
-    length: 255,
-  })
-    .notNull()
-    .references(() => featureSelections.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
-  augmentationId: varchar("augmentation_id", { length: 255 })
-    .notNull()
-    .references(() => augmentations.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
-  preTrainedModel: jsonb("pre_trained_model").notNull(),
-  customModelId: varchar("custom_model_id", { length: 255 })
-    .notNull()
-    .references(() => customModels.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
-  trainedModelUrl: varchar("trained_model_url", { length: 255 }).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .notNull()
-    .$onUpdate(() => new Date()),
-});
+    augmentationId: varchar("augmentation_id", { length: 255 }).references(
+      () => augmentations.id,
+      {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }
+    ),
+    preTrainedModel: jsonb("pre_trained_model"),
+    customModelId: varchar("custom_model_id", { length: 255 }).references(
+      () => customModels.id,
+      {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }
+    ),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    unique("unique_version_workflow")
+      .on(table.workflowId, table.version)
+      .nullsNotDistinct(),
+  ]
+);

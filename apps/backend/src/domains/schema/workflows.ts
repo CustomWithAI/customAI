@@ -9,7 +9,6 @@ export const workflows = pgTable("workflows", {
   name: varchar("name", { length: 255 }).notNull(),
   description: varchar("description", { length: 255 }).notNull(),
   type: varchar("type", { length: 255 }).notNull(),
-  defaultId: varchar("default_id", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

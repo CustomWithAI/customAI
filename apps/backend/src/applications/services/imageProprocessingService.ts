@@ -1,7 +1,7 @@
 import type { ImagePreprocessingRepository } from "@/applications/repositories/imagePreprocessingRepository";
-import { HttpError } from "@/config/error";
 import type { imagePreprocessings } from "@/domains/schema/imagePreprocessings";
 import type { PaginationParams } from "@/utils/db-type";
+import { NotFoundError, InternalServerError } from "elysia";
 
 export class ImagePreprocessingService {
   public constructor(private repository: ImagePreprocessingRepository) {}

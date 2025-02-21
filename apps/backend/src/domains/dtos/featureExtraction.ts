@@ -1,3 +1,4 @@
+import { toMultipleResponse } from "@/utils/dto";
 import { t } from "elysia";
 
 export const createFeatureExtractionDto = t.Object({
@@ -7,7 +8,24 @@ export const createFeatureExtractionDto = t.Object({
 
 export const updateFeatureExtractionDto = t.Partial(createFeatureExtractionDto);
 
+export const featureExtractionResponseDto = t.Object({
+  ...createFeatureExtractionDto.properties,
+  id: t.String(),
+  createdAt: t.Date(),
+  updatedAt: t.Date(),
+  userId: t.String(),
+  data: t.Unknown(),
+});
+
+export const featureExtractionsResponseDto = toMultipleResponse(
+  featureExtractionResponseDto
+);
+
 export type CreateFeatureExtractionDto =
   typeof createFeatureExtractionDto.static;
 export type UpdateFeatureExtractionDto =
   typeof updateFeatureExtractionDto.static;
+export type FeatureExtractionResponseDto =
+  typeof featureExtractionResponseDto.static;
+export type FeatureExtractionsResponseDto =
+  typeof featureExtractionsResponseDto.static;
