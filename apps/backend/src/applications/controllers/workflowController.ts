@@ -14,6 +14,7 @@ import {
   trainingResponseDto,
   trainingsResponseDto,
   startTrainingResponseDto,
+  defaultTrainingResponseDto,
 } from "@/domains/dtos/training";
 
 export const workflow = new Elysia({
@@ -66,7 +67,7 @@ export const workflow = new Elysia({
         async ({ user, params, body, trainingService }) => {
           return trainingService.createTraining(user.id, params.id, body);
         },
-        { body: createTrainingDto }
+        { body: createTrainingDto, response: defaultTrainingResponseDto }
       )
       .get(
         "/",
@@ -77,15 +78,19 @@ export const workflow = new Elysia({
             query
           );
         },
-        { query: paginationDto }
+        { query: paginationDto, response: trainingsResponseDto }
       )
-      .get("/:trainingId", async ({ user, params, trainingService }) => {
-        return trainingService.getTrainingById(
-          user.id,
-          params.id,
-          params.trainingId
-        );
-      })
+      .get(
+        "/:trainingId",
+        async ({ user, params, trainingService }) => {
+          return trainingService.getTrainingById(
+            user.id,
+            params.id,
+            params.trainingId
+          );
+        },
+        { response: trainingResponseDto }
+      )
       .put(
         "/:trainingId",
         async ({ user, params, body, trainingService }) => {
@@ -96,15 +101,19 @@ export const workflow = new Elysia({
             body
           );
         },
-        { body: updateTrainingDto }
+        { body: updateTrainingDto, response: defaultTrainingResponseDto }
       )
-      .delete("/:trainingId", async ({ user, params, trainingService }) => {
-        return trainingService.deleteTraining(
-          user.id,
-          params.id,
-          params.trainingId
-        );
-      })
+      .delete(
+        "/:trainingId",
+        async ({ user, params, trainingService }) => {
+          return trainingService.deleteTraining(
+            user.id,
+            params.id,
+            params.trainingId
+          );
+        },
+        { response: defaultTrainingResponseDto }
+      )
       .post(
         "/:trainingId/start",
         async ({ user, params, trainingService }) => {

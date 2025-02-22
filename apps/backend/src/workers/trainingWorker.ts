@@ -7,11 +7,11 @@ const processTraining = async (trainingData: any) => {
   try {
     queueLogger.info(`🚀 Processing training: ${trainingData.queueId}`);
 
-    // ✅ อัปเดตสถานะเป็น `running`
+    // ✅ Change status into `running`
     await trainingRepository.updateStatus(trainingData.id, "running");
 
-    // 🔥 เรียก API ของ Machine Learning Server เพื่อเริ่ม Training (สมมติว่ามี API นี้)
-    const response = await fetch("http://ml-server/train", {
+    // 🔥 Call Machine Learning Server API For Training
+    const response = await fetch(config.PYTHON_SERVER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(trainingData),
@@ -21,13 +21,13 @@ const processTraining = async (trainingData: any) => {
       throw new Error(`Training failed: ${response.statusText}`);
     }
 
-    // ✅ อัปเดตสถานะเป็น `completed`
+    // ✅ Update status into `completed`
     await trainingRepository.updateStatus(trainingData.id, "completed");
     queueLogger.info(`✅ Training completed: ${trainingData.queueId}`);
   } catch (error) {
     queueLogger.error(`❌ Training failed: ${trainingData.queueId}`, error);
 
-    // ✅ อัปเดตสถานะเป็น `failed`
+    // ✅ Update status into `failed`
     await trainingRepository.updateStatus(trainingData.id, "failed");
   }
 };
@@ -52,7 +52,7 @@ export const startTrainingWorker = async () => {
         const trainingData = JSON.parse(msg.content.toString());
         await processTraining(trainingData);
 
-        // ✅ ลบ Message ออกจาก Queue
+        // ✅ Delete Message From Queue
         channel.ack(msg);
       }
     },

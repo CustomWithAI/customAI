@@ -53,7 +53,8 @@ const envSchema = z.object({
   S3_DEVELOPMENT_ENDPOINT: z.string().url().default("http://localhost:4566"),
 
   // Python Server
-  MAX_RETRY_COUNT: z.number().default(3),
+  MAX_RETRY_COUNT: z.coerce.number().default(3),
+  PYTHON_SERVER_URL: z.string().url().default("http://something:8000"),
 
   APP_VERSION: z.string().default(packageJson.version),
 });

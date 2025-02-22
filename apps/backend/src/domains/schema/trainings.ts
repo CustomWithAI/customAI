@@ -48,7 +48,7 @@ export const trainings = pgTable(
     queueId: varchar("queue_id", { length: 255 }),
     retryCount: integer("retry_count").default(0).notNull(),
     errorMessage: text("error_message"),
-    trainedModelpath: varchar("trained_model_path", { length: 255 }),
+    trainedModelPath: varchar("trained_model_path", { length: 255 }),
     workflowId: varchar("workflow_id", { length: 255 })
       .notNull()
       .references(() => workflows.id, {

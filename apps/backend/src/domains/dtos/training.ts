@@ -1,6 +1,6 @@
 import { toMultipleResponse } from "@/utils/dto";
 import { t } from "elysia";
-import { datasetResponseDto } from "@/domains/dtos/dataset";
+import { defaultDatasetResponseDto } from "@/domains/dtos/dataset";
 import { imagePreprocessingResponseDto } from "@/domains/dtos/imagePreprocessing";
 import { featureExtractionResponseDto } from "@/domains/dtos/featureExtraction";
 import { featureSelectionResponseDto } from "@/domains/dtos/featureSelection";
@@ -26,24 +26,47 @@ export const updateTrainingDto = t.Partial(
   })
 );
 
-export const trainingResponseDto = t.Object({
+export const defaultTrainingResponseDto = t.Object({
   id: t.String(),
   isDefault: t.Boolean(),
-  version: t.Number(),
+  version: t.Union([t.Number(), t.Null()]),
   hyperparameter: t.Unknown(),
   pipeline: t.Unknown(),
   status: t.String(),
-  queueId: t.Optional(t.String()),
+  queueId: t.Union([t.String(), t.Null()]),
   retryCount: t.Number(),
-  errorMessage: t.Optional(t.String()),
-  trainedModelPath: t.Optional(t.String()),
-  dataset: datasetResponseDto,
-  imagePreprocessing: t.Optional(imagePreprocessingResponseDto),
-  featureExtraction: t.Optional(featureExtractionResponseDto),
-  featureSelection: t.Optional(featureSelectionResponseDto),
-  augmentation: t.Optional(augmentationResponseDto),
-  preTrainedModel: t.Optional(t.Unknown()),
-  customModel: t.Optional(customModelResponseDto),
+  errorMessage: t.Union([t.String(), t.Null()]),
+  trainedModelPath: t.Union([t.String(), t.Null()]),
+  workflowId: t.String(),
+  datasetId: t.String(),
+  imagePreprocessingId: t.Union([t.String(), t.Null()]),
+  featureExtractionId: t.Union([t.String(), t.Null()]),
+  featureSelectionId: t.Union([t.String(), t.Null()]),
+  augmentationId: t.Union([t.String(), t.Null()]),
+  preTrainedModel: t.Union([t.Unknown(), t.Null()]),
+  customModelId: t.Union([t.String(), t.Null()]),
+  createdAt: t.Date(),
+  updatedAt: t.Date(),
+});
+
+export const trainingResponseDto = t.Object({
+  id: t.String(),
+  isDefault: t.Boolean(),
+  version: t.Union([t.Number(), t.Null()]),
+  hyperparameter: t.Unknown(),
+  pipeline: t.Unknown(),
+  status: t.String(),
+  queueId: t.Union([t.String(), t.Null()]),
+  retryCount: t.Number(),
+  errorMessage: t.Union([t.String(), t.Null()]),
+  trainedModelPath: t.Union([t.String(), t.Null()]),
+  dataset: defaultDatasetResponseDto,
+  imagePreprocessing: t.Union([imagePreprocessingResponseDto, t.Null()]),
+  featureExtraction: t.Union([featureExtractionResponseDto, t.Null()]),
+  featureSelection: t.Union([featureSelectionResponseDto, t.Null()]),
+  augmentation: t.Union([augmentationResponseDto, t.Null()]),
+  preTrainedModel: t.Union([t.Unknown(), t.Null()]),
+  customModel: t.Union([customModelResponseDto, t.Null()]),
   createdAt: t.Date(),
   updatedAt: t.Date(),
 });
@@ -57,5 +80,7 @@ export const trainingsResponseDto = toMultipleResponse(trainingResponseDto);
 
 export type CreateTrainingDto = typeof createTrainingDto.static;
 export type UpdateTrainingDto = typeof updateTrainingDto.static;
+export type DefaultTrainingResponseDto =
+  typeof defaultTrainingResponseDto.static;
 export type TrainingResponseDto = typeof trainingResponseDto.static;
 export type TrainingsResponseDto = typeof trainingsResponseDto.static;
