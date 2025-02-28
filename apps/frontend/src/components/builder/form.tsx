@@ -80,6 +80,7 @@ type TemplateType =
 	| "number"
 	| "percent"
 	| "slider"
+	| "sliderInput"
 	| "image"
 	| "date"
 	| "password";
@@ -126,6 +127,7 @@ type TemplateSwitchOptions = {
 
 type TemplateSliderOptions = {
 	options?: {
+		min: number;
 		max: number;
 		step: number;
 	};
@@ -169,6 +171,11 @@ type TemplateForm<T extends object> =
 	  }
 	| {
 			template: "slider";
+			element: TemplateElement<T>;
+			config: TemplateConfig & TemplateSliderOptions & TemplateConditional<T>;
+	  }
+	| {
+			template: "sliderInput";
 			element: TemplateElement<T>;
 			config: TemplateConfig & TemplateSliderOptions & TemplateConditional<T>;
 	  }
@@ -585,7 +592,7 @@ const RenderInput = memo(
 											if (!file) return;
 											const response = await mutateUploadImage({
 												file,
-												purpose: "product",
+												datasetId: "",
 											});
 											if (!response?.url) {
 												return toast({
@@ -714,6 +721,69 @@ const RenderInput = memo(
 									className="cursor-pointer"
 									aria-label="Percentage value"
 								/>
+							</FormItem>
+						)}
+					/>
+				);
+			}
+			case "sliderInput": {
+				return (
+					<FormField
+						key={key}
+						control={control}
+						name={name}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<FormItem className={cn(className)}>
+								<div className="flex items-center">
+									<FormLabel>{label}</FormLabel>
+									<FormDescription className="mb-3">
+										{description}
+									</FormDescription>
+								</div>
+								<div className="flex items-center gap-x-3 justify-between">
+									<Slider
+										max={options && "max" in options ? options?.max : 100}
+										min={options && "min" in options ? options?.min : 0}
+										step={options && "step" in options ? options?.step : 1}
+										value={setValue ? [setValue as number] : [value || 0]}
+										data-cyName={testDataId}
+										disabled={disabled}
+										onValueChange={(v) =>
+											setOnChange ? setOnChange(v[0]) : onChange(v[0])
+										}
+										id="slider"
+										className="cursor-pointer"
+										aria-label="Percentage value"
+									/>
+									<Input
+										className="w-16"
+										aria-invalid={Boolean((errors as any)?.[String(name)])}
+										required={required}
+										max={options && "max" in options ? options?.max : 100}
+										min={options && "min" in options ? options?.min : 0}
+										data-cy={testDataId}
+										disabled={disabled}
+										autoFocus={isFirstInput}
+										type="tel"
+										onChange={(e) =>
+											setOnChange
+												? setOnChange(e.target.valueAsNumber)
+												: onChange(e.target.valueAsNumber)
+										}
+										onBlur={onBlur}
+										defaultValue={value || 0}
+										value={
+											setValue
+												? !Number.isNaN(setValue)
+													? (setValue as number)
+													: undefined
+												: !Number.isNaN(value)
+													? value
+													: undefined
+										}
+										placeholder={placeholder}
+									/>
+								</div>
 							</FormItem>
 						)}
 					/>

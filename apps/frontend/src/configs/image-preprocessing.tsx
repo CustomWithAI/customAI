@@ -313,8 +313,8 @@ export const node = (
 					element: {
 						testDataId: "grayscale-form",
 						label: "Enable status",
-						key: "log_trans-1",
-						name: "log_trans",
+						key: "grayscale-1",
+						name: "grayscale",
 						required: true,
 					},
 					config: {

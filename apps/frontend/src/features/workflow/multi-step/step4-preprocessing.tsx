@@ -13,10 +13,14 @@ export const ImagePreprocessingPage = () => {
 	const { getQueryParam, setQueryParam, compareQueryParam } = useQueryParam({
 		name: "view",
 	});
+	const { setQueryParam: setStepParam } = useQueryParam({ name: "step" });
 	const viewParam = getQueryParam();
 	const handleSubmit = useCallback(() => {
-		setQueryParam({ value: encodeBase64("augmentation"), resetParams: true });
-	}, [setQueryParam]);
+		setStepParam({
+			value: encodeBase64("augmentation"),
+			resetParams: true,
+		});
+	}, [setStepParam]);
 	return (
 		<>
 			<div id="tab" className="flex p-1 bg-zinc-100 w-fit space-x-1 rounded-lg">

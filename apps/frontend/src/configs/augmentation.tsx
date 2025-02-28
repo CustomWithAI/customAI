@@ -1,5 +1,15 @@
+import { TextFormItem } from "@/components/builder/form-utils";
+import { ContentHeader } from "@/components/typography/text";
 import type { DragColumn, Metadata } from "@/stores/dragStore";
-import type { z } from "zod";
+import { findById } from "@/utils/findId";
+import {
+	IconBlur,
+	IconBrightness,
+	IconColorPicker,
+	IconTransform,
+} from "@tabler/icons-react";
+import { Crop, Droplet, Scaling } from "lucide-react";
+import { z } from "zod";
 
 export const node = (
 	fields: DragColumn<z.ZodRawShape>[],
@@ -8,5 +18,1654 @@ export const node = (
 		metadata: Metadata;
 	}) => void,
 ): DragColumn[] => {
-	return [];
+	return [
+		{
+			type: "grayscale",
+			title: "Gray scale",
+			description: "Convert image to grayscale",
+			icon: <Droplet />,
+			id: "grayscale-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "grayscale-form",
+						label: "Probability",
+						key: "grayscale-1",
+						name: "grayscale",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "grayscale-1")?.metadata?.probability
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "grayscale-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+			}),
+		},
+		{
+			type: "resizing",
+			title: "Resizing Node",
+			description: "Resize image to a specific width and height",
+			icon: <Scaling />,
+			id: "resizing-1",
+			metadata: {
+				size: {
+					type: "Object",
+					value: {
+						x: { type: "Number", value: 1 },
+						y: { type: "Number", value: 1 },
+					},
+				},
+			},
+			inputField: [
+				{
+					template: "custom",
+					element: {
+						testDataId: "resizing-form",
+						renderCustomInput() {
+							return (
+								<div className="flex gap-x-3">
+									{["x", "y"].map((axis) => (
+										<TextFormItem
+											key={`resizing-${axis}`}
+											className="w-1/2"
+											label={axis.toLocaleUpperCase()}
+											onChange={(e) => {
+												onUpdateMetadata({
+													id: "resizing-1",
+													metadata: {
+														size: {
+															type: "Object",
+															value: {
+																[axis]: {
+																	type: "Number",
+																	value: Number(e.target.value),
+																},
+															},
+														},
+													},
+												});
+											}}
+											value={
+												(findById(fields, "resizing-1")?.metadata as any)?.size
+													?.value?.[axis]?.value
+											}
+										/>
+									))}
+								</div>
+							);
+						},
+					},
+					config: {},
+				},
+			],
+			inputSchema: z.object({
+				size: z.object({
+					x: z.string(),
+					y: z.string(),
+				}),
+			}),
+		},
+		{
+			type: "cropping",
+			title: "Cropping Node",
+			description: "Crop a region from the image (x, y, width, height)",
+			icon: <Crop />,
+			id: "cropping-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				size: {
+					type: "Object",
+					value: {
+						x: { type: "Number", value: 0 },
+						y: { type: "Number", value: 0 },
+					},
+				},
+				crop_position: {
+					type: "Object",
+					value: {
+						x: { type: "Number", value: 0 },
+						y: { type: "Number", value: 0 },
+					},
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "cropping-form",
+						label: "Probability",
+						key: "cropping-1",
+						name: "cropping",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "cropping-1")?.metadata?.probability
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "cropping-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "custom",
+					element: {
+						testDataId: "cropping-form",
+						renderCustomInput() {
+							return (
+								<>
+									<ContentHeader className="mt-4">Cropping Size</ContentHeader>
+									<div className="flex gap-x-3">
+										{["x", "y"].map((axis) => (
+											<TextFormItem
+												key={`cropping-${axis}`}
+												className="w-1/2"
+												label={axis.toUpperCase()}
+												onChange={(e) => {
+													onUpdateMetadata({
+														id: "cropping-1",
+														metadata: {
+															size: {
+																type: "Object",
+																value: {
+																	[axis]: {
+																		type: "Number",
+																		value: Number(e.target.value),
+																	},
+																},
+															},
+														},
+													});
+												}}
+												value={
+													(findById(fields, "cropping-1")?.metadata as any)
+														?.size?.value?.[axis]?.value
+												}
+												placeholder="0"
+											/>
+										))}
+									</div>
+									<ContentHeader className="mt-4">
+										Cropping Position
+									</ContentHeader>
+									<div className="flex gap-x-3">
+										{["x", "y"].map((axis) => (
+											<TextFormItem
+												key={`crop_position-${axis}`}
+												className="w-1/2"
+												label={`Crop position ${axis.toUpperCase()}`}
+												onChange={(e) => {
+													onUpdateMetadata({
+														id: "cropping-1",
+														metadata: {
+															crop_position: {
+																type: "Object",
+																value: {
+																	[axis]: {
+																		type: "Number",
+																		value: Number(e.target.value),
+																	},
+																},
+															},
+														},
+													});
+												}}
+												value={
+													(findById(fields, "cropping-1")?.metadata as any)
+														?.crop_position?.value?.[axis]?.value
+												}
+												placeholder="0"
+											/>
+										))}
+									</div>
+								</>
+							);
+						},
+					},
+					config: {},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				size: z.object({
+					x: z.string(),
+					y: z.string(),
+				}),
+				crop_position: z.object({
+					x: z.string(),
+					y: z.string(),
+				}),
+			}),
+		},
+		{
+			type: "rotation",
+			title: "Rotation",
+			description: "Rotate image by a random angle within a range",
+			icon: <Droplet />,
+			id: "rotation-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				rotation: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "rotation-form",
+						label: "Probability",
+						key: "rotation-1",
+						name: "rotation",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "rotation-1")?.metadata?.probability
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							console.log(value);
+							onUpdateMetadata({
+								id: "rotation-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							max: 1,
+							min: 0,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "rotation-form",
+						label: "Rotation",
+						key: "rotation-1",
+						name: "rotation",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "rotation-1")?.metadata?.rotation
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							console.log(value);
+							onUpdateMetadata({
+								id: "rotation-1",
+								metadata: {
+									rotation: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				rotation: z.number().default(0),
+			}),
+		},
+		{
+			type: "flip",
+			title: "Flip",
+			description: "Flip image horizontally, vertically, or both",
+			icon: <Droplet />,
+			id: "flip-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				flip: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "flip-form",
+						label: "Probability",
+						key: "flip-1",
+						name: "flip",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "flip-1")?.metadata?.probability
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							console.log(value);
+							onUpdateMetadata({
+								id: "flip-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "select",
+					element: {
+						testDataId: "flip-form",
+						label: "flip",
+						key: "flip-1",
+						name: "flip",
+						required: true,
+					},
+					config: {
+						options: {
+							group: false,
+							list: [
+								{
+									label: "horizontal",
+									value: 0,
+								},
+								{
+									label: "vertical",
+									value: 1,
+								},
+								{
+									label: "both",
+									value: -1,
+								},
+							],
+						},
+						setValue: findById(fields, "flip-1")?.metadata?.flip
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							console.log(value);
+							onUpdateMetadata({
+								id: "flip-1",
+								metadata: {
+									flip: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				flip: z.number().default(0),
+			}),
+		},
+		{
+			type: "translate",
+			title: "Translate",
+			description: "Shift image along x and y axes",
+			icon: <IconTransform />,
+			id: "translate-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				size: {
+					type: "Object",
+					value: {
+						x: { type: "Number", value: 1 },
+						y: { type: "Number", value: 1 },
+					},
+				},
+			},
+			inputField: [
+				{
+					template: "custom",
+					element: {
+						testDataId: "translate-form",
+						renderCustomInput() {
+							return (
+								<div className="flex gap-x-3">
+									{["x", "y"].map((axis) => (
+										<TextFormItem
+											key={`translate-${axis}`}
+											className="w-1/2"
+											label={axis.toLocaleUpperCase()}
+											onChange={(e) => {
+												onUpdateMetadata({
+													id: "translate-1",
+													metadata: {
+														size: {
+															type: "Object",
+															value: {
+																[axis]: {
+																	type: "Number",
+																	value: Number(e.target.value),
+																},
+															},
+														},
+													},
+												});
+											}}
+											value={
+												(findById(fields, "translate-1")?.metadata as any)?.size
+													?.value?.[axis]?.value
+											}
+										/>
+									))}
+								</div>
+							);
+						},
+					},
+					config: {},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				size: z.object({
+					x: z.string(),
+					y: z.string(),
+				}),
+			}),
+		},
+		{
+			type: "scale",
+			title: "Scale",
+			description: "Scale image by a factor",
+			icon: <Scaling />,
+			id: "scale-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				scale: {
+					type: "Object",
+					value: {
+						x: { type: "Number", value: 1 },
+						y: { type: "Number", value: 1 },
+					},
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "scale-form",
+						label: "Probability",
+						key: "scale-1",
+						name: "scale",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "scale-1")?.metadata?.probability
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "scale-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							max: 1,
+							min: 0,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "custom",
+					element: {
+						testDataId: "scale-form",
+						renderCustomInput() {
+							return (
+								<div className="flex gap-x-3">
+									{["x", "y"].map((axis) => (
+										<TextFormItem
+											key={`scale-${axis}`}
+											className="w-1/2"
+											label={axis.toLocaleUpperCase()}
+											onChange={(e) => {
+												onUpdateMetadata({
+													id: "scale-1",
+													metadata: {
+														scale: {
+															type: "Object",
+															value: {
+																[axis]: {
+																	type: "Number",
+																	value: Number(e.target.value),
+																},
+															},
+														},
+													},
+												});
+											}}
+											value={
+												(findById(fields, "scale-1")?.metadata as any)?.scale
+													?.value?.[axis]?.value
+											}
+										/>
+									))}
+								</div>
+							);
+						},
+					},
+					config: {},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				scale: z.object({
+					x: z.string(),
+					y: z.string(),
+				}),
+			}),
+		},
+		{
+			type: "brightness",
+			title: "Brightness",
+			description: "Adjust image brightness",
+			icon: <IconBrightness />,
+			id: "brightness-1",
+			metadata: {
+				min: {
+					type: "Number",
+					value: 0,
+				},
+				max: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			inputField: [
+				{
+					template: "slider",
+					element: {
+						testDataId: "brightness-form",
+						label: "Probability",
+						key: "brightness-1",
+						name: "brightness",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "brightness-1")?.metadata?.min
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "brightness-1",
+								metadata: {
+									min: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: -1,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "brightness-form",
+						label: "Probability",
+						key: "brightness-1",
+						name: "brightness",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "brightness-1")?.metadata?.max
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "brightness-1",
+								metadata: {
+									max: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: -1,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				min: z.number(),
+				max: z.number(),
+			}),
+		},
+		{
+			type: "contrast_stretching",
+			title: "Contrast Stretching",
+			description: "Normalize contrast using min-max scaling",
+			icon: <IconBrightness />,
+			id: "contrast_stretching-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				min: {
+					type: "Number",
+					value: 0,
+				},
+				max: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			inputField: [
+				{
+					template: "number",
+					element: {
+						testDataId: "contrast_stretching-form",
+						label: "Probability",
+						key: "contrast_stretching-1",
+						name: "contrast_stretching",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "contrast_stretching-1")?.metadata
+							?.probability?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "contrast_stretching-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+					},
+				},
+				{
+					template: "slider",
+					element: {
+						testDataId: "contrast_stretching-form",
+						label: "Probability",
+						key: "contrast_stretching-1",
+						name: "contrast_stretching",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "contrast_stretching-1")?.metadata?.min
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "contrast_stretching-1",
+								metadata: {
+									min: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: -1,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "contrast_stretching-form",
+						label: "Contrast Stretching Scale",
+						key: "contrast_stretching-1",
+						name: "contrast_stretching",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "contrast_stretching-1")?.metadata?.max
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "contrast_stretching-1",
+								metadata: {
+									max: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: -1,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				min: z.number(),
+				max: z.number(),
+			}),
+		},
+		{
+			type: "hist_equalization",
+			title: "Contrast Stretching",
+			description: "Apply histogram equalization to improve contrast",
+			icon: <IconBrightness />,
+			id: "hist_equalization-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "hist_equalization-form",
+						label: "Probability",
+						key: "hist_equalization-1",
+						name: "hist_equalization",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "hist_equalization-1")?.metadata
+							?.probability?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "hist_equalization-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+			}),
+		},
+		{
+			type: "adaptive_equalization",
+			title: "Adaptive Equalization",
+			description: "Apply CLAHE for localized contrast enhancement",
+			icon: <IconBrightness />,
+			id: "adaptive_equalization-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				config: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "adaptive_equalization-form",
+						label: "Probability",
+						key: "adaptive_equalization-1",
+						name: "adaptive_equalization",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "adaptive_equalization-1")?.metadata
+							?.probability?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "adaptive_equalization-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "adaptive_equalization-form",
+						label: "Scale",
+						key: "adaptive_equalization-1",
+						name: "adaptive_equalization",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "adaptive_equalization-1")?.metadata
+							?.config?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "adaptive_equalization-1",
+								metadata: {
+									config: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				config: z.number(),
+			}),
+		},
+		{
+			type: "saturation",
+			title: "Saturation",
+			description: "Adjust color saturation",
+			icon: <IconColorPicker />,
+			id: "saturation-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				config: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "saturation-form",
+						label: "Probability",
+						key: "saturation-1",
+						name: "saturation",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "saturation-1")?.metadata?.probability
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "saturation-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "saturation-form",
+						label: "Scale",
+						key: "saturation-1",
+						name: "saturation",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "saturation-1")?.metadata?.config
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "saturation-1",
+								metadata: {
+									config: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				config: z.number(),
+			}),
+		},
+		{
+			type: "hue",
+			title: "Hue",
+			description: "Adjust color hue values",
+			icon: <IconColorPicker />,
+			id: "hue-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				config: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "hue-form",
+						label: "Probability",
+						key: "hue-1",
+						name: "hue",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "hue-1")?.metadata?.probability
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "hue-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "hue-form",
+						label: "Scale",
+						key: "hue-1",
+						name: "hue",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "hue-1")?.metadata?.config
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "hue-1",
+								metadata: {
+									config: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				config: z.number(),
+			}),
+		},
+		{
+			type: "gamma",
+			title: "Gamma",
+			description: "Adjust color gamma correction",
+			icon: <IconColorPicker />,
+			id: "gamma-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				config: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "gamma-form",
+						label: "Probability",
+						key: "gamma-1",
+						name: "gamma",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "gamma-1")?.metadata?.probability
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "gamma-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "gamma-form",
+						label: "Scale",
+						key: "gamma-1",
+						name: "gamma",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "gamma-1")?.metadata?.config
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "gamma-1",
+								metadata: {
+									config: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				config: z.number(),
+			}),
+		},
+		{
+			type: "gamma",
+			title: "Gamma",
+			description: "Adjust color gamma correction",
+			icon: <IconColorPicker />,
+			id: "gamma-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				config: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "gamma-form",
+						label: "Probability",
+						key: "gamma-1",
+						name: "gamma",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "gamma-1")?.metadata?.probability
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "gamma-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "gamma-form",
+						label: "Scale",
+						key: "gamma-1",
+						name: "gamma",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "gamma-1")?.metadata?.config
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "gamma-1",
+								metadata: {
+									config: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				config: z.number(),
+			}),
+		},
+		{
+			type: "gaussian_blur",
+			title: "Gaussian blur",
+			id: "gaussian_blur-1",
+			description: "Apply Gaussian blur with kernel size and sigma",
+			icon: <IconBlur />,
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				blur: {
+					type: "Object",
+					value: {
+						kernel_size: {
+							type: "Number",
+							value: 0,
+						},
+						sigma: {
+							type: "Number",
+							value: 0,
+						},
+					},
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "gaussian_blur-form",
+						label: "Probability",
+						key: "gaussian_blur-1",
+						name: "gaussian_blur",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "gaussian_blur-1")?.metadata?.probability
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "gaussian_blur-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "gaussian_blur-kernel_size-form",
+						label: "Kernel size",
+						key: "gaussian_blur-1",
+						name: "gaussian_blur",
+						required: true,
+					},
+					config: {
+						setValue: (
+							findById(fields, "gaussian_blur-1")?.metadata?.blur?.value as any
+						)?.kernel_size?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "gaussian_blur-1",
+								metadata: {
+									blur: {
+										type: "Object",
+										value: {
+											kernel_size: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "gaussian_blur-sigma-form",
+						label: "Sigma",
+						key: "gaussian_blur-1",
+						name: "gaussian_blur",
+						required: true,
+					},
+					config: {
+						setValue: (
+							findById(fields, "gaussian_blur-1")?.metadata?.blur?.value as any
+						)?.sigma?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "gaussian_blur-1",
+								metadata: {
+									blur: {
+										type: "Object",
+										value: {
+											sigma: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				blur: z.object({
+					kernel_size: z.number(),
+					sigma: z.number(),
+				}),
+			}),
+		},
+		{
+			type: "motion_blur",
+			title: "Motion blur",
+			id: "motion_blur-1",
+			description: "Simulate motion blur",
+			icon: <IconBlur />,
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				blur: {
+					type: "Object",
+					value: {
+						kernel_size: {
+							type: "Number",
+							value: 0,
+						},
+						angle: {
+							type: "Number",
+							value: 0,
+						},
+					},
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "motion_blur-form",
+						label: "Probability",
+						key: "motion_blur-1",
+						name: "motion_blur",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "motion_blur-1")?.metadata?.probability
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "motion_blur-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "motion_blur-kernel_size-form",
+						label: "Kernel size",
+						key: "motion_blur-1",
+						name: "motion_blur",
+						required: true,
+					},
+					config: {
+						setValue: (
+							findById(fields, "motion_blur-1")?.metadata?.blur?.value as any
+						)?.kernel_size?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "motion_blur-1",
+								metadata: {
+									blur: {
+										type: "Object",
+										value: {
+											kernel_size: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "motion_blur-angle-form",
+						label: "Angle",
+						key: "motion_blur-1",
+						name: "motion_blur",
+						required: true,
+					},
+					config: {
+						setValue: (
+							findById(fields, "motion_blur-1")?.metadata?.blur?.value as any
+						)?.angle?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "motion_blur-1",
+								metadata: {
+									blur: {
+										type: "Object",
+										value: {
+											angle: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				blur: z.object({
+					kernel_size: z.number(),
+					angle: z.number(),
+				}),
+			}),
+		},
+		{
+			type: "zoom_blur",
+			title: "Zoom Blur",
+			description: "Apply zoom blur effect",
+			icon: <IconColorPicker />,
+			id: "zoom_blur-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				config: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "zoom_blur-form",
+						label: "Probability",
+						key: "zoom_blur-1",
+						name: "zoom_blur",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "zoom_blur-1")?.metadata?.probability
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "zoom_blur-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "zoom_blur-form",
+						label: "Zoom Factor",
+						key: "zoom_blur-1",
+						name: "zoom_blur",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "zoom_blur-1")?.metadata?.config
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "zoom_blur-1",
+								metadata: {
+									config: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				config: z.number(),
+			}),
+		},
+		{
+			type: "sharpening",
+			title: "Sharpening",
+			description: "Sharpen the image",
+			icon: <IconColorPicker />,
+			id: "sharpening-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				config: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "sharpening-form",
+						label: "Probability",
+						key: "sharpening-1",
+						name: "sharpening",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "sharpening-1")?.metadata?.probability
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "sharpening-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "sharpening-form",
+						label: "Zoom Factor",
+						key: "sharpening-1",
+						name: "sharpening",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "sharpening-1")?.metadata?.config
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "sharpening-1",
+								metadata: {
+									config: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				config: z.number(),
+			}),
+		},
+	];
 };
