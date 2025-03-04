@@ -50,7 +50,7 @@ export class TrainingRepository {
         customModel: customModels,
       })
       .from(trainings)
-      .innerJoin(datasets, eq(trainings.datasetId, datasets.id))
+      .leftJoin(datasets, eq(trainings.datasetId, datasets.id))
       .leftJoin(
         imagePreprocessings,
         eq(trainings.imagePreprocessingId, imagePreprocessings.id)
@@ -112,7 +112,7 @@ export class TrainingRepository {
         customModel: customModels,
       })
       .from(trainings)
-      .innerJoin(datasets, eq(trainings.datasetId, datasets.id))
+      .leftJoin(datasets, eq(trainings.datasetId, datasets.id))
       .leftJoin(
         imagePreprocessings,
         eq(trainings.imagePreprocessingId, imagePreprocessings.id)

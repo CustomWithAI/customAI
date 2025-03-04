@@ -8,7 +8,6 @@ import { augmentationResponseDto } from "@/domains/dtos/augmentation";
 import { customModelResponseDto } from "@/domains/dtos/customModel";
 
 export const createTrainingDto = t.Object({
-  datasetId: t.String({ maxLength: 255 }),
   pipeline: t.Record(t.String(), t.Any()),
 });
 
@@ -17,6 +16,7 @@ export const updateTrainingDto = t.Partial(
     ...createTrainingDto.properties,
     version: t.Number(),
     hyperparameter: t.Record(t.String(), t.Any()),
+    datasetId: t.String({ maxLength: 255 }),
     imagePreprocessingId: t.String({ maxLength: 255 }),
     featureExtractionId: t.String({ maxLength: 255 }),
     featureSelectionId: t.String({ maxLength: 255 }),
@@ -38,7 +38,7 @@ export const defaultTrainingResponseDto = t.Object({
   errorMessage: t.Union([t.String(), t.Null()]),
   trainedModelPath: t.Union([t.String(), t.Null()]),
   workflowId: t.String(),
-  datasetId: t.String(),
+  datasetId: t.Union([t.String(), t.Null()]),
   imagePreprocessingId: t.Union([t.String(), t.Null()]),
   featureExtractionId: t.Union([t.String(), t.Null()]),
   featureSelectionId: t.Union([t.String(), t.Null()]),
@@ -60,7 +60,7 @@ export const trainingResponseDto = t.Object({
   retryCount: t.Number(),
   errorMessage: t.Union([t.String(), t.Null()]),
   trainedModelPath: t.Union([t.String(), t.Null()]),
-  dataset: defaultDatasetResponseDto,
+  dataset: t.Union([defaultDatasetResponseDto, t.Null()]),
   imagePreprocessing: t.Union([imagePreprocessingResponseDto, t.Null()]),
   featureExtraction: t.Union([featureExtractionResponseDto, t.Null()]),
   featureSelection: t.Union([featureSelectionResponseDto, t.Null()]),

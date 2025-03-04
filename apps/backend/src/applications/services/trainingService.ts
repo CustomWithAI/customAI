@@ -85,6 +85,8 @@ export class TrainingService {
   public async startTraining(userId: string, workflowId: string, id: string) {
     await this.ensureWorkflowExists(userId, workflowId);
 
+    // TODO: Should validate this training have dataset or not and check if "failed" before or not
+
     const training = await this.repository.findById(workflowId, id);
     if (training.length === 0) {
       throw new NotFoundError(`Training not found: ${id}`);

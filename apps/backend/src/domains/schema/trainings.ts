@@ -55,12 +55,13 @@ export const trainings = pgTable(
         onDelete: "cascade",
         onUpdate: "cascade",
       }),
-    datasetId: varchar("dataset_id", { length: 255 })
-      .notNull()
-      .references(() => datasets.id, {
+    datasetId: varchar("dataset_id", { length: 255 }).references(
+      () => datasets.id,
+      {
         onDelete: "cascade",
         onUpdate: "cascade",
-      }),
+      }
+    ),
     imagePreprocessingId: varchar("image_preprocessing_id", {
       length: 255,
     }).references(() => imagePreprocessings.id, {

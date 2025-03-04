@@ -18,6 +18,7 @@ import { shutdown } from "@/utils/shutdown";
 import { cors } from "@elysiajs/cors";
 import { staticPlugin } from "@elysiajs/static";
 import { Elysia } from "elysia";
+import { mockTrainingController } from "@/applications/controllers/mockTrainingController";
 
 try {
   logger.info("🏃‍♀️ Starting connection..");
@@ -39,6 +40,7 @@ try {
     .use(featureSelection)
     .use(customModel)
     .use(workflow)
+    .use(mockTrainingController)
     .onParse(({ request, route }) => {
       if (route.startsWith("/api/auth")) {
         return request.body;

@@ -12,7 +12,7 @@ export const sendToRabbitMQ = async (trainingData: any): Promise<string> => {
 
     // ✅ Define Queue If Not Exists
     await channel.assertQueue(config.RABBITMQ_TRAINING_QUEUE_NAME, {
-      durable: true, // ✅ ทำให้ Queue คงอยู่หลังจาก Restart
+      durable: true, // ✅ Keep Queue Persistent After Restart
     });
 
     // ✅ Create queueId as UUID
@@ -20,8 +20,8 @@ export const sendToRabbitMQ = async (trainingData: any): Promise<string> => {
 
     // ✅ Push queueId into trainingData Before Sending
     const payload = {
-      queueId,
       ...trainingData,
+      queueId,
     };
 
     // ✅ Send Training Data Into Queue
@@ -29,7 +29,7 @@ export const sendToRabbitMQ = async (trainingData: any): Promise<string> => {
       config.RABBITMQ_TRAINING_QUEUE_NAME,
       Buffer.from(JSON.stringify(payload)),
       {
-        persistent: true, // ✅ ทำให้ Message คงอยู่หลังจาก Restart
+        persistent: true, // ✅ Keep Queue Persistent After Restart
       }
     );
 

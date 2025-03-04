@@ -12,7 +12,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: your_postgres_password
       POSTGRES_HOST_AUTH_METHOD: trust
-      
+
   rabbitmq:
     image: rabbitmq:4-management-alpine
     container_name: rabbitmq
@@ -57,10 +57,9 @@ services:
     container_name: localstack
     image: localstack/localstack:latest
     ports:
-      - "4566:4566"            # LocalStack Gateway
-      - "4510-4559:4510-4559"  # external services port range
+      - "4566:4566"
+      - "4510-4559:4510-4559"
     environment:
-      # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
       - DEBUG=${DEBUG:-0}
     healthcheck:
       test: ["CMD", "curl", "-s", "http://localhost:4566/_localstack/health"]
@@ -70,10 +69,11 @@ services:
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./localstack}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+
   aws-cli:
     image: amazon/aws-cli
     depends_on:
-     localstack:
+      localstack:
         condition: service_healthy
     volumes:
       - ./testbucket:/aws
@@ -87,20 +87,6 @@ services:
         aws --endpoint-url=http://localstack:4566 s3api create-bucket --bucket my-bucket --region us-east-1
         aws --endpoint-url=http://localstack:4566 s3api ls s3://my-bucket --recursive --human-readable --summarize
       "
-  ai_app:
-    container_name: python_ai
-    profiles:
-      - ""
-      - python
-    depends_on:
-      - localstack
-    build: 
-      context: ./apps/ai-service
-      dockerfile: dev.Dockerfile
-    volumes:
-      - ./apps/frontend:/app
-    ports:
-      - 8000:8000 
 
   backend_app:
     container_name: backend_app
@@ -117,6 +103,26 @@ services:
     ports:
       - 4000:4000 
     depends_on:
+      - localstack
+      - postgres
+      - rabbitmq
+      - redis
+
+  worker:
+    container_name: worker
+    profiles:
+      - ""
+      - worker
+    build:
+      context: ./apps/backend
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./apps/backend:/app
+      - /app/node_modules
+    command: ["bun", "run", "--watch", "src/workers/trainingWorker.ts"]
+    env_file: apps/backend/.env
+    depends_on:
+      - backend_app
       - localstack
       - postgres
       - rabbitmq
