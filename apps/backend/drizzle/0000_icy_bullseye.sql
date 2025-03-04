@@ -130,7 +130,7 @@ CREATE TABLE "trainings" (
 	"error_message" text,
 	"trained_model_path" varchar(255),
 	"workflow_id" varchar(255) NOT NULL,
-	"dataset_id" varchar(255) NOT NULL,
+	"dataset_id" varchar(255),
 	"image_preprocessing_id" varchar(255),
 	"feature_extraction_id" varchar(255),
 	"feature_selection_id" varchar(255),

@@ -1,5 +1,5 @@
 {
-  "id": "78a4997a-71f9-44d1-8568-ee1311ac078f",
+  "id": "b2580298-253d-4cd6-a386-252710fdf110",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -962,7 +962,7 @@
           "name": "dataset_id",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "image_preprocessing_id": {
           "name": "image_preprocessing_id",
