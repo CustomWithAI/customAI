@@ -641,7 +641,7 @@ export const node = (
 			},
 			inputField: [
 				{
-					template: "slider",
+					template: "sliderInput",
 					element: {
 						testDataId: "brightness-form",
 						label: "Probability",
@@ -674,7 +674,7 @@ export const node = (
 					template: "sliderInput",
 					element: {
 						testDataId: "brightness-form",
-						label: "Probability",
+						label: "Brightness",
 						key: "brightness-1",
 						name: "brightness",
 						required: true,

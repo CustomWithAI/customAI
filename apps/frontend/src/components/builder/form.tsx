@@ -431,12 +431,21 @@ const RenderInput = memo(
 										data-cy={testDataId}
 										disabled={disabled}
 										autoFocus={isFirstInput}
-										type="number"
-										onChange={(e) =>
-											setOnChange
-												? setOnChange(e.target.valueAsNumber)
-												: onChange(e.target.valueAsNumber)
-										}
+										type="tel"
+										inputMode="decimal"
+										pattern="[0-9]*[.,]?[0-9]*"
+										onChange={(e) => {
+											const inputValue = e.target.value.trim();
+											const parsedValue =
+												inputValue !== ""
+													? Number.parseFloat(inputValue)
+													: Number.NaN;
+											if (!Number.isNaN(parsedValue)) {
+												setOnChange
+													? setOnChange(parsedValue)
+													: onChange(parsedValue);
+											}
+										}}
 										onBlur={onBlur}
 										value={
 											setValue
@@ -762,14 +771,23 @@ const RenderInput = memo(
 										max={options && "max" in options ? options?.max : 100}
 										min={options && "min" in options ? options?.min : 0}
 										data-cy={testDataId}
+										inputMode="decimal"
+										pattern="[0-9]*[.,]?[0-9]*"
 										disabled={disabled}
 										autoFocus={isFirstInput}
 										type="tel"
-										onChange={(e) =>
-											setOnChange
-												? setOnChange(e.target.valueAsNumber)
-												: onChange(e.target.valueAsNumber)
-										}
+										onChange={(e) => {
+											const inputValue = e.target.value.trim();
+											const parsedValue =
+												inputValue !== ""
+													? Number.parseFloat(inputValue)
+													: Number.NaN;
+											if (!Number.isNaN(parsedValue)) {
+												setOnChange
+													? setOnChange(parsedValue)
+													: onChange(parsedValue);
+											}
+										}}
 										onBlur={onBlur}
 										defaultValue={value || 0}
 										value={
