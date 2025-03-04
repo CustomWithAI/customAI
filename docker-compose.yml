@@ -88,7 +88,7 @@ services:
         aws --endpoint-url=http://localstack:4566 s3 cp /aws/1.jpg s3://my-bucket/;
         aws --endpoint-url=http://localstack:4566 s3 cp /aws/2.jpg s3://my-bucket/;
         aws --endpoint-url=http://localstack:4566 s3 cp /aws/3.jpg s3://my-bucket/;
-        aws --endpoint-url=http://localstack:4566 s3api ls s3://my-bucket --recursive --human-readable --summarize
+        aws --endpoint-url=http://localstack:4566 s3 ls s3://my-bucket --recursive --human-readable --summarize
       "
 
   backend_app:
