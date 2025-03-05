@@ -146,6 +146,17 @@ export class TrainingRepository {
       .returning();
   }
 
+  public async updateByWorkflowId(
+    workflowId: string,
+    data: Partial<typeof trainings.$inferInsert>
+  ) {
+    return db
+      .update(trainings)
+      .set(data)
+      .where(and(eq(trainings.workflowId, workflowId)))
+      .returning();
+  }
+
   public async deleteById(workflowId: string, id: string) {
     return db
       .delete(trainings)

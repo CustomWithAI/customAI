@@ -110,4 +110,24 @@ export class TrainingService {
 
     return { message: "Training added to queue", queueId };
   }
+
+  public async setTrainingToDefault(
+    userId: string,
+    workflowId: string,
+    id: string
+  ) {
+    await this.ensureWorkflowExists(userId, workflowId);
+
+    await this.repository.updateByWorkflowId(workflowId, { isDefault: false });
+
+    const result = await this.repository.updateById(workflowId, id, {
+      isDefault: true,
+    });
+
+    if (result.length === 0) {
+      throw new NotFoundError(`Training not found: ${id}`);
+    }
+
+    return result[0];
+  }
 }

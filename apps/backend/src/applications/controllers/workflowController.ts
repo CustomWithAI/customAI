@@ -125,4 +125,15 @@ export const workflow = new Elysia({
         },
         { response: startTrainingResponseDto }
       )
+      .post(
+        "/:trainingId/set-default",
+        async ({ user, params, trainingService }) => {
+          return trainingService.setTrainingToDefault(
+            user.id,
+            params.id,
+            params.trainingId
+          );
+        },
+        { response: defaultTrainingResponseDto }
+      )
   );
