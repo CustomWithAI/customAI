@@ -11,6 +11,7 @@ import type { PaginationParams } from "@/utils/db-type";
 import withPagination from "@/utils/pagination";
 import { and, eq, getTableColumns } from "drizzle-orm";
 import type { TrainingResponseDto } from "@/domains/dtos/training";
+import { workflows } from "@/domains/schema/workflows";
 
 export class TrainingRepository {
   public async create(data: typeof trainings.$inferInsert) {
@@ -110,6 +111,7 @@ export class TrainingRepository {
         featureSelection: featureSelections,
         augmentation: augmentations,
         customModel: customModels,
+        workflow: workflows,
       })
       .from(trainings)
       .leftJoin(datasets, eq(trainings.datasetId, datasets.id))
@@ -127,6 +129,7 @@ export class TrainingRepository {
       )
       .leftJoin(augmentations, eq(trainings.augmentationId, augmentations.id))
       .leftJoin(customModels, eq(trainings.customModelId, customModels.id))
+      .innerJoin(workflows, eq(trainings.workflowId, workflows.id))
       .where(and(eq(trainings.id, id), eq(trainings.workflowId, workflowId)))
       .limit(1);
   }

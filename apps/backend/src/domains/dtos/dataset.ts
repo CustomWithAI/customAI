@@ -15,7 +15,6 @@ export const defaultDatasetResponseDto = t.Object({
   id: t.String(),
   createdAt: t.Date(),
   updatedAt: t.Date(),
-  userId: t.String(),
   splitData: t.Unknown(),
 });
 

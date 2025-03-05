@@ -15,7 +15,6 @@ export const imagePreprocessingResponseDto = t.Object({
   id: t.String(),
   createdAt: t.Date(),
   updatedAt: t.Date(),
-  userId: t.String(),
   data: t.Unknown(),
 });
 

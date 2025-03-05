@@ -6,15 +6,16 @@ import { featureExtractionResponseDto } from "@/domains/dtos/featureExtraction";
 import { featureSelectionResponseDto } from "@/domains/dtos/featureSelection";
 import { augmentationResponseDto } from "@/domains/dtos/augmentation";
 import { customModelResponseDto } from "@/domains/dtos/customModel";
+import { workflowResponseDto } from "@/domains/dtos/workflow";
 
 export const createTrainingDto = t.Object({
   pipeline: t.Record(t.String(), t.Any()),
+  version: t.Number(),
 });
 
 export const updateTrainingDto = t.Partial(
   t.Object({
     ...createTrainingDto.properties,
-    version: t.Number(),
     hyperparameter: t.Record(t.String(), t.Any()),
     datasetId: t.String({ maxLength: 255 }),
     imagePreprocessingId: t.String({ maxLength: 255 }),
@@ -65,6 +66,7 @@ export const trainingResponseDto = t.Object({
   featureExtraction: t.Union([featureExtractionResponseDto, t.Null()]),
   featureSelection: t.Union([featureSelectionResponseDto, t.Null()]),
   augmentation: t.Union([augmentationResponseDto, t.Null()]),
+  workflow: workflowResponseDto,
   preTrainedModel: t.Union([t.Unknown(), t.Null()]),
   customModel: t.Union([customModelResponseDto, t.Null()]),
   createdAt: t.Date(),

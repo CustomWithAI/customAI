@@ -14,7 +14,6 @@ export const workflowResponseDto = t.Object({
   id: t.String(),
   createdAt: t.Date(),
   updatedAt: t.Date(),
-  userId: t.String(),
 });
 
 export const workflowsResponseDto = toMultipleResponse(workflowResponseDto);
