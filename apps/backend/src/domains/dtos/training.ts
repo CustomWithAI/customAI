@@ -10,7 +10,7 @@ import { workflowResponseDto } from "@/domains/dtos/workflow";
 
 export const createTrainingDto = t.Object({
   pipeline: t.Record(t.String(), t.Any()),
-  version: t.Number(),
+  version: t.Optional(t.Number()),
 });
 
 export const updateTrainingDto = t.Partial(

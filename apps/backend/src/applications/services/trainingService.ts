@@ -1,7 +1,7 @@
 import type { TrainingRepository } from "@/applications/repositories/trainingRepository";
 import type { WorkflowRepository } from "@/applications/repositories/workflowRepository";
 import { sendToRabbitMQ } from "@/infrastructures/rabbitmq/queue";
-import { NotFoundError, InternalServerError } from "elysia";
+import { NotFoundError, InternalServerError, error } from "elysia";
 import type { trainings } from "@/domains/schema/trainings";
 import type { PaginationParams } from "@/utils/db-type";
 import type { CreateTrainingDto } from "@/domains/dtos/training";
@@ -26,8 +26,17 @@ export class TrainingService {
   ) {
     await this.ensureWorkflowExists(userId, workflowId);
 
+    const trainings = await this.repository.findByWorkflowId(workflowId, {
+      limit: 1,
+    });
+
+    if (trainings.data.length > 0 && !data.version) {
+      throw error(400, "Training version is required");
+    }
+
     const result = await this.repository.create({
       ...data,
+      ...(trainings.data.length === 0 ? { isDefault: true, version: 1.0 } : {}),
       workflowId,
       hyperparameter: {},
     });
