@@ -38,6 +38,7 @@ type VisualProps = {
 			metadata: Metadata;
 		}) => void,
 	) => DragColumn[];
+	image: string;
 	customNode: ({
 		data,
 		id,
@@ -46,7 +47,7 @@ type VisualProps = {
 		id: string;
 	}) => JSX.Element;
 };
-export const VisualSection = ({ node, customNode }: VisualProps) => {
+export const VisualSection = ({ node, customNode, image }: VisualProps) => {
 	const dialogRef = useRef<DialogBuilderRef>(null);
 	const { isLessThan } = useSizeScreen();
 	const fields = useDragStore(useShallow((state) => state.fields));
@@ -74,10 +75,11 @@ export const VisualSection = ({ node, customNode }: VisualProps) => {
 				id: field.id,
 				title: field.title,
 				description: field.description,
-				image: "/placeholder.svg?height=200&width=200",
+				image: image,
 				value: "",
 				type: "custom",
 				metadata: field.metadata,
+				previewImg: field.previewImg,
 				inputSchema: field.inputSchema,
 				inputField: field.inputField,
 				onChange: (value: string) => {
@@ -98,8 +100,7 @@ export const VisualSection = ({ node, customNode }: VisualProps) => {
 				id: "input-1",
 				title: "Input Node",
 				description: "This is the input node",
-				image: "/placeholder.svg?height=200&width=200",
-				value: "10",
+				image: image,
 				type: "input",
 				onChange: () => {},
 			},
@@ -112,14 +113,13 @@ export const VisualSection = ({ node, customNode }: VisualProps) => {
 				id: "output-1",
 				title: "Output Node",
 				description: "This is the output node",
-				image: "/placeholder.svg?height=200&width=200",
-				value: "10",
+				image: image,
 				type: "output",
 				onChange: () => {},
 			},
 		};
 		return [inputNode, ...processNode, outputNode];
-	}, [fields, onDeleteNodeStore, onResetNodeStore]);
+	}, [fields, onDeleteNodeStore, image, onResetNodeStore]);
 
 	const initialEdges: Edge[] = useMemo(() => {
 		const edges: Edge[] = [];
@@ -219,8 +219,9 @@ export const VisualSection = ({ node, customNode }: VisualProps) => {
 					id: id,
 					title: `${type.charAt(0).toUpperCase() + type.slice(1)} Node`,
 					description: `This is a ${type} node`,
-					image: "/placeholder.svg?height=200&width=200",
+					image: image,
 					value: "",
+					previewImg: node?.previewImg,
 					type: type,
 					metadata: {
 						position: { type: "Position" as const, value: position },
@@ -249,6 +250,7 @@ export const VisualSection = ({ node, customNode }: VisualProps) => {
 			setNodes,
 			onAddNode,
 			onUpdateMetadata,
+			image,
 			onResetNodeStore,
 			onDeleteNodeStore,
 		],

@@ -40,10 +40,10 @@ export const datasetService = {
 		} catch (error) {}
 	},
 
-	getImages: async ({ id }: { id: string }) => {
+	getImages: async ({ id, params }: { id: string; params?: string }) => {
 		try {
 			const { data } = await axiosClient.get<responsePagination<ResponseImage>>(
-				`/datasets/${id}/images`,
+				`/datasets/${id}/images${params || ""}`,
 			);
 			return data;
 		} catch (error) {}

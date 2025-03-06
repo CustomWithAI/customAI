@@ -439,7 +439,7 @@ const RenderInput = memo(
 											const parsedValue =
 												inputValue !== ""
 													? Number.parseFloat(inputValue)
-													: Number.NaN;
+													: undefined;
 											if (!Number.isNaN(parsedValue)) {
 												setOnChange
 													? setOnChange(parsedValue)
@@ -683,9 +683,7 @@ const RenderInput = memo(
 								<Selection
 									className="my-3"
 									group={options && "group" in options ? options?.group : false}
-									value={
-										setValue ? (setValue as string | number | boolean) : value
-									}
+									value={setValue as string | number | boolean}
 									cyName={testDataId}
 									disabled={disabled}
 									placeholder={placeholder}

@@ -15,7 +15,10 @@ export default async function Page({
 				<Menubar.List>
 					<Menubar.Item
 						onClick={() =>
-							setQueryParam({ value: "images", resetParams: true })
+							setQueryParam({
+								params: { name: "tab", value: "images" },
+								resetParams: true,
+							})
 						}
 						current={compareQueryParam({ value: "images", allowNull: true })}
 					>
@@ -23,7 +26,10 @@ export default async function Page({
 					</Menubar.Item>
 					<Menubar.Item
 						onClick={() =>
-							setQueryParam({ value: "settings", resetParams: true })
+							setQueryParam({
+								params: { name: "tab", value: "settings" },
+								resetParams: true,
+							})
 						}
 						current={compareQueryParam({ value: "settings" })}
 					>

@@ -66,7 +66,7 @@ export const Selection = ({
 }: SelectionPropsType) => {
 	const getDisplayValue = useCallback(
 		(value: OptionValue | null): string | ReactNode => {
-			if (value === null) return placeholder;
+			if (value === null || value === undefined) return placeholder;
 			const findOptionInArray = (optArray: Option[]) =>
 				optArray.find((opt) => opt.value === value);
 			let option: Option | undefined;
@@ -98,7 +98,7 @@ export const Selection = ({
 						"my-3 w-full",
 						{
 							"text-zinc-500 dark:text-zinc-500":
-								value === null || value === undefined,
+								value === null || value === undefined || value === "",
 						},
 						className,
 					)}

@@ -96,28 +96,33 @@ export function useQueryParam(defaultName?: { name?: string }) {
 
 	const setQueryParam = useCallback(
 		({
-			name = defaultName?.name,
-			value,
+			params,
 			subfix,
 			resetParams,
 		}: {
-			name?: string;
-			value: string | null;
+			params:
+				| { [key: string]: string | null }
+				| { name: string; value: string | null };
 			subfix?: string;
 			resetParams?: boolean;
 		}): void => {
-			if (!name) return;
-			if (!subfix) {
-				router.replace(
-					`${pathname}?${createQueryParam({ name, value, resetParams })}`,
-				);
-				return;
+			let queryParams: { [key: string]: string | null };
+
+			if ("name" in params && "value" in params && params.name) {
+				queryParams = { [params.name]: params.value };
+			} else {
+				queryParams = params as { [key: string]: string | null };
 			}
-			router.replace(
-				`${pathname}?${createQueryParam({ name, value, resetParams })}${subfix}`,
-			);
+
+			const queryString = Object.entries(queryParams)
+				.map(([name, value]) => createQueryParam({ name, value, resetParams }))
+				.join("&");
+
+			const url = `${pathname}?${queryString}${subfix || ""}`;
+
+			router.replace(url);
 		},
-		[createQueryParam, pathname, router, defaultName],
+		[createQueryParam, pathname, router],
 	);
 
 	const replaceQueryParam = useCallback(

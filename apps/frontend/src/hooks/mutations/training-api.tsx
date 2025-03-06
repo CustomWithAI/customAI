@@ -1,0 +1,28 @@
+import authService from "@/services/auth";
+import { trainingService } from "@/services/training";
+import { workflowService } from "@/services/workflow";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+export const useCreateTraining = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: trainingService.createTraining,
+		onSuccess: (ctx) => {
+			queryClient.invalidateQueries({
+				queryKey: ["trainings", ctx?.data.workflowId, ctx?.data.id],
+			});
+		},
+	});
+};
+
+export const useUpdateTraining = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: trainingService.updateTraining,
+		onSuccess: (ctx) => {
+			queryClient.invalidateQueries({
+				queryKey: ["training", ctx?.data.workflowId, ctx?.data.id],
+			});
+		},
+	});
+};

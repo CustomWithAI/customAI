@@ -40,7 +40,11 @@ export const stepConfig: Record<string, StepConfig> = {
 		stepTitle: "Import or create a dataset",
 		description: null,
 		icon: <FileDown />,
-		component: () => <DatasetPage />,
+		component: () => (
+			<DragStoreProvider>
+				<DatasetPage />
+			</DragStoreProvider>
+		),
 	},
 	preset: {
 		title: "Workflow preset",
@@ -53,28 +57,40 @@ export const stepConfig: Record<string, StepConfig> = {
 					{
 						title: "Image Pre-processing",
 						id: "1",
-						metadata: { check: { type: "Boolean", value: false } },
+						metadata: {
+							check: { type: "Boolean", value: false },
+							name: { type: "String", value: "preprocessing" },
+						},
 						description: "edit image before training",
 						icon: <Image />,
 					},
 					{
 						title: "Feature Selection & Extraction",
 						id: "2",
-						metadata: { check: { type: "Boolean", value: false } },
+						metadata: {
+							check: { type: "Boolean", value: false },
+							name: { type: "String", value: "preprocessing" },
+						},
 						description: "focus on main feature",
 						icon: <SquareDashedMousePointer />,
 					},
 					{
 						title: "Data Augmentation",
 						id: "3",
-						metadata: { check: { type: "Boolean", value: false } },
+						metadata: {
+							check: { type: "Boolean", value: false },
+							name: { type: "String", value: "augmentation" },
+						},
 						description: "create random sampling",
 						icon: <BetweenHorizontalStart />,
 					},
 					{
 						title: "Training Configuration",
 						id: "4",
-						metadata: { check: { type: "Boolean", value: false } },
+						metadata: {
+							check: { type: "Boolean", value: false },
+							name: { type: "String", value: "modelconfig" },
+						},
 						description: "setting model hyperparameter",
 						icon: <FileSliders />,
 					},

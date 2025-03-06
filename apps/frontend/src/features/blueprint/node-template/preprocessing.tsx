@@ -9,6 +9,7 @@ import {
 	ContextMenuItem,
 	ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import EnhanceImage from "@/components/ui/enhanceImage";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { node } from "@/configs/image-preprocessing";
@@ -44,6 +45,16 @@ export default function CustomNode({
 	const input = useMemo(() => {
 		return node(fields, onUpdateMetadata).find((field) => field.id === id);
 	}, [fields, onUpdateMetadata, id]);
+
+	const previousPreviewImgParams = useMemo(() => {
+		return [
+			...previousNodesData
+				.flatMap((field) => field.previewImg)
+				.filter((f) => f !== undefined),
+			...(input?.previewImg || []),
+		];
+	}, [previousNodesData, input?.previewImg]);
+
 	return (
 		<ContextMenu>
 			<ContextMenuTrigger>
@@ -57,27 +68,19 @@ export default function CustomNode({
 					)}
 					<div className="space-y-4">
 						<div className="relative w-full h-32">
-							<Image
-								src={image || "/placeholder.svg"}
-								alt={title}
-								fill
-								className="object-cover rounded-md border border-gray-50"
-							/>
+							{image && (
+								<EnhanceImage
+									imagePath={image}
+									filters={previousPreviewImgParams}
+									className="object-cover rounded-md border border-gray-50"
+								/>
+							)}
 						</div>
 						<div>
 							<h3 className="font-semibold">{title}</h3>
 							<p className="text-sm text-muted-foreground">{description}</p>
 						</div>
 						<div className="space-y-2 ">
-							{/** Debug */}
-							{/* {previousNodesData.length > 0 && (
-								<div>
-									<Label>All Nodes Data</Label>
-									<pre className="p-2 bg-muted rounded-md text-xs overflow-scroll max-h-32">
-										{JSON.stringify(previousNodesData, null, 2)}
-									</pre>
-								</div>
-							)} */}
 							<Subtle className="w-full border-b py-2">Config</Subtle>
 							{input?.inputField && input?.inputSchema ? (
 								<FormBuilder.Provider
@@ -90,16 +93,7 @@ export default function CustomNode({
 										schema={input.inputSchema}
 									/>
 								</FormBuilder.Provider>
-							) : (
-								<div>
-									<Label>Current Value</Label>
-									<Input
-										value={value}
-										onChange={(e) => onChange(e.target.value)}
-										placeholder="Enter value..."
-									/>
-								</div>
-							)}
+							) : null}
 						</div>
 						{type === "condition" && (
 							<div className="text-sm text-muted-foreground">

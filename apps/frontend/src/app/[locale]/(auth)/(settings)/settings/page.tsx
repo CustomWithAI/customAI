@@ -16,7 +16,10 @@ export default function Page() {
 				<Menubar.List>
 					<Menubar.Item
 						onClick={() =>
-							setQueryParam({ value: "account", resetParams: true })
+							setQueryParam({
+								params: { name: "tab", value: "account" },
+								resetParams: true,
+							})
 						}
 						current={compareQueryParam({ value: "account", allowNull: true })}
 					>
@@ -24,7 +27,10 @@ export default function Page() {
 					</Menubar.Item>
 					<Menubar.Item
 						onClick={() =>
-							setQueryParam({ value: "security", resetParams: true })
+							setQueryParam({
+								params: { name: "tab", value: "security" },
+								resetParams: true,
+							})
 						}
 						current={compareQueryParam({ value: "security" })}
 					>
@@ -32,7 +38,10 @@ export default function Page() {
 					</Menubar.Item>
 					<Menubar.Item
 						onClick={() =>
-							setQueryParam({ value: "appearance", resetParams: true })
+							setQueryParam({
+								params: { name: "tab", value: "appearance" },
+								resetParams: true,
+							})
 						}
 						current={compareQueryParam({ value: "appearance" })}
 					>

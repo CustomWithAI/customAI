@@ -3,6 +3,7 @@ import { Content, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DialogClose } from "@/components/ui/dialog";
+import EnhanceImage from "@/components/ui/enhanceImage";
 import { node } from "@/configs/image-preprocessing";
 import { useDragStore } from "@/contexts/dragContext";
 import { cn } from "@/libs/utils";
@@ -11,7 +12,7 @@ import { generateId } from "@/utils/generate-id";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 
-export const AddFeatureSection = () => {
+export const AddFeatureSection = ({ image }: { image?: string }) => {
 	const onAdd = useDragStore((state) => state.onAdd);
 	const fields = useDragStore((state) => state.fields);
 	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
@@ -19,6 +20,9 @@ export const AddFeatureSection = () => {
 	const input = useMemo(() => {
 		return node(fields, onUpdateMetadata);
 	}, [fields, onUpdateMetadata]);
+	if (!image) {
+		return <>a</>;
+	}
 	return (
 		<>
 			<div className="overflow-scroll max-h-[90%] flex flex-col gap-4">
@@ -28,16 +32,11 @@ export const AddFeatureSection = () => {
 							checked={Boolean(selected.find((item) => item.id === element.id))}
 							onCheckedChange={() => setSelected((prev) => [...prev, element])}
 						/>
-						<div className="relative aspect-square size-32 ">
-							<Image
-								fill
-								priority
-								alt={`${element.title}-previewImage`}
-								src={element.imagePreviewUrl || ""}
-								className={cn(
-									"border border-gray-100 rounded-lg",
-									element.previewClassName,
-								)}
+						<div className="relative aspect-square items-center flex justify-center size-32 ">
+							<EnhanceImage
+								imagePath={image}
+								filters={element.previewImg || []}
+								className="h-full w-full object-contain rounded-md"
 							/>
 						</div>
 						<div>

@@ -1,4 +1,5 @@
 import type { FormFields, SchemaType } from "@/components/builder/form";
+import type { Filter } from "@/components/ui/enhanceImage";
 import { deepMerge } from "@/utils/deepMerge";
 import { metadataToJSON } from "@/utils/formatMetadata";
 import { generateId } from "@/utils/generate-id";
@@ -25,7 +26,7 @@ export type DragColumn<
 	id: string;
 	title: string;
 	description: string | null;
-	previewClassName?: string;
+	previewImg?: Filter[];
 	imagePreviewUrl?: string;
 	inputSchema?: SchemaType<T>;
 	inputField?: FormFields<
@@ -90,7 +91,9 @@ export const createDragStore = (initState = defaultState) => {
 		immer((set, get) => ({
 			fields: initState,
 			// Reset to initial state
-			onReset: () => set({ fields: initState }),
+			onReset: () => {
+				set({ fields: [] });
+			},
 
 			// Add a new field
 			onAdd: (data: DragColumn[] | DragColumn | null) => {

@@ -1,47 +1,58 @@
+import type { Filter } from "@/components/ui/enhanceImage";
 import type { Metadata } from "@/stores/dragStore";
 import { useEdges, useNodes } from "reactflow";
 
 type NodeData = {
 	id: string;
 	type: string;
-	value: string;
+	metadata: Metadata;
+	previewImg: Filter[];
 };
 
 export default function usePreviousNodesData(id: string): NodeData[] {
-	const nodes = useNodes<{ type: string; value: string }>();
+	const nodes = useNodes<{
+		type: string;
+		value: string;
+		metadata: Metadata;
+		previewImg: Filter[];
+	}>();
 	const edges = useEdges();
 
-	const rootNode = nodes.find((node) => {
-		const incomingEdges = edges.filter((edge) => edge.target === node.id);
-		return incomingEdges.length === 0;
-	});
+	const nodeMap = new Map(nodes.map((node) => [node.id, node]));
 
-	const traverseGraph = (
-		nodeId: string,
-		visited = new Set<string>(),
-	): NodeData[] => {
-		if (visited.has(nodeId)) return [];
+	const incomingEdgesMap = new Map<string, string[]>();
+	for (const { source, target } of edges) {
+		if (!incomingEdgesMap.has(target)) {
+			incomingEdgesMap.set(target, []);
+		}
+		incomingEdgesMap.get(target)?.push(source);
+	}
+
+	const previousNodes: NodeData[] = [];
+	const queue: string[] = incomingEdgesMap.get(id) || [];
+	const visited = new Set<string>();
+
+	while (queue.length) {
+		const nodeId = queue.shift();
+		if (!nodeId) {
+			console.warn("no node to visit");
+			break;
+		}
+		if (visited.has(nodeId)) continue;
 		visited.add(nodeId);
 
-		const currentNode = nodes.find((node) => node.id === nodeId);
-		if (!currentNode) return [];
+		const node = nodeMap.get(nodeId);
+		if (node) {
+			previousNodes.push({
+				id: node.id,
+				type: node.data.type,
+				metadata: node.data.metadata,
+				previewImg: node.data.previewImg,
+			});
+		}
 
-		const outgoingEdges = edges.filter((edge) => edge.source === nodeId);
-		const childNodesData = outgoingEdges.flatMap((edge) =>
-			traverseGraph(edge.target, visited),
-		);
+		queue.push(...(incomingEdgesMap.get(nodeId) || []));
+	}
 
-		return [
-			{
-				id: currentNode.id,
-				type: currentNode.data.type,
-				value: currentNode.data.value,
-			},
-			...childNodesData,
-		];
-	};
-
-	const previousNodesData = rootNode ? traverseGraph(rootNode.id) : [];
-
-	return previousNodesData;
+	return previousNodes;
 }

@@ -1,11 +1,14 @@
 import { Header, Subtle } from "@/components/typography/text";
 import { useRouter } from "@/libs/i18nNavigation";
+import { cn } from "../../../libs/utils";
 
 interface CardProps {
 	title: string;
 	description: string;
 	imagesCount: number;
-	href: string;
+	href?: string;
+	onClick?: () => void;
+	className?: string;
 	images: string[];
 }
 
@@ -14,14 +17,23 @@ export const DatasetCard: React.FC<CardProps> = ({
 	description,
 	imagesCount,
 	href = "",
+	onClick,
+	className,
 	images,
 }) => {
 	const router = useRouter();
 	return (
 		<button
 			type="button"
-			className="min-w-64 hover:shadow-blue-500 hover:shadow-sm duration-200 border rounded-lg shadow-md overflow-hidden"
-			onClick={() => router.push(href)}
+			className={cn(
+				"min-w-64 hover:shadow-blue-500 hover:shadow-sm duration-200 border",
+				" rounded-lg shadow-md overflow-hidden",
+				className,
+			)}
+			onClick={() => {
+				href && router.push(href);
+				onClick?.();
+			}}
 		>
 			<div className="flex h-28 relative overflow-hidden">
 				{images.map((image, index) => (

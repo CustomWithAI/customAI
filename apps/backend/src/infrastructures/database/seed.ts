@@ -1,7 +1,11 @@
+import { dataset } from "@/applications/controllers/datasetController";
 import { config } from "@/config/env";
 import { logger } from "@/config/logger";
 import { account, session, user, verification } from "@/domains/schema/auth";
+import { datasets } from "@/domains/schema/datasets";
+import { images } from "@/domains/schema/images";
 import { cleanupDB } from "@/utils/db-utils";
+import { randomUUIDv7 } from "bun";
 import { drizzle } from "drizzle-orm/node-postgres";
 
 const db = drizzle(
@@ -43,8 +47,48 @@ export async function seedAuth(): Promise<void> {
 				updatedAt: new Date(),
 			},
 		];
+		const id = randomUUIDv7();
+		const sampleDatasets = [
+			{
+				id,
+				name: "Dataset Orange Cat",
+				description: "Dataset เพื่อแมวส้ม",
+				annotationMethod: "image_labeling",
+				splitData: { text: "แมว", number: 200 },
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				userId: "nS2tgN5GuNguqywEy6yo1OIOVjhggrHQ",
+			},
+		];
+
+		const sampleImages = [
+			{
+				path: "datasets/test/1.jpg",
+				annotation: {},
+				updatedAt: new Date(),
+				createdAt: new Date(),
+				datasetId: id,
+			},
+			{
+				path: "datasets/test/2.jpg",
+				annotation: {},
+				updatedAt: new Date(),
+				createdAt: new Date(),
+				datasetId: id,
+			},
+			{
+				path: "datasets/test/3.jpg",
+				annotation: {},
+				updatedAt: new Date(),
+				createdAt: new Date(),
+				datasetId: id,
+			},
+		];
+
 		await context.insert(user).values(sampleUsers);
 		await context.insert(account).values(sampleAccounts);
+		await context.insert(datasets).values(sampleDatasets);
+		await context.insert(images).values(sampleImages);
 		logger.info("🌱 Auth data has been seeded");
 		Promise.resolve();
 	});

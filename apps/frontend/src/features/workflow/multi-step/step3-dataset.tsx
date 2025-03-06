@@ -1,34 +1,92 @@
+import { BaseSkeleton } from "@/components/specific/skeleton";
 import { Content, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useDragStore } from "@/contexts/dragContext";
 import { DatasetCard } from "@/features/dataset/components/gridBox";
+import {
+	useCreateTraining,
+	useUpdateTraining,
+} from "@/hooks/mutations/training-api";
+import { useGetDatasets } from "@/hooks/queries/dataset-api";
 import { useQueryParam } from "@/hooks/use-query-params";
+import { useToast } from "@/hooks/use-toast";
 import { encodeBase64 } from "@/libs/base64";
 import { Plus } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+import { decodeBase64 } from "../../../libs/base64";
 
 export const DatasetPage = () => {
-	const { setQueryParam } = useQueryParam({ name: "step" });
+	const [datasetId, setDatasetId] = useState<string | null>(null);
+	const { toast } = useToast();
+	const { getQueryParam, setQueryParam } = useQueryParam({ name: "id" });
+	const { data: datasets, isPending: datasetPending } = useGetDatasets();
+	const { mutateAsync: updateTraining, isPending: updatePending } =
+		useUpdateTraining();
+	const workflowId = decodeBase64(getQueryParam()) || "";
+	const trainingId = decodeBase64(getQueryParam("trainings")) || "";
 
-	const handleSubmit = useCallback(() => {
-		setQueryParam({ value: encodeBase64("preprocessing"), resetParams: true });
-	}, [setQueryParam]);
+	const handleSubmit = useCallback(async () => {
+		if (!datasetId) {
+			return;
+		}
+		await updateTraining(
+			{
+				workflowId,
+				trainingId,
+				datasetId,
+			},
+			{
+				onSuccess: (t) => {
+					setQueryParam({
+						params: {
+							step: encodeBase64(t?.data.pipeline.current || "start"),
+							id: encodeBase64(workflowId),
+							trainings: encodeBase64(trainingId),
+						},
+						resetParams: true,
+					});
+				},
+				onError: (error) => {
+					toast({ title: error.message, variant: "destructive" });
+				},
+			},
+		);
+	}, [setQueryParam, datasetId, workflowId, trainingId, toast, updateTraining]);
 
 	const handlePrevious = useCallback(() => {
-		setQueryParam({ value: encodeBase64("preset"), resetParams: true });
-	}, [setQueryParam]);
+		setQueryParam({
+			params: {
+				step: encodeBase64("preset"),
+				id: encodeBase64(workflowId as string),
+			},
+			resetParams: true,
+		});
+	}, [setQueryParam, workflowId]);
 
 	return (
 		<div className="flex flex-col gap-y-4">
 			<Subtle>Recent dataset used</Subtle>
-			<div>
-				<DatasetCard
-					title={""}
-					description={""}
-					imagesCount={0}
-					href={""}
-					images={[]}
-				/>
-			</div>
+			<BaseSkeleton loading={datasetPending}>
+				<div>
+					{datasets?.data.map((dataset) => (
+						<DatasetCard
+							key={dataset.id}
+							title={dataset.name}
+							description={dataset.description}
+							imagesCount={dataset.imageCount}
+							href={""}
+							className={
+								datasetId === dataset.id ? "border border-green-400" : ""
+							}
+							onClick={() => setDatasetId(dataset.id)}
+							images={dataset.images}
+						/>
+					))}
+				</div>
+			</BaseSkeleton>
+
 			<Subtle>Create new dataset</Subtle>
 			<button
 				type="button"
@@ -41,8 +99,14 @@ export const DatasetPage = () => {
 				</Subtle>
 			</button>
 			<div className="flex justify-end w-full space-x-4 mt-6">
-				<Button variant="ghost">Previous</Button>
-				<Button onClick={handleSubmit} type="submit">
+				<Button
+					disabled={updatePending}
+					onClick={handlePrevious}
+					variant="ghost"
+				>
+					Previous
+				</Button>
+				<Button disabled={updatePending} onClick={handleSubmit} type="submit">
 					Next
 				</Button>
 			</div>

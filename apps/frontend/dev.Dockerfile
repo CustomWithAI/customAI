@@ -3,6 +3,7 @@ FROM base AS build
 
 WORKDIR /app
 
+RUN apk add --no-cache gcompat
 COPY package.json package-lock.json ./
 RUN npm install
 

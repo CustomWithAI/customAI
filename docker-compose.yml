@@ -85,9 +85,10 @@ services:
     command: >
       "
         aws --endpoint-url=http://localstack:4566 s3api create-bucket --bucket my-bucket --region us-east-1
-        aws --endpoint-url=http://localstack:4566 s3 cp /aws/1.jpg s3://my-bucket/;
-        aws --endpoint-url=http://localstack:4566 s3 cp /aws/2.jpg s3://my-bucket/;
-        aws --endpoint-url=http://localstack:4566 s3 cp /aws/3.jpg s3://my-bucket/;
+        aws --endpoint-url=http://localstack:4566 s3 cp /aws/1.jpg s3://my-bucket/datasets/test/1.jpg;
+        aws --endpoint-url=http://localstack:4566 s3 cp /aws/2.jpg s3://my-bucket/datasets/test/2.jpg;
+        aws --endpoint-url=http://localstack:4566 s3 cp /aws/3.jpg s3://my-bucket/datasets/test/3.jpg;
+        aws --endpoint-url=http://localstack:4566 s3api put-bucket-cors --bucket my-bucket --cors-configuration file:///aws/cors.json;
         aws --endpoint-url=http://localstack:4566 s3 ls s3://my-bucket --recursive --human-readable --summarize
       "
 
