@@ -14,7 +14,7 @@ export const SelectiveBar = memo(
 	({ total, current, title, icon, type = "dot" }: SelectiveBarProps) => (
 		<div className="w-full ml-8">
 			<div className="flex gap-x-3 mb-2">
-				<AnimatePresence initial={false} mode="wait">
+				<AnimatePresence initial={false}>
 					{Array.from({ length: Math.max(0, current) }).map((_, index) => (
 						<motion.div
 							key={`selective-previous-${index}`}

@@ -19,7 +19,7 @@ export const AugmentationPage = () => {
 				<button
 					type="button"
 					onClick={() => {
-						setQueryParam({ value: "blueprint", subfix: "#tab" });
+						setQueryParam({ params: { view: "blueprint" }, subfix: "#tab" });
 					}}
 					className={cn("px-4 py-1.5 rounded-md relative", {
 						"text-zinc-900": viewParam === "blueprint",
@@ -37,7 +37,7 @@ export const AugmentationPage = () => {
 				</button>
 				<button
 					type="button"
-					onClick={() => setQueryParam({ value: "table" })}
+					onClick={() => setQueryParam({ params: { view: "table" } })}
 					className={cn("px-4 py-1.5 rounded-md relative", {
 						"text-zinc-900": viewParam === "table",
 						"text-zinc-500": viewParam !== "table",

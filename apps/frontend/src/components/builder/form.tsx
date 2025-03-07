@@ -433,13 +433,13 @@ const RenderInput = memo(
 										autoFocus={isFirstInput}
 										type="tel"
 										inputMode="decimal"
-										pattern="[0-9]*[.,]?[0-9]*"
 										onChange={(e) => {
-											const inputValue = e.target.value.trim();
+											let inputValue = e.target.value.trim();
+											if (inputValue.endsWith(".")) {
+												inputValue += "0";
+											}
 											const parsedValue =
-												inputValue !== ""
-													? Number.parseFloat(inputValue)
-													: undefined;
+												inputValue !== "" ? inputValue : undefined;
 											if (!Number.isNaN(parsedValue)) {
 												setOnChange
 													? setOnChange(parsedValue)
@@ -450,10 +450,14 @@ const RenderInput = memo(
 										value={
 											setValue
 												? !Number.isNaN(setValue)
-													? (setValue as number)
+													? String(setValue).endsWith(".0")
+														? String(setValue).replace(".0", ".")
+														: (setValue as number)
 													: undefined
 												: !Number.isNaN(value)
-													? value
+													? String(value).endsWith(".0")
+														? String(value).replace(".0", ".")
+														: value
 													: undefined
 										}
 										placeholder={placeholder}
@@ -486,24 +490,37 @@ const RenderInput = memo(
 											disabled={disabled}
 											autoFocus={isFirstInput}
 											type="number"
-											onChange={(e) =>
-												setOnChange
-													? setOnChange(e.target.valueAsNumber)
-													: onChange(e.target.valueAsNumber)
-											}
-											placeholder={placeholder}
-											min={0}
-											max={100}
+											inputMode="decimal"
+											onChange={(e) => {
+												let inputValue = e.target.value.trim();
+												if (inputValue.endsWith(".")) {
+													inputValue += "0";
+												}
+												const parsedValue =
+													inputValue !== "" ? inputValue : undefined;
+												if (!Number.isNaN(parsedValue)) {
+													setOnChange
+														? setOnChange(parsedValue)
+														: onChange(parsedValue);
+												}
+											}}
 											onBlur={onBlur}
 											value={
 												setValue
 													? !Number.isNaN(setValue)
-														? (setValue as number)
+														? String(setValue).endsWith(".0")
+															? String(setValue).replace(".0", ".")
+															: (setValue as number)
 														: undefined
 													: !Number.isNaN(value)
-														? value
+														? String(value).endsWith(".0")
+															? String(value).replace(".0", ".")
+															: value
 														: undefined
 											}
+											placeholder={placeholder}
+											min={0}
+											max={100}
 											className="pr-7"
 										/>
 										<span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -769,17 +786,18 @@ const RenderInput = memo(
 										max={options && "max" in options ? options?.max : 100}
 										min={options && "min" in options ? options?.min : 0}
 										data-cy={testDataId}
-										inputMode="decimal"
 										pattern="[0-9]*[.,]?[0-9]*"
 										disabled={disabled}
 										autoFocus={isFirstInput}
 										type="tel"
+										inputMode="decimal"
 										onChange={(e) => {
-											const inputValue = e.target.value.trim();
+											let inputValue = e.target.value.trim();
+											if (inputValue.endsWith(".")) {
+												inputValue += "0";
+											}
 											const parsedValue =
-												inputValue !== ""
-													? Number.parseFloat(inputValue)
-													: Number.NaN;
+												inputValue !== "" ? inputValue : undefined;
 											if (!Number.isNaN(parsedValue)) {
 												setOnChange
 													? setOnChange(parsedValue)
@@ -787,14 +805,17 @@ const RenderInput = memo(
 											}
 										}}
 										onBlur={onBlur}
-										defaultValue={value || 0}
 										value={
 											setValue
 												? !Number.isNaN(setValue)
-													? (setValue as number)
+													? String(setValue).endsWith(".0")
+														? String(setValue).replace(".0", ".")
+														: (setValue as number)
 													: undefined
 												: !Number.isNaN(value)
-													? value
+													? String(value).endsWith(".0")
+														? String(value).replace(".0", ".")
+														: value
 													: undefined
 										}
 										placeholder={placeholder}

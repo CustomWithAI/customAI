@@ -7,8 +7,18 @@ export const useCreateWorkflow = () => {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: workflowService.createWorkflow,
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["workflows"] });
+		onSuccess: (data) => {
+			queryClient.invalidateQueries({ queryKey: ["workflows", data?.data.id] });
+		},
+	});
+};
+
+export const useUpdateWorkflow = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: workflowService.updateWorkflow,
+		onSuccess: (data) => {
+			queryClient.invalidateQueries({ queryKey: ["workflows", data?.data.id] });
 		},
 	});
 };

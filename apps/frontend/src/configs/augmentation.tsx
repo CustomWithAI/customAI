@@ -8,6 +8,7 @@ import {
 	IconColorPicker,
 	IconTransform,
 } from "@tabler/icons-react";
+import { INTER_LINEAR, Size } from "@techstark/opencv-js";
 import { Crop, Droplet, Scaling } from "lucide-react";
 import { z } from "zod";
 
@@ -31,6 +32,10 @@ export const node = (
 					value: 0,
 				},
 			},
+			previewImg:
+				findById(fields, "grayscale-1")?.metadata?.probability?.value !== false
+					? [{ type: "grayscale" }]
+					: [],
 			inputField: [
 				{
 					template: "sliderInput",
@@ -82,6 +87,23 @@ export const node = (
 					},
 				},
 			},
+			previewImg: [
+				{
+					type: "opencv",
+					method: "resize",
+					params: [
+						new Size(
+							(findById(fields, "resizing-1")?.metadata as any)?.size?.value?.x
+								?.value,
+							(findById(fields, "resizing-1")?.metadata as any)?.size?.value?.y
+								?.value,
+						),
+						0,
+						0,
+						INTER_LINEAR,
+					],
+				},
+			],
 			inputField: [
 				{
 					template: "custom",
@@ -92,6 +114,7 @@ export const node = (
 								<div className="flex gap-x-3">
 									{["x", "y"].map((axis) => (
 										<TextFormItem
+											number
 											key={`resizing-${axis}`}
 											className="w-1/2"
 											label={axis.toLocaleUpperCase()}
@@ -104,7 +127,7 @@ export const node = (
 															value: {
 																[axis]: {
 																	type: "Number",
-																	value: Number(e.target.value),
+																	value: e as number,
 																},
 															},
 														},
@@ -157,6 +180,21 @@ export const node = (
 					},
 				},
 			},
+			previewImg: [
+				{
+					type: "crop",
+					params: [
+						((findById(fields, "cropping-1")?.metadata as any)?.size?.value?.x
+							?.value as number) || 50,
+						(findById(fields, "cropping-1")?.metadata as any)?.size?.value?.y
+							?.value || 50,
+						(findById(fields, "cropping-1")?.metadata as any)?.crop_position
+							?.value?.x?.value || 100,
+						(findById(fields, "cropping-1")?.metadata as any)?.crop_position
+							?.value?.y?.value || 100,
+					],
+				},
+			],
 			inputField: [
 				{
 					template: "sliderInput",
@@ -199,6 +237,7 @@ export const node = (
 									<div className="flex gap-x-3">
 										{["x", "y"].map((axis) => (
 											<TextFormItem
+												number
 												key={`cropping-${axis}`}
 												className="w-1/2"
 												label={axis.toUpperCase()}
@@ -211,7 +250,7 @@ export const node = (
 																value: {
 																	[axis]: {
 																		type: "Number",
-																		value: Number(e.target.value),
+																		value: e as number,
 																	},
 																},
 															},
@@ -232,6 +271,7 @@ export const node = (
 									<div className="flex gap-x-3">
 										{["x", "y"].map((axis) => (
 											<TextFormItem
+												number
 												key={`crop_position-${axis}`}
 												className="w-1/2"
 												label={`Crop position ${axis.toUpperCase()}`}
@@ -244,7 +284,7 @@ export const node = (
 																value: {
 																	[axis]: {
 																		type: "Number",
-																		value: Number(e.target.value),
+																		value: e as number,
 																	},
 																},
 															},
@@ -294,6 +334,14 @@ export const node = (
 					value: 0,
 				},
 			},
+			previewImg: [
+				{
+					type: "rotate",
+					angle: Number(
+						findById(fields, "rotation-1")?.metadata?.angle?.value || 45,
+					),
+				},
+			],
 			inputField: [
 				{
 					template: "sliderInput",
@@ -374,6 +422,15 @@ export const node = (
 					value: 0,
 				},
 			},
+			previewImg: [
+				{
+					type: "opencv",
+					method: "flip",
+					params: [
+						Number(findById(fields, "flipping-1")?.metadata?.direction?.value),
+					],
+				},
+			],
 			inputField: [
 				{
 					template: "sliderInput",
@@ -474,6 +531,17 @@ export const node = (
 					},
 				},
 			},
+			previewImg: [
+				{
+					type: "translate",
+					params: [
+						((findById(fields, "translate-1")?.metadata as any)?.size?.value?.x
+							?.value as number) || 50,
+						(findById(fields, "translate-1")?.metadata as any)?.size?.value?.y
+							?.value || 50,
+					],
+				},
+			],
 			inputField: [
 				{
 					template: "custom",
@@ -484,6 +552,7 @@ export const node = (
 								<div className="flex gap-x-3">
 									{["x", "y"].map((axis) => (
 										<TextFormItem
+											number
 											key={`translate-${axis}`}
 											className="w-1/2"
 											label={axis.toLocaleUpperCase()}
@@ -496,7 +565,7 @@ export const node = (
 															value: {
 																[axis]: {
 																	type: "Number",
-																	value: Number(e.target.value),
+																	value: e as number,
 																},
 															},
 														},
@@ -543,6 +612,17 @@ export const node = (
 					},
 				},
 			},
+			previewImg: [
+				{
+					type: "scale",
+					params: [
+						((findById(fields, "scale-1")?.metadata as any)?.size?.value?.x
+							?.value as number) || 50,
+						(findById(fields, "scale-1")?.metadata as any)?.size?.value?.y
+							?.value || 50,
+					],
+				},
+			],
 			inputField: [
 				{
 					template: "sliderInput",
@@ -583,6 +663,7 @@ export const node = (
 								<div className="flex gap-x-3">
 									{["x", "y"].map((axis) => (
 										<TextFormItem
+											number
 											key={`scale-${axis}`}
 											className="w-1/2"
 											label={axis.toLocaleUpperCase()}
@@ -595,7 +676,7 @@ export const node = (
 															value: {
 																[axis]: {
 																	type: "Number",
-																	value: Number(e.target.value),
+																	value: e as number,
 																},
 															},
 														},
@@ -639,6 +720,16 @@ export const node = (
 					value: 0,
 				},
 			},
+			previewImg: [
+				{
+					type: "brightness",
+					params: [
+						Number(
+							findById(fields, "brightness-1")?.metadata?.max?.value || 45,
+						),
+					],
+				},
+			],
 			inputField: [
 				{
 					template: "sliderInput",
@@ -726,6 +817,21 @@ export const node = (
 					value: 0,
 				},
 			},
+			previewImg: [
+				{
+					type: "contrast_stretching",
+					params: [
+						Number(
+							findById(fields, "contrast_stretching-1")?.metadata?.min?.value ||
+								45,
+						),
+						Number(
+							findById(fields, "contrast_stretching-1")?.metadata?.max?.value ||
+								45,
+						),
+					],
+				},
+			],
 			inputField: [
 				{
 					template: "number",
@@ -831,6 +937,11 @@ export const node = (
 					value: 0,
 				},
 			},
+			previewImg:
+				findById(fields, "hist_equalization-1")?.metadata?.probability
+					?.value !== 0
+					? [{ type: "histEqualization" }]
+					: [],
 			inputField: [
 				{
 					template: "sliderInput",
@@ -843,7 +954,7 @@ export const node = (
 					},
 					config: {
 						setValue: findById(fields, "hist_equalization-1")?.metadata
-							?.probability?.value as boolean,
+							?.probability?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "hist_equalization-1",
@@ -1282,6 +1393,25 @@ export const node = (
 					},
 				},
 			},
+			previewImg: [
+				{
+					type: "gaussianBlur",
+					params: [
+						[
+							((
+								findById(fields, "gaussian_blur-1")?.metadata?.blur
+									?.value as any
+							)?.kernel_size?.value as number) || 5,
+							((
+								findById(fields, "gaussian_blur-1")?.metadata?.blur
+									?.value as any
+							)?.kernel_size?.value as number) || 5,
+						],
+						((findById(fields, "gaussian_blur-1")?.metadata?.blur?.value as any)
+							?.sigma?.value as number) || 1,
+					],
+				},
+			],
 			inputField: [
 				{
 					template: "sliderInput",
@@ -1605,6 +1735,15 @@ export const node = (
 					value: 0,
 				},
 			},
+			previewImg: [
+				{
+					type: "sharpen",
+					params: [
+						(findById(fields, "sharpening-1")?.metadata?.config
+							?.value as number) || 1.5,
+					],
+				},
+			],
 			inputField: [
 				{
 					template: "sliderInput",

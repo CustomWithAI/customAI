@@ -1,4 +1,5 @@
 import { DragStoreProvider } from "@/contexts/dragContext";
+import { OpenCVProvider } from "@/libs/opencv-providers";
 import {
 	BetweenHorizontalStart,
 	Blend,
@@ -69,7 +70,7 @@ export const stepConfig: Record<string, StepConfig> = {
 						id: "2",
 						metadata: {
 							check: { type: "Boolean", value: false },
-							name: { type: "String", value: "preprocessing" },
+							name: { type: "String", value: "featureEx" },
 						},
 						description: "focus on main feature",
 						icon: <SquareDashedMousePointer />,

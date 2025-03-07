@@ -1,42 +1,122 @@
 import { Content } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
+import { useDragStore } from "@/contexts/dragContext";
 import { TablePreprocessingSection } from "@/features/image-preprocessing/sections/table";
 import { VisualPreprocessingSection } from "@/features/image-preprocessing/sections/visual";
+import {
+	useCreatePreprocessing,
+	useUpdatePreprocessing,
+} from "@/hooks/mutations/preprocess-api";
+import { useUpdateTraining } from "@/hooks/mutations/training-api";
 import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
+import { useToast } from "@/hooks/use-toast";
 import { decodeBase64, encodeBase64 } from "@/libs/base64";
 import { useRouterAsync } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import { getStep } from "@/utils/step-utils";
+import { formatDate } from "@/utils/to-datetime";
 import { motion } from "framer-motion";
 import { useCallback } from "react";
+import { useShallow } from "zustand/react/shallow";
+import { metadataToJSON } from "../../../utils/formatMetadata";
 
 export const ImagePreprocessingPage = () => {
 	const { getQueryParam, setQueryParam, compareQueryParam } = useQueryParam({
 		name: "view",
 	});
 	const viewParam = getQueryParam();
+	const { toast } = useToast();
 
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
 
-	const { data: training } = useGetTrainingById(workflowId, trainingId);
+	const { data: training } = useGetTrainingById(
+		decodeBase64(workflowId),
+		decodeBase64(trainingId),
+		{ enabled: workflowId !== "" && trainingId !== "" },
+	);
+	const { mutateAsync: createPreprocess } = useCreatePreprocessing();
+	const { mutateAsync: updatePreprocess } = useUpdatePreprocessing();
+	const { mutateAsync: updateTraining } = useUpdateTraining();
 
-	const handleSubmit = useCallback(() => {
-		setQueryParam({
-			params: {
-				step: encodeBase64(
-					getStep(
-						"next",
-						training?.data.pipeline.current,
-						training?.data.pipeline.steps,
-					),
-				),
-				id: workflowId,
-				trainings: trainingId,
+	const fields = useDragStore(useShallow((state) => state.fields));
+
+	const handleSubmit = useCallback(async () => {
+		const json = fields.reduce(
+			(acc, field) => {
+				if (!field.type) {
+					return acc;
+				}
+				acc[field.type] = metadataToJSON(field.metadata);
+				return acc;
 			},
-			resetParams: true,
-		});
-	}, [setQueryParam, trainingId, workflowId, training?.data.pipeline]);
+			{} as Record<string, any>,
+		);
+		const preProcessFn = training?.data.imagePreprocessing
+			? createPreprocess
+			: updatePreprocess;
+		await preProcessFn(
+			{
+				data: json,
+				name: `${training?.data.workflow.name}-${formatDate()}`,
+				id: training?.data.imagePreprocessing?.id || "",
+			},
+			{
+				onError: (error) => {
+					toast({
+						title: `Image-processing failed to create: ${error.message}`,
+						variant: "destructive",
+					});
+				},
+				onSuccess: async (data) => {
+					if (!data?.data.id) {
+						toast({
+							title: "Image-processing is not existed",
+							variant: "destructive",
+						});
+						return;
+					}
+					await updateTraining(
+						{
+							workflowId: decodeBase64(workflowId),
+							trainingId: decodeBase64(trainingId),
+							imagePreprocessingId: data.data.id,
+						},
+						{
+							onSuccess: () => {
+								setQueryParam({
+									params: {
+										step: encodeBase64(
+											getStep(
+												"next",
+												training?.data.pipeline.current,
+												training?.data.pipeline.steps,
+											),
+										),
+										id: workflowId,
+										trainings: trainingId,
+									},
+									resetParams: true,
+								});
+							},
+						},
+					);
+				},
+			},
+		);
+	}, [
+		setQueryParam,
+		trainingId,
+		workflowId,
+		fields,
+		training?.data.pipeline,
+		updatePreprocess,
+		training?.data.imagePreprocessing,
+		updateTraining,
+		toast,
+		training?.data.workflow,
+		createPreprocess,
+	]);
 
 	const handlePrevious = useCallback(() => {
 		setQueryParam({
@@ -54,6 +134,7 @@ export const ImagePreprocessingPage = () => {
 			resetParams: true,
 		});
 	}, [setQueryParam, workflowId, trainingId, training?.data.pipeline]);
+
 	return (
 		<>
 			<div id="tab" className="flex p-1 bg-zinc-100 w-fit space-x-1 rounded-lg">
@@ -104,7 +185,7 @@ export const ImagePreprocessingPage = () => {
 				<Button onClick={handlePrevious} variant="ghost">
 					Previous
 				</Button>
-				<Button onClick={handleSubmit} type="submit">
+				<Button onClick={async () => await handleSubmit()} type="submit">
 					Next
 				</Button>
 			</div>

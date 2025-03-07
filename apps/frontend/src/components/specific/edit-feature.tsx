@@ -6,7 +6,7 @@ import EnhanceImage from "@/components/ui/enhanceImage";
 import { useDragStore } from "@/contexts/dragContext";
 import { cn } from "@/libs/utils";
 import type { DragColumn, Metadata } from "@/stores/dragStore";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
 
@@ -25,6 +25,7 @@ export const EditFeature = ({
 		}) => void,
 	) => DragColumn[];
 }) => {
+	const [mode, setMode] = useState<"main" | "combine">("main");
 	const fields = useDragStore(useShallow((state) => state.fields));
 	const onUpdateMetadata = useDragStore(
 		useShallow((state) => state.onUpdateMetadata),
@@ -38,10 +39,25 @@ export const EditFeature = ({
 		<div className="flex max-h-[70vh] gap-x-6 w-full">
 			<div
 				className={cn(
-					"h-[70vh] w-1/2 dark:bg-black border rounded-lg shadow-sm bg-white overflow-scroll",
+					"relative h-[70vh] w-1/2 dark:bg-black border rounded-lg shadow-sm bg-white overflow-scroll",
 					"dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative flex items-center justify-center",
 				)}
 			>
+				<div className="absolute flex flex-col z-50 rounded-md bg-white bottom-2 left-2 border">
+					<button
+						aria-selected={mode === "main"}
+						type="button"
+						className="aria-selected:bg-blue-500 aria-selected:text-white w-24 text-sm rounded-sm m-1 mb-0 text-center py-2"
+					>
+						specific
+					</button>
+					<button
+						type="button"
+						className="w-24 text-sm rounded-sm hover:bg-zinc-50 m-0.5 text-center py-2"
+					>
+						preview
+					</button>
+				</div>
 				<div className="relative aspect-square items-center flex justify-center h-full w-5/6 ">
 					<EnhanceImage
 						imagePath={image}

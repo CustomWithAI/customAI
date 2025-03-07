@@ -2,9 +2,12 @@ import {
 	DialogBuilder,
 	type DialogBuilderRef,
 } from "@/components/builder/dialog";
+import { AddFeatureSection } from "@/components/specific/add-feature";
+import { EditFeature } from "@/components/specific/edit-feature";
 import { Content, ContentHeader, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import EnhanceImage from "@/components/ui/enhanceImage";
+import { node } from "@/configs/image-preprocessing";
 import { useDragStore } from "@/contexts/dragContext";
 import { VisualCard } from "@/features/workflow/components/visual-card";
 import { useGetImages } from "@/hooks/queries/dataset-api";
@@ -18,10 +21,8 @@ import {
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { AddFeatureSection } from "./add-feature";
-import { EditFeature } from "./edit-feature";
 
 export const TablePreprocessingSection = () => {
 	const { getQueryParam } = useQueryParam();
@@ -40,10 +41,22 @@ export const TablePreprocessingSection = () => {
 	);
 
 	const fields = useDragStore(useShallow((state) => state.fields));
+	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
 	const onDrag = useDragStore((state) => state.onDrag);
 	const onRemove = useDragStore((state) => state.onRemove);
 	const editRef = useRef<DialogBuilderRef>(null);
 
+	const input = useMemo(() => {
+		return node(fields, onUpdateMetadata).filter((field) =>
+			fields.map((field) => field.id).includes(field.id),
+		);
+	}, [fields, onUpdateMetadata]);
+
+	console.log(
+		input
+			.flatMap((fields) => fields.previewImg)
+			.filter((f) => f !== undefined) || [],
+	);
 	return (
 		<div className="grid grid-cols-4 gap-6 max-md:grid-cols-1">
 			<div className="col-span-2 lg:col-span-3 max-md:order-2">
@@ -85,8 +98,13 @@ export const TablePreprocessingSection = () => {
 									</div>
 								</div>
 							),
-							description: <div className="w-full border-b my-4" />,
-							body: <AddFeatureSection image={images?.data.at(0)?.url || ""} />,
+							description: <div className="w-full border-b mt-4 mb-1" />,
+							body: (
+								<AddFeatureSection
+									image={images?.data.at(0)?.url || ""}
+									node={node}
+								/>
+							),
 							trigger: (
 								<Button
 									variant="outline"
@@ -105,7 +123,11 @@ export const TablePreprocessingSection = () => {
 					trigger: null,
 					title: "Edit Image Processing",
 					body: (id) => (
-						<EditFeature image={images?.data.at(0)?.url || ""} id={id} />
+						<EditFeature
+							image={images?.data.at(0)?.url || ""}
+							id={id}
+							node={node}
+						/>
 					),
 				}}
 			/>
@@ -140,7 +162,7 @@ export const TablePreprocessingSection = () => {
 							<EnhanceImage
 								imagePath={images?.data.at(0)?.url || ""}
 								filters={
-									fields
+									input
 										.flatMap((fields) => fields.previewImg)
 										.filter((f) => f !== undefined) || []
 								}

@@ -34,11 +34,30 @@ import {
 	Percent,
 	RotateCcw,
 	Scaling,
+	Spline,
 } from "lucide-react";
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, ReactNode } from "react";
 import { z } from "zod";
 
 const Corner = ["top-left", "top-right", "bottom-left", "bottom-right"];
+const CornerIcon: Record<string, ReactNode | undefined>[] = [
+	{
+		x: <Spline key="top-left" className="size-5" />,
+		y: <div className="size-5" />,
+	},
+	{
+		x: <div className="size-5" />,
+		y: <Spline key="top-right" className="size-5 ml-auto rotate-90" />,
+	},
+	{
+		x: <Spline key="bottom-left" className="size-5 -rotate-90 " />,
+		y: <div className="size-5" />,
+	},
+	{
+		x: <div className="size-5" />,
+		y: <Spline key="bottom-right" className="size-5 ml-auto rotate-180" />,
+	},
+];
 
 export const node = (
 	fields: DragColumn<z.ZodRawShape>[],
@@ -90,6 +109,7 @@ export const node = (
 								<div className="flex gap-x-3">
 									{["x", "y"].map((axis) => (
 										<TextFormItem
+											number
 											key={`resizing-${axis}`}
 											className="w-1/2"
 											label={axis.toLocaleUpperCase()}
@@ -102,7 +122,7 @@ export const node = (
 															value: {
 																[axis]: {
 																	type: "Number",
-																	value: Number(e.target.value),
+																	value: e as number,
 																},
 															},
 														},
@@ -178,9 +198,10 @@ export const node = (
 									<div className="flex gap-x-3">
 										{["x", "y"].map((axis) => (
 											<TextFormItem
+												number
 												key={`cropping-${axis}`}
 												className="w-1/2"
-												label="X"
+												label={axis.toUpperCase()}
 												onChange={(e) => {
 													onUpdateMetadata({
 														id: "cropping-1",
@@ -190,7 +211,7 @@ export const node = (
 																value: {
 																	[axis]: {
 																		type: "Number",
-																		value: Number(e.target.value),
+																		value: e as number,
 																	},
 																},
 															},
@@ -209,10 +230,11 @@ export const node = (
 									<div className="flex gap-x-3">
 										{["x", "y"].map((axis) => (
 											<TextFormItem
+												number
 												key={`crop_position-${axis}`}
 												className="w-1/2"
-												label="Crop position x"
-												onChange={(e) => {
+												label={axis.toUpperCase()}
+												onChange={(v) => {
 													onUpdateMetadata({
 														id: "cropping-1",
 														metadata: {
@@ -221,7 +243,7 @@ export const node = (
 																value: {
 																	[axis]: {
 																		type: "Number",
-																		value: Number(e.target.value),
+																		value: v as number,
 																	},
 																},
 															},
@@ -587,17 +609,18 @@ export const node = (
 							return (
 								<div className="flex flex-col">
 									<ContentHeader>Source Point</ContentHeader>
-									<div className="grid-cols-2 gap-x-3">
+									<div className="grid grid-cols-2 gap-x-3 gap-y-2">
 										{Array.from({ length: 4 }, () => ["x", "y"]).map(
 											(corner, index) => (
 												<div
-													className="w-full flex gap-x-3"
+													className="w-full flex gap-x-1"
 													key={`source-${index}`}
 												>
 													{corner.map((axis) => (
 														<TextFormItem
+															number
 															key={`source-${axis}`}
-															label={Corner[index]}
+															label={CornerIcon?.[index]?.[axis]}
 															className="w-1/2"
 															onChange={(e) => {
 																onUpdateMetadata({
@@ -611,7 +634,7 @@ export const node = (
 																					value: {
 																						[axis]: {
 																							type: "Number",
-																							value: Number(e.target.value),
+																							value: e as number,
 																						},
 																					},
 																				},
@@ -627,7 +650,7 @@ export const node = (
 																)?.source?.value?.[Corner[index]]?.value?.[axis]
 																	?.value || undefined
 															}
-															placeholder="0"
+															placeholder={axis}
 														/>
 													))}
 												</div>
@@ -637,17 +660,18 @@ export const node = (
 									<ContentHeader className="mt-4">
 										Destination Point
 									</ContentHeader>
-									<div className="grid-cols-2 gap-x-3">
+									<div className="grid grid-cols-2 gap-x-3 gap-y-2">
 										{Array.from({ length: 4 }, () => ["x", "y"]).map(
 											(corner, index) => (
 												<div
-													className="w-full flex gap-x-3"
+													className="w-full flex gap-x-1"
 													key={`source-${index}`}
 												>
 													{corner.map((axis) => (
 														<TextFormItem
+															number
 															key={`source-${axis}`}
-															label={Corner[index]}
+															label={CornerIcon?.[index]?.[axis]}
 															className="w-1/2"
 															onChange={(e) => {
 																onUpdateMetadata({
@@ -661,7 +685,7 @@ export const node = (
 																					value: {
 																						[axis]: {
 																							type: "Number",
-																							value: Number(e.target.value),
+																							value: e as number,
 																						},
 																					},
 																				},
@@ -677,7 +701,7 @@ export const node = (
 																)?.source?.value?.[Corner[index]]?.value?.[axis]
 																	?.value || undefined
 															}
-															placeholder="0"
+															placeholder={axis}
 														/>
 													))}
 												</div>
@@ -780,6 +804,7 @@ export const node = (
 									render={({ field: { onChange, value } }) => (
 										<div className="flex gap-x-3">
 											<TextFormItem
+												number
 												className="w-1/2"
 												label="X"
 												onChange={(e) => {
@@ -791,7 +816,7 @@ export const node = (
 																value: {
 																	x: {
 																		type: "Number",
-																		value: Number(e.target.value),
+																		value: e as number,
 																	},
 																},
 															},
@@ -806,6 +831,7 @@ export const node = (
 												}
 											/>
 											<TextFormItem
+												number
 												className="w-1/2"
 												label="Y"
 												onChange={(e) => {
@@ -817,7 +843,7 @@ export const node = (
 																value: {
 																	y: {
 																		type: "Number",
-																		value: Number(e.target.value),
+																		value: e as number,
 																	},
 																},
 															},
@@ -937,6 +963,7 @@ export const node = (
 								<div className="flex gap-x-3">
 									{["min", "max"].map((range) => (
 										<TextFormItem
+											number
 											key={`normalizeRange-${range}`}
 											className="w-1/2"
 											label={`${range} range`}
@@ -949,7 +976,7 @@ export const node = (
 															value: {
 																[range]: {
 																	type: "Number",
-																	value: Number(e.target.value),
+																	value: e as number,
 																},
 															},
 														},

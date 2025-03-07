@@ -7,18 +7,34 @@ export const getStep = (
 ): string => {
 	const currentIndex = steps?.find((step) => step.name === current)?.index;
 	if (!currentIndex) {
-		return "";
+		return current || "";
 	}
 	switch (method) {
-		case "prev":
+		case "prev": {
 			if (currentIndex === 0) {
 				return "preset";
 			}
-			return steps.find((step) => step.index === currentIndex - 1)?.name || "";
-		case "next":
+			const prevName = steps.find(
+				(step) => step.index === currentIndex - 1,
+			)?.name;
+			if (!prevName) {
+				console.warn("no previous found:", currentIndex);
+				return current || "";
+			}
+			return prevName;
+		}
+		case "next": {
 			if (currentIndex === steps.length - 1) {
 				return "start";
 			}
-			return steps.find((step) => step.index === currentIndex + 1)?.name || "";
+			const nextName = steps.find(
+				(step) => step.index === currentIndex + 1,
+			)?.name;
+			if (!nextName) {
+				console.warn("no next found:", currentIndex);
+				return current || "";
+			}
+			return nextName;
+		}
 	}
 };

@@ -84,33 +84,53 @@ interface FilterUnsharpMasking {
 
 interface FilterDilation {
 	type: "dilation";
-	params?: [number]; // Kernel size (default: [3])
+	params?: [number];
 }
 
 interface FilterErosion {
 	type: "erosion";
-	params?: [number]; // Kernel size (default: [3])
+	params?: [number];
 }
 
 interface FilterOpening {
 	type: "opening";
-	params?: [number]; // Kernel size (default: [3])
+	params?: [number];
 }
 
 interface FilterClosing {
 	type: "closing";
-	params?: [number]; // Kernel size (default: [3])
+	params?: [number];
 }
 
-interface FilterOpenCV<T extends keyof typeof cv> {
+interface FilterTranslate {
+	type: "translate";
+	params: [number, number];
+}
+
+interface FilterScale {
+	type: "scale";
+	params?: [number, number];
+}
+
+interface FilterBrightness {
+	type: "brightness";
+	params?: [number];
+}
+
+interface FilterContrastStretching {
+	type: "contrast_stretching";
+	params?: [number, number];
+}
+
+interface FilterOpenCV<T extends keyof typeof import("@techstark/opencv-js")> {
 	type: "opencv";
 	method: T;
-	params: Parameters<(typeof cv)[T]>;
+	params: Parameters<typeof import("@techstark/opencv-js")[T]>;
 }
 
 export type Filter =
 	| FilterStyle
-	| FilterOpenCV<keyof typeof cv>
+	| FilterOpenCV<keyof typeof import("@techstark/opencv-js")>
 	| FilterCrop
 	| FilterRotation
 	| FilterPerspective
@@ -129,7 +149,11 @@ export type Filter =
 	| FilterDilation
 	| FilterErosion
 	| FilterOpening
-	| FilterClosing;
+	| FilterClosing
+	| FilterTranslate
+	| FilterScale
+	| FilterBrightness
+	| FilterContrastStretching;
 
 interface EnhanceImageProps {
 	imagePath: string;
@@ -144,13 +168,22 @@ const EnhanceImage: React.FC<EnhanceImageProps> = memo(
 		const [processedImage, setProcessedImage] = useState<string>("");
 		const [isOpenCVReady, setIsOpenCVReady] = useState<boolean>(false);
 
+		console.log("re-render on image");
+
 		useEffect(() => {
-			if (cv.getBuildInformation()) {
-				setIsOpenCVReady(true);
-			} else {
-				cv.onRuntimeInitialized = () => {
+			try {
+				if (
+					typeof cv.getBuildInformation === "function" &&
+					cv.getBuildInformation()
+				) {
 					setIsOpenCVReady(true);
-				};
+				} else {
+					cv.onRuntimeInitialized = () => {
+						setIsOpenCVReady(true);
+					};
+				}
+			} catch (error) {
+				console.error(error);
 			}
 		}, []);
 
@@ -259,7 +292,11 @@ const EnhanceImage: React.FC<EnhanceImageProps> = memo(
 
 						case "opencv":
 							try {
-								(cv[filter.method] as any)(mat, mat, ...filter.params);
+								(
+									cv[
+										filter.method as keyof typeof import("@techstark/opencv-js")
+									] as any
+								)(mat, mat, ...filter.params);
 							} catch (err) {
 								console.error(
 									`Error applying OpenCV filter: ${filter.method}`,
@@ -366,7 +403,6 @@ const EnhanceImage: React.FC<EnhanceImageProps> = memo(
 							const dst = new cv.Mat();
 							cv.addWeighted(mat, 1 + intensity, mask, intensity, 0, dst);
 
-							// Cleanup
 							mat.delete();
 							blurred.delete();
 							mask.delete();
@@ -425,15 +461,15 @@ const EnhanceImage: React.FC<EnhanceImageProps> = memo(
 							break;
 						}
 						case "erosion": {
-							const kernelSize = 3; // 3x3 kernel size for erosion
-							const kernel = cv.Mat.ones(kernelSize, kernelSize, cv.CV_8U); // Create a 3x3 square kernel
+							const kernelSize = 3;
+							const kernel = cv.Mat.ones(kernelSize, kernelSize, cv.CV_8U);
 
 							const dst = new cv.Mat();
-							cv.erode(mat, dst, kernel); // Apply erosion with the kernel
+							cv.erode(mat, dst, kernel);
 
 							mat.delete();
 							kernel.delete();
-							mat = dst; // Update mat with processed result
+							mat = dst;
 							break;
 						}
 						case "opening": {
@@ -457,6 +493,52 @@ const EnhanceImage: React.FC<EnhanceImageProps> = memo(
 
 							mat.delete();
 							kernel.delete();
+							mat = dst;
+							break;
+						}
+
+						case "translate": {
+							const [dx, dy] = filter.params as [number, number];
+							const dst = new cv.Mat();
+
+							const M = cv.matFromArray(2, 3, cv.CV_32F, [1, 0, dx, 0, 1, dy]); // Transformation matrix
+							cv.warpAffine(mat, dst, M, new cv.Size(mat.cols, mat.rows));
+
+							mat.delete();
+							M.delete();
+							mat = dst;
+							break;
+						}
+
+						case "scale": {
+							const [sx, sy] = filter.params as [number, number];
+							const dst = new cv.Mat();
+
+							cv.resize(mat, dst, new cv.Size(0, 0), sx, sy, cv.INTER_LINEAR); // Resize with linear interpolation
+
+							mat.delete();
+							mat = dst;
+							break;
+						}
+
+						case "brightness": {
+							const [value] = filter.params as [number];
+							const dst = new cv.Mat();
+
+							mat.convertTo(dst, -1, 1, value * 255); // Scale brightness adjustment
+
+							mat.delete();
+							mat = dst;
+							break;
+						}
+
+						case "contrast_stretching": {
+							const [low, high] = filter.params as [number, number];
+							const dst = new cv.Mat();
+
+							cv.normalize(mat, dst, low * 255, high * 255, cv.NORM_MINMAX);
+
+							mat.delete();
 							mat = dst;
 							break;
 						}
@@ -484,7 +566,13 @@ const EnhanceImage: React.FC<EnhanceImageProps> = memo(
 						className={className}
 					/>
 				) : (
-					<p>{isOpenCVReady ? "Processing image..." : "Loading OpenCV..."}</p>
+					<p>
+						{isOpenCVReady ? (
+							<div className="bg-zinc-200 aspect-video h-full" />
+						) : (
+							"Loading OpenCV..."
+						)}
+					</p>
 				)}
 			</div>
 		);

@@ -16,9 +16,10 @@ import { node } from "@/configs/image-preprocessing";
 import { useDragStore } from "@/contexts/dragContext";
 import usePreviousNodesData from "@/hooks/useRootNode";
 import type { CustomNodeData } from "@/types/node";
+import useStableMemo, { useStableArray } from "@/utils/stable-array";
 import { RefreshCw, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Handle, Position } from "reactflow";
 import { useShallow } from "zustand/react/shallow";
 
@@ -43,17 +44,26 @@ export default function CustomNode({
 	const fields = useDragStore(useShallow((state) => state.fields));
 	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
 	const input = useMemo(() => {
-		return node(fields, onUpdateMetadata).find((field) => field.id === id);
+		const result = node(fields, onUpdateMetadata).find(
+			(field) => field.id === id,
+		);
+		return result ? { ...result } : undefined;
 	}, [fields, onUpdateMetadata, id]);
 
-	const previousPreviewImgParams = useMemo(() => {
+	const stableInputPreviewImg = useMemo(
+		() => input?.previewImg || [],
+		[input?.previewImg],
+	);
+
+	const previousPreviewImgParams = useStableMemo(() => {
 		return [
-			...previousNodesData
+			...node(fields, onUpdateMetadata)
+				.filter((elem) => previousNodesData.map((d) => d.id).includes(elem.id))
 				.flatMap((field) => field.previewImg)
 				.filter((f) => f !== undefined),
-			...(input?.previewImg || []),
+			...stableInputPreviewImg,
 		];
-	}, [previousNodesData, input?.previewImg]);
+	}, [previousNodesData, stableInputPreviewImg, fields, onUpdateMetadata]);
 
 	return (
 		<ContextMenu>
@@ -67,12 +77,12 @@ export default function CustomNode({
 						/>
 					)}
 					<div className="space-y-4">
-						<div className="relative w-full h-32">
+						<div className="relative aspect-video w-full h-32">
 							{image && (
 								<EnhanceImage
 									imagePath={image}
 									filters={previousPreviewImgParams}
-									className="object-cover rounded-md border border-gray-50"
+									className="object-cover w-full h-32 rounded-md border border-gray-50"
 								/>
 							)}
 						</div>

@@ -1,6 +1,7 @@
 import type { Pipeline } from "../request/requestTrainingPreset";
 import type { DebugType } from "./common";
 import type { ResponseDataset } from "./dataset";
+import type { PreprocessingModel } from "./preprocessing";
 import type { WorkflowModel } from "./workflow";
 
 export type TrainingModel = DebugType<
@@ -10,6 +11,7 @@ export type TrainingModel = DebugType<
 		status: string;
 		queueId: string;
 		dataset: ResponseDataset;
+		imagePreprocessing: PreprocessingModel;
 		retryCount: number;
 		errorMessage: string;
 		trainedModelPath: string;
@@ -17,7 +19,10 @@ export type TrainingModel = DebugType<
 		createdAt: string;
 		updatedAt: string;
 		workflow: WorkflowModel;
-	} & Omit<Required<ChangeableTrainingModel>, "datasetId">
+	} & Pick<
+		Required<ChangeableTrainingModel>,
+		"pipeline" | "version" | "preTrainedModel"
+	>
 >;
 
 export type ChangeableTrainingModel = Partial<{

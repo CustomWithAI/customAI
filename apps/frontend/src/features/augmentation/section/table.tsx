@@ -2,10 +2,17 @@ import {
 	DialogBuilder,
 	type DialogBuilderRef,
 } from "@/components/builder/dialog";
+import { AddFeatureSection } from "@/components/specific/add-feature";
 import { Content, ContentHeader, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
+import { node } from "@/configs/augmentation";
 import { useDragStore } from "@/contexts/dragContext";
 import { VisualCard } from "@/features/workflow/components/visual-card";
+import { useGetImages } from "@/hooks/queries/dataset-api";
+import { useGetTrainingById } from "@/hooks/queries/training-api";
+import { useQueryParam } from "@/hooks/use-query-params";
+import { decodeBase64 } from "@/libs/base64";
+import { jsonToParams } from "@/utils/Json-to-params";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
 	SortableContext,
@@ -15,10 +22,24 @@ import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useRef } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { AddFeatureSection } from "./add-feature";
 import { EditFeature } from "./edit-feature";
 
 export const TableAugmentationSection = () => {
+	const { getQueryParam } = useQueryParam();
+	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
+
+	const { data: training } = useGetTrainingById(
+		decodeBase64(workflowId),
+		decodeBase64(trainingId),
+	);
+	const { data: images } = useGetImages(
+		training?.data.dataset?.id || "",
+		{
+			enabled: !!training?.data.dataset?.id,
+		},
+		jsonToParams({ limit: 1 }),
+	);
+
 	const fields = useDragStore(useShallow((state) => state.fields));
 	const onDrag = useDragStore((state) => state.onDrag);
 	const onRemove = useDragStore((state) => state.onRemove);
@@ -57,21 +78,26 @@ export const TableAugmentationSection = () => {
 								<div className="flex space-x-3">
 									<ImageIcon className="mt-1" />
 									<div>
-										<ContentHeader>Pre-processing Options</ContentHeader>
+										<ContentHeader>Augmentation Options</ContentHeader>
 										<Subtle>
-											apply pre-processing transformation to those images
+											apply random data augmentation to those images
 										</Subtle>
 									</div>
 								</div>
 							),
-							description: <div className="w-full border-b my-4" />,
-							body: <AddFeatureSection />,
+							description: <div className="w-full border-b mt-4 mb-1" />,
+							body: (
+								<AddFeatureSection
+									image={images?.data.at(0)?.url || ""}
+									node={node}
+								/>
+							),
 							trigger: (
 								<Button
 									variant="outline"
 									className="mt-4 text-[#0063E8] border-[#0063E8] hover:text-[#004de8] active:scale-95 focus:scale-100 transition-transform duration-150 ease-in-out"
 								>
-									Add Image Preprocessing
+									Add Data Augmentation
 								</Button>
 							),
 						}}

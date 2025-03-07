@@ -5,7 +5,6 @@ import { useEdges, useNodes } from "reactflow";
 type NodeData = {
 	id: string;
 	type: string;
-	metadata: Metadata;
 	previewImg: Filter[];
 };
 
@@ -13,7 +12,6 @@ export default function usePreviousNodesData(id: string): NodeData[] {
 	const nodes = useNodes<{
 		type: string;
 		value: string;
-		metadata: Metadata;
 		previewImg: Filter[];
 	}>();
 	const edges = useEdges();
@@ -46,7 +44,6 @@ export default function usePreviousNodesData(id: string): NodeData[] {
 			previousNodes.push({
 				id: node.id,
 				type: node.data.type,
-				metadata: node.data.metadata,
 				previewImg: node.data.previewImg,
 			});
 		}

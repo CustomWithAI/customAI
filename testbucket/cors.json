@@ -4,7 +4,7 @@
 			"AllowedHeaders": ["*"],
 			"AllowedMethods": ["GET", "POST", "PUT", "DELETE"],
 			"AllowedOrigins": ["*"],
-			"ExposeHeaders": ["ETag"]
+			"ExposeHeaders": ["ETag", "Access-Control-Allow-Origin"]
 		}
 	]
 }

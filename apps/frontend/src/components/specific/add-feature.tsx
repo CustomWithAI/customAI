@@ -5,9 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DialogClose } from "@/components/ui/dialog";
 import EnhanceImage from "@/components/ui/enhanceImage";
-import { node } from "@/configs/image-preprocessing";
 import { useDragStore } from "@/contexts/dragContext";
-import type { DragColumn } from "@/stores/dragStore";
+import type { DragColumn, Metadata } from "@/stores/dragStore";
 import {
 	type KeyboardEvent,
 	useCallback,
@@ -16,8 +15,21 @@ import {
 	useState,
 } from "react";
 import { FixedSizeList as List } from "react-window";
+import type { z } from "zod";
 
-export const AddFeatureSection = ({ image }: { image?: string }) => {
+export const AddFeatureSection = ({
+	image,
+	node,
+}: {
+	image?: string;
+	node: (
+		fields: DragColumn<z.ZodRawShape>[],
+		onUpdateMetadata: (payload: {
+			id: string;
+			metadata: Metadata;
+		}) => void,
+	) => DragColumn[];
+}) => {
 	const onAdd = useDragStore((state) => state.onAdd);
 	const fields = useDragStore((state) => state.fields);
 	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
@@ -26,7 +38,7 @@ export const AddFeatureSection = ({ image }: { image?: string }) => {
 
 	const input = useMemo(() => {
 		return node(fields, onUpdateMetadata);
-	}, [fields, onUpdateMetadata]);
+	}, [fields, onUpdateMetadata, node]);
 	if (!image) {
 		return;
 	}
