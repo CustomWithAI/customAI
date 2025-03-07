@@ -1,6 +1,6 @@
 export type responsePagination<T extends object> = {
 	data: T[];
 	nextCursor: string | undefined;
-	perviousCursor: string | undefined;
+	prevCursor: string | undefined;
 	total: number;
 };

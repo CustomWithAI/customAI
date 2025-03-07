@@ -168,8 +168,6 @@ const EnhanceImage: React.FC<EnhanceImageProps> = memo(
 		const [processedImage, setProcessedImage] = useState<string>("");
 		const [isOpenCVReady, setIsOpenCVReady] = useState<boolean>(false);
 
-		console.log("re-render on image");
-
 		useEffect(() => {
 			try {
 				if (

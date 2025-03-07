@@ -12,7 +12,7 @@ import { getStep } from "@/utils/step-utils";
 import { motion } from "framer-motion";
 import { useCallback } from "react";
 
-export const AugmentationPage = () => {
+export const FeaturePage = () => {
 	const { getQueryParam, setQueryParam, compareQueryParam } = useQueryParam({
 		name: "view",
 	});

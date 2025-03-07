@@ -35,7 +35,7 @@ export const EditFeature = ({
 
 	if (!input?.inputSchema || !input?.inputField) return;
 	return (
-		<div className="flex max-h-[70vh] gap-x-6 w-full">
+		<div className="flex max-md:flex-col max-h-[70vh] gap-x-6 w-full">
 			<div
 				className={cn(
 					"h-[70vh] w-1/2 dark:bg-black border rounded-lg shadow-sm bg-white overflow-scroll",
@@ -50,7 +50,7 @@ export const EditFeature = ({
 					/>
 				</div>
 			</div>
-			<div className="w-1/2 h-full">
+			<div className="w-full md:w-1/2 h-full">
 				<ContentHeader className="border-b mb-4">config</ContentHeader>
 				<FormBuilder.Provider
 					formName={`form-${id}`}

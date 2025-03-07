@@ -17,7 +17,7 @@ export const useGetImages = (
 	params?: string,
 ) =>
 	useQuery({
-		queryKey: ["datasets", "images", id],
+		queryKey: ["datasets", "images", id, params],
 		queryFn: async () => await datasetService.getImages({ id, params }),
 		...options,
 	});

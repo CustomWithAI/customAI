@@ -10,6 +10,7 @@ import {
 	PackageSearch,
 	Shuffle,
 	SquareDashedMousePointer,
+	TextSelect,
 } from "lucide-react";
 import type React from "react";
 import type { ReactNode } from "react";
@@ -18,6 +19,7 @@ import { Step3Page } from "./step2-preset";
 import { DatasetPage } from "./step3-dataset";
 import { ImagePreprocessingPage } from "./step4-preprocessing";
 import { AugmentationPage } from "./step5-augmentation";
+import { FeaturePage } from "./step6-feature-extraction";
 import { ModelConfigPage } from "./step8-model-config";
 
 type StepConfig = {
@@ -120,6 +122,17 @@ export const stepConfig: Record<string, StepConfig> = {
 		component: () => (
 			<DragStoreProvider initial={[]}>
 				<AugmentationPage />
+			</DragStoreProvider>
+		),
+	},
+	featureEx: {
+		title: "Feature Extraction",
+		stepTitle: "Setup Feature Extraction",
+		description: "focus on main feature",
+		icon: <TextSelect />,
+		component: () => (
+			<DragStoreProvider initial={[]}>
+				<FeaturePage />
 			</DragStoreProvider>
 		),
 	},

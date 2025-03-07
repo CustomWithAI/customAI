@@ -1,7 +1,7 @@
 import type { FormFields, SchemaType } from "@/components/builder/form";
 import type { Filter } from "@/components/ui/enhanceImage";
 import { deepMerge } from "@/utils/deepMerge";
-import { metadataToJSON } from "@/utils/formatMetadata";
+import { metadataToArray, metadataToJSON } from "@/utils/formatMetadata";
 import { generateId } from "@/utils/generate-id";
 import type { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";

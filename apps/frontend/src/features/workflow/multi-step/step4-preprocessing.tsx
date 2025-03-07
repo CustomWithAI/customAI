@@ -16,10 +16,11 @@ import { useRouterAsync } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import { getStep } from "@/utils/step-utils";
 import { formatDate } from "@/utils/to-datetime";
-import { motion } from "framer-motion";
+import { keyframes, motion } from "framer-motion";
+import { StepBack } from "lucide-react";
 import { useCallback } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { metadataToJSON } from "../../../utils/formatMetadata";
+import { metadataToArray, metadataToJSON } from "../../../utils/formatMetadata";
 
 export const ImagePreprocessingPage = () => {
 	const { getQueryParam, setQueryParam, compareQueryParam } = useQueryParam({
@@ -40,6 +41,7 @@ export const ImagePreprocessingPage = () => {
 	const { mutateAsync: updateTraining } = useUpdateTraining();
 
 	const fields = useDragStore(useShallow((state) => state.fields));
+	const onReset = useDragStore((state) => state.onReset);
 
 	const handleSubmit = useCallback(async () => {
 		const json = fields.reduce(
@@ -47,17 +49,18 @@ export const ImagePreprocessingPage = () => {
 				if (!field.type) {
 					return acc;
 				}
-				acc[field.type] = metadataToJSON(field.metadata);
+				acc[field.type] = metadataToArray(field.metadata);
 				return acc;
 			},
 			{} as Record<string, any>,
 		);
+		const priority = Object.keys(json);
 		const preProcessFn = training?.data.imagePreprocessing
-			? createPreprocess
-			: updatePreprocess;
+			? updatePreprocess
+			: createPreprocess;
 		await preProcessFn(
 			{
-				data: json,
+				data: { ...json, priority },
 				name: `${training?.data.workflow.name}-${formatDate()}`,
 				id: training?.data.imagePreprocessing?.id || "",
 			},
@@ -76,14 +79,30 @@ export const ImagePreprocessingPage = () => {
 						});
 						return;
 					}
+					if (!training?.data.pipeline) {
+						toast({
+							title: "trainings is not existed",
+							variant: "destructive",
+						});
+						return;
+					}
 					await updateTraining(
 						{
 							workflowId: decodeBase64(workflowId),
 							trainingId: decodeBase64(trainingId),
 							imagePreprocessingId: data.data.id,
+							pipeline: {
+								current: getStep(
+									"next",
+									training?.data.pipeline.current,
+									training?.data.pipeline.steps,
+								),
+								steps: training?.data.pipeline.steps,
+							},
 						},
 						{
 							onSuccess: () => {
+								onReset();
 								setQueryParam({
 									params: {
 										step: encodeBase64(
@@ -114,6 +133,7 @@ export const ImagePreprocessingPage = () => {
 		training?.data.imagePreprocessing,
 		updateTraining,
 		toast,
+		onReset,
 		training?.data.workflow,
 		createPreprocess,
 	]);

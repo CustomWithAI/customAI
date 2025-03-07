@@ -94,16 +94,28 @@ export const AddFeatureSection = ({
 	return (
 		<>
 			{selected.length > 0 ? (
-				<div className="flex gap-4 h-4 mb-1">
-					<Subtle className="-mt-0.5">
-						{deferredSelected.length} select{deferredSelected.length > 1 && "s"}
+				<div className="flex gap-4 h-5 mb-1">
+					<Subtle className="-mt-px">
+						{deferredSelected.length} select
+						{deferredSelected.length > 1 ? "s" : " "}
 					</Subtle>
-					<Badge onClick={() => setSelected([])} variant="destructive">
+					<Badge
+						onClick={() => setSelected([])}
+						variant="outline"
+						className="border-red-500 text-red-500 hover:text-white hover:bg-red-500"
+					>
 						Remove all
+					</Badge>
+					<Badge onClick={() => setSelected(input)} variant="outline">
+						Select All
 					</Badge>
 				</div>
 			) : (
-				<div className="h-4 mb-1" />
+				<div className="h-5 mb-1.5 -mt-0.5">
+					<Badge onClick={() => setSelected(input)} variant="outline">
+						Select All
+					</Badge>
+				</div>
 			)}
 			<div className="relative overflow-scroll max-h-[90%] flex flex-col gap-4">
 				<List height={400} itemCount={input.length} itemSize={100} width="100%">

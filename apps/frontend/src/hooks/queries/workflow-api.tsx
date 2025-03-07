@@ -12,3 +12,13 @@ export const useGetWorkflowById = (
 		...options,
 	});
 };
+
+export const useGetWorkflows = (
+	options?: AppQueryOptions<typeof workflowService.getWorkflows>,
+) => {
+	return useQuery({
+		queryFn: workflowService.getWorkflows,
+		queryKey: ["workflows"],
+		...options,
+	});
+};

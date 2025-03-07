@@ -68,7 +68,7 @@ export const node = (
 ): DragColumn[] => {
 	return [
 		{
-			type: "resizing",
+			type: "resize",
 			title: "Resizing Node",
 			description: "Evaluates a condition and routes the flow",
 			icon: <Scaling />,
@@ -88,10 +88,14 @@ export const node = (
 					method: "resize",
 					params: [
 						new Size(
-							(findById(fields, "resizing-1")?.metadata as any)?.size?.value?.x
-								?.value,
-							(findById(fields, "resizing-1")?.metadata as any)?.size?.value?.y
-								?.value,
+							Number(
+								(findById(fields, "resizing-1")?.metadata as any)?.size?.value
+									?.x?.value,
+							),
+							Number(
+								(findById(fields, "resizing-1")?.metadata as any)?.size?.value
+									?.y?.value,
+							),
 						),
 						0,
 						0,
@@ -150,7 +154,7 @@ export const node = (
 			}),
 		},
 		{
-			type: "cropping",
+			type: "crop",
 			title: "Cropping Node",
 			description: "Processes the input value",
 			icon: <Crop />,
@@ -194,7 +198,7 @@ export const node = (
 						renderCustomInput() {
 							return (
 								<>
-									<ContentHeader>Cropping Size</ContentHeader>
+									<ContentHeader>Size</ContentHeader>
 									<div className="flex gap-x-3">
 										{["x", "y"].map((axis) => (
 											<TextFormItem
@@ -226,7 +230,7 @@ export const node = (
 											/>
 										))}
 									</div>
-									<ContentHeader>Cropping Position</ContentHeader>
+									<ContentHeader className="mt-2">Position</ContentHeader>
 									<div className="flex gap-x-3">
 										{["x", "y"].map((axis) => (
 											<TextFormItem
@@ -277,7 +281,7 @@ export const node = (
 			}),
 		},
 		{
-			type: "rotation",
+			type: "rotate",
 			title: "Rotation Node",
 			description: "Displays the final output",
 			icon: <RotateCcw />,
@@ -321,7 +325,7 @@ export const node = (
 			}),
 		},
 		{
-			type: "flipping",
+			type: "flip",
 			title: "Flipping Node",
 			description: "Displays the final output",
 			icon: <FlipHorizontal2 />,
@@ -413,7 +417,6 @@ export const node = (
 						setValue: findById(fields, "grayscale-1")?.metadata?.gray_scale
 							?.value as boolean,
 						setOnChange: (value: unknown) => {
-							console.log(value);
 							onUpdateMetadata({
 								id: "grayscale-1",
 								metadata: {
@@ -432,7 +435,7 @@ export const node = (
 			}),
 		},
 		{
-			type: "perspective",
+			type: "pers_trans",
 			title: "Perspective Transformation",
 			description: "Displays the final output",
 			icon: <Axis3d />,
@@ -717,7 +720,7 @@ export const node = (
 			],
 		},
 		{
-			type: "percentage",
+			type: "thresh_percent",
 			title: "Percentage Tresholding",
 			description: "Displays the final output",
 			icon: <Percent />,
@@ -766,11 +769,11 @@ export const node = (
 			}),
 		},
 		{
-			type: "mean-filtering",
-			title: "Mean Filtering",
+			type: "mean_blur",
+			title: "Mean Blur",
 			description: "Evaluates a condition and routes the flow",
 			icon: <ArrowDownWideNarrow />,
-			id: "mean-filtering-1",
+			id: "mean-blur-1",
 			metadata: {
 				kernel_size: {
 					type: "Object",
@@ -784,9 +787,9 @@ export const node = (
 				{
 					type: "meanBlur",
 					params: [
-						(findById(fields, "mean-filtering-1")?.metadata as any)?.kernel_size
+						(findById(fields, "mean-blur-1")?.metadata as any)?.kernel_size
 							?.value?.x?.value || 5,
-						(findById(fields, "mean-filtering-1")?.metadata as any)?.kernel_size
+						(findById(fields, "mean-blur-1")?.metadata as any)?.kernel_size
 							?.value?.y?.value || 5,
 					],
 				},
@@ -795,7 +798,7 @@ export const node = (
 				{
 					template: "custom",
 					element: {
-						testDataId: "mean-filtering-form",
+						testDataId: "mean-blur-form",
 						renderCustomInput({ control }) {
 							return (
 								<FormField
@@ -809,7 +812,7 @@ export const node = (
 												label="X"
 												onChange={(e) => {
 													onUpdateMetadata({
-														id: "mean-filtering-1",
+														id: "mean-blur-1",
 														metadata: {
 															kernel_size: {
 																type: "Object",
@@ -824,10 +827,8 @@ export const node = (
 													});
 												}}
 												value={
-													(
-														findById(fields, "mean-filtering-1")
-															?.metadata as any
-													)?.kernel_size?.value?.x?.value
+													(findById(fields, "mean-blur-1")?.metadata as any)
+														?.kernel_size?.value?.x?.value
 												}
 											/>
 											<TextFormItem
@@ -836,7 +837,7 @@ export const node = (
 												label="Y"
 												onChange={(e) => {
 													onUpdateMetadata({
-														id: "mean-filtering-1",
+														id: "mean-blur-1",
 														metadata: {
 															kernel_size: {
 																type: "Object",
@@ -851,10 +852,8 @@ export const node = (
 													});
 												}}
 												value={
-													(
-														findById(fields, "mean-filtering-1")
-															?.metadata as any
-													)?.kernel_size?.value?.y?.value
+													(findById(fields, "mean-blur-1")?.metadata as any)
+														?.kernel_size?.value?.y?.value
 												}
 											/>
 										</div>
@@ -874,11 +873,11 @@ export const node = (
 			}),
 		},
 		{
-			type: "median-filtering",
-			title: "Median Filtering",
+			type: "median_blur",
+			title: "Median blur",
 			description: "Evaluates a condition and routes the flow",
 			icon: <ArrowDownWideNarrow />,
-			id: "median-filtering-1",
+			id: "median-blur-1",
 			metadata: {
 				kernel_size: {
 					type: "Number",
@@ -889,8 +888,8 @@ export const node = (
 				{
 					type: "medianBlur",
 					params: [
-						(findById(fields, "median-filtering-1")?.metadata as any)
-							?.kernel_size?.value || 3,
+						(findById(fields, "median-blur-1")?.metadata as any)?.kernel_size
+							?.value || 3,
 					],
 				},
 			],
@@ -898,15 +897,15 @@ export const node = (
 				{
 					template: "number",
 					element: {
-						testDataId: "median-filtering-form",
-						label: "Mean Filtering size",
+						testDataId: "median-blur-form",
+						label: "Mean blur size",
 						name: "kernel_size",
 						key: "kernel_size-median",
 					},
 					config: {
 						setOnChange: (value) => {
 							onUpdateMetadata({
-								id: "median-filtering-1",
+								id: "median-blur-1",
 								metadata: {
 									kernel_size: {
 										type: "Number",
@@ -915,7 +914,7 @@ export const node = (
 								},
 							});
 						},
-						setValue: (findById(fields, "median-filtering-1")?.metadata as any)
+						setValue: (findById(fields, "median-blur-1")?.metadata as any)
 							?.kernel_size?.value,
 					},
 				},
@@ -925,7 +924,7 @@ export const node = (
 			}),
 		},
 		{
-			type: "normalization",
+			type: "normalize",
 			title: "Normalization",
 			description:
 				"Data transformation process that aligns data values to a common scale",
@@ -1004,7 +1003,7 @@ export const node = (
 			}),
 		},
 		{
-			type: "log-transformation",
+			type: "log_trans",
 			title: "Log transformation",
 			description:
 				"Data transformation method which it replaces each variable x with a log(x)",
@@ -1035,7 +1034,6 @@ export const node = (
 						setValue: findById(fields, "log-transformation-1")?.metadata
 							?.log_trans?.value as boolean,
 						setOnChange: (value: unknown) => {
-							console.log(value);
 							onUpdateMetadata({
 								id: "log-transformation-1",
 								metadata: {
@@ -1054,7 +1052,7 @@ export const node = (
 			}),
 		},
 		{
-			type: "histogram-equalization",
+			type: "histogram_equalization",
 			title: "Histogram Equalization",
 			description: "improve pixel image contrast",
 			icon: <DraftingCompass />,
@@ -1084,7 +1082,6 @@ export const node = (
 						setValue: findById(fields, "histogram-equalization-1")?.metadata
 							?.histogram_equalization?.value as boolean,
 						setOnChange: (value: unknown) => {
-							console.log(value);
 							onUpdateMetadata({
 								id: "histogram-equalization-1",
 								metadata: {
@@ -1306,18 +1303,22 @@ export const node = (
 			description: "Apply Gaussian blur with kernel size and sigma",
 			icon: <IconBlur />,
 			metadata: {
-				blur: {
+				kernel_size: {
 					type: "Object",
 					value: {
-						kernel_size: {
+						x: {
 							type: "Number",
 							value: 0,
 						},
-						sigma: {
+						y: {
 							type: "Number",
 							value: 0,
 						},
 					},
+				},
+				sigma: {
+					type: "Number",
+					value: 0,
 				},
 			},
 			previewImg: [
@@ -1325,51 +1326,69 @@ export const node = (
 					type: "gaussianBlur",
 					params: [
 						[
-							((
-								findById(fields, "gaussian_blur-1")?.metadata?.blur
-									?.value as any
-							)?.kernel_size?.value as number) || 5,
-							((
-								findById(fields, "gaussian_blur-1")?.metadata?.blur
-									?.value as any
-							)?.kernel_size?.value as number) || 5,
+							Number(
+								(
+									findById(fields, "gaussian_blur-1")?.metadata?.kernel_size
+										?.value as any
+								)?.x?.value,
+							) || 5,
+							Number(
+								(
+									findById(fields, "gaussian_blur-1")?.metadata?.kernel_size
+										?.value as any
+								)?.y?.value,
+							) || 5,
 						],
-						((findById(fields, "gaussian_blur-1")?.metadata?.blur?.value as any)
-							?.sigma?.value as number) || 1,
+						Number(
+							(
+								findById(fields, "gaussian_blur-1")?.metadata?.sigma
+									?.value as any
+							)?.sigma?.value,
+						) || 1,
 					],
 				},
 			],
 			inputField: [
 				{
-					template: "number",
+					template: "custom",
 					element: {
-						testDataId: "gaussian_blur-kernel_size-form",
-						label: "Kernel size",
-						key: "gaussian_blur-1",
-						name: "gaussian_blur",
-						required: true,
-					},
-					config: {
-						setValue: (
-							findById(fields, "gaussian_blur-1")?.metadata?.blur?.value as any
-						)?.kernel_size?.value as number,
-						setOnChange: (value: unknown) => {
-							onUpdateMetadata({
-								id: "gaussian_blur-1",
-								metadata: {
-									blur: {
-										type: "Object",
-										value: {
-											kernel_size: {
-												type: "Number",
-												value: value as number,
-											},
-										},
-									},
-								},
-							});
+						testDataId: "gaussian_blur-form",
+						renderCustomInput() {
+							return (
+								<div className="flex gap-x-3">
+									{["x", "y"].map((axis) => (
+										<TextFormItem
+											number
+											key={`gaussian_blur-${axis}`}
+											className="w-1/2"
+											label={axis.toLocaleUpperCase()}
+											onChange={(e) => {
+												onUpdateMetadata({
+													id: "gaussian_blur-1",
+													metadata: {
+														kernel_size: {
+															type: "Object",
+															value: {
+																[axis]: {
+																	type: "Number",
+																	value: e as number,
+																},
+															},
+														},
+													},
+												});
+											}}
+											value={
+												(findById(fields, "gaussian_blur-1")?.metadata as any)
+													?.kernel_size?.value?.[axis]?.value
+											}
+										/>
+									))}
+								</div>
+							);
 						},
 					},
+					config: {},
 				},
 				{
 					template: "number",

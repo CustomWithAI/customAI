@@ -1,3 +1,4 @@
+"use client";
 import {
 	DialogBuilder,
 	type DialogBuilderRef,
@@ -21,10 +22,11 @@ import {
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 export const TablePreprocessingSection = () => {
+	const [cursor, setCursor] = useState<string | null>(null);
 	const { getQueryParam } = useQueryParam();
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
 
@@ -37,7 +39,7 @@ export const TablePreprocessingSection = () => {
 		{
 			enabled: !!training?.data.dataset?.id,
 		},
-		jsonToParams({ limit: 1 }),
+		jsonToParams({ limit: 1, cursor: cursor }),
 	);
 
 	const fields = useDragStore(useShallow((state) => state.fields));
@@ -52,11 +54,6 @@ export const TablePreprocessingSection = () => {
 		);
 	}, [fields, onUpdateMetadata]);
 
-	console.log(
-		input
-			.flatMap((fields) => fields.previewImg)
-			.filter((f) => f !== undefined) || [],
-	);
 	return (
 		<div className="grid grid-cols-4 gap-6 max-md:grid-cols-1">
 			<div className="col-span-2 lg:col-span-3 max-md:order-2">
@@ -135,9 +132,18 @@ export const TablePreprocessingSection = () => {
 				<div className="max-md:w-full">
 					<Content>Original</Content>
 					<div className="flex gap-x-3 max-md:mt-2 items-center">
-						<div className="h-full items-center hover:bg-gray-200 rounded-lg">
-							<ChevronLeft />
-						</div>
+						<button
+							type="button"
+							aria-disabled={!!images?.prevCursor}
+							onClick={() => {
+								if (images?.prevCursor) {
+									setCursor(images?.prevCursor);
+								}
+							}}
+							className="h-full items-center hover:bg-gray-200 rounded-lg"
+						>
+							<ChevronLeft className="aria-disabled:text-zinc-500 aria-disabled:cursor-not-allowed" />
+						</button>
 						<div className="relative flex items-center w-full md:m-6 aspect-square">
 							<img
 								src={images?.data.at(0)?.url || ""}
@@ -146,9 +152,18 @@ export const TablePreprocessingSection = () => {
 								className="object-cover rounded-lg shadow-lg"
 							/>
 						</div>
-						<div className="h-full items-center hover:bg-gray-200 rounded-lg">
-							<ChevronRight />
-						</div>
+						<button
+							type="button"
+							aria-disabled={!!images?.nextCursor}
+							onClick={() => {
+								if (images?.nextCursor) {
+									setCursor(images?.nextCursor);
+								}
+							}}
+							className="h-full items-center hover:bg-gray-200 rounded-lg"
+						>
+							<ChevronRight className="aria-disabled:text-zinc-500 aria-disabled:cursor-not-allowed" />
+						</button>
 					</div>
 					<p className="w-full max-md:mt-2 text-center text-sm text-gray-600">
 						1 of {images?.total}

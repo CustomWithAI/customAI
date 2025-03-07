@@ -1,19 +1,25 @@
 "use client";
 import { AppNavbar } from "@/components/layout/appNavbar";
 import { ViewList } from "@/components/specific/viewList";
-import { Primary } from "@/components/typography/text";
+import { Primary, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ContentDataset } from "@/features/dataset/components/content";
+import { WorkflowCard } from "@/features/workflow/components/content-workflow";
+import { useGetWorkflows } from "@/hooks/queries/workflow-api";
 import { useRouterAsync } from "@/libs/i18nNavigation";
 import { Filter, PackagePlus } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 export default function Page() {
 	const { asyncRoute } = useRouterAsync();
+
 	const handleCreate = useCallback(() => {
 		asyncRoute("/workflow/create");
 	}, [asyncRoute]);
+
+	const { data: workflows } = useGetWorkflows();
+
 	return (
 		<AppNavbar activeTab="Home" PageTitle="home" disabledTab={undefined}>
 			<div className="flex justify-between">
@@ -36,7 +42,15 @@ export default function Page() {
 					</div>
 					<ViewList.Trigger />
 				</div>
-				<ContentDataset />
+				<Subtle className="text-xs mb-3 font-medium">
+					Found {workflows?.data.total}{" "}
+					{(workflows?.data.total || 0) > 1 ? "workflows" : "workflow"}
+				</Subtle>
+				<div className="grid grid-cols-4 gap-4">
+					{workflows?.data.data.map((workflow) => {
+						return <WorkflowCard key={workflow.id} {...workflow} />;
+					})}
+				</div>
 			</ViewList.Provider>
 		</AppNavbar>
 	);

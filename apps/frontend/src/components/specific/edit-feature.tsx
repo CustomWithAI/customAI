@@ -34,12 +34,19 @@ export const EditFeature = ({
 		return node(fields, onUpdateMetadata).find((field) => field.id === id);
 	}, [fields, onUpdateMetadata, node, id]);
 
+	const preview = useMemo(() => {
+		return node(fields, onUpdateMetadata)
+			.filter((field) => fields.map((field) => field.id).includes(field.id))
+			.flatMap((field) => field.previewImg)
+			.filter((item) => item !== undefined);
+	}, [fields, onUpdateMetadata, node]);
+
 	if (!input?.inputSchema || !input?.inputField) return;
 	return (
-		<div className="flex max-h-[70vh] gap-x-6 w-full">
+		<div className="flex max-h-[70vh] max-md:flex-col gap-x-6 max-md:gap-y-6 w-full">
 			<div
 				className={cn(
-					"relative h-[70vh] w-1/2 dark:bg-black border rounded-lg shadow-sm bg-white overflow-scroll",
+					"relative h-[70vh] w-full md:w-1/2 dark:bg-black border rounded-lg shadow-sm bg-white overflow-scroll",
 					"dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative flex items-center justify-center",
 				)}
 			>
@@ -47,13 +54,16 @@ export const EditFeature = ({
 					<button
 						aria-selected={mode === "main"}
 						type="button"
+						onClick={() => setMode("main")}
 						className="aria-selected:bg-blue-500 aria-selected:text-white w-24 text-sm rounded-sm m-1 mb-0 text-center py-2"
 					>
 						specific
 					</button>
 					<button
+						aria-selected={mode === "combine"}
 						type="button"
-						className="w-24 text-sm rounded-sm hover:bg-zinc-50 m-0.5 text-center py-2"
+						onClick={() => setMode("combine")}
+						className="aria-selected:bg-blue-500 aria-selected:text-white w-24 text-sm rounded-sm m-1 text-center py-2"
 					>
 						preview
 					</button>
@@ -61,12 +71,12 @@ export const EditFeature = ({
 				<div className="relative aspect-square items-center flex justify-center h-full w-5/6 ">
 					<EnhanceImage
 						imagePath={image}
-						filters={input.previewImg || []}
+						filters={mode === "combine" ? preview : input.previewImg || []}
 						className="h-full w-full object-contain rounded-md"
 					/>
 				</div>
 			</div>
-			<div className="w-1/2 h-full">
+			<div className="w-full md:w-1/2 h-full">
 				<ContentHeader className="border-b mb-4">config</ContentHeader>
 				<FormBuilder.Provider
 					formName={`form-${id}`}

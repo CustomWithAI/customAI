@@ -36,7 +36,6 @@ export const ContentImage = ({
 	if (!images || !total) {
 		return <></>;
 	}
-	console.log(images);
 	return (
 		<>
 			<Subtle className="text-xs mb-3 font-medium">

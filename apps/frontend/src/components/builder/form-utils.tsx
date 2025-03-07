@@ -20,7 +20,7 @@ export const TextFormItem = ({
 	placeholder,
 }: TextFormItemProps) => (
 	<FormItem className={cn("w-1/2", className)}>
-		<FormLabel>{label}</FormLabel>
+		<FormLabel className="text-black/50 text-sm">{label}</FormLabel>
 		<FormControl>
 			<Input
 				type="text"

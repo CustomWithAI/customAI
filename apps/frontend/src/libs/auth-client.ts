@@ -25,3 +25,5 @@ export const authClient = createAuthClient({
 	],
 	additionalFields: {},
 });
+
+export const useSession = authClient.useSession;

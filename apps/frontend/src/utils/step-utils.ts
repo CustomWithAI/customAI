@@ -6,7 +6,7 @@ export const getStep = (
 	steps: Pipeline["steps"] | undefined,
 ): string => {
 	const currentIndex = steps?.find((step) => step.name === current)?.index;
-	if (!currentIndex) {
+	if (currentIndex === undefined || steps === undefined) {
 		return current || "";
 	}
 	switch (method) {
@@ -14,7 +14,7 @@ export const getStep = (
 			if (currentIndex === 0) {
 				return "preset";
 			}
-			const prevName = steps.find(
+			const prevName = steps?.find(
 				(step) => step.index === currentIndex - 1,
 			)?.name;
 			if (!prevName) {
