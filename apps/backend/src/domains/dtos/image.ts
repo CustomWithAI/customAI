@@ -10,6 +10,7 @@ export const createImagesDto = t.Object({
 
 export const updateImageDto = t.Object({
   file: t.Optional(t.File()),
+  class: t.Optional(t.String()),
   annotation: t.Optional(t.Record(t.String(), t.Any())),
 });
 
@@ -17,6 +18,7 @@ export const imageResponseDto = t.Object({
   path: t.String(),
   url: t.String(),
   annotation: t.Unknown(),
+  class: t.String(),
   createdAt: t.Date(),
   updatedAt: t.Date(),
   datasetId: t.String(),
