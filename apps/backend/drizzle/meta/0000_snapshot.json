@@ -1,5 +1,5 @@
 {
-  "id": "b2580298-253d-4cd6-a386-252710fdf110",
+  "id": "c3609e48-28c4-45fa-898d-8a4c8b729ac8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -535,11 +535,23 @@
           "primaryKey": false,
           "notNull": true
         },
-        "split_data": {
-          "name": "split_data",
-          "type": "jsonb",
+        "train": {
+          "name": "train",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "test": {
+          "name": "test",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "valid": {
+          "name": "valid",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -840,6 +852,12 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
+        },
+        "class": {
+          "name": "class",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",

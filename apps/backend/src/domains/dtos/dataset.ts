@@ -5,7 +5,9 @@ export const createDatasetDto = t.Object({
   name: t.String({ maxLength: 255 }),
   description: t.String({ maxLength: 255 }),
   annotationMethod: t.String({ maxLength: 255 }),
-  splitData: t.Record(t.String(), t.Any()),
+  train: t.Integer(),
+  test: t.Integer(),
+  valid: t.Integer(),
 });
 
 export const updateDatasetDto = t.Partial(createDatasetDto);
@@ -15,7 +17,9 @@ export const defaultDatasetResponseDto = t.Object({
   id: t.String(),
   createdAt: t.Date(),
   updatedAt: t.Date(),
-  splitData: t.Unknown(),
+  train: t.Union([t.Integer(), t.Null()]),
+  test: t.Union([t.Integer(), t.Null()]),
+  valid: t.Union([t.Integer(), t.Null()]),
 });
 
 export const datasetResponseDto = t.Object({

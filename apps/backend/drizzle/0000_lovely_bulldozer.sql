@@ -77,7 +77,9 @@ CREATE TABLE "datasets" (
 	"name" varchar(255) NOT NULL,
 	"description" varchar(255) NOT NULL,
 	"annotation_method" varchar(255) NOT NULL,
-	"split_data" jsonb NOT NULL,
+	"train" integer,
+	"test" integer,
+	"valid" integer,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"user_id" text NOT NULL
@@ -113,6 +115,7 @@ CREATE TABLE "image_preprocessings" (
 CREATE TABLE "images" (
 	"path" varchar(255) PRIMARY KEY NOT NULL,
 	"annotation" jsonb NOT NULL,
+	"class" varchar(255),
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"dataset_id" varchar(255) NOT NULL
