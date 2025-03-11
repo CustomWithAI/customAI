@@ -1,5 +1,5 @@
 {
-  "id": "c3609e48-28c4-45fa-898d-8a4c8b729ac8",
+  "id": "e19d92b2-b8a8-4a93-8ad4-cc9d35ae9dd5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -535,6 +535,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "split_method": {
+          "name": "split_method",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
         "train": {
           "name": "train",
           "type": "integer",
@@ -1008,7 +1014,7 @@
         },
         "pre_trained_model": {
           "name": "pre_trained_model",
-          "type": "jsonb",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },

@@ -22,7 +22,7 @@ export const updateTrainingDto = t.Partial(
     featureExtractionId: t.String({ maxLength: 255 }),
     featureSelectionId: t.String({ maxLength: 255 }),
     augmentationId: t.String({ maxLength: 255 }),
-    preTrainedModel: t.Record(t.String(), t.Any()),
+    preTrainedModel: t.String({ maxLength: 255 }),
     customModelId: t.String({ maxLength: 255 }),
   })
 );
@@ -44,7 +44,7 @@ export const defaultTrainingResponseDto = t.Object({
   featureExtractionId: t.Union([t.String(), t.Null()]),
   featureSelectionId: t.Union([t.String(), t.Null()]),
   augmentationId: t.Union([t.String(), t.Null()]),
-  preTrainedModel: t.Union([t.Unknown(), t.Null()]),
+  preTrainedModel: t.Union([t.String(), t.Null()]),
   customModelId: t.Union([t.String(), t.Null()]),
   createdAt: t.Date(),
   updatedAt: t.Date(),
@@ -67,7 +67,7 @@ export const trainingResponseDto = t.Object({
   featureSelection: t.Union([featureSelectionResponseDto, t.Null()]),
   augmentation: t.Union([augmentationResponseDto, t.Null()]),
   workflow: workflowResponseDto,
-  preTrainedModel: t.Union([t.Unknown(), t.Null()]),
+  preTrainedModel: t.Union([t.String(), t.Null()]),
   customModel: t.Union([customModelResponseDto, t.Null()]),
   createdAt: t.Date(),
   updatedAt: t.Date(),

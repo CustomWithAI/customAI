@@ -34,6 +34,10 @@ export const swaggerConfig = () => (app: Elysia) => {
               description: "Permission endpoints",
             },
             role: { name: "Role", description: "Role endpoints" },
+            enum: {
+              name: "Enum",
+              description: "Enum endpoints",
+            },
             augmentation: {
               name: "Augmentation",
               description: "CRUD for data augmentation",

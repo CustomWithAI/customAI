@@ -1,3 +1,11 @@
 {
-  "annotationMethod": ["classification", "object_detection", "segmentation"]
+  "annotationMethod": ["classification", "object_detection", "segmentation"],
+  "splitMethod": ["default", "stratified_sampling"],
+  "preTrainedModel": {
+    "deepLearning": {
+      "classification": ["resnet50", "vgg16", "mobilenetv2"],
+      "object_detection": ["yolov5", "yolov8", "yolov11"],
+      "segmentation": ["yolov8", "yolov11"]
+    }
+  }
 }

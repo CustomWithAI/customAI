@@ -87,7 +87,7 @@ export const trainings = pgTable(
         onUpdate: "cascade",
       }
     ),
-    preTrainedModel: jsonb("pre_trained_model"),
+    preTrainedModel: varchar("pre_trained_model", { length: 255 }),
     customModelId: varchar("custom_model_id", { length: 255 }).references(
       () => customModels.id,
       {
