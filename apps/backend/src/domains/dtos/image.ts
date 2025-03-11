@@ -18,7 +18,7 @@ export const imageResponseDto = t.Object({
   path: t.String(),
   url: t.String(),
   annotation: t.Unknown(),
-  class: t.String(),
+  class: t.Union([t.String(), t.Null()]),
   createdAt: t.Date(),
   updatedAt: t.Date(),
   datasetId: t.String(),
