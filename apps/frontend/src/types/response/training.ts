@@ -1,4 +1,5 @@
 import type { Pipeline } from "../request/requestTrainingPreset";
+import type { AugmentationModel } from "./augmentation";
 import type { DebugType } from "./common";
 import type { ResponseDataset } from "./dataset";
 import type { PreprocessingModel } from "./preprocessing";
@@ -11,6 +12,7 @@ export type TrainingModel = DebugType<
 		status: string;
 		queueId: string;
 		dataset: ResponseDataset;
+		augmentation: AugmentationModel;
 		imagePreprocessing: PreprocessingModel;
 		retryCount: number;
 		errorMessage: string;

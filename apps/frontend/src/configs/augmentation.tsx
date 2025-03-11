@@ -356,7 +356,6 @@ export const node = (
 						setValue: findById(fields, "rotation-1")?.metadata?.probability
 							?.value as boolean,
 						setOnChange: (value: unknown) => {
-							console.log(value);
 							onUpdateMetadata({
 								id: "rotation-1",
 								metadata: {
@@ -616,10 +615,14 @@ export const node = (
 				{
 					type: "scale",
 					params: [
-						((findById(fields, "scale-1")?.metadata as any)?.size?.value?.x
-							?.value as number) || 50,
-						(findById(fields, "scale-1")?.metadata as any)?.size?.value?.y
-							?.value || 50,
+						Number(
+							(findById(fields, "scale-1")?.metadata as any)?.size?.value?.x
+								?.value,
+						) || 50,
+						Number(
+							(findById(fields, "scale-1")?.metadata as any)?.size?.value?.y
+								?.value,
+						) || 50,
 					],
 				},
 			],
@@ -724,9 +727,7 @@ export const node = (
 				{
 					type: "brightness",
 					params: [
-						Number(
-							findById(fields, "brightness-1")?.metadata?.max?.value || 45,
-						),
+						Number(findById(fields, "brightness-1")?.metadata?.max?.value || 3),
 					],
 				},
 			],
@@ -927,7 +928,7 @@ export const node = (
 		},
 		{
 			type: "hist_equalization",
-			title: "Contrast Stretching",
+			title: "Hist Equalization",
 			description: "Apply histogram equalization to improve contrast",
 			icon: <IconBrightness />,
 			id: "hist_equalization-1",
@@ -994,13 +995,24 @@ export const node = (
 					value: 0,
 				},
 			},
+			previewImg: [
+				{
+					type: "adaptive_equalization",
+					params: [
+						Number(
+							findById(fields, "adaptive_equalization-1")?.metadata?.probability
+								?.value,
+						) || 10,
+					],
+				},
+			],
 			inputField: [
 				{
 					template: "sliderInput",
 					element: {
 						testDataId: "adaptive_equalization-form",
 						label: "Probability",
-						key: "adaptive_equalization-1",
+						key: "prob_adaptive_equalization-1",
 						name: "adaptive_equalization",
 						required: true,
 					},
@@ -1030,7 +1042,7 @@ export const node = (
 					element: {
 						testDataId: "adaptive_equalization-form",
 						label: "Scale",
-						key: "adaptive_equalization-1",
+						key: "scale_adaptive_equalization-1",
 						name: "adaptive_equalization",
 						required: true,
 					},
@@ -1072,6 +1084,16 @@ export const node = (
 					value: 0,
 				},
 			},
+			previewImg: [
+				{
+					type: "saturation",
+					params: [
+						Number(
+							findById(fields, "saturation-1")?.metadata?.probability?.value,
+						) || 10,
+					],
+				},
+			],
 			inputField: [
 				{
 					template: "sliderInput",
@@ -1150,6 +1172,15 @@ export const node = (
 					value: 0,
 				},
 			},
+			previewImg: [
+				{
+					type: "hue",
+					params: [
+						Number(findById(fields, "hue-1")?.metadata?.probability?.value) ||
+							10,
+					],
+				},
+			],
 			inputField: [
 				{
 					template: "sliderInput",
@@ -1228,84 +1259,15 @@ export const node = (
 					value: 0,
 				},
 			},
-			inputField: [
+			previewImg: [
 				{
-					template: "sliderInput",
-					element: {
-						testDataId: "gamma-form",
-						label: "Probability",
-						key: "gamma-1",
-						name: "gamma",
-						required: true,
-					},
-					config: {
-						setValue: findById(fields, "gamma-1")?.metadata?.probability
-							?.value as boolean,
-						setOnChange: (value: unknown) => {
-							onUpdateMetadata({
-								id: "gamma-1",
-								metadata: {
-									probability: {
-										type: "Number",
-										value: value as number,
-									},
-								},
-							});
-						},
-						options: {
-							min: 0,
-							max: 1,
-							step: 0.1,
-						},
-					},
-				},
-				{
-					template: "number",
-					element: {
-						testDataId: "gamma-form",
-						label: "Scale",
-						key: "gamma-1",
-						name: "gamma",
-						required: true,
-					},
-					config: {
-						setValue: findById(fields, "gamma-1")?.metadata?.config
-							?.value as boolean,
-						setOnChange: (value: unknown) => {
-							onUpdateMetadata({
-								id: "gamma-1",
-								metadata: {
-									config: {
-										type: "Number",
-										value: value as number,
-									},
-								},
-							});
-						},
-					},
+					type: "gamma",
+					params: [
+						Number(findById(fields, "gamma-1")?.metadata?.probability?.value) ||
+							10,
+					],
 				},
 			],
-			inputSchema: z.object({
-				probability: z.number().positive(),
-				config: z.number(),
-			}),
-		},
-		{
-			type: "gamma",
-			title: "Gamma",
-			description: "Adjust color gamma correction",
-			icon: <IconColorPicker />,
-			id: "gamma-1",
-			metadata: {
-				probability: {
-					type: "Number",
-					value: 0,
-				},
-				config: {
-					type: "Number",
-					value: 0,
-				},
-			},
 			inputField: [
 				{
 					template: "sliderInput",
@@ -1539,6 +1501,21 @@ export const node = (
 					},
 				},
 			},
+			previewImg: [
+				{
+					type: "motion_blur",
+					params: [
+						Number(
+							(findById(fields, "motion_blur-1")?.metadata?.blur?.value as any)
+								?.kernel_size?.value,
+						) || 5,
+						Number(
+							(findById(fields, "motion_blur-1")?.metadata?.blur?.value as any)
+								?.angle?.value,
+						) || 45,
+					],
+				},
+			],
 			inputField: [
 				{
 					template: "sliderInput",

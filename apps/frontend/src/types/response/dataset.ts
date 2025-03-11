@@ -14,6 +14,7 @@ export type ResponseDataset = {
 export type ResponseImage = {
 	path: string;
 	url: string;
+	class: string | null;
 	annotation: string;
 	createdAt: string;
 	updatedAt: string;

@@ -1,3 +1,4 @@
+import { presetList } from "@/configs/preset";
 import { DragStoreProvider } from "@/contexts/dragContext";
 import { OpenCVProvider } from "@/libs/opencv-providers";
 import {
@@ -55,50 +56,7 @@ export const stepConfig: Record<string, StepConfig> = {
 		description: "Choose train workflow pipeline preset",
 		icon: <FileChartColumnIncreasing />,
 		component: () => (
-			<DragStoreProvider
-				initial={[
-					{
-						title: "Image Pre-processing",
-						id: "1",
-						metadata: {
-							check: { type: "Boolean", value: false },
-							name: { type: "String", value: "preprocessing" },
-						},
-						description: "edit image before training",
-						icon: <Image />,
-					},
-					{
-						title: "Feature Selection & Extraction",
-						id: "2",
-						metadata: {
-							check: { type: "Boolean", value: false },
-							name: { type: "String", value: "featureEx" },
-						},
-						description: "focus on main feature",
-						icon: <SquareDashedMousePointer />,
-					},
-					{
-						title: "Data Augmentation",
-						id: "3",
-						metadata: {
-							check: { type: "Boolean", value: false },
-							name: { type: "String", value: "augmentation" },
-						},
-						description: "create random sampling",
-						icon: <BetweenHorizontalStart />,
-					},
-					{
-						title: "Training Configuration",
-						id: "4",
-						metadata: {
-							check: { type: "Boolean", value: false },
-							name: { type: "String", value: "modelconfig" },
-						},
-						description: "setting model hyperparameter",
-						icon: <FileSliders />,
-					},
-				]}
-			>
+			<DragStoreProvider initial={presetList}>
 				<Step3Page />
 			</DragStoreProvider>
 		),

@@ -35,7 +35,7 @@ export const SelectiveBar = memo(
 						(_, index) => (
 							<motion.div
 								key={`selective-next-${index}`}
-								layoutId={`dot-${current + index}`}
+								layoutId={`dot-${current + index + 1}`}
 								transition={{ type: "spring", stiffness: 300, damping: 20 }}
 								className="bg-[#CBCBCB] w-1 h-1 rounded-full"
 							/>

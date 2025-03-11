@@ -2,6 +2,7 @@
 
 import { FormBuilder } from "@/components/builder/form";
 import { Subtle } from "@/components/typography/text";
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import {
 	ContextMenu,
@@ -17,9 +18,9 @@ import { useDragStore } from "@/contexts/dragContext";
 import usePreviousNodesData from "@/hooks/useRootNode";
 import type { CustomNodeData } from "@/types/node";
 import useStableMemo, { useStableArray } from "@/utils/stable-array";
-import { RefreshCw, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, RefreshCw, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Handle, Position } from "reactflow";
 import { useShallow } from "zustand/react/shallow";
 
@@ -40,6 +41,7 @@ export default function CustomNode({
 		onDelete,
 		onReset,
 	} = data;
+	const [isOpen, setOpen] = useState<boolean>(true);
 	const previousNodesData = usePreviousNodesData(id);
 	const fields = useDragStore(useShallow((state) => state.fields));
 	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
@@ -91,18 +93,40 @@ export default function CustomNode({
 							<p className="text-sm text-muted-foreground">{description}</p>
 						</div>
 						<div className="space-y-2 ">
-							<Subtle className="w-full border-b py-2">Config</Subtle>
-							{input?.inputField && input?.inputSchema ? (
-								<FormBuilder.Provider
-									key={`form-${input.title}`}
-									formName={`form-${input.title}`}
-									schema={input.inputSchema}
+							{type !== "input" && type !== "output" && (
+								<button
+									type="button"
+									onClick={() => setOpen((prev) => !prev)}
+									className="w-full group/child border-b py-1 flex justify-between"
 								>
-									<FormBuilder.Build
-										formFields={input.inputField}
-										schema={input.inputSchema}
-									/>
-								</FormBuilder.Provider>
+									<Badge>Config</Badge>
+									<button
+										type="button"
+										className="m-0.5 size-4 group-hover/child:bg-zinc-100"
+									>
+										{isOpen ? (
+											<ChevronUp className="size-4" />
+										) : (
+											<ChevronDown className="size-4" />
+										)}
+									</button>
+								</button>
+							)}
+							{isOpen ? (
+								<>
+									{input?.inputField && input?.inputSchema ? (
+										<FormBuilder.Provider
+											key={`form-${input.title}`}
+											formName={`form-${input.title}`}
+											schema={input.inputSchema}
+										>
+											<FormBuilder.Build
+												formFields={input.inputField}
+												schema={input.inputSchema}
+											/>
+										</FormBuilder.Provider>
+									) : null}
+								</>
 							) : null}
 						</div>
 						{type === "condition" && (

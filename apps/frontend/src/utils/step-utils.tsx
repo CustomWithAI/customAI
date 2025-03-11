@@ -1,9 +1,11 @@
+import { presetList } from "@/configs/preset";
 import type { Pipeline } from "@/types/request/requestTrainingPreset";
 
 export const getStep = (
 	method: "prev" | "next",
 	current: string | undefined,
 	steps: Pipeline["steps"] | undefined,
+	zeroIndexCallback: () => void,
 ): string => {
 	const currentIndex = steps?.find((step) => step.name === current)?.index;
 	if (currentIndex === undefined || steps === undefined) {
@@ -12,6 +14,7 @@ export const getStep = (
 	switch (method) {
 		case "prev": {
 			if (currentIndex === 0) {
+				zeroIndexCallback();
 				return "preset";
 			}
 			const prevName = steps?.find(

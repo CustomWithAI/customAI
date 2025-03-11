@@ -1,14 +1,22 @@
 import { Content } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
+import { presetList } from "@/configs/preset";
+import { useDragStore } from "@/contexts/dragContext";
 import { TableAugmentationSection } from "@/features/augmentation/section/table";
 import { VisualAugmentationSection } from "@/features/augmentation/section/visual";
+import {
+	useCreateAugmentation,
+	useUpdateAugmentation,
+} from "@/hooks/mutations/augmentation-api";
 import { useUpdateTraining } from "@/hooks/mutations/training-api";
 import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { decodeBase64, encodeBase64 } from "@/libs/base64";
 import { cn } from "@/libs/utils";
+import { metadataToArray } from "@/utils/formatMetadata";
 import { getStep } from "@/utils/step-utils";
+import { formatDate } from "@/utils/to-datetime";
 import { motion } from "framer-motion";
 import { useCallback } from "react";
 
@@ -28,8 +36,116 @@ export const AugmentationPage = () => {
 	);
 
 	const { mutateAsync: updateTraining } = useUpdateTraining();
+	const { mutateAsync: createAugmentation } = useCreateAugmentation();
+	const { mutateAsync: updateAugmentation } = useUpdateAugmentation();
 
-	const handleSubmit = useCallback(() => {}, []);
+	const fields = useDragStore((state) => state.fields);
+	const onSet = useDragStore((state) => state.onSet);
+	const onReset = useDragStore((state) => state.onReset);
+
+	const handleSubmit = useCallback(async () => {
+		const json = fields.reduce(
+			(acc, field) => {
+				if (!field.type) {
+					return acc;
+				}
+				acc[field.type] = metadataToArray(field.metadata);
+				return acc;
+			},
+			{} as Record<string, any>,
+		);
+		const priority = Object.keys(json);
+		const preProcessFn = training?.data.augmentation
+			? updateAugmentation
+			: createAugmentation;
+		await preProcessFn(
+			{
+				data: { ...json, priority },
+				name: `${training?.data.workflow.name}-${formatDate()}`,
+				id: training?.data.augmentation?.id || "",
+			},
+			{
+				onError: (error) => {
+					toast({
+						title: `Augmentation failed to create: ${error.message}`,
+						variant: "destructive",
+					});
+				},
+				onSuccess: async (data) => {
+					if (!data?.data.id) {
+						toast({
+							title: "Augmentation is not existed",
+							variant: "destructive",
+						});
+						return;
+					}
+					if (!training?.data.pipeline) {
+						toast({
+							title: "trainings is not existed",
+							variant: "destructive",
+						});
+						return;
+					}
+					await updateTraining(
+						{
+							workflowId: decodeBase64(workflowId),
+							trainingId: decodeBase64(trainingId),
+							imagePreprocessingId: data.data.id,
+							pipeline: {
+								current: getStep(
+									"next",
+									training?.data.pipeline.current,
+									training?.data.pipeline.steps,
+									() => onSet(presetList),
+								),
+								steps: training?.data.pipeline.steps,
+							},
+						},
+						{
+							onSuccess: () => {
+								onReset();
+								setQueryParam({
+									params: {
+										step: encodeBase64(
+											getStep(
+												"next",
+												training?.data.pipeline.current,
+												training?.data.pipeline.steps,
+												() => onSet(presetList),
+											),
+										),
+										id: workflowId,
+										trainings: trainingId,
+									},
+									resetParams: true,
+								});
+							},
+							onError: (error) => {
+								toast({
+									title: `Augmentation failed to create: ${error.message}`,
+									variant: "destructive",
+								});
+							},
+						},
+					);
+				},
+			},
+		);
+	}, [
+		fields,
+		createAugmentation,
+		onReset,
+		onSet,
+		setQueryParam,
+		toast,
+		updateAugmentation,
+		training?.data.augmentation,
+		training?.data.pipeline,
+		training?.data.workflow,
+		workflowId,
+		updateTraining,
+		trainingId,
+	]);
 
 	const handlePrevious = useCallback(async () => {
 		if (!training?.data.pipeline.steps) return;
@@ -42,6 +158,7 @@ export const AugmentationPage = () => {
 						"prev",
 						training?.data.pipeline.current,
 						training?.data.pipeline.steps,
+						() => onSet(presetList),
 					),
 					steps: training?.data.pipeline.steps,
 				},
@@ -55,6 +172,7 @@ export const AugmentationPage = () => {
 									"prev",
 									training?.data.pipeline.current,
 									training?.data.pipeline.steps,
+									() => onSet(presetList),
 								),
 							),
 							id: workflowId,
@@ -69,6 +187,7 @@ export const AugmentationPage = () => {
 		setQueryParam,
 		workflowId,
 		trainingId,
+		onSet,
 		updateTraining,
 		training?.data.pipeline,
 	]);

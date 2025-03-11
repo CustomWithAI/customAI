@@ -7,15 +7,18 @@ import { DialogClose } from "@/components/ui/dialog";
 import EnhanceImage from "@/components/ui/enhanceImage";
 import { useDragStore } from "@/contexts/dragContext";
 import type { DragColumn, Metadata } from "@/stores/dragStore";
+import useStableMemo, { useStableArray } from "@/utils/stable-array";
 import {
 	type KeyboardEvent,
+	type ReactNode,
+	memo,
 	useCallback,
 	useDeferredValue,
-	useMemo,
 	useState,
 } from "react";
-import { FixedSizeList as List } from "react-window";
+import { FixedSizeList as List, areEqual } from "react-window";
 import type { z } from "zod";
+import { Row } from "./feature-row";
 
 export const AddFeatureSection = ({
 	image,
@@ -36,12 +39,9 @@ export const AddFeatureSection = ({
 	const [selected, setSelected] = useState<DragColumn[]>([]);
 	const deferredSelected = useDeferredValue(selected);
 
-	const input = useMemo(() => {
+	const input = useStableMemo(() => {
 		return node(fields, onUpdateMetadata);
 	}, [fields, onUpdateMetadata, node]);
-	if (!image) {
-		return;
-	}
 
 	const toggleSelection = useCallback((element: DragColumn) => {
 		setSelected((prev) =>
@@ -60,36 +60,9 @@ export const AddFeatureSection = ({
 		[toggleSelection],
 	);
 
-	const Row = ({
-		index,
-		style,
-	}: { index: number; style: React.CSSProperties }) => {
-		const element = input[index];
-		const isChecked = deferredSelected.some((item) => item.id === element.id);
-
-		return (
-			<div
-				key={element.id}
-				style={style}
-				onKeyDown={(e) => handleKeyDown(e, element)}
-				onClick={() => toggleSelection(element)}
-				className="flex gap-x-8 hover:cursor-pointer items-center hover:bg-zinc-50 pl-4"
-			>
-				<Checkbox checked={isChecked} />
-				<div className="relative aspect-square items-center flex justify-center size-32">
-					<EnhanceImage
-						imagePath={image}
-						filters={element.previewImg || []}
-						className="h-full w-full object-contain rounded-md"
-					/>
-				</div>
-				<div>
-					<Content>{element.title}</Content>
-					<Subtle>{element.description}</Subtle>
-				</div>
-			</div>
-		);
-	};
+	if (!image) {
+		return;
+	}
 
 	return (
 		<>
@@ -118,8 +91,30 @@ export const AddFeatureSection = ({
 				</div>
 			)}
 			<div className="relative overflow-scroll max-h-[90%] flex flex-col gap-4">
-				<List height={400} itemCount={input.length} itemSize={100} width="100%">
-					{Row}
+				<List
+					height={400}
+					itemCount={input.length}
+					itemData={input}
+					itemSize={100}
+					width="100%"
+				>
+					{({ data, index, style }) => {
+						const element = data[index];
+						const isChecked = deferredSelected.some(
+							(item) => item.id === element.id,
+						);
+						return (
+							<Row
+								key={element.id}
+								image={image}
+								isChecked={isChecked}
+								handleKeyDown={handleKeyDown}
+								toggleSelection={toggleSelection}
+								style={style}
+								element={element}
+							/>
+						);
+					}}
 				</List>
 			</div>
 			<div className="mt-6">

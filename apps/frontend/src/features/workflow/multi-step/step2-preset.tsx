@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button";
 import { useDragStore } from "@/contexts/dragContext";
 import { ListBox } from "@/features/image-preprocessing/components/listBox";
 import { PresetBox } from "@/features/image-preprocessing/components/presetBox";
-import { useCreateTraining } from "@/hooks/mutations/training-api";
+import {
+	useCreateTraining,
+	useUpdateTraining,
+} from "@/hooks/mutations/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { encodeBase64 } from "@/libs/base64";
@@ -15,16 +18,20 @@ import {
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { BrainCircuit, Ham, Layers } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 export const Step3Page = () => {
 	const [selected, setSelected] = useState<"full" | "minimum" | "raw">();
 	const { getQueryParam, setQueryParam } = useQueryParam({ name: "id" });
 	const { toast } = useToast();
-	const workflowId = decodeBase64(getQueryParam()) || "";
+	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
+
 	const { mutateAsync: createTraining, isPending: createPending } =
 		useCreateTraining();
+	const { mutateAsync: updateTraining, isPending: updatePending } =
+		useUpdateTraining();
+
 	const fields = useDragStore(useShallow((state) => state.fields));
 	const onDrag = useDragStore((state) => state.onDrag);
 	const onReset = useDragStore((state) => state.onReset);
@@ -63,7 +70,7 @@ export const Step3Page = () => {
 		}
 		await createTraining(
 			{
-				workflowId,
+				workflowId: decodeBase64(workflowId),
 				pipeline: {
 					current,
 					steps,
@@ -71,15 +78,15 @@ export const Step3Page = () => {
 			},
 			{
 				onSuccess: (ctx) => {
-					onReset();
 					setQueryParam({
 						params: {
 							step: encodeBase64("dataset"),
-							id: encodeBase64(workflowId),
+							id: workflowId,
 							trainings: encodeBase64(ctx?.data.id || ""),
 						},
 						resetParams: true,
 					});
+					onReset();
 				},
 				onError: (error) => {
 					toast({ title: error.message, variant: "destructive" });

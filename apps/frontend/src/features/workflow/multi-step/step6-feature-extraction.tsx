@@ -1,5 +1,7 @@
 import { Content } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
+import { presetList } from "@/configs/preset";
+import { useDragStore } from "@/contexts/dragContext";
 import { TableAugmentationSection } from "@/features/augmentation/section/table";
 import { VisualAugmentationSection } from "@/features/augmentation/section/visual";
 import { useUpdateTraining } from "@/hooks/mutations/training-api";
@@ -30,6 +32,7 @@ export const FeaturePage = () => {
 	const { mutateAsync: updateTraining } = useUpdateTraining();
 
 	const handleSubmit = useCallback(() => {}, []);
+	const onSet = useDragStore((state) => state.onSet);
 
 	const handlePrevious = useCallback(async () => {
 		if (!training?.data.pipeline.steps) return;
@@ -42,6 +45,7 @@ export const FeaturePage = () => {
 						"prev",
 						training?.data.pipeline.current,
 						training?.data.pipeline.steps,
+						() => onSet(presetList),
 					),
 					steps: training?.data.pipeline.steps,
 				},
@@ -55,6 +59,7 @@ export const FeaturePage = () => {
 									"prev",
 									training?.data.pipeline.current,
 									training?.data.pipeline.steps,
+									() => onSet(presetList),
 								),
 							),
 							id: workflowId,
@@ -69,6 +74,7 @@ export const FeaturePage = () => {
 		setQueryParam,
 		workflowId,
 		trainingId,
+		onSet,
 		updateTraining,
 		training?.data.pipeline,
 	]);

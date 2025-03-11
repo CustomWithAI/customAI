@@ -1,5 +1,6 @@
 import { Content } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
+import { presetList } from "@/configs/preset";
 import { useDragStore } from "@/contexts/dragContext";
 import { TablePreprocessingSection } from "@/features/image-preprocessing/sections/table";
 import { VisualPreprocessingSection } from "@/features/image-preprocessing/sections/visual";
@@ -42,6 +43,7 @@ export const ImagePreprocessingPage = () => {
 
 	const fields = useDragStore(useShallow((state) => state.fields));
 	const onReset = useDragStore((state) => state.onReset);
+	const onSet = useDragStore((state) => state.onSet);
 
 	const handleSubmit = useCallback(async () => {
 		const json = fields.reduce(
@@ -96,6 +98,7 @@ export const ImagePreprocessingPage = () => {
 									"next",
 									training?.data.pipeline.current,
 									training?.data.pipeline.steps,
+									() => onSet(presetList),
 								),
 								steps: training?.data.pipeline.steps,
 							},
@@ -110,12 +113,19 @@ export const ImagePreprocessingPage = () => {
 												"next",
 												training?.data.pipeline.current,
 												training?.data.pipeline.steps,
+												() => onSet(presetList),
 											),
 										),
 										id: workflowId,
 										trainings: trainingId,
 									},
 									resetParams: true,
+								});
+							},
+							onError: (error) => {
+								toast({
+									title: `Image-processing failed to create: ${error.message}`,
+									variant: "destructive",
 								});
 							},
 						},
@@ -133,6 +143,7 @@ export const ImagePreprocessingPage = () => {
 		training?.data.imagePreprocessing,
 		updateTraining,
 		toast,
+		onSet,
 		onReset,
 		training?.data.workflow,
 		createPreprocess,
@@ -146,6 +157,7 @@ export const ImagePreprocessingPage = () => {
 						"prev",
 						training?.data.pipeline.current,
 						training?.data.pipeline.steps,
+						() => onSet(presetList),
 					),
 				),
 				id: workflowId,
@@ -153,7 +165,7 @@ export const ImagePreprocessingPage = () => {
 			},
 			resetParams: true,
 		});
-	}, [setQueryParam, workflowId, trainingId, training?.data.pipeline]);
+	}, [setQueryParam, workflowId, trainingId, onSet, training?.data.pipeline]);
 
 	return (
 		<>
