@@ -13,36 +13,23 @@ type SelectiveBarProps = {
 export const SelectiveBar = memo(
 	({ total, current, title, icon, type = "dot" }: SelectiveBarProps) => (
 		<div className="w-full ml-8">
-			<div className="flex gap-x-3 mb-2">
-				<AnimatePresence initial={false}>
-					{Array.from({ length: Math.max(0, current) }).map((_, index) => (
-						<motion.div
-							key={`selective-previous-${index}`}
-							layoutId={`dot-${index}`}
-							transition={{ type: "spring", stiffness: 300, damping: 20 }}
-							className="bg-[#0F172A] w-1 h-1 rounded-full"
-						/>
-					))}
+			<motion.div layout className="flex items-center gap-x-3 mb-2">
+				{Array.from({ length: total }).map((_, index) => (
 					<motion.div
-						key="current-step"
-						layoutId="current-step"
+						key={index}
+						layoutId={`dot-${index}`}
 						transition={{ type: "spring", stiffness: 300, damping: 20 }}
-						layout="size"
-						className="bg-[#658EE2] h-1 rounded-full"
-						style={{ width: "2.25rem" }}
+						className={`h-1 rounded-full ${
+							index < current
+								? "bg-[#0F172A] w-1"
+								: index === current
+									? "bg-[#658EE2]"
+									: "bg-[#CBCBCB] w-1"
+						}`}
+						style={{ width: index === current ? "2.25rem" : "0.25rem" }}
 					/>
-					{Array.from({ length: Math.max(0, total - current - 1) }).map(
-						(_, index) => (
-							<motion.div
-								key={`selective-next-${index}`}
-								layoutId={`dot-${current + index + 1}`}
-								transition={{ type: "spring", stiffness: 300, damping: 20 }}
-								className="bg-[#CBCBCB] w-1 h-1 rounded-full"
-							/>
-						),
-					)}
-				</AnimatePresence>
-			</div>
+				))}
+			</motion.div>
 			<Subtle className="font-medium">
 				Step {current} of {total}
 			</Subtle>

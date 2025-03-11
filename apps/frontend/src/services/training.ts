@@ -4,6 +4,7 @@ import type {
 	ChangeableTrainingModel,
 	TrainingModel,
 } from "@/types/response/training";
+import type { AxiosError } from "axios";
 
 export const trainingService = {
 	createTraining: async ({

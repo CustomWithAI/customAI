@@ -48,7 +48,13 @@ export default function Page() {
 				</Subtle>
 				<div className="grid grid-cols-4 gap-4">
 					{workflows?.data.data.map((workflow) => {
-						return <WorkflowCard key={workflow.id} {...workflow} />;
+						return (
+							<WorkflowCard
+								href={`workflow/${workflow.id}`}
+								key={workflow.id}
+								{...workflow}
+							/>
+						);
 					})}
 				</div>
 			</ViewList.Provider>

@@ -8,7 +8,7 @@ import { EditFeature } from "@/components/specific/edit-feature";
 import { Content, ContentHeader, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import EnhanceImage from "@/components/ui/enhanceImage";
-import { node } from "@/configs/image-preprocessing";
+import { node } from "@/configs/feat-extract";
 import { useDragStore } from "@/contexts/dragContext";
 import { VisualCard } from "@/features/workflow/components/visual-card";
 import { useGetImages } from "@/hooks/queries/dataset-api";
@@ -25,7 +25,7 @@ import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
-export const TablePreprocessingSection = () => {
+export const TableFeatureExSection = () => {
 	const [cursor, setCursor] = useState<string | null>(null);
 	const [count, setCount] = useState<number>(1);
 	const { getQueryParam } = useQueryParam();
@@ -89,10 +89,8 @@ export const TablePreprocessingSection = () => {
 								<div className="flex space-x-3">
 									<ImageIcon className="mt-1" />
 									<div>
-										<ContentHeader>Pre-processing Options</ContentHeader>
-										<Subtle>
-											apply pre-processing transformation to those images
-										</Subtle>
+										<ContentHeader>Feature Extraction Options</ContentHeader>
+										<Subtle>apply feature extraction to those images</Subtle>
 									</div>
 								</div>
 							),
@@ -108,7 +106,7 @@ export const TablePreprocessingSection = () => {
 									variant="outline"
 									className="mt-4 text-[#0063E8] border-[#0063E8] hover:text-[#004de8] active:scale-95 focus:scale-100 transition-transform duration-150 ease-in-out"
 								>
-									Add Image Preprocessing
+									Add Feature Extraction
 								</Button>
 							),
 						}}

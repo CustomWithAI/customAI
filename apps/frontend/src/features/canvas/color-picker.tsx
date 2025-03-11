@@ -31,7 +31,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
 			<PopoverTrigger asChild>
 				<Button
 					variant="outline"
-					className="w-8 h-8 p-0 ml-1"
+					className="w-8 h-8 p-0 mt-0 ml-1"
 					style={{ backgroundColor: value }}
 				>
 					<span className="sr-only">Pick a color</span>

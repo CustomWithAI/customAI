@@ -54,8 +54,8 @@ export function EditLabelDialog({
 							onChange={(e) => setName(e.target.value)}
 						/>
 					</div>
-					<div className="space-y-2">
-						<Label className="-mt-3">Color</Label>
+					<div className="space-y-4 flex align-middle">
+						<Label className="mt-5">Color</Label>
 						<ColorPicker value={color} onChange={setColor} />
 					</div>
 				</div>

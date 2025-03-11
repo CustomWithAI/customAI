@@ -1,16 +1,23 @@
 "use client";
 import { AppNavbar } from "@/components/layout/appNavbar";
 import { Menubar } from "@/components/ui/menubar";
+import { useGetWorkflowById } from "@/hooks/queries/workflow-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { InsightPage } from "./_container/insight";
 import { MainWorkflowPage } from "./_container/main";
 import { SettingPage } from "./_container/setting";
 import { VersionPage } from "./_container/version";
 
-export default function Page() {
+export default function Page({ params: { id } }: { params: { id: string } }) {
 	const { compareQueryParam, setQueryParam } = useQueryParam({ name: "tab" });
+
+	const { data: workflow } = useGetWorkflowById(id);
 	return (
-		<AppNavbar activeTab="Home" PageTitle="" disabledTab={undefined}>
+		<AppNavbar
+			activeTab="Home"
+			PageTitle={workflow?.data.name || ""}
+			disabledTab={undefined}
+		>
 			<div className="max-w-screen no-scroll mb-4 overflow-x-scroll border-b">
 				<Menubar.List>
 					<Menubar.Item
@@ -71,7 +78,7 @@ export default function Page() {
 				</Menubar.List>
 			</div>
 			{compareQueryParam({ value: "overview", allowNull: true }) ? (
-				<MainWorkflowPage />
+				<MainWorkflowPage data={workflow?.data} />
 			) : null}
 			{compareQueryParam({ value: "versions" }) ? <VersionPage /> : null}
 			{compareQueryParam({ value: "insights" }) ? <InsightPage /> : null}

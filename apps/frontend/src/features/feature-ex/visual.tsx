@@ -1,5 +1,5 @@
 import { Content } from "@/components/typography/text";
-import { node } from "@/configs/augmentation";
+import { node } from "@/configs/feat-extract";
 import CustomNode from "@/features/blueprint/node-template/preprocessing";
 import { VisualSection } from "@/features/blueprint/visual-section";
 import { useGetImages } from "@/hooks/queries/dataset-api";
@@ -9,7 +9,7 @@ import { decodeBase64 } from "@/libs/base64";
 import { jsonToParams } from "@/utils/Json-to-params";
 import { Suspense } from "react";
 
-export const VisualAugmentationSection = () => {
+export const VisualFeatureExSection = () => {
 	const { getQueryParam } = useQueryParam();
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
 

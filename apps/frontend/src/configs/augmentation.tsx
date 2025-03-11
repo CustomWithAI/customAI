@@ -9,7 +9,7 @@ import {
 	IconTransform,
 } from "@tabler/icons-react";
 import { INTER_LINEAR, Size } from "@techstark/opencv-js";
-import { Crop, Droplet, Scaling } from "lucide-react";
+import { AudioWaveform, Crop, Droplet, Scaling } from "lucide-react";
 import { z } from "zod";
 
 export const node = (
@@ -1781,6 +1781,426 @@ export const node = (
 			inputSchema: z.object({
 				probability: z.number().positive(),
 				config: z.number(),
+			}),
+		},
+		{
+			type: "gaussian_noise",
+			title: "Gaussian Noise",
+			description: "add gaussian noise to image.",
+			icon: <AudioWaveform />,
+			id: "gaussian_noise-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				config: {
+					type: "Object",
+					value: {
+						mean: {
+							type: "Number",
+							value: 0,
+						},
+						variance: {
+							type: "Number",
+							value: 0,
+						},
+					},
+				},
+			},
+			previewImg: [
+				{
+					type: "gaussian_noise",
+					params: [
+						Number(
+							(findById(fields, "gaussian_noise-1") as any)?.metadata?.config
+								?.value?.mean?.value,
+						) || 1.5,
+						Number(
+							(findById(fields, "gaussian_noise-1") as any)?.metadata?.config
+								?.value?.variance?.value,
+						) || 0.1,
+					],
+				},
+			],
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "gaussian_noise-form",
+						label: "Probability",
+						key: "gaussian_noise-prob-1",
+						name: "gaussian_noise",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "gaussian_noise-1")?.metadata
+							?.probability?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "gaussian_noise-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "gaussian_noise-form",
+						label: "Mean",
+						key: "gaussian_noise-mean-1",
+						name: "gaussian_noise",
+						required: true,
+					},
+					config: {
+						setValue: (findById(fields, "gaussian_noise-1") as any)?.metadata
+							?.config?.value?.mean?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "gaussian_noise-1",
+								metadata: {
+									config: {
+										type: "Object",
+										value: {
+											mean: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "gaussian_noise-form",
+						label: "Variance",
+						key: "gaussian_noise-variance-1",
+						name: "gaussian_noise",
+						required: true,
+					},
+					config: {
+						setValue: (findById(fields, "gaussian_noise-1") as any)?.metadata
+							?.config?.value?.variance?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "gaussian_noise-1",
+								metadata: {
+									config: {
+										type: "Object",
+										value: {
+											variance: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				config: z.object({
+					mean: z.number().positive(),
+					variance: z.number().positive(),
+				}),
+			}),
+		},
+		{
+			type: "salt_pepper_noise",
+			title: "Salt Pepper Noise",
+			description: "add salt vs pepper noise to image.",
+			icon: <AudioWaveform />,
+			id: "salt_pepper_noise-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				config: {
+					type: "Object",
+					value: {
+						amount: {
+							type: "Number",
+							value: 0,
+						},
+						salt_pepper_ratio: {
+							type: "Number",
+							value: 0,
+						},
+					},
+				},
+			},
+			previewImg: [
+				{
+					type: "salt_pepper_noise",
+					params: [
+						Number(
+							(findById(fields, "salt_pepper_noise-1") as any)?.metadata?.config
+								?.value?.amount?.value,
+						) || 0.05,
+						Number(
+							(findById(fields, "salt_pepper_noise-1") as any)?.metadata?.config
+								?.value?.salt_pepper_ratio?.value,
+						) || 0.5,
+					],
+				},
+			],
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "salt_pepper_noise-form",
+						label: "Probability",
+						key: "salt_pepper_noise-prob-1",
+						name: "salt_pepper_noise",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "salt_pepper_noise-1")?.metadata
+							?.probability?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "salt_pepper_noise-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "salt_pepper_noise-form",
+						label: "Amount",
+						key: "salt_pepper_noise-amount-1",
+						name: "salt_pepper_noise",
+						required: true,
+					},
+					config: {
+						setValue: (findById(fields, "salt_pepper_noise-1") as any)?.metadata
+							?.config?.value?.amount?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "salt_pepper_noise-1",
+								metadata: {
+									config: {
+										type: "Object",
+										value: {
+											amount: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "salt_pepper_noise-form",
+						label: "Salt Vs Pepper Ratio",
+						key: "salt_pepper_noise-salt_pepper_noise_ratio-1",
+						name: "salt_pepper_noise",
+						required: true,
+					},
+					config: {
+						setValue: (findById(fields, "salt_pepper_noise-1") as any)?.metadata
+							?.config?.value?.salt_pepper_ratio?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "salt_pepper_noise-1",
+								metadata: {
+									config: {
+										type: "Object",
+										value: {
+											salt_pepper_ratio: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				config: z.object({
+					amount: z.number().positive(),
+					salt_pepper_ratio: z.number().positive(),
+				}),
+			}),
+		},
+		{
+			type: "elastic_distortion",
+			title: "Gaussian Noise",
+			description: "add gaussian noise to image.",
+			icon: <AudioWaveform />,
+			id: "elastic_distortion-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				config: {
+					type: "Object",
+					value: {
+						alpha: {
+							type: "Number",
+							value: 0,
+						},
+						sigma: {
+							type: "Number",
+							value: 0,
+						},
+					},
+				},
+			},
+			previewImg: [
+				{
+					type: "elastic_distortion",
+					params: [
+						Number(
+							(findById(fields, "elastic_distortion-1") as any)?.metadata
+								?.config?.value?.alpha?.value,
+						) || 0.05,
+						Number(
+							(findById(fields, "elastic_distortion-1") as any)?.metadata
+								?.config?.value?.sigma?.value,
+						) || 0.5,
+					],
+				},
+			],
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "elastic_distortion-form",
+						label: "Probability",
+						key: "elastic_distortion-prob-1",
+						name: "elastic_distortion",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "elastic_distortion-1")?.metadata
+							?.probability?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "elastic_distortion-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "elastic_distortion-form",
+						label: "Amount",
+						key: "elastic_distortion-alpha-1",
+						name: "elastic_distortion",
+						required: true,
+					},
+					config: {
+						setValue: (findById(fields, "elastic_distortion-1") as any)
+							?.metadata?.config?.value?.amount?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "elastic_distortion-1",
+								metadata: {
+									config: {
+										type: "Object",
+										value: {
+											alpha: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "elastic_distortion-form",
+						label: "Salt Vs Pepper Ratio",
+						key: "elastic_distortion-sigma-1",
+						name: "elastic_distortion",
+						required: true,
+					},
+					config: {
+						setValue: (findById(fields, "elastic_distortion-1") as any)
+							?.metadata?.config?.value?.salt_pepper_ratio?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "elastic_distortion-1",
+								metadata: {
+									config: {
+										type: "Object",
+										value: {
+											sigma: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				config: z.object({
+					alpha: z.number().positive(),
+					sigma: z.number().positive(),
+				}),
 			}),
 		},
 	];

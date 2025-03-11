@@ -2,6 +2,7 @@ import authService from "@/services/auth";
 import { trainingService } from "@/services/training";
 import { workflowService } from "@/services/workflow";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 
 export const useCreateTraining = () => {
 	const queryClient = useQueryClient();

@@ -20,45 +20,105 @@ export const node = (
 ): DragColumn[] => {
 	return [
 		{
-			type: "grayscale",
-			title: "Gray scale",
+			type: "orb",
+			title: "Oriented FAST and Rotated BRIEF",
 			description: "Convert image to grayscale",
 			icon: <Droplet />,
-			id: "grayscale-1",
+			id: "orb-1",
 			metadata: {
-				probability: {
+				n_keypoints: {
 					type: "Number",
 					value: 0,
 				},
+				scale_factor: {
+					type: "Number",
+					value: 1,
+				},
+				n_level: {
+					type: "Number",
+					value: 1,
+				},
 			},
+			previewImg: [
+				{
+					type: "orb",
+					params: [
+						Number(findById(fields, "orb-1")?.metadata?.n_keypoints?.value) ||
+							100,
+						Number(findById(fields, "orb-1")?.metadata?.scale_factor?.value) ||
+							1,
+						Number(findById(fields, "orb-1")?.metadata?.n_level?.value) || 1,
+					],
+				},
+			],
 			inputField: [
 				{
-					template: "sliderInput",
+					template: "number",
 					element: {
-						testDataId: "grayscale-form",
-						label: "Probability",
-						key: "grayscale-1",
-						name: "grayscale",
-						required: true,
+						testDataId: "orb-form",
+						label: "N Keypoints",
+						key: "orb-n-1",
+						name: "orb",
 					},
 					config: {
-						setValue: findById(fields, "grayscale-1")?.metadata?.probability
-							?.value as boolean,
+						setValue: findById(fields, "orb-1")?.metadata?.n_keypoints?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
-								id: "grayscale-1",
+								id: "orb-1",
 								metadata: {
-									probability: {
+									n_keypoints: {
 										type: "Number",
 										value: value as number,
 									},
 								},
 							});
 						},
-						options: {
-							min: 0,
-							max: 1,
-							step: 0.1,
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "orb-form",
+						label: "Scale Factor",
+						key: "orb-scale-1",
+						name: "orb",
+					},
+					config: {
+						setValue: findById(fields, "orb-1")?.metadata?.scale_factor?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "orb-1",
+								metadata: {
+									scale_factor: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "orb-form",
+						label: "N Level",
+						key: "orb-1",
+						name: "orb",
+					},
+					config: {
+						setValue: findById(fields, "orb-1")?.metadata?.n_level
+							?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "orb-1",
+								metadata: {
+									n_level: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
 						},
 					},
 				},

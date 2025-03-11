@@ -1,4 +1,9 @@
 "use client";
+import {
+	DialogBuilder,
+	type DialogBuilderRef,
+} from "@/components/builder/dialog";
+import { NumberInput } from "@/components/builder/form-utils";
 import { Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { useDragStore } from "@/contexts/dragContext";
@@ -17,14 +22,21 @@ import {
 	SortableContext,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import type { AxiosError } from "axios";
 import { BrainCircuit, Ham, Layers } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 export const Step3Page = () => {
 	const [selected, setSelected] = useState<"full" | "minimum" | "raw">();
+	const [version, setVersion] = useState<number | string | undefined>(
+		undefined,
+	);
+
+	const versionRef = useRef<DialogBuilderRef>(null);
 	const { getQueryParam, setQueryParam } = useQueryParam({ name: "id" });
 	const { toast } = useToast();
+
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
 
 	const { mutateAsync: createTraining, isPending: createPending } =
@@ -52,8 +64,8 @@ export const Step3Page = () => {
 	const handleSubmit = useCallback(async () => {
 		const { current, steps } = fields.reduce(
 			(acc, item, index) => {
-				if (item.metadata.check.value === true) {
-					acc.steps.push({ index, name: item.metadata.name.value as string });
+				if (item.metadata.check.value === true && item.metadata.name.value) {
+					acc.steps.push({ index, name: String(item.metadata.name.value) });
 					if (acc.current === null) {
 						acc.current = item.metadata.name.value as string;
 					}
@@ -68,9 +80,12 @@ export const Step3Page = () => {
 		if (current === null) {
 			return;
 		}
-		await createTraining(
+		const trainingFn = trainingId ? updateTraining : createTraining;
+		await trainingFn(
 			{
 				workflowId: decodeBase64(workflowId),
+				trainingId: decodeBase64(trainingId) || "",
+				...(version ? { version: Number(version) } : {}),
 				pipeline: {
 					current,
 					steps,
@@ -89,11 +104,31 @@ export const Step3Page = () => {
 					onReset();
 				},
 				onError: (error) => {
-					toast({ title: error.message, variant: "destructive" });
+					if (
+						(error as AxiosError<string>).response?.data ===
+						"Training version is required"
+					) {
+						versionRef.current?.open();
+						return;
+					}
+					toast({
+						title: (error as AxiosError<string>).response?.data.toString(),
+						variant: "destructive",
+					});
 				},
 			},
 		);
-	}, [setQueryParam, workflowId, onReset, fields, toast, createTraining]);
+	}, [
+		setQueryParam,
+		workflowId,
+		trainingId,
+		updateTraining,
+		onReset,
+		fields,
+		toast,
+		createTraining,
+		version,
+	]);
 
 	const handlePrevious = useCallback(() => {
 		setQueryParam({
@@ -172,20 +207,54 @@ export const Step3Page = () => {
 			</div>
 			<div className="flex justify-end w-full space-x-4 mt-6">
 				<Button
-					disabled={createPending}
+					disabled={createPending || updatePending}
 					onClick={handlePrevious}
 					variant="ghost"
 				>
 					Previous
 				</Button>
 				<Button
-					disabled={createPending}
+					disabled={createPending || updatePending}
 					onClick={async () => await handleSubmit()}
 					type="submit"
 				>
 					Next
 				</Button>
 			</div>
+			<DialogBuilder
+				ref={versionRef}
+				config={{
+					trigger: null,
+					className: undefined,
+					title: "Seem this training isn't your first version",
+					description:
+						"please define your current version to continue training",
+					body: (
+						<NumberInput
+							id="version"
+							className="w-full"
+							label="version"
+							number
+							placeholder="1.0.0"
+							onChange={(v) => setVersion(v)}
+							value={String(version)}
+						/>
+					),
+					footer: (
+						<div className="w-full">
+							<Button
+								type="submit"
+								onClick={async () => {
+									versionRef.current?.close();
+									await handleSubmit();
+								}}
+							>
+								Submit
+							</Button>
+						</div>
+					),
+				}}
+			/>
 		</>
 	);
 };

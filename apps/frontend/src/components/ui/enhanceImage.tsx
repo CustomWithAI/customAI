@@ -175,6 +175,16 @@ interface FilterElasticDistortion {
 	params?: [number, number]; // [alpha, sigma]
 }
 
+interface FilterHOG {
+	type: "hog";
+	params?: [number[], number[], number];
+}
+
+interface FilterORB {
+	type: "orb";
+	params?: [number, number, number];
+}
+
 interface FilterOpenCV<T extends keyof typeof import("@techstark/opencv-js")> {
 	type: "opencv";
 	method: T;
@@ -216,7 +226,9 @@ export type Filter =
 	| FilterGaussianNoise
 	| FilterSaltPepperNoise
 	| FilterRandomErasing
-	| FilterElasticDistortion;
+	| FilterElasticDistortion
+	| FilterHOG
+	| FilterORB;
 
 interface EnhanceImageProps {
 	imagePath: string;
@@ -988,6 +1000,125 @@ const EnhanceImage: React.FC<EnhanceImageProps> = memo(
 								mean.delete();
 								stddev.delete();
 								elasticDistortion.delete();
+								break;
+							}
+
+							case "hog": {
+								const [pixels_per_cell, cells_per_block, orientations] =
+									filter.params as [number[], number[], number];
+
+								const gradX = new cv.Mat();
+								const gradY = new cv.Mat();
+								cv.Sobel(
+									mat,
+									gradX,
+									cv.CV_32F,
+									1,
+									0,
+									3,
+									1,
+									0,
+									cv.BORDER_DEFAULT,
+								);
+								cv.Sobel(
+									mat,
+									gradY,
+									cv.CV_32F,
+									0,
+									1,
+									3,
+									1,
+									0,
+									cv.BORDER_DEFAULT,
+								);
+
+								const magnitude = new cv.Mat();
+								const angle = new cv.Mat();
+								cv.cartToPolar(gradX, gradY, magnitude, angle, true);
+
+								const cellSize = pixels_per_cell;
+								const blockSize = cells_per_block;
+
+								const histograms: cv.Mat[] = [];
+
+								for (let y = 0; y < mat.rows - cellSize[1]; y += cellSize[1]) {
+									for (
+										let x = 0;
+										x < mat.cols - cellSize[0];
+										x += cellSize[0]
+									) {
+										const cellMagnitude = magnitude.roi(
+											new cv.Rect(x, y, cellSize[0], cellSize[1]),
+										);
+										const cellAngle = angle.roi(
+											new cv.Rect(x, y, cellSize[0], cellSize[1]),
+										);
+
+										const hist = new cv.Mat();
+										const range = [0, 180];
+
+										const matVector = new cv.MatVector();
+										matVector.push_back(cellAngle);
+
+										cv.calcHist(
+											matVector,
+											[0],
+											new cv.Mat(),
+											hist,
+											[orientations],
+											range,
+										);
+
+										histograms.push(hist);
+
+										cellMagnitude.delete();
+										cellAngle.delete();
+									}
+								}
+
+								const histVector = new cv.MatVector();
+								for (const hist of histograms) {
+									histVector.push_back(hist);
+								}
+
+								const mask = new cv.Mat();
+								const histSize = [orientations];
+								const ranges = [0, 180];
+								const histResult = new cv.Mat();
+
+								const matVector = new cv.MatVector();
+								matVector.push_back(mat);
+
+								cv.calcHist(matVector, [0], mask, histResult, histSize, ranges);
+
+								console.log(histResult);
+
+								gradX.delete();
+								gradY.delete();
+								magnitude.delete();
+								angle.delete();
+
+								break;
+							}
+
+							case "orb": {
+								const [n_keypoints, scale_factor, n_level] = filter.params as [
+									number,
+									number,
+									number,
+								];
+
+								const orb = new cv.ORB(n_keypoints, scale_factor, n_level);
+								const keypoints = new cv.KeyPointVector();
+								const descriptors = new cv.Mat();
+
+								orb.detectAndCompute(mat, new cv.Mat(), keypoints, descriptors);
+
+								const imgWithKeypoints = new cv.Mat();
+								cv.drawKeypoints(mat, keypoints, imgWithKeypoints);
+
+								mat.delete();
+								mat = imgWithKeypoints;
 								break;
 							}
 						}

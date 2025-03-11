@@ -2,8 +2,8 @@ import { Content } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { presetList } from "@/configs/preset";
 import { useDragStore } from "@/contexts/dragContext";
-import { TableAugmentationSection } from "@/features/augmentation/section/table";
-import { VisualAugmentationSection } from "@/features/augmentation/section/visual";
+import { TableFeatureExSection } from "@/features/feature-ex/table";
+import { VisualFeatureExSection } from "@/features/feature-ex/visual";
 import { useUpdateTraining } from "@/hooks/mutations/training-api";
 import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
@@ -121,10 +121,10 @@ export const FeaturePage = () => {
 				</button>
 			</div>
 			{compareQueryParam({ value: "table", allowNull: true }) ? (
-				<TableAugmentationSection />
+				<TableFeatureExSection />
 			) : null}
 			{compareQueryParam({ value: "blueprint" }) ? (
-				<VisualAugmentationSection />
+				<VisualFeatureExSection />
 			) : null}
 			<div className="flex justify-end w-full space-x-4 mt-6">
 				<Button
