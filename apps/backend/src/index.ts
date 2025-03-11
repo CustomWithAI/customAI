@@ -1,3 +1,4 @@
+import { enumController } from "@/applications/controllers/enumController";
 import { augmentation } from "@/applications/controllers/augmentationController";
 import { dataset } from "@/applications/controllers/datasetController";
 import { imagePreprocessing } from "@/applications/controllers/imagePreprocessingController";
@@ -33,6 +34,7 @@ try {
     .use(cors())
     .use(staticPlugin())
     .use(swaggerConfig())
+    .use(enumController)
     .use(augmentation)
     .use(dataset)
     .use(imagePreprocessing)
