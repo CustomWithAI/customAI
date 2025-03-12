@@ -27,3 +27,15 @@ export const useUpdateTraining = () => {
 		},
 	});
 };
+
+export const useStartTraining = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: trainingService.startTraining,
+		onSuccess: (_, params) => {
+			queryClient.invalidateQueries({
+				queryKey: ["training", params.workflowId, params.trainingId],
+			});
+		},
+	});
+};

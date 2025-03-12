@@ -5,9 +5,7 @@ import { useQueryParam } from "@/hooks/use-query-params";
 import ImagesPage from "./_container/images";
 import DatasetManagement from "./_container/management";
 
-export default async function Page({
-	params: { id },
-}: { params: { id: string } }) {
+export default function Page({ params: { id } }: { params: { id: string } }) {
 	const { compareQueryParam, setQueryParam } = useQueryParam({ name: "tab" });
 	return (
 		<AppNavbar activeTab="Home" PageTitle="" disabledTab={undefined}>

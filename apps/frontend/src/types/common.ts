@@ -4,3 +4,5 @@ export type responsePagination<T extends object> = {
 	prevCursor: string | undefined;
 	total: number;
 };
+
+export type NotNull<T> = T extends null | undefined ? never : T;

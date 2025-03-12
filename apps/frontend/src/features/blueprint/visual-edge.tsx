@@ -19,7 +19,7 @@ export default function VisualEdge({
 }: VisualEdgeProps) {
 	const id = generateId();
 	return (
-		<Card className="mt-4">
+		<Card>
 			<CardHeader className="relative">
 				<CardTitle>Edge Details</CardTitle>
 				<button
@@ -38,10 +38,10 @@ export default function VisualEdge({
 				>
 					<div>
 						<p className="text-sm">
-							<strong>Source:</strong> {edge?.source}
+							<strong>Source</strong> {edge?.source}
 						</p>
 						<p className="text-sm">
-							<strong>Target:</strong> {edge?.target}
+							<strong>Target</strong> {edge?.target}
 						</p>
 					</div>
 					<Button

@@ -8,7 +8,7 @@ type WorkflowCardProps = {
 	name: string;
 	description: string;
 	imageUrl: string;
-	current: string;
+	current: boolean;
 	onClick: (type: string) => void;
 	tags: string[];
 };
@@ -25,13 +25,13 @@ export const WorkflowCard = memo(
 			type="button"
 			onClick={() => onClick(name)}
 			className={cn(
-				"relative hover:bg-zinc-50 text-start shadow-md rounded-lg p-6 border max-w-sm space-y-4",
-				{ "border-green-500": current === name },
+				"relative hover:bg-zinc-50 text-start shadow-md min-h-96 flex flex-col m-px rounded-lg p-6 border w-full max-w-xs space-y-4",
+				{ "border-green-500": current },
 			)}
 		>
-			<div className="space-y-0.5">
+			<div className="space-y-0.5 h-16 flex flex-col align-text-top">
 				<ContentHeader>{name}</ContentHeader>
-				<Subtle>{description}</Subtle>
+				<Subtle className="">{description}</Subtle>
 			</div>
 			<Image
 				src={imageUrl}

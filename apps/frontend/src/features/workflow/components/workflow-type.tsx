@@ -1,6 +1,9 @@
 import { FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { workflowTypeConfig } from "@/configs/workflow-type";
+import { useGetEnum } from "@/hooks/queries/enum-api";
+import { getArrayFromEnum } from "@/utils/array-from-enum";
 import { Filter, FilterX } from "lucide-react";
 import { type ElementRef, useRef, useState } from "react";
 import { WorkflowCard } from "./workflow-card";
@@ -14,6 +17,12 @@ export const WorkflowTypeSection = ({
 	onChange,
 }: WorkflowTypeSectionProps) => {
 	const [input, setInput] = useState<string | undefined>("");
+	const { data: enumWorkflow, isPending: enumPending } = useGetEnum();
+
+	const enumWorkflowByName = getArrayFromEnum(enumWorkflow?.data, [
+		"annotationMethod",
+	]);
+
 	const inputRef = useRef<ElementRef<"input">>(null);
 	return (
 		<div className="space-y-2">
@@ -44,15 +53,25 @@ export const WorkflowTypeSection = ({
 					)}
 				</button>
 			</div>
-			<div className="flex gap-4 flex-wrap pt-4">
-				<WorkflowCard
-					onClick={() => onChange("Object Detection")}
-					name="Object Detection"
-					current={value}
-					description="localize and classify objects in images."
-					imageUrl={""}
-					tags={["Counting", "Locate", "Identify"]}
-				/>
+			<div className="flex gap-4 overflow-x-auto flex-wrap pt-4">
+				{enumWorkflowByName?.map((workflow) => {
+					const { name, description, tags } = workflowTypeConfig[workflow] ?? {
+						name: workflow,
+						description: "new type workflow isn't implement yet.",
+						tags: [],
+					};
+					return (
+						<WorkflowCard
+							key={workflow}
+							onClick={() => onChange(workflow)}
+							name={name}
+							current={value === workflow}
+							description={description}
+							imageUrl={""}
+							tags={tags}
+						/>
+					);
+				})}
 			</div>
 		</div>
 	);

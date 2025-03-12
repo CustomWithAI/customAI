@@ -55,14 +55,6 @@ export default function VisualBox({
 				</button>
 			</CardHeader>
 			<CardContent className="space-y-4">
-				<div className="relative w-full h-48">
-					<Image
-						src={image || "/placeholder.svg"}
-						alt={title}
-						fill
-						className="object-cover rounded-md border border-gray-50"
-					/>
-				</div>
 				<div className="space-y-2">
 					<div>
 						<Label>Type</Label>
@@ -90,12 +82,7 @@ export default function VisualBox({
 								schema={input.inputSchema}
 							/>
 						</FormBuilder.Provider>
-					) : (
-						<div>
-							<Label>Current Value</Label>
-							<Input value={value} readOnly />
-						</div>
-					)}
+					) : null}
 				</div>
 			</CardContent>
 		</Card>

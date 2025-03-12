@@ -15,6 +15,7 @@ import { getImageSize } from "@/utils/image-size";
 import { Ellipsis } from "lucide-react";
 import { useFormatter } from "next-intl";
 import { useEffect, useState } from "react";
+import { decodeBase64 } from "../../../libs/base64";
 
 export const ContentImage = ({
 	images,
@@ -114,7 +115,7 @@ export const ContentImage = ({
 							/>
 							<div>
 								<Content className="min-w-0 text-left flex-1 truncate">
-									{image.path}
+									{image.class ?? "Unlabeled class"}
 								</Content>
 								<Subtle
 									className={cn(

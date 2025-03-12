@@ -1,6 +1,7 @@
 import { cn } from "@/libs/utils";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import type React from "react";
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 
 export interface TextProps {
 	children: React.ReactNode;
@@ -115,5 +116,40 @@ export const Lead = ({ children, className }: TextProps) => {
 		<p className={cn("text-lg font-medium text-gray-700", className)}>
 			{children}
 		</p>
+	);
+};
+
+export const PreDataBlock = ({
+	children,
+	className,
+	priority,
+}: TextProps & { priority: string | null }) => {
+	const [open, setOpen] = useState<boolean>(false);
+	return (
+		<div className="space-y-4">
+			<button
+				onClick={() => setOpen((n) => !n)}
+				type="button"
+				className="hover:bg-zinc-50 border px-3 py-2 -my-2 rounded flex gap-x-3"
+			>
+				<Subtle>{priority || "data"}</Subtle>
+
+				<ChevronDown
+					className={cn("size-4 mt-0.5 transition-transform duration-150", {
+						"rotate-180 ": open,
+					})}
+				/>
+			</button>
+			{open && (
+				<pre
+					className={cn(
+						"bg-gray-100 p-4 rounded-md text-sm font-mono overflow-x-auto",
+						className,
+					)}
+				>
+					<code>{children}</code>
+				</pre>
+			)}
+		</div>
 	);
 };

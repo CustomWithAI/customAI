@@ -24,7 +24,7 @@ export const saveFormData = (formName: string, formData: any) => {
 
 export const getSavedFormData = (formName: string, defaultValues: any) => {
 	const savedForms = getAllSavedForms();
-	return savedForms[formName] || defaultValues;
+	return savedForms?.[formName] || defaultValues;
 };
 
 export const deleteSaveData = (formName: string) => {

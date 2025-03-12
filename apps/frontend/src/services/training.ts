@@ -3,6 +3,7 @@ import type { TrainingPipeline } from "@/types/request/requestTrainingPreset";
 import type {
 	ChangeableTrainingModel,
 	TrainingModel,
+	TrainingQueue,
 } from "@/types/response/training";
 import type { AxiosError } from "axios";
 
@@ -37,6 +38,16 @@ export const trainingService = {
 		try {
 			return axiosClient.get<TrainingModel>(
 				`/workflows/${workflowId}/trainings/${trainingId}`,
+			);
+		} catch (error) {}
+	},
+	startTraining: async ({
+		workflowId,
+		trainingId,
+	}: { workflowId?: string; trainingId?: string }) => {
+		try {
+			return axiosClient.get<TrainingQueue>(
+				`workflows/${workflowId}/training/${trainingId}`,
 			);
 		} catch (error) {}
 	},

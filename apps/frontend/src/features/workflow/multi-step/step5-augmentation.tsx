@@ -90,7 +90,7 @@ export const AugmentationPage = () => {
 						{
 							workflowId: decodeBase64(workflowId),
 							trainingId: decodeBase64(trainingId),
-							imagePreprocessingId: data.data.id,
+							augmentationId: data.data.id,
 							pipeline: {
 								current: getStep(
 									"next",

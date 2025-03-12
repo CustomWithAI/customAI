@@ -69,7 +69,7 @@ export const DatasetPage = () => {
 		<div className="flex flex-col gap-y-4">
 			<Subtle>Recent dataset used</Subtle>
 			<BaseSkeleton loading={datasetPending}>
-				<div>
+				<div className="overflow-x-auto">
 					{datasets?.data.map((dataset) => (
 						<DatasetCard
 							key={dataset.id}

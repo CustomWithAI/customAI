@@ -2,82 +2,180 @@
 import { type FormFieldInput, useFormBuilder } from "@/components/builder/form";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form";
-import { useQueryParam } from "@/hooks/use-query-params";
-import { encodeBase64 } from "@/libs/base64";
 import {
-	type ModelConfigurationSchema,
-	modelConfigurationSchema,
+	ClassificationParams,
+	ObjectDetectionParams,
+	SegmentationParams,
+} from "@/configs/hyperparameter";
+import { presetList } from "@/configs/preset";
+import { workflowEnum } from "@/configs/workflow-type";
+import { useDragStore } from "@/contexts/dragContext";
+import { useUpdateTraining } from "@/hooks/mutations/training-api";
+import { useGetTrainingById } from "@/hooks/queries/training-api";
+import { useQueryParam } from "@/hooks/use-query-params";
+import { useToast } from "@/hooks/use-toast";
+import { decodeBase64, encodeBase64 } from "@/libs/base64";
+import {
+	classificationSchema,
+	objectDetectionSchema,
+	segmentationSchema,
 } from "@/models/model-config";
+import type { NotNull } from "@/types/common";
+import { getStep } from "@/utils/step-utils";
+import { useCallback, useMemo } from "react";
+import type { ZodObject, z } from "zod";
 
-const workflowDetailsFormField: FormFieldInput<ModelConfigurationSchema> = [
-	{
-		template: "text",
-		element: {
-			label: "Epochs",
-			description: "Controls the number of training passes over the dataset",
-			key: "epochs",
-			testDataId: "epochs",
-			name: "epochs",
-			placeholder: "Eg., 1, 10, 100",
-		},
-		config: {},
+const hyperparameterByType: Record<
+	string,
+	{ formField: FormFieldInput<any>; schema: ZodObject<any> }
+> = {
+	[workflowEnum.ObjectDetection]: {
+		formField: ObjectDetectionParams,
+		schema: objectDetectionSchema,
 	},
-	{
-		template: "text",
-		element: {
-			label: "Batch Size",
-			description:
-				"Higher values work well for balanced datasets and larger models",
-			key: "batch_size",
-			testDataId: "batch_size",
-			name: "batch_size",
-			placeholder: "Eg., 1, 10, 100",
-		},
-		config: {},
+	[workflowEnum.Classification]: {
+		formField: ClassificationParams,
+		schema: classificationSchema,
 	},
-	{
-		template: "switch",
-		element: {
-			label: "Early Stopping",
-			description: "Stops training if performance plateaus",
-			key: "early-stopping",
-			testDataId: "early-stopping",
-			name: "early_stopping",
-		},
-		config: {},
+	[workflowEnum.Segmentation]: {
+		formField: SegmentationParams,
+		schema: segmentationSchema,
 	},
-	{
-		template: "select",
-		element: {
-			label: "Early Stopping",
-			description: "Stops training if performance plateaus",
-			key: "early-stopping",
-			testDataId: "early-stopping",
-			name: "loss_function",
-		},
-		config: {
-			options: {
-				group: false,
-			},
-		},
-	},
-];
+};
 export const ModelConfigPage = () => {
-	const { setQueryParam } = useQueryParam({ name: "step" });
-	const onSubmitData = (data: ModelConfigurationSchema) => {
-		setQueryParam({ value: encodeBase64("preset"), resetParams: true });
-	};
+	const { setQueryParam, getQueryParam } = useQueryParam({ name: "step" });
+	const { toast } = useToast();
+
+	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
+
+	const { data: training, isPending: trainingPending } = useGetTrainingById(
+		decodeBase64(workflowId),
+		decodeBase64(trainingId),
+		{ enabled: workflowId !== "" && trainingId !== "" },
+	);
+
+	const { mutateAsync: updateTraining } = useUpdateTraining();
+
+	const onSet = useDragStore((state) => state.onSet);
+
+	const hyperparameterField = useMemo(() => {
+		if (training?.data.preTrainedModel) {
+			return hyperparameterByType[training?.data.workflow.type || ""] ?? null;
+		}
+		return null;
+	}, [training?.data.preTrainedModel, training?.data.workflow]);
+
+	const handlePrevious = useCallback(async () => {
+		if (!training?.data.pipeline.steps) return;
+		await updateTraining(
+			{
+				workflowId: decodeBase64(workflowId),
+				trainingId: decodeBase64(trainingId),
+				pipeline: {
+					current: getStep(
+						"prev",
+						training?.data.pipeline.current,
+						training?.data.pipeline.steps,
+						() => onSet(presetList),
+					),
+					steps: training?.data.pipeline.steps,
+				},
+			},
+			{
+				onSuccess: () => {
+					setQueryParam({
+						params: {
+							step: encodeBase64(
+								getStep(
+									"prev",
+									training?.data.pipeline.current,
+									training?.data.pipeline.steps,
+									() => onSet(presetList),
+								),
+							),
+							id: workflowId,
+							trainings: trainingId,
+						},
+						resetParams: true,
+					});
+				},
+			},
+		);
+	}, [
+		setQueryParam,
+		workflowId,
+		trainingId,
+		onSet,
+		updateTraining,
+		training?.data.pipeline,
+	]);
+
+	const onSubmitData = useCallback(
+		async (data: z.infer<NotNull<typeof hyperparameterField>["schema"]>) => {
+			if (!training?.data.pipeline.steps) return;
+			await updateTraining(
+				{
+					workflowId: decodeBase64(workflowId),
+					trainingId: decodeBase64(trainingId),
+					hyperparameter: data,
+					pipeline: {
+						current: getStep(
+							"next",
+							training?.data.pipeline.current,
+							training?.data.pipeline.steps,
+							() => onSet(presetList),
+						),
+						steps: training?.data.pipeline.steps,
+					},
+				},
+				{
+					onSuccess: () => {
+						setQueryParam({
+							params: {
+								step: encodeBase64(
+									getStep(
+										"next",
+										training?.data.pipeline.current,
+										training?.data.pipeline.steps,
+										() => onSet(presetList),
+									),
+								),
+								id: workflowId,
+								trainings: trainingId,
+							},
+							resetParams: true,
+						});
+					},
+				},
+			);
+		},
+		[
+			updateTraining,
+			training?.data.pipeline,
+			onSet,
+			workflowId,
+			trainingId,
+			setQueryParam,
+		],
+	);
+
 	const { Provider, Build } = useFormBuilder({
-		schema: modelConfigurationSchema,
+		schema: hyperparameterField?.schema,
 		onSubmit: onSubmitData,
 		formName: "create-Step1-id",
 	});
 
 	return (
 		<Provider>
-			<Build formFields={workflowDetailsFormField} />
+			<Build formFields={hyperparameterField?.formField} />
 			<div className="flex justify-end w-full space-x-4 mt-6">
-				<Button variant="ghost">Cancel</Button>
+				<Button
+					disabled={trainingPending}
+					onClick={async () => await handlePrevious()}
+					variant="ghost"
+				>
+					Previous
+				</Button>
 				<Button type="submit">Next</Button>
 			</div>
 		</Provider>

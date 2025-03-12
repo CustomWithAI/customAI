@@ -52,6 +52,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Selection } from "../ui/selection";
+import { Skeleton } from "../ui/skeleton";
 import { Slider } from "../ui/slider";
 import { Switch } from "../ui/switch";
 
@@ -68,7 +69,7 @@ type InferSchema<T extends ZodRawShape | ZodDiscriminatedUnion<string, any>> =
 type FormProviderProps<
 	T extends ZodRawShape | ZodDiscriminatedUnion<string, any>,
 > = {
-	schema: SchemaType<T>;
+	schema?: SchemaType<T>;
 	defaultValues?: DefaultValues<InferSchema<T>>;
 	onSubmit?: SubmitHandler<InferSchema<T>>;
 	formName: string;
@@ -77,6 +78,7 @@ type FormProviderProps<
 
 type TemplateType =
 	| "text"
+	| "int"
 	| "number"
 	| "percent"
 	| "slider"
@@ -205,11 +207,11 @@ export type FormFieldInput<T extends object> = FormFields<T>[];
 type FormBuilderPropsType<
 	T extends ZodRawShape | ZodDiscriminatedUnion<any, any>,
 > = {
-	schema:
+	schema?:
 		| ZodObject<T extends ZodRawShape ? T : never>
 		| ZodEffects<ZodObject<T extends ZodRawShape ? T : never>>
 		| ZodDiscriminatedUnion<any, any>;
-	formFields: FormFields<
+	formFields?: FormFields<
 		z.infer<
 			| ZodObject<T extends ZodRawShape ? T : never>
 			| ZodDiscriminatedUnion<any, any>
@@ -229,6 +231,9 @@ const FormBuilderProvider = <
 	onSubmit,
 	children,
 }: FormProviderProps<T>): ReactElement => {
+	if (!schema) {
+		return <Skeleton />;
+	}
 	const getSavedData = useCallback(() => {
 		return getSavedFormData(formName, defaultValues);
 	}, [defaultValues, formName]);
@@ -279,6 +284,8 @@ const Builder = <T extends ZodRawShape | ZodDiscriminatedUnion<any, any>>({
 	} = useFormContext();
 
 	const watchedValues = useWatch({ control });
+
+	if (!formFields) return <></>;
 
 	return (
 		<>
@@ -439,12 +446,14 @@ const RenderInput = memo(
 												inputValue += "0";
 											}
 											const parsedValue =
-												inputValue !== "" ? inputValue : undefined;
-											if (!Number.isNaN(parsedValue)) {
-												setOnChange
-													? setOnChange(parsedValue)
-													: onChange(parsedValue);
-											}
+												inputValue !== "" || !Number.isNaN(inputValue)
+													? inputValue.endsWith(".0")
+														? inputValue
+														: Number.parseFloat(inputValue)
+													: undefined;
+											setOnChange
+												? setOnChange(parsedValue)
+												: onChange(parsedValue);
 										}}
 										onBlur={onBlur}
 										value={
@@ -459,6 +468,50 @@ const RenderInput = memo(
 														? String(value).replace(".0", ".")
 														: value
 													: undefined
+										}
+										placeholder={placeholder}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+			}
+			case "int": {
+				return (
+					<FormField
+						key={key}
+						control={control}
+						name={name}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<FormItem className={cn(className)}>
+								<FormLabel>{label}</FormLabel>
+								{description && (
+									<FormDescription>{description}</FormDescription>
+								)}
+								<FormControl>
+									<Input
+										aria-invalid={Boolean((errors as any)?.[String(name)])}
+										required={required}
+										data-cy={testDataId}
+										disabled={disabled}
+										autoFocus={isFirstInput}
+										type="tel"
+										inputMode="numeric"
+										onChange={(e) => {
+											const inputValue = e.target.value.trim();
+											if (/^\d+$/.test(inputValue)) {
+												setOnChange
+													? setOnChange(Number(inputValue))
+													: onChange(Number(inputValue));
+											}
+										}}
+										onBlur={onBlur}
+										value={
+											!Number.isNaN(value) && Number.isInteger(value)
+												? value
+												: ""
 										}
 										placeholder={placeholder}
 									/>

@@ -290,8 +290,14 @@ export const VisualSection = ({ node, customNode, image }: VisualProps) => {
 					onEdgesChange={onEdgesChange}
 					onConnect={onConnect}
 					nodeTypes={nodeTypes}
-					onNodeClick={(_, node) => setSelectedNode(node)}
-					onEdgeClick={(_, edge) => setSelectedEdge(edge)}
+					onNodeClick={(_, node) => {
+						setSelectedNode(node);
+						setSelectedEdge(null);
+					}}
+					onEdgeClick={(_, edge) => {
+						setSelectedNode(null);
+						setSelectedEdge(edge);
+					}}
 					onInit={setReactFlowInstance}
 					onDragOver={onDragOver}
 					onDrop={onDrop}

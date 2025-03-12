@@ -4,15 +4,22 @@ import { presetList } from "@/configs/preset";
 import { useDragStore } from "@/contexts/dragContext";
 import { TableFeatureExSection } from "@/features/feature-ex/table";
 import { VisualFeatureExSection } from "@/features/feature-ex/visual";
+import {
+	useCreateFeatureEx,
+	useUpdateFeatureEx,
+} from "@/hooks/mutations/feature-ex-api";
 import { useUpdateTraining } from "@/hooks/mutations/training-api";
 import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { decodeBase64, encodeBase64 } from "@/libs/base64";
 import { cn } from "@/libs/utils";
+import { metadataToArray } from "@/utils/formatMetadata";
 import { getStep } from "@/utils/step-utils";
+import { formatDate } from "@/utils/to-datetime";
 import { motion } from "framer-motion";
 import { useCallback } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 export const FeaturePage = () => {
 	const { getQueryParam, setQueryParam, compareQueryParam } = useQueryParam({
@@ -30,8 +37,114 @@ export const FeaturePage = () => {
 	);
 
 	const { mutateAsync: updateTraining } = useUpdateTraining();
+	const { mutateAsync: createFeature } = useCreateFeatureEx();
+	const { mutateAsync: updateFeature } = useUpdateFeatureEx();
 
-	const handleSubmit = useCallback(() => {}, []);
+	const fields = useDragStore(useShallow((state) => state.fields));
+	const onReset = useDragStore((state) => state.onReset);
+
+	const handleSubmit = useCallback(async () => {
+		const json = fields.reduce(
+			(acc, field) => {
+				if (!field.type) {
+					return acc;
+				}
+				acc[field.type] = metadataToArray(field.metadata);
+				return acc;
+			},
+			{} as Record<string, any>,
+		);
+		const priority = Object.keys(json);
+		const preProcessFn = training?.data.featureExtraction
+			? updateFeature
+			: createFeature;
+		await preProcessFn(
+			{
+				data: { ...json, priority },
+				name: `${training?.data.workflow.name}-${formatDate()}`,
+				id: training?.data.featureExtraction?.id || "",
+			},
+			{
+				onError: (error) => {
+					toast({
+						title: `Image-processing failed to create: ${error.message}`,
+						variant: "destructive",
+					});
+				},
+				onSuccess: async (data) => {
+					if (!data?.data.id) {
+						toast({
+							title: "Image-processing is not existed",
+							variant: "destructive",
+						});
+						return;
+					}
+					if (!training?.data.pipeline) {
+						toast({
+							title: "trainings is not existed",
+							variant: "destructive",
+						});
+						return;
+					}
+					await updateTraining(
+						{
+							workflowId: decodeBase64(workflowId),
+							trainingId: decodeBase64(trainingId),
+							featureExtractionId: data.data.id,
+							pipeline: {
+								current: getStep(
+									"next",
+									training?.data.pipeline.current,
+									training?.data.pipeline.steps,
+									() => onSet(presetList),
+								),
+								steps: training?.data.pipeline.steps,
+							},
+						},
+						{
+							onSuccess: () => {
+								onReset();
+								setQueryParam({
+									params: {
+										step: encodeBase64(
+											getStep(
+												"next",
+												training?.data.pipeline.current,
+												training?.data.pipeline.steps,
+												() => onSet(presetList),
+											),
+										),
+										id: workflowId,
+										trainings: trainingId,
+									},
+									resetParams: true,
+								});
+							},
+							onError: (error) => {
+								toast({
+									title: `Image-processing failed to create: ${error.message}`,
+									variant: "destructive",
+								});
+							},
+						},
+					);
+				},
+			},
+		);
+	}, [
+		createFeature,
+		updateFeature,
+		fields,
+		onReset,
+		trainingId,
+		updateTraining,
+		workflowId,
+		setQueryParam,
+		toast,
+		training?.data.pipeline,
+		training?.data.featureExtraction,
+		training?.data.workflow,
+	]);
 	const onSet = useDragStore((state) => state.onSet);
 
 	const handlePrevious = useCallback(async () => {

@@ -89,7 +89,7 @@ export const AppNavbar = memo(
 					</header>
 					<div
 						className={cn(
-							"flex flex-1 flex-col gap-4 px-8 py-10 w-full max-w-screen-2xl mx-auto",
+							"flex flex-1 flex-col gap-4 px-8 py-10 w-full max-w-full 2xl:max-w-screen-2xl mx-auto",
 							contentClassName,
 						)}
 					>

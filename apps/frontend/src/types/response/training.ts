@@ -2,6 +2,7 @@ import type { Pipeline } from "../request/requestTrainingPreset";
 import type { AugmentationModel } from "./augmentation";
 import type { DebugType } from "./common";
 import type { ResponseDataset } from "./dataset";
+import type { FeatureExModel } from "./feature-ex";
 import type { PreprocessingModel } from "./preprocessing";
 import type { WorkflowModel } from "./workflow";
 
@@ -14,6 +15,7 @@ export type TrainingModel = DebugType<
 		dataset: ResponseDataset;
 		augmentation: AugmentationModel;
 		imagePreprocessing: PreprocessingModel;
+		featureExtraction: FeatureExModel;
 		retryCount: number;
 		errorMessage: string;
 		trainedModelPath: string;
@@ -27,6 +29,10 @@ export type TrainingModel = DebugType<
 	>
 >;
 
+export type TrainingQueue = {
+	message: string;
+	queueId: string;
+};
 export type ChangeableTrainingModel = Partial<{
 	hyperparameter: object;
 	pipeline: Pipeline;
@@ -36,6 +42,6 @@ export type ChangeableTrainingModel = Partial<{
 	featureExtractionId: string;
 	featureSelectionId: string;
 	augmentationId: string;
-	preTrainedModel: object;
+	preTrainedModel: string;
 	customModelId: string;
 }>;

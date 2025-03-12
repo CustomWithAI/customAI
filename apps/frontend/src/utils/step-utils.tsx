@@ -1,4 +1,5 @@
 import { presetList } from "@/configs/preset";
+import { StepKey } from "@/configs/step-key";
 import type { Pipeline } from "@/types/request/requestTrainingPreset";
 
 export const getStep = (
@@ -7,6 +8,13 @@ export const getStep = (
 	steps: Pipeline["steps"] | undefined,
 	zeroIndexCallback: () => void,
 ): string => {
+	if (current === StepKey.Finish && method === "prev") {
+		return (
+			steps?.reduce((max, current) => {
+				return current.index > max.index ? current : max;
+			}, steps?.[0])?.name || ""
+		);
+	}
 	const currentIndex = steps?.find((step) => step.name === current)?.index;
 	if (currentIndex === undefined || steps === undefined) {
 		return current || "";
@@ -28,7 +36,7 @@ export const getStep = (
 		}
 		case "next": {
 			if (currentIndex === steps.length - 1) {
-				return "start";
+				return StepKey.Finish;
 			}
 			const nextName = steps.find(
 				(step) => step.index === currentIndex + 1,

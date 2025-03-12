@@ -5,6 +5,7 @@ import {
 	Image,
 	SquareDashedMousePointer,
 } from "lucide-react";
+import { StepKey } from "./step-key";
 
 export const presetList: DragColumn[] = [
 	{
@@ -12,7 +13,7 @@ export const presetList: DragColumn[] = [
 		id: "1",
 		metadata: {
 			check: { type: "Boolean", value: false },
-			name: { type: "String", value: "preprocessing" },
+			name: { type: "String", value: StepKey.Preprocessing },
 		},
 		description: "edit image before training",
 		icon: <Image />,
@@ -22,7 +23,7 @@ export const presetList: DragColumn[] = [
 		id: "2",
 		metadata: {
 			check: { type: "Boolean", value: false },
-			name: { type: "String", value: "featureEx" },
+			name: { type: "String", value: StepKey.FeatureEx },
 		},
 		description: "focus on main feature",
 		icon: <SquareDashedMousePointer />,
@@ -32,7 +33,7 @@ export const presetList: DragColumn[] = [
 		id: "3",
 		metadata: {
 			check: { type: "Boolean", value: false },
-			name: { type: "String", value: "augmentation" },
+			name: { type: "String", value: StepKey.Augmentation },
 		},
 		description: "create random sampling",
 		icon: <BetweenHorizontalStart />,
@@ -42,7 +43,7 @@ export const presetList: DragColumn[] = [
 		id: "4",
 		metadata: {
 			check: { type: "Boolean", value: false },
-			name: { type: "String", value: "modelconfig" },
+			name: { type: "String", value: StepKey.ModelConfig },
 		},
 		description: "setting model hyperparameter",
 		icon: <FileSliders />,
