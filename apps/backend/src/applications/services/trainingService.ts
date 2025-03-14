@@ -1,15 +1,18 @@
 import type { TrainingRepository } from "@/applications/repositories/trainingRepository";
 import type { WorkflowRepository } from "@/applications/repositories/workflowRepository";
+import type { ImageRepository } from "@/applications/repositories/imageRepository";
 import { sendToRabbitMQ } from "@/infrastructures/rabbitmq/queue";
 import { NotFoundError, InternalServerError, error } from "elysia";
-import type { trainings } from "@/domains/schema/trainings";
+import type { trainings, TrainingStatusEnum } from "@/domains/schema/trainings";
 import type { PaginationParams } from "@/utils/db-type";
 import type { CreateTrainingDto } from "@/domains/dtos/training";
+import { config } from "@/config/env";
 
 export class TrainingService {
   public constructor(
     private repository: TrainingRepository,
-    private workflowRepository: WorkflowRepository
+    private workflowRepository: WorkflowRepository,
+    private imageRepository: ImageRepository
   ) {}
 
   private async ensureWorkflowExists(userId: string, workflowId: string) {
@@ -38,7 +41,6 @@ export class TrainingService {
       ...data,
       ...(trainings.data.length === 0 ? { isDefault: true, version: 1.0 } : {}),
       workflowId,
-      hyperparameter: {},
     });
 
     if (result.length === 0) {
@@ -94,17 +96,131 @@ export class TrainingService {
   public async startTraining(userId: string, workflowId: string, id: string) {
     await this.ensureWorkflowExists(userId, workflowId);
 
-    // TODO: Should validate this training have dataset or not and check if "failed" before or not
-
-    const training = await this.repository.findById(workflowId, id);
-    if (training.length === 0) {
+    const trainings = await this.repository.findById(workflowId, id);
+    if (trainings.length === 0) {
       throw new NotFoundError(`Training not found: ${id}`);
     }
-    if (training[0].status !== "created") {
-      throw new InternalServerError("Training has already started");
+
+    const training = trainings[0];
+
+    // Part Check Status
+    if (training.status !== "created" && training.status !== "failed") {
+      throw error(400, "Training has already started");
     }
 
-    const queueId = await sendToRabbitMQ(training[0]);
+    if (
+      training.status === "failed" &&
+      training.retryCount < config.MAX_RETRY_COUNT
+    ) {
+      throw error(400, "Training is in process after some errors occurred");
+    }
+
+    // Part Data Validation
+
+    // Have Dataset or Not
+    if (!training.dataset) {
+      throw error(400, "Dataset is required");
+    }
+
+    // Check Dataset Match Workflow Type or Not
+    if (training.dataset.annotationMethod !== training.workflow.type) {
+      throw error(
+        400,
+        "Dataset annotation method does not match workflow type"
+      );
+    }
+
+    // Have Model or Not
+    if (!training.preTrainedModel && !training.customModel) {
+      throw error(400, "Pre-trained model or custom model is required");
+    }
+
+    // Have Hyperparameter or Not
+    if (
+      typeof training.hyperparameter !== "object" ||
+      training.hyperparameter === null
+    ) {
+      throw new InternalServerError("Hyperparameter must be an object");
+    }
+
+    if (Object.keys(training.hyperparameter).length === 0) {
+      throw error(400, "Hyperparameter is required");
+    }
+
+    // Have Train Test Valid or Not
+    if (
+      !training.dataset.train ||
+      !training.dataset.test ||
+      !training.dataset.valid
+    ) {
+      throw error(400, "Train/Test/Valid ratio in dataset is required");
+    }
+
+    // Have Split Method or Not
+    if (!training.dataset.splitMethod) {
+      throw error(400, "Split method in dataset is required");
+    }
+
+    // Have Model or Not
+    if (
+      training.workflow.type === "classification" &&
+      !training.preTrainedModel &&
+      !training.machineLearningModel &&
+      !training.customModel
+    ) {
+      throw error(
+        400,
+        `Pre-trained model, machine learning model, or custom model is required for ${training.workflow.type}`
+      );
+    }
+
+    if (
+      training.workflow.type === "object_detection" &&
+      !training.preTrainedModel &&
+      !training.customModel
+    ) {
+      throw error(
+        400,
+        `Pre-trained model or custom model is required for ${training.workflow.type}`
+      );
+    }
+
+    if (
+      training.workflow.type === "segmentation" &&
+      !training.preTrainedModel
+    ) {
+      throw error(
+        400,
+        `Pre-trained model is required for ${training.workflow.type}`
+      );
+    }
+
+    // Check All Images Have Class and Annotation or Not
+    const { data: images } = await this.imageRepository.findByDatasetId(
+      training.dataset.id,
+      { limit: 1000 }
+    );
+
+    const hasMissingClass = images.some((image) => !image.class);
+
+    if (hasMissingClass) {
+      throw error(400, "There are images without a class");
+    }
+
+    const hasMissingAnnotation = images.some(
+      (image) =>
+        ["object_detection", "segmentation"].includes(training.workflow.type) &&
+        image.annotation == null
+    );
+
+    if (hasMissingAnnotation) {
+      throw error(
+        400,
+        `There are images without annotations, but they are required for ${training.workflow.type}`
+      );
+    }
+
+    const queueId = await sendToRabbitMQ(training);
 
     await this.repository.updateStatus(id, "pending", queueId);
 
@@ -129,5 +245,13 @@ export class TrainingService {
     }
 
     return result[0];
+  }
+
+  public async updateStatus(
+    id: string,
+    status: TrainingStatusEnum,
+    queueId?: string
+  ) {
+    return this.repository.updateStatus(id, status, queueId);
   }
 }

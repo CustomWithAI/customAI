@@ -50,5 +50,6 @@ export const customModelService = new CustomModelService(customModelRepository);
 export const workflowService = new WorkflowService(workflowRepository);
 export const trainingService = new TrainingService(
   trainingRepository,
-  workflowRepository
+  workflowRepository,
+  imageRepository
 );

@@ -2,7 +2,7 @@ import {
   connectRabbitMQ,
   getRabbitMQChannel,
 } from "@/infrastructures/rabbitmq/connection";
-import { trainingRepository } from "@/config/dependencies";
+import { imageService, trainingService } from "@/config/dependencies";
 import { logger, queueLogger } from "@/config/logger";
 import { config } from "@/config/env";
 import type { TrainingResponseDto } from "@/domains/dtos/training";
@@ -39,7 +39,19 @@ export const startTrainingWorker = async () => {
 
         try {
           // ✅ Update Status Into "running"
-          await trainingRepository.updateStatus(trainingData.id, "running");
+          await trainingService.updateStatus(trainingData.id, "running");
+
+          // TODO: เริ่มตรงนี้ตาม Note
+
+          if (!trainingData.dataset) {
+            throw new Error("Training dataset not found");
+          }
+
+          const { data: images } = await imageService.getImagesByDatasetId(
+            trainingData.workflow.userId,
+            trainingData.dataset.id,
+            { limit: 1000 }
+          );
 
           // 🔥 Call Python Server API
           const response = await fetch(
@@ -56,7 +68,7 @@ export const startTrainingWorker = async () => {
           }
 
           // ✅ Update Status Into "completed"
-          await trainingRepository.updateStatus(trainingData.id, "completed");
+          await trainingService.updateStatus(trainingData.id, "completed");
           queueLogger.info(`✅ Training completed: ${trainingData.queueId}`);
         } catch (error) {
           queueLogger.error(
@@ -65,7 +77,7 @@ export const startTrainingWorker = async () => {
           );
 
           // ✅ Update Status Into "failed"
-          await trainingRepository.updateStatus(trainingData.id, "failed");
+          await trainingService.updateStatus(trainingData.id, "failed");
         } finally {
           // ✅ Delete Request From Queue
           channel.ack(msg);

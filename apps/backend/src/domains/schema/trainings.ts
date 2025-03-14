@@ -42,7 +42,7 @@ export const trainings = pgTable(
       .$defaultFn(() => v7()),
     isDefault: boolean("is_default").default(false).notNull(),
     version: doublePrecision("version"),
-    hyperparameter: jsonb("hyperparameter").notNull(),
+    hyperparameter: jsonb("hyperparameter"),
     pipeline: jsonb("pipeline").notNull(),
     status: trainingStatusEnum("status").default("created").notNull(),
     queueId: varchar("queue_id", { length: 255 }),
@@ -88,6 +88,7 @@ export const trainings = pgTable(
       }
     ),
     preTrainedModel: varchar("pre_trained_model", { length: 255 }),
+    machineLearningModel: jsonb("machine_learning_model"),
     customModelId: varchar("custom_model_id", { length: 255 }).references(
       () => customModels.id,
       {

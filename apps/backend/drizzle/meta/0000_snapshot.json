@@ -1,5 +1,5 @@
 {
-  "id": "e19d92b2-b8a8-4a93-8ad4-cc9d35ae9dd5",
+  "id": "1a74988a-7a49-4f95-9ce5-913284d83f35",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -935,7 +935,7 @@
           "name": "hyperparameter",
           "type": "jsonb",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "pipeline": {
           "name": "pipeline",
@@ -1015,6 +1015,12 @@
         "pre_trained_model": {
           "name": "pre_trained_model",
           "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "machine_learning_model": {
+          "name": "machine_learning_model",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
