@@ -27,6 +27,7 @@ type SelectionPropsType = {
 	value?: string | number | boolean;
 	defaultValue?: string;
 	placeholder?: ReactNode;
+	asSelect?: boolean;
 	autoFocus?: boolean;
 	className?: string;
 } & (
@@ -57,6 +58,7 @@ export const Selection = ({
 	className,
 	defaultValue,
 	group,
+	asSelect,
 	disabled,
 	cyName,
 	value,
@@ -64,6 +66,7 @@ export const Selection = ({
 	placeholder,
 	onChange,
 }: SelectionPropsType) => {
+	const Slot = !asSelect ? FormControl : "div";
 	const getDisplayValue = useCallback(
 		(value: OptionValue | null): string | ReactNode => {
 			if (value === null || value === undefined) return placeholder;
@@ -82,6 +85,7 @@ export const Selection = ({
 		},
 		[options, placeholder],
 	);
+
 	return (
 		<Select
 			value={String(value)}
@@ -92,7 +96,7 @@ export const Selection = ({
 				onChange ? onChange(defineString(e)) : undefined;
 			}}
 		>
-			<FormControl>
+			<Slot>
 				<SelectTrigger
 					className={cn(
 						"my-3 w-full",
@@ -111,7 +115,7 @@ export const Selection = ({
 						{getDisplayValue(value ?? null)}
 					</SelectValue>
 				</SelectTrigger>
-			</FormControl>
+			</Slot>
 			<SelectContent className="bg-white">
 				{group && Boolean(options)
 					? Object.keys(options).map((group) => (

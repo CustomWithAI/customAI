@@ -21,3 +21,25 @@ export const useGetImages = (
 		queryFn: async () => await datasetService.getImages({ id, params }),
 		...options,
 	});
+
+export const useGetSurroundingImages = (
+	id: string,
+	pathId: string,
+	options?: AppQueryOptions<typeof datasetService.getSurroundImageById>,
+) =>
+	useQuery({
+		queryKey: ["surroundingImages", id, pathId],
+		queryFn: async () =>
+			await datasetService.getSurroundImageById({ id, pathId }),
+		...options,
+	});
+
+export const useGetDataset = (
+	id: string,
+	options?: AppQueryOptions<typeof datasetService.getDataset>,
+) =>
+	useQuery({
+		queryKey: ["dataset", id],
+		queryFn: async () => await datasetService.getDataset({ id }),
+		...options,
+	});

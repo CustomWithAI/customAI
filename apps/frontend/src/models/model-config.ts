@@ -4,7 +4,7 @@ import { float } from "./common";
 export type ClassificationSchema = z.infer<typeof classificationSchema>;
 export const classificationSchema = z.object({
 	learning_rate: float.default("0.01"),
-	learning_rate_scheduler: z.string(),
+	learning_rate_scheduler: z.string().nullable().default(null),
 	momentum: float.default("1"),
 	optimizer_type: z.string().optional().nullable(),
 	batch_size: z.number().positive().default(32),

@@ -48,7 +48,7 @@ export default function ImagesPage({ id }: { id: string }) {
 					<ViewList.Trigger />
 				</div>
 			</div>
-			<ContentImage images={images?.data} total={images?.total} />
+			<ContentImage images={images?.data} id={id} total={images?.total} />
 		</ViewList.Provider>
 	);
 }

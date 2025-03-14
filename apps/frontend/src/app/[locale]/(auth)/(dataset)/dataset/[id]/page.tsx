@@ -1,14 +1,20 @@
 "use client";
 import { AppNavbar } from "@/components/layout/appNavbar";
 import { Menubar } from "@/components/ui/menubar";
+import { useGetDataset } from "@/hooks/queries/dataset-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import ImagesPage from "./_container/images";
 import DatasetManagement from "./_container/management";
 
 export default function Page({ params: { id } }: { params: { id: string } }) {
 	const { compareQueryParam, setQueryParam } = useQueryParam({ name: "tab" });
+	const { data: dataset } = useGetDataset(id);
 	return (
-		<AppNavbar activeTab="Home" PageTitle="" disabledTab={undefined}>
+		<AppNavbar
+			activeTab="Home"
+			PageTitle={dataset?.name || ""}
+			disabledTab={undefined}
+		>
 			<div className="max-w-screen no-scroll overflow-x-scroll border-b mb-4">
 				<Menubar.List>
 					<Menubar.Item
@@ -38,7 +44,9 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 			{compareQueryParam({ value: "images", allowNull: true }) ? (
 				<ImagesPage id={id} />
 			) : null}
-			{compareQueryParam({ value: "settings" }) ? <DatasetManagement /> : null}
+			{compareQueryParam({ value: "settings" }) ? (
+				<DatasetManagement dataset={dataset} />
+			) : null}
 		</AppNavbar>
 	);
 }

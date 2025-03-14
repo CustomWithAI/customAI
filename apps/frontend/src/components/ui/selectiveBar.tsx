@@ -20,13 +20,13 @@ export const SelectiveBar = memo(
 						layoutId={`dot-${index}`}
 						transition={{ type: "spring", stiffness: 300, damping: 20 }}
 						className={`h-1 rounded-full ${
-							index < current
+							index < current - 1
 								? "bg-[#0F172A] w-1"
-								: index === current
+								: index === current - 1
 									? "bg-[#658EE2]"
 									: "bg-[#CBCBCB] w-1"
 						}`}
-						style={{ width: index === current ? "2.25rem" : "0.25rem" }}
+						style={{ width: index === current - 1 ? "2.25rem" : "0.25rem" }}
 					/>
 				))}
 			</motion.div>

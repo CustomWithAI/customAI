@@ -1,5 +1,9 @@
 import { axiosClient } from "@/libs/api-client";
-import type { ResponseDataset, ResponseImage } from "@/types/response/dataset";
+import type {
+	ResponseDataset,
+	ResponseImage,
+	ResponseSurroundImage,
+} from "@/types/response/dataset";
 import type { responsePagination } from "../types/common";
 
 export const datasetService = {
@@ -36,7 +40,7 @@ export const datasetService = {
 
 	deleteDataset: () => {
 		try {
-			axiosClient.delete("/dataset");
+			return axiosClient.delete("/dataset");
 		} catch (error) {}
 	},
 
@@ -46,6 +50,24 @@ export const datasetService = {
 				`/datasets/${id}/images${params || ""}`,
 			);
 			return data;
+		} catch (error) {}
+	},
+
+	getSurroundImageById: async ({
+		id,
+		pathId,
+	}: { id: string; pathId: string }) => {
+		try {
+			const { data } = await axiosClient.get<ResponseSurroundImage>(
+				`/datasets/${id}/images/surrounding/${pathId}`,
+			);
+			return data;
+		} catch (error) {}
+	},
+
+	deleteImage: async ({ id, path }: { id: string; path: string }) => {
+		try {
+			return axiosClient.delete(`/datasets/${id}/images/${path}`);
 		} catch (error) {}
 	},
 };

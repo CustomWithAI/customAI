@@ -55,6 +55,7 @@ export interface Editor {
 	id: string;
 	squares: Square[];
 	labels: Label[];
+	classifiedLabel?: string;
 	mode: Mode;
 	polygons: Polygon[];
 	freehandPaths: FreehandPath[];

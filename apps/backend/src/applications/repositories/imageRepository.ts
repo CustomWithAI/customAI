@@ -2,7 +2,7 @@ import { images } from "@/domains/schema/images";
 import { db } from "@/infrastructures/database/connection";
 import type { PaginationParams } from "@/utils/db-type";
 import withPagination from "@/utils/pagination";
-import { and, eq } from "drizzle-orm";
+import { and, asc, desc, eq, gt, lt } from "drizzle-orm";
 
 export class ImageRepository {
 	public async create(data: (typeof images.$inferInsert)[]) {
@@ -43,6 +43,36 @@ export class ImageRepository {
 			.from(images)
 			.where(and(eq(images.datasetId, datasetId), eq(images.path, filePath)))
 			.limit(1);
+	}
+
+	public async findSurroundingByPath(datasetId: string, filePath: string) {
+		const currentImage = await db
+			.select()
+			.from(images)
+			.where(and(eq(images.datasetId, datasetId), eq(images.path, filePath)))
+			.limit(1);
+
+		if (!currentImage.length) return null;
+
+		const prevImage = await db
+			.select()
+			.from(images)
+			.where(and(eq(images.datasetId, datasetId), lt(images.path, filePath)))
+			.orderBy(desc(images.path))
+			.limit(1);
+
+		const nextImage = await db
+			.select()
+			.from(images)
+			.where(and(eq(images.datasetId, datasetId), gt(images.path, filePath)))
+			.orderBy(asc(images.path))
+			.limit(1);
+
+		return {
+			prev: prevImage?.[0] || null,
+			current: currentImage?.[0] || null,
+			next: nextImage?.[0] || null,
+		};
 	}
 
 	public async updateByPath(

@@ -7,9 +7,9 @@ import { env } from "@/env.mjs";
 import { useSocialAccounts } from "@/hooks/queries/security-api";
 import { toast } from "@/hooks/use-toast";
 import { authClient } from "@/libs/auth-client";
+import { useRouter } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
 export const SocialAccount = () => {

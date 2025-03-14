@@ -5,8 +5,16 @@ import { useFreehand } from "@/hooks/canvas/useFreehand";
 import { usePolygon } from "@/hooks/canvas/usePolygon";
 import { useSquares } from "@/hooks/canvas/useSquare";
 import { cn } from "@/libs/utils";
-import type { Label, Mode, Point, SelectedShape, Square } from "@/types/square";
+import type {
+	Editor,
+	Label,
+	Mode,
+	Point,
+	SelectedShape,
+	Square,
+} from "@/types/square";
 import { darkenColor } from "@/utils/color-utils";
+import { getImageSize } from "@/utils/image-size";
 import { generateRandomLabel } from "@/utils/random";
 import { Lock } from "lucide-react";
 import {
@@ -28,9 +36,12 @@ interface SquareEditorProps {
 	width?: number;
 	height?: number;
 	editorId: string;
+	editor: Editor;
 	initialSquares: Square[];
+	type: string;
+	image: string;
 	initialLabels: Label[];
-	onChange?: (squares: Square[], labels: Label[]) => void;
+	onChange?: (updatedEditor: Partial<Editor>) => void;
 	mode: Mode;
 	onModeChange: (mode: Mode) => void;
 }
@@ -39,6 +50,9 @@ export default function SquareEditor({
 	width = 800,
 	height = 600,
 	editorId,
+	type,
+	editor,
+	image,
 	initialSquares,
 	initialLabels,
 	onChange,
@@ -50,6 +64,10 @@ export default function SquareEditor({
 		x: number;
 		y: number;
 	} | null>(null);
+	const [size, setSize] = useState<{
+		width: number;
+		height: number;
+	}>({ width: 800, height: 600 });
 	const [labels, setLabels] = useState<Label[]>(initialLabels);
 	const [selectedShape, setSelectedShape] = useState<SelectedShape | null>(
 		null,
@@ -59,6 +77,10 @@ export default function SquareEditor({
 		x: number;
 		y: number;
 	} | null>(null);
+
+	useEffect(() => {
+		getImageSize(image).then((imageSize) => setSize(imageSize));
+	}, [image]);
 
 	const {
 		squares,
@@ -73,7 +95,7 @@ export default function SquareEditor({
 		moveSquareForward,
 		moveSquareBackward,
 	} = useSquares((square) => {
-		onChange?.(squares, labels);
+		onChange?.({ squares, labels });
 	});
 
 	useEffect(() => {
@@ -97,7 +119,7 @@ export default function SquareEditor({
 		deletePolygon,
 	} = usePolygon({
 		onChange: (polygon) => {
-			handleEditorChange(editorId, {
+			onChange?.({
 				polygons: [...polygons.filter((p) => p.id !== polygon.id), polygon],
 			});
 		},
@@ -118,7 +140,7 @@ export default function SquareEditor({
 		deletePath,
 	} = useFreehand({
 		onChange: (path) => {
-			handleEditorChange(editorId, {
+			onChange?.({
 				freehandPaths: [...freehandPaths.filter((p) => p.id !== path.id), path],
 			});
 		},
@@ -127,11 +149,12 @@ export default function SquareEditor({
 
 	const usedLabelIds = useMemo(() => {
 		return [
+			editor.classifiedLabel,
 			...squares.map((square) => square.labelId),
 			...polygons.map((polygon) => polygon.labelId),
 			...freehandPaths.map((path) => path.labelId),
 		].filter(Boolean) as string[];
-	}, [freehandPaths, polygons, squares]);
+	}, [freehandPaths, polygons, squares, editor.classifiedLabel]);
 
 	const findShapeById = useCallback(
 		(labelId: string) => {
@@ -228,7 +251,6 @@ export default function SquareEditor({
 	const handleMouseDown = useCallback(
 		(event: React.MouseEvent) => {
 			if (event.button !== 0) return;
-			console.log(event.button);
 			const unusedLabel = getUnusedLabel() || handleAddLabel();
 			const { x, y } = getMousePosition(event);
 
@@ -278,48 +300,6 @@ export default function SquareEditor({
 					}
 					setSelectedSquare(null);
 					handleStartDrag(x, y);
-					break;
-				}
-				case "select": {
-					if (!(event.target as Element).closest("[data-square-id]")) {
-						return;
-					}
-					const targetElement = document.elementFromPoint(
-						event.clientX,
-						event.clientY,
-					);
-					if (targetElement?.classList.contains("resize-handle")) {
-						const squareElement = targetElement.closest("[data-square-id]");
-						const cornerType = targetElement.getAttribute("data-corner") as
-							| "top-left"
-							| "top-right"
-							| "bottom-left"
-							| "bottom-right";
-
-						if (squareElement && cornerType) {
-							const squareId = squareElement.getAttribute("data-square-id");
-							const square = squares.find((s) => s.id === squareId);
-							if (square && !square.isLocked) {
-								event.stopPropagation();
-								handleStartDrag(x, y, square, cornerType);
-								return;
-							}
-						}
-					}
-					const squareElement = (event.target as Element).closest(
-						"[data-square-id]",
-					);
-					if (squareElement) {
-						const squareId = squareElement.getAttribute("data-square-id");
-						const square = squares.find((s) => s.id === squareId);
-						if (square) {
-							setSelectedSquare(square.id);
-							if (!square.isLocked) {
-								handleStartDrag(x, y, square);
-							}
-							return;
-						}
-					}
 					break;
 				}
 				case "delete": {
@@ -425,7 +405,6 @@ export default function SquareEditor({
 			const { x, y } = getMousePosition(event);
 			switch (mode) {
 				case "square":
-				case "select":
 					updateDrag(x, y);
 					break;
 				case "polygon":
@@ -458,7 +437,6 @@ export default function SquareEditor({
 			if (event.button === 2) return;
 			switch (mode) {
 				case "square":
-				case "select":
 					endDrag();
 					break;
 				case "polygon":
@@ -522,7 +500,7 @@ export default function SquareEditor({
 					isLocked,
 				}),
 			),
-			polygon: polygons.map(
+			polygons: polygons.map(
 				({ id, points, color, labelId, zIndex, isLocked }) => ({
 					id,
 					points: points.map(({ x, y }) => ({
@@ -535,7 +513,7 @@ export default function SquareEditor({
 					isLocked,
 				}),
 			),
-			path: freehandPaths.map(
+			paths: freehandPaths.map(
 				({ id, points, color, labelId, zIndex, isLocked }) => ({
 					id,
 					points: points.map(({ x, y }) => ({
@@ -557,7 +535,7 @@ export default function SquareEditor({
 		const url = URL.createObjectURL(blob);
 		const link = document.createElement("a");
 		link.href = url;
-		link.download = "squares.json";
+		link.download = "annotate.json";
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);
@@ -578,20 +556,38 @@ export default function SquareEditor({
 					color: label.color,
 				})),
 			);
-			for (const square of data.square) {
-				updateSquare(square.id, {
-					x: square.x,
-					y: square.y,
-					width: square.width,
-					height: square.height,
-					labelId: square.labelId,
-					zIndex: square.zIndex,
-					isLocked: square.isLocked,
-				});
+			if (Array.isArray(data?.squares)) {
+				for (const square of data.square) {
+					const { id, property } = square;
+					updateSquare(id, {
+						...property,
+					});
+				}
 			}
-			onChange?.(data.squares, data.labels);
+			if (Array.isArray(data?.polygons)) {
+				for (const polygon of data.polygons) {
+					const { id, property } = polygon;
+					updatePolygon(id, {
+						...property,
+					});
+				}
+			}
+			if (Array.isArray(data?.paths)) {
+				for (const path of data.paths) {
+					const { id, property } = path;
+					updatePath(id, {
+						...property,
+					});
+				}
+			}
+			onChange?.({
+				squares: data?.squares,
+				labels: data?.labels,
+				polygons: data?.polygon,
+				freehandPaths: data?.paths,
+			});
 		},
-		[updateSquare, onChange],
+		[updateSquare, onChange, updatePolygon, updatePath],
 	);
 
 	const handleKeyDown = useCallback(
@@ -651,17 +647,17 @@ export default function SquareEditor({
 		};
 		setLabels((prev) => {
 			const updated = [...prev, newLabel];
-			onChange?.(squares, updated);
+			onChange?.({ labels: updated });
 			return updated;
 		});
 		return newLabel;
-	}, [onChange, squares]);
+	}, [onChange]);
 
 	const handleRemoveLabel = useCallback(
 		(labelId: string) => {
 			setLabels((prev) => {
 				const updated = prev.filter((label) => label.id !== labelId);
-				onChange?.(squares, updated);
+				onChange?.({ labels: updated });
 				return updated;
 			});
 			setSelectedLabel((prev) => (prev === labelId ? null : prev));
@@ -686,6 +682,12 @@ export default function SquareEditor({
 			if (isUsedLabel(labelId)) {
 				const shape = findShapeById(labelId);
 				switch (mode) {
+					case "select": {
+						setSelectedShape(null);
+						setContextMenu(null);
+						setShapeContextMenu(null);
+						break;
+					}
 					case "square": {
 						if (shape?.id) {
 							setSelectedSquare(shape?.id);
@@ -711,7 +713,9 @@ export default function SquareEditor({
 				}
 				return;
 			}
-
+			onChange?.({
+				classifiedLabel: labelId,
+			});
 			updateLabel(selectedSquare, labelId, updateSquare);
 			updateLabel(selectedPolygon, labelId, updatePolygon);
 			updateLabel(selectedPath, labelId, updatePath);
@@ -719,6 +723,7 @@ export default function SquareEditor({
 		[
 			selectedSquare,
 			findShapeById,
+			onChange,
 			mode,
 			setSelectedSquare,
 			isUsedLabel,
@@ -736,29 +741,11 @@ export default function SquareEditor({
 				const updated = prev.map((label) =>
 					label.id === updatedLabel.id ? updatedLabel : label,
 				);
-				onChange?.(squares, updated);
+				onChange?.({ labels: updated });
 				return updated;
 			});
 		},
-		[onChange, squares],
-	);
-
-	const handleEditorChange = useCallback(
-		(
-			editorId: string,
-			updates: Partial<{
-				squares: Square[];
-				labels: Label[];
-				polygons: { id: string; points: { x: number; y: number }[] }[];
-				freehandPaths: { id: string; points: { x: number; y: number }[] }[];
-			}>,
-		) => {
-			onChange?.(
-				[...squares, ...(updates.squares || [])],
-				[...labels, ...(updates.labels || [])],
-			);
-		},
-		[onChange, squares, labels],
+		[onChange],
 	);
 
 	const visibleSquares = squares.filter((square) => {
@@ -769,18 +756,25 @@ export default function SquareEditor({
 	return (
 		<div className="flex w-full h-full">
 			<ModeSelector
+				type={type}
 				mode={mode}
 				onChange={onModeChange}
 				editorId={editorId}
 				handleExport={handleExport}
 				handleImport={handleImport}
 			/>
-			<div className="flex-1 space-y-4">
-				<div className="relative w-full h-full flex dark:bg-dot-white/[0.2] bg-dot-black/[0.2] items-center justify-center">
+			<div className="flex-1 space-y-4 p-36 dark:bg-dot-white/[0.2] bg-dot-black/[0.2]">
+				<div className="relative w-full h-full flex items-center justify-center">
 					<div
 						ref={containerRef}
-						style={{ width, height }}
-						className="relative border rounded-md shadow-md bg-white border-gray-300 overflow-hidden"
+						style={{
+							width: size?.width,
+							height: size?.height,
+							backgroundImage: `url(${image})`,
+							backgroundSize: "cover",
+							backgroundPosition: "center",
+						}}
+						className="relative border rounded shadow-md bg-white border-gray-300 overflow-hidden"
 						onMouseDown={handleMouseDown}
 						onMouseMove={handleMouseMove}
 						onMouseUp={handleMouseUp}

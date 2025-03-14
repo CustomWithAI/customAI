@@ -1,38 +1,45 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save } from "lucide-react";
 import { memo } from "react";
 
 interface EditorNavigationProps {
-	currentIndex: number;
 	totalEditors: number;
+	disabled?: [boolean, boolean];
 	onPrevious: () => void;
 	onNext: () => void;
+	onSubmit: () => void;
 }
 
 export const EditorNavigation = ({
-	currentIndex,
+	disabled = [false, false],
 	totalEditors,
 	onPrevious,
+	onSubmit,
 	onNext,
 }: EditorNavigationProps) => {
 	return (
-		<div className="flex items-center gap-4">
+		<div className="flex flex-wrap items-center gap-4">
+			<Button
+				onClick={onSubmit}
+				effect="expandIcon"
+				iconPlacement="right"
+				icon={Save}
+			>
+				Apply & Close
+			</Button>
 			<Button
 				variant="outline"
 				size="icon"
 				onClick={onPrevious}
-				disabled={currentIndex === 0}
+				disabled={disabled?.[0]}
 			>
 				<ChevronLeft className="h-4 w-4" />
 			</Button>
-			<span className="text-sm">
-				Editor {currentIndex + 1} of {totalEditors}
-			</span>
 			<Button
 				variant="outline"
 				size="icon"
 				onClick={onNext}
-				disabled={currentIndex === totalEditors - 1}
+				disabled={disabled?.[1]}
 			>
 				<ChevronRight className="h-4 w-4" />
 			</Button>

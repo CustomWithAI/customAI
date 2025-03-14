@@ -11,10 +11,10 @@ import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { decodeBase64, encodeBase64 } from "@/libs/base64";
+import { useRouter } from "@/libs/i18nNavigation";
 import { getStep } from "@/utils/step-utils";
 import type { AxiosError } from "axios";
 import { Brain } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import { formatCapital } from "../../../utils/capital";
 

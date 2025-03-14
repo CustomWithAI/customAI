@@ -612,9 +612,9 @@ const RenderInput = memo(
 									<Switch
 										defaultChecked={setValue as boolean}
 										checked={
-											setValue !== undefined || setValue !== null
-												? (setValue as boolean)
-												: value
+											setValue === undefined || setValue === null
+												? value
+												: (setValue as boolean)
 										}
 										onCheckedChange={setOnChange ? setOnChange : onChange}
 										onBlur={onBlur}
@@ -744,24 +744,32 @@ const RenderInput = memo(
 						key={key}
 						control={control}
 						name={name}
-						render={({ field: { onChange, onBlur, value } }) => (
-							<FormItem className={cn(className)}>
-								<FormLabel>{label}</FormLabel>
-								<FormDescription className="mb-3">
-									{description}
-								</FormDescription>
-								<Selection
-									className="my-3"
-									group={options && "group" in options ? options?.group : false}
-									value={setValue as string | number | boolean}
-									cyName={testDataId}
-									disabled={disabled}
-									placeholder={placeholder}
-									onChange={setOnChange ? setOnChange : onChange}
-									options={options && "list" in options ? options?.list : {}}
-								/>
-							</FormItem>
-						)}
+						render={({ field: { onChange, onBlur, value } }) => {
+							return (
+								<FormItem className={cn(className)}>
+									<FormLabel>{label}</FormLabel>
+									<FormDescription className="mb-3">
+										{description}
+									</FormDescription>
+									<Selection
+										className="my-3"
+										group={
+											options && "group" in options ? options?.group : false
+										}
+										value={
+											(setValue === undefined || setValue === null
+												? value
+												: setValue) as string | number | boolean
+										}
+										cyName={testDataId}
+										disabled={disabled}
+										placeholder={placeholder}
+										onChange={setOnChange ? setOnChange : onChange}
+										options={options && "list" in options ? options?.list : {}}
+									/>
+								</FormItem>
+							);
+						}}
 					/>
 				);
 			}

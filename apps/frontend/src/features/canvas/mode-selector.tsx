@@ -27,13 +27,21 @@ const MODES: (
 			color?: string;
 			key: string;
 			onClick?: Function;
+			type?: string;
 	  }
-	| { id: "line"; icon?: never; color?: never; key?: never; onClick?: never }
+	| {
+			id: "line";
+			icon?: never;
+			color?: never;
+			key?: never;
+			onClick?: never;
+			type?: never;
+	  }
 )[] = [
-	{ id: "square", icon: <Square />, key: "1" },
-	{ id: "polygon", icon: <Hexagon />, key: "2" },
-	{ id: "freehand", icon: <Pencil />, key: "3" },
-	{ id: "select", icon: <MousePointer2 />, key: "S" },
+	{ id: "square", icon: <Square />, key: "1", type: "object_detection" },
+	{ id: "polygon", icon: <Hexagon />, key: "2", type: "object_detection" },
+	{ id: "freehand", icon: <Pencil />, key: "3", type: "segmentation" },
+	{ id: "select", icon: <MousePointer2 />, key: "S", type: "classification" },
 	{ id: "delete", icon: <Trash2 />, color: "text-red-600", key: "D" },
 	{ id: "line" },
 	{ id: "export", icon: <Download />, key: "E" },
@@ -41,6 +49,7 @@ const MODES: (
 ];
 
 interface ModeSelectorProps {
+	type: string;
 	mode: Mode;
 	onChange: (mode: Mode) => void;
 	editorId: string;
@@ -48,6 +57,7 @@ interface ModeSelectorProps {
 	handleImport: (json: string | object) => void;
 }
 export function ModeSelector({
+	type,
 	mode,
 	onChange,
 	editorId,
@@ -94,9 +104,12 @@ export function ModeSelector({
 
 	return (
 		<div className="fixed top-1/2 left-4 z-40 flex flex-col gap-1 -translate-y-1/2 border border-gray-200 bg-white shadow-lg rounded-lg p-1">
-			{MODES.map(({ id, icon, color, key }) => {
+			{MODES.map(({ id, icon, color, key, type: modeType }) => {
 				if (id === "line") {
-					return <div className="w-full border-t" />;
+					return <div key={id} className="w-full border-t" />;
+				}
+				if (modeType && type !== modeType) {
+					return null;
 				}
 				return (
 					<TooltipProvider key={id}>

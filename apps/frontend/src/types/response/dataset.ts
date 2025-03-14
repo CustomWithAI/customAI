@@ -2,8 +2,11 @@ export type ResponseDataset = {
 	name: string;
 	description: string;
 	annotationMethod: string;
-	splitData: string;
+	train: number;
+	test: number;
+	valid: number;
 	id: string;
+	split_method: string;
 	createdAt: string;
 	updatedAt: string;
 	userId: string;
@@ -11,6 +14,11 @@ export type ResponseDataset = {
 	imageCount: number;
 };
 
+export type ResponseSurroundImage = {
+	prev: ResponseImage;
+	current: ResponseImage;
+	next: ResponseImage;
+};
 export type ResponseImage = {
 	path: string;
 	url: string;

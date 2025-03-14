@@ -9,23 +9,36 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useDeleteImageByPath } from "@/hooks/mutations/dataset-api";
+import { useToast } from "@/hooks/use-toast";
+import { useRouterAsync } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import type { ResponseImage } from "@/types/response/dataset";
 import { getImageSize } from "@/utils/image-size";
 import { Ellipsis } from "lucide-react";
 import { useFormatter } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { decodeBase64 } from "../../../libs/base64";
+import { decodeBase64, encodeBase64 } from "../../../libs/base64";
 
 export const ContentImage = ({
+	id,
 	images,
 	total,
-}: { images: ResponseImage[] | undefined; total: number | undefined }) => {
+}: {
+	images: ResponseImage[] | undefined;
+	total: number | undefined;
+	id: string;
+}) => {
 	const viewList = ViewList.useViewListState();
 	const [imageSizes, setImageSizes] = useState<
 		{ width: number; height: number }[]
 	>([]);
 	const format = useFormatter();
+	const { toast } = useToast();
+	const { asyncRoute } = useRouterAsync();
+
+	const { mutateAsync: deleteImage } = useDeleteImageByPath();
 
 	useEffect(() => {
 		if (images) {
@@ -74,8 +87,33 @@ export const ContentImage = ({
 											</div>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent>
-											<DropdownMenuItem>Annotate</DropdownMenuItem>
-											<DropdownMenuItem className="text-red-500">
+											<DropdownMenuItem
+												onClick={async () => {
+													await asyncRoute(
+														`/dataset/${id}/annotation/?image=${encodeBase64(image.path)}`,
+													);
+												}}
+											>
+												Annotate
+											</DropdownMenuItem>
+											<DropdownMenuItem
+												onClick={async () => {
+													await deleteImage(
+														{
+															id,
+															path: image.path,
+														},
+														{
+															onSuccess: (_, params) => {
+																toast({
+																	title: `remove ${decodeURIComponent(params.path)} image from dataset`,
+																});
+															},
+														},
+													);
+												}}
+												className="text-red-500"
+											>
 												Delete
 											</DropdownMenuItem>
 										</DropdownMenuContent>
