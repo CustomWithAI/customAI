@@ -2,6 +2,47 @@
   "annotationMethod": ["classification", "object_detection", "segmentation"],
   "splitMethod": ["default", "stratified_sampling"],
   "preTrainedModel": {
+    "machineLearning": {
+      "classification": [
+        {
+          "key": "decision_trees",
+          "value": {
+            "max_depth": 5,
+            "min_samples_split": 2,
+            "min_samples_leaf": 1,
+            "max_features": "sqrt",
+            "criterion": "gini"
+          }
+        },
+        {
+          "key": "random_forest",
+          "value": {
+            "n_estimators": 100,
+            "max_depth": 10,
+            "min_samples_split": 2,
+            "min_samples_leaf": 1,
+            "max_features": "sqrt"
+          }
+        },
+        {
+          "key": "svm",
+          "value": {
+            "kernel": "rbf",
+            "gamma": "scale",
+            "degree": 3
+          }
+        },
+        {
+          "key": "knn",
+          "value": {
+            "n_neighbors": 5,
+            "weights": "uniform",
+            "algorithm": "auto",
+            "leaf_size": 30
+          }
+        }
+      ]
+    },
     "deepLearning": {
       "classification": ["resnet50", "vgg16", "mobilenetv2"],
       "object_detection": ["yolov5", "yolov8", "yolov11"],

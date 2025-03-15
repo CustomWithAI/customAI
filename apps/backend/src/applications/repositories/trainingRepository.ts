@@ -134,6 +134,52 @@ export class TrainingRepository {
       .limit(1);
   }
 
+  public async findByDefault(workflowId: string) {
+    const {
+      workflowId: resultWorkflowId,
+      datasetId,
+      imagePreprocessingId,
+      featureExtractionId,
+      featureSelectionId,
+      augmentationId,
+      customModelId,
+      ...rest
+    } = getTableColumns(trainings);
+
+    return db
+      .select({
+        ...rest,
+        dataset: datasets,
+        imagePreprocessing: imagePreprocessings,
+        featureExtraction: featureExtractions,
+        featureSelection: featureSelections,
+        augmentation: augmentations,
+        customModel: customModels,
+        workflow: workflows,
+      })
+      .from(trainings)
+      .leftJoin(datasets, eq(trainings.datasetId, datasets.id))
+      .leftJoin(
+        imagePreprocessings,
+        eq(trainings.imagePreprocessingId, imagePreprocessings.id)
+      )
+      .leftJoin(
+        featureExtractions,
+        eq(trainings.featureExtractionId, featureExtractions.id)
+      )
+      .leftJoin(
+        featureSelections,
+        eq(trainings.featureSelectionId, featureSelections.id)
+      )
+      .leftJoin(augmentations, eq(trainings.augmentationId, augmentations.id))
+      .leftJoin(customModels, eq(trainings.customModelId, customModels.id))
+      .innerJoin(workflows, eq(trainings.workflowId, workflows.id))
+      .where(
+        and(eq(trainings.isDefault, true), eq(trainings.workflowId, workflowId))
+      )
+      .limit(1);
+  }
+
   public async updateById(
     workflowId: string,
     id: string,

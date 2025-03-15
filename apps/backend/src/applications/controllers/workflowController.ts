@@ -136,4 +136,11 @@ export const workflow = new Elysia({
         },
         { response: defaultTrainingResponseDto }
       )
+      .get(
+        "/default",
+        async ({ user, params, trainingService }) => {
+          return trainingService.getTrainingByDefault(user.id, params.id);
+        },
+        { response: trainingResponseDto }
+      )
   );

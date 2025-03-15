@@ -68,6 +68,16 @@ export class TrainingService {
     return result[0];
   }
 
+  public async getTrainingByDefault(userId: string, workflowId: string) {
+    await this.ensureWorkflowExists(userId, workflowId);
+
+    const result = await this.repository.findByDefault(workflowId);
+    if (result.length === 0) {
+      throw new NotFoundError("Default training not found");
+    }
+    return result[0];
+  }
+
   public async updateTraining(
     userId: string,
     workflowId: string,
