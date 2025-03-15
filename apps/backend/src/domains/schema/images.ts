@@ -3,8 +3,7 @@ import { datasets } from "@/domains/schema/datasets";
 
 export const images = pgTable("images", {
   path: varchar("path", { length: 255 }).primaryKey(),
-  annotation: jsonb("annotation").notNull(),
-  class: varchar("class", { length: 255 }),
+  annotation: jsonb("annotation"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
