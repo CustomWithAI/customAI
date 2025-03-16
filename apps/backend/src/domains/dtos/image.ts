@@ -9,7 +9,7 @@ export const createImagesDto = t.Object({
 });
 
 export const classificationAnnotationDto = t.Object({
-  labels: t.Array(t.String()),
+  label: t.String(),
 });
 
 export const objectDetectionAnnotationDto = t.Object({
@@ -22,7 +22,6 @@ export const objectDetectionAnnotationDto = t.Object({
       label: t.String(),
     })
   ),
-  labels: t.Array(t.String()),
 });
 
 export const segmentationAnnotationDto = t.Object({
@@ -37,7 +36,6 @@ export const segmentationAnnotationDto = t.Object({
       label: t.String(),
     })
   ),
-  labels: t.Array(t.String()),
 });
 
 export const updateImageDto = t.Object({

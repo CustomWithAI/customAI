@@ -78,6 +78,7 @@ CREATE TABLE "datasets" (
 	"description" varchar(255) NOT NULL,
 	"annotation_method" varchar(255) NOT NULL,
 	"split_method" varchar(255),
+	"labels" varchar(255)[],
 	"train" integer,
 	"test" integer,
 	"valid" integer,
@@ -115,8 +116,7 @@ CREATE TABLE "image_preprocessings" (
 --> statement-breakpoint
 CREATE TABLE "images" (
 	"path" varchar(255) PRIMARY KEY NOT NULL,
-	"annotation" jsonb NOT NULL,
-	"class" varchar(255),
+	"annotation" jsonb,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"dataset_id" varchar(255) NOT NULL
