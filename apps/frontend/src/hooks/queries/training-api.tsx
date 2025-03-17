@@ -14,3 +14,14 @@ export const useGetTrainingById = (
 		...options,
 	});
 };
+
+export const useGetTrainingByDefault = (
+	workflowId: string,
+	options?: AppQueryOptions<typeof trainingService.getTrainingByDefault>,
+) => {
+	return useQuery({
+		queryKey: ["training", workflowId, "default"],
+		queryFn: async () => trainingService.getTrainingByDefault({ workflowId }),
+		...options,
+	});
+};

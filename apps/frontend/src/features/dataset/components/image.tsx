@@ -1,6 +1,7 @@
 "use client";
 import { ViewList } from "@/components/specific/viewList";
-import { Content, Subtle } from "@/components/typography/text";
+import { Content, Subtle, Tiny } from "@/components/typography/text";
+import { DotBadge } from "@/components/ui/dot-badge";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -65,7 +66,7 @@ export const ContentImage = ({
 				Found {total} {total > 1 ? "images" : "image"}
 			</Subtle>
 			{viewList === "Grid" ? (
-				<div className="grid grid-cols-4 gap-4">
+				<div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-4">
 					{images.map((image, index) => (
 						<div
 							key={index}
@@ -124,11 +125,11 @@ export const ContentImage = ({
 								<Subtle
 									className={cn(
 										"text-left",
-										{ "text-green-500": image.class },
-										{ "text-red-500": !image.class },
+										{ "text-green-500": image.annotation },
+										{ "text-red-500": !image.annotation },
 									)}
 								>
-									{image.class ? "annotated" : "unannotated"}
+									{image.annotation ? "annotated" : "unannotated"}
 								</Subtle>
 								<p className="text-xs text-gray-400">
 									{imageSizes[index]?.width} x {imageSizes[index]?.height} px
@@ -148,30 +149,29 @@ export const ContentImage = ({
 								src={image.url}
 								className="rounded-md"
 								alt={image.path}
-								width={48}
-								height={48}
+								width={52}
+								height={52}
 							/>
-							<div>
+							<div className="w-1/2 flex-col flex justify-start">
 								<Content className="min-w-0 text-left flex-1 truncate">
-									{image.class ?? "Unlabeled class"}
+									{image.annotation?.label || "Unlabeled class"}
 								</Content>
-								<Subtle
-									className={cn(
-										"text-left",
-										{ "text-green-500": image.class },
-										{ "text-red-500": !image.class },
-									)}
-								>
-									{image.class ? "annotated" : "unannotated"}
-								</Subtle>
+								<div className="w-fit">
+									<DotBadge
+										variant={image.annotation ? "success" : "danger"}
+										className={cn("text-left")}
+									>
+										{image.annotation ? "annotated" : "unannotated"}
+									</DotBadge>
+								</div>
 							</div>
 							<div className="mx-auto flex-shrink-0">
-								<Subtle className="text-gray-500">
+								<Subtle className="text-xs text-gray-500">
 									{imageSizes[index]?.width} x {imageSizes[index]?.height} px
 								</Subtle>
 							</div>
 							<div>
-								<Subtle className="flex-shrink-0">
+								<Subtle className="text-xs flex-shrink-0">
 									{format.relativeTime(new Date(image.createdAt))}
 								</Subtle>
 							</div>

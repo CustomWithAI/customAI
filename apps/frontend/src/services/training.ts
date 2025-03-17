@@ -41,6 +41,13 @@ export const trainingService = {
 			);
 		} catch (error) {}
 	},
+	getTrainingByDefault: async ({ workflowId }: { workflowId: string }) => {
+		try {
+			return axiosClient.get<TrainingModel>(
+				`/workflows/${workflowId}/trainings/default`,
+			);
+		} catch (error) {}
+	},
 	startTraining: async ({
 		workflowId,
 		trainingId,

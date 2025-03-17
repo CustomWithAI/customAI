@@ -8,5 +8,4 @@ export const datasetDetailsSchema = z.object({
 	annotationMethod: z
 		.string()
 		.min(1, { message: "annotation method is required" }),
-	splitData: z.string().min(1, { message: "split data is required" }),
 });

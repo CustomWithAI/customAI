@@ -42,6 +42,7 @@ const hyperparameterByType: Record<
 		schema: segmentationSchema,
 	},
 };
+
 export const ModelConfigPage = () => {
 	const { setQueryParam, getQueryParam } = useQueryParam({ name: "step" });
 	const { toast } = useToast();

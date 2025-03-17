@@ -9,12 +9,16 @@ import {
 } from "@/components/typography/text";
 import { DotBadge } from "@/components/ui/dot-badge";
 import { encodeBase64 } from "@/libs/base64";
+import type { TrainingModel } from "@/types/response/training";
 import type { WorkflowModel } from "@/types/response/workflow";
 import { Layers2, PackagePlus, ScanSearch, Tractor } from "lucide-react";
+import { useFormatter } from "next-intl";
 
 export const MainWorkflowPage = ({
 	data,
-}: { data: WorkflowModel | undefined }) => {
+	default: mainDefault,
+}: { data: WorkflowModel | undefined; default: TrainingModel | undefined }) => {
+	const { relativeTime } = useFormatter();
 	return (
 		<>
 			<Header>{data?.name}</Header>
@@ -83,8 +87,12 @@ export const MainWorkflowPage = ({
 									Ready to use
 								</DotBadge>
 								<div className="flex items-baseline space-x-2">
-									<Content className="font-semibold leading-none">2.1</Content>
-									<Subtle className="leading-none">2 month ago</Subtle>
+									<Content className="font-semibold leading-none">
+										{mainDefault?.version?.toFixed(1)}
+									</Content>
+									<Subtle className="leading-none">
+										{relativeTime(new Date(mainDefault?.createdAt || ""))}
+									</Subtle>
 								</div>
 							</div>
 						</div>

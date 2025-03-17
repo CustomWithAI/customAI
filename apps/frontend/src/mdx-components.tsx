@@ -9,7 +9,7 @@ export function useMDXComponents(components?: MDXComponents): MDXComponents {
 			// Override default elements with styled versions
 			h1: ({ children }) => (
 				<h1
-					className="mt-8 mb-4 text-4xl font-bold tracking-tight"
+					className="mt-8 mb-4 text-4xl text-zinc-700 font-bold tracking-tight"
 					id={children?.toString().toLowerCase().replace(/\s+/g, "-")}
 				>
 					{children}
@@ -17,7 +17,7 @@ export function useMDXComponents(components?: MDXComponents): MDXComponents {
 			),
 			h2: ({ children }) => (
 				<h2
-					className="mt-8 mb-3 text-3xl font-semibold tracking-tight"
+					className="mt-8 mb-3 text-3xl text-zinc-700 font-semibold tracking-tight"
 					id={children?.toString().toLowerCase().replace(/\s+/g, "-")}
 				>
 					{children}
@@ -25,7 +25,7 @@ export function useMDXComponents(components?: MDXComponents): MDXComponents {
 			),
 			h3: ({ children }) => (
 				<h3
-					className="mt-6 mb-2 text-2xl font-semibold tracking-tight"
+					className="mt-6 mb-2 text-2xl text-zinc-700 font-semibold tracking-tight"
 					id={children?.toString().toLowerCase().replace(/\s+/g, "-")}
 				>
 					{children}

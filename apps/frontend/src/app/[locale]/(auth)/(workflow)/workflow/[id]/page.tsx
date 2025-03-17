@@ -1,6 +1,7 @@
 "use client";
 import { AppNavbar } from "@/components/layout/appNavbar";
 import { Menubar } from "@/components/ui/menubar";
+import { useGetTrainingByDefault } from "@/hooks/queries/training-api";
 import { useGetWorkflowById } from "@/hooks/queries/workflow-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { InsightPage } from "./_container/insight";
@@ -12,6 +13,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 	const { compareQueryParam, setQueryParam } = useQueryParam({ name: "tab" });
 
 	const { data: workflow } = useGetWorkflowById(id);
+	const { data: defaultTraining } = useGetTrainingByDefault(id);
 	return (
 		<AppNavbar
 			activeTab="Home"
@@ -78,7 +80,10 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 				</Menubar.List>
 			</div>
 			{compareQueryParam({ value: "overview", allowNull: true }) ? (
-				<MainWorkflowPage data={workflow?.data} />
+				<MainWorkflowPage
+					data={workflow?.data}
+					default={defaultTraining?.data}
+				/>
 			) : null}
 			{compareQueryParam({ value: "versions" }) ? <VersionPage /> : null}
 			{compareQueryParam({ value: "insights" }) ? <InsightPage /> : null}

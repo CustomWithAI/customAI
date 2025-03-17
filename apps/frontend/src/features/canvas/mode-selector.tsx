@@ -39,7 +39,7 @@ const MODES: (
 	  }
 )[] = [
 	{ id: "square", icon: <Square />, key: "1", type: "object_detection" },
-	{ id: "polygon", icon: <Hexagon />, key: "2", type: "object_detection" },
+	{ id: "polygon", icon: <Hexagon />, key: "2", type: "segmentation" },
 	{ id: "freehand", icon: <Pencil />, key: "3", type: "segmentation" },
 	{ id: "select", icon: <MousePointer2 />, key: "S", type: "classification" },
 	{ id: "delete", icon: <Trash2 />, color: "text-red-600", key: "D" },
@@ -69,16 +69,15 @@ export function ModeSelector({
 			if (!id) return;
 			switch (id) {
 				case "export":
-					document.getElementById(`import-json-${editorId}`)?.click();
+					handleExport();
 					break;
 				case "import":
-					handleExport();
+					document.getElementById(`import-json-${editorId}`)?.click();
 					break;
 				case "line":
 					break;
 				default: {
 					onChange(id as Mode);
-					break;
 				}
 			}
 		},

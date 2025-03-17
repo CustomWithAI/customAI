@@ -18,7 +18,7 @@ interface LabelSidebarProps {
 }
 
 export function LabelSidebar({
-	labels,
+	labels = [],
 	onAddLabel,
 	onRemoveLabel,
 	onLabelClick,

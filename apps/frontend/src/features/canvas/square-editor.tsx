@@ -68,7 +68,7 @@ export default function SquareEditor({
 		width: number;
 		height: number;
 	}>({ width: 800, height: 600 });
-	const [labels, setLabels] = useState<Label[]>(initialLabels);
+	const [labels, setLabels] = useState<Label[]>(initialLabels || []);
 	const [selectedShape, setSelectedShape] = useState<SelectedShape | null>(
 		null,
 	);
@@ -550,7 +550,7 @@ export default function SquareEditor({
 			}
 			setLabels([]);
 			setLabels(
-				data.labels.map((label: Label) => ({
+				data.labels?.map((label: Label) => ({
 					id: label.id,
 					name: label.name,
 					color: label.color,

@@ -4,6 +4,9 @@ import { AppNavbar } from "@/components/layout/appNavbar";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form";
 import { WorkflowTypeSection } from "@/features/workflow/components/workflow-type";
+import { useCreateDataset } from "@/hooks/mutations/dataset-api";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "@/libs/i18nNavigation";
 import {
 	type DatasetDetailsSchema,
 	datasetDetailsSchema,
@@ -40,7 +43,7 @@ const datasetDetailsFormField: FormFieldInput<DatasetDetailsSchema> = [
 				return (
 					<FormField
 						control={control}
-						name="pipeline_type"
+						name="annotationMethod"
 						render={({ field: { onChange, value } }) => (
 							<WorkflowTypeSection value={value} onChange={onChange} />
 						)}
@@ -52,8 +55,20 @@ const datasetDetailsFormField: FormFieldInput<DatasetDetailsSchema> = [
 	},
 ];
 const CreateDatasetPage = () => {
-	const onSubmitData = (data: DatasetDetailsSchema) => {
-		console.log(data);
+	const { mutateAsync: createDataset } = useCreateDataset();
+	const router = useRouter();
+	const { toast } = useToast();
+
+	const onSubmitData = async (data: DatasetDetailsSchema) => {
+		await createDataset(
+			{ data },
+			{
+				onSuccess: (ctx) => {
+					toast({ title: `create dataset ${ctx?.data.name} successfully` });
+					router.push(`${ctx?.data.id}`);
+				},
+			},
+		);
 	};
 	const { Provider, Build } = useFormBuilder({
 		schema: datasetDetailsSchema,

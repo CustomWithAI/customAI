@@ -4,18 +4,31 @@ import type {
 	ResponseImage,
 	ResponseSurroundImage,
 } from "@/types/response/dataset";
+import type { DatasetDetailsSchema } from "../models/dataset";
 import type { responsePagination } from "../types/common";
 
 export const datasetService = {
-	createDataset: async () => {
+	createDataset: async ({ data }: { data: DatasetDetailsSchema }) => {
 		try {
-			axiosClient.post("/dataset");
+			return axiosClient.post<ResponseDataset>("/datasets", data);
 		} catch (error) {}
 	},
 
-	updateDataset: async () => {
+	updateDataset: async ({
+		id,
+		data,
+	}: {
+		id: string;
+		data: Partial<
+			Omit<ResponseDataset, "userId, imageCount, images, createdAt, updatedAt">
+		>;
+	}) => {
 		try {
-			axiosClient.patch("/dataset");
+			const { data: responseData } = await axiosClient.put<ResponseDataset>(
+				`/datasets/${id}`,
+				data,
+			);
+			return responseData;
 		} catch (error) {}
 	},
 
@@ -50,6 +63,20 @@ export const datasetService = {
 				`/datasets/${id}/images${params || ""}`,
 			);
 			return data;
+		} catch (error) {}
+	},
+
+	updateImage: async ({
+		data,
+		id,
+		imagesPath,
+	}: { data: Partial<ResponseImage>; id: string; imagesPath: string }) => {
+		try {
+			const response = await axiosClient.put<ResponseImage>(
+				`/datasets/${id}/images/${imagesPath}/`,
+				data,
+			);
+			return response?.data;
 		} catch (error) {}
 	},
 

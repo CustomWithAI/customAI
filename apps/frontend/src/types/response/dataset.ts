@@ -1,10 +1,11 @@
 export type ResponseDataset = {
 	name: string;
 	description: string;
-	annotationMethod: string;
-	train: number;
-	test: number;
-	valid: number;
+	annotationMethod?: string;
+	train?: number;
+	test?: number;
+	valid?: number;
+	labels?: string[];
 	id: string;
 	split_method: string;
 	createdAt: string;
@@ -22,8 +23,12 @@ export type ResponseSurroundImage = {
 export type ResponseImage = {
 	path: string;
 	url: string;
-	class: string | null;
-	annotation: string;
+	annotation: {
+		label?: string;
+		annotation?:
+			| { x: number; y: number; width: number; height: number; label: string }[]
+			| { points: { x: number; y: number }[]; label: string }[];
+	};
 	createdAt: string;
 	updatedAt: string;
 	datasetId: string;
