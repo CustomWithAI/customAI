@@ -20,6 +20,7 @@ export const datasets = pgTable(
     description: varchar("description", { length: 255 }).notNull(),
     annotationMethod: varchar("annotation_method", { length: 255 }).notNull(),
     splitMethod: varchar("split_method", { length: 255 }),
+    labels: varchar("labels", { length: 255 }).array(),
     train: integer("train"),
     test: integer("test"),
     valid: integer("valid"),

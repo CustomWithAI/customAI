@@ -1,5 +1,5 @@
 {
-  "id": "1a74988a-7a49-4f95-9ce5-913284d83f35",
+  "id": "1573c0da-c206-4672-a2cb-47df479a23e8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -541,6 +541,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "labels": {
+          "name": "labels",
+          "type": "varchar(255)[]",
+          "primaryKey": false,
+          "notNull": false
+        },
         "train": {
           "name": "train",
           "type": "integer",
@@ -856,12 +862,6 @@
         "annotation": {
           "name": "annotation",
           "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "class": {
-          "name": "class",
-          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },

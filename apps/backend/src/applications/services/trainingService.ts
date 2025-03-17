@@ -211,17 +211,7 @@ export class TrainingService {
       { limit: 1000 }
     );
 
-    const hasMissingClass = images.some((image) => !image.class);
-
-    if (hasMissingClass) {
-      throw error(400, "There are images without a class");
-    }
-
-    const hasMissingAnnotation = images.some(
-      (image) =>
-        ["object_detection", "segmentation"].includes(training.workflow.type) &&
-        image.annotation == null
-    );
+    const hasMissingAnnotation = images.some((image) => !image.annotation);
 
     if (hasMissingAnnotation) {
       throw error(
