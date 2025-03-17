@@ -16,7 +16,7 @@ import { ButtonLoading } from "@/components/ui/loading-button";
 import { env } from "@/env.mjs";
 import { useToast } from "@/hooks/use-toast";
 import { authClient } from "@/libs/auth-client";
-import { useRouterAsync } from "@/libs/i18nNavigation";
+import { useRouterAsync } from "@/libs/i18nAsyncRoute";
 import { cn } from "@/libs/utils";
 import { LoginSchema, type LoginSchemaType } from "@/models/auth";
 import { zodResolver } from "@hookform/resolvers/zod";

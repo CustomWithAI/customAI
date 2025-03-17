@@ -36,12 +36,12 @@ export function LearningLayout({
 	navigation,
 }: LearningLayoutProps) {
 	return (
-		<div className="flex min-h-screen">
+		<div className="flex w-full min-h-screen">
 			{/* Navigation Sidebar */}
 			<LearningSidebar />
 
 			{/* Main content and TOC sidebar */}
-			<div className="flex-1 overflow-auto">
+			<div className="flex-1 w-full overflow-auto">
 				<div className="container mx-auto px-4 py-8">
 					<div className="flex flex-col lg:flex-row gap-12">
 						<div className="flex-1">

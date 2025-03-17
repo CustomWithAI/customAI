@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
 import type React from "react";
 import type { ReactNode } from "react";
 
@@ -7,6 +8,11 @@ export const metadata: Metadata = {
 	description: "A flexible learning platform built with Next.js and MDX",
 };
 
-export default function LearningLayout({ children }: { children: ReactNode }) {
+export default async function LearningLayout({
+	children,
+	params,
+}: { children: ReactNode; params: Promise<{ locale: string }> }) {
+	const { locale } = await params;
+	setRequestLocale(locale);
 	return <div className="relative min-h-screen flex">{children}</div>;
 }

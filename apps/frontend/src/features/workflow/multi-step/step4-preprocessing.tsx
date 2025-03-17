@@ -13,7 +13,6 @@ import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { decodeBase64, encodeBase64 } from "@/libs/base64";
-import { useRouterAsync } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import { getStep } from "@/utils/step-utils";
 import { formatDate } from "@/utils/to-datetime";

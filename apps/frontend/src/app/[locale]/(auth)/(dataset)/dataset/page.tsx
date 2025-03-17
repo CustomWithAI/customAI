@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ContentDataset } from "@/features/dataset/components/content";
 import { useGetDatasets } from "@/hooks/queries/dataset-api";
-import { useRouterAsync } from "@/libs/i18nNavigation";
+import { useRouterAsync } from "@/libs/i18nAsyncRoute";
 import { Filter, PackagePlus } from "lucide-react";
 import { useCallback, useState } from "react";
 

@@ -1,6 +1,7 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useRouterAsync } from "@/libs/i18nNavigation";
+import { useRouterAsync } from "@/libs/i18nAsyncRoute";
+
 import { cn } from "@/libs/utils";
 import { Terminal } from "lucide-react";
 import { type ReactElement, type ReactNode, cloneElement } from "react";

@@ -11,6 +11,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/libs/utils";
 import { BookOpen, ChevronRight, FileText, Home, Menu } from "lucide-react";
+import { useLocale } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -34,26 +35,26 @@ const documentationNav: DocGroup[] = [
 		title: "Getting Started",
 		icon: BookOpen,
 		pages: [
-			{ title: "Introduction", href: "/docs/getting-started" },
-			{ title: "Installation", href: "/docs/installation" },
-			{ title: "Configuration", href: "/docs/configuration" },
+			{ title: "Introduction", href: "/learning/getting-started" },
+			{ title: "Installation", href: "/learning/installation" },
+			{ title: "Configuration", href: "/learning/configuration" },
 		],
 	},
 	{
 		title: "Usage",
 		icon: FileText,
 		pages: [
-			{ title: "Basic Usage", href: "/docs/usage" },
-			{ title: "Advanced Features", href: "/docs/advanced-features" },
-			{ title: "API Reference", href: "/docs/api-reference" },
+			{ title: "Basic Usage", href: "/learning/usage" },
+			{ title: "Advanced Features", href: "/learning/advanced-features" },
+			{ title: "API Reference", href: "/learning/api-reference" },
 		],
 	},
 	{
 		title: "Examples",
 		pages: [
-			{ title: "Simple Example", href: "/docs/simple-example" },
-			{ title: "Complex Example", href: "/docs/complex-example" },
-			{ title: "Case Studies", href: "/docs/case-studies" },
+			{ title: "Simple Example", href: "/learning/simple-example" },
+			{ title: "Complex Example", href: "/learning/complex-example" },
+			{ title: "Case Studies", href: "/learning/case-studies" },
 		],
 	},
 ];

@@ -7,7 +7,7 @@ import {
 } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/libs/auth-client";
-import { useRouterAsync } from "@/libs/i18nNavigation";
+import { useRouterAsync } from "@/libs/i18nAsyncRoute";
 import { cn } from "@/libs/utils";
 import { Check, Earth, Leaf, Plane, Rocket, Sprout, Wind } from "lucide-react";
 import { useCallback, useState } from "react";

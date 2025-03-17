@@ -1,6 +1,6 @@
 import BaseLayout from "@/components/layout/baseLayout";
 import { routing } from "@/i18n/routings";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
@@ -23,6 +23,8 @@ export default async function LocaleLayout({
 	children,
 	params: { locale },
 }: Props) {
+	console.log("params:", locale);
+	setRequestLocale(locale);
 	if (!routing.locales.includes(locale as "en-US" | "th-TH")) {
 		notFound();
 	}

@@ -1,0 +1,9 @@
+{
+	"languages": {
+		"en-US": "English",
+		"th-TH": "ไทย"
+	},
+	"notices": {
+		"fallbackLanguage": "{languages}"
+	}
+}

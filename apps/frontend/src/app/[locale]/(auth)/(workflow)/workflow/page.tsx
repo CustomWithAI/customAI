@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { ContentDataset } from "@/features/dataset/components/content";
 import { WorkflowCard } from "@/features/workflow/components/content-workflow";
 import { useGetWorkflows } from "@/hooks/queries/workflow-api";
-import { useRouterAsync } from "@/libs/i18nNavigation";
+import { useRouterAsync } from "@/libs/i18nAsyncRoute";
 import { Filter, PackagePlus } from "lucide-react";
 import { useCallback } from "react";
 

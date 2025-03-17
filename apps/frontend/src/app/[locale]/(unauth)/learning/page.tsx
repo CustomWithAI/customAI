@@ -1,4 +1,6 @@
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import fs from "fs";
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import path from "path";
 import { LearningSidebar } from "@/components/mdx/learningSidebar";
 import { Button } from "@/components/ui/button";
@@ -10,7 +12,9 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { Link } from "@/libs/i18nNavigation";
 import { getAllMDXData } from "@/libs/mdx-utils";
+import { getPrefixLang } from "@/utils/getPrefixLang";
 import {
 	ArrowRight,
 	BookOpen,
@@ -20,7 +24,7 @@ import {
 	Lightbulb,
 	Rocket,
 } from "lucide-react";
-import Link from "next/link";
+import { routing } from "../../../../i18n/routings";
 
 // Documentation categories with icons
 const categoryIcons: Record<string, any> = {
@@ -32,8 +36,23 @@ const categoryIcons: Record<string, any> = {
 	Resources: BookOpen,
 };
 
-export default function DocsLandingPage() {
-	const docsDirectory = path.join(process.cwd(), "/src/content/docs");
+export default function DocsLandingPage({
+	params: { locale },
+}: { params: { locale: string } }) {
+	const actualLang = routing.locales.includes(locale as any)
+		? locale
+		: routing.defaultLocale;
+	let docsDirectory = path.join(
+		process.cwd(),
+		`/src/content/learning/${getPrefixLang(actualLang)}`,
+	);
+	if (fs.existsSync(docsDirectory)) {
+		docsDirectory = path.join(
+			process.cwd(),
+			`/src/content/learning/${getPrefixLang(routing.defaultLocale)}`,
+		);
+	}
+
 	const allDocs = getAllMDXData(docsDirectory);
 
 	const docsByTag: Record<string, typeof allDocs> = {};
@@ -48,7 +67,7 @@ export default function DocsLandingPage() {
 			}
 		}
 	}
-
+	console.log(allDocs);
 	const featuredDocs = allDocs.filter(
 		(doc) =>
 			doc.frontmatter.tags?.includes("basics") ||
@@ -56,12 +75,12 @@ export default function DocsLandingPage() {
 	);
 
 	return (
-		<div className="flex min-h-screen">
+		<div className="flex w-full min-h-screen">
 			{/* Navigation Sidebar */}
 			<LearningSidebar />
 
 			{/* Main content */}
-			<div className="flex-1 overflow-auto">
+			<div className="flex-1 w-full overflow-auto">
 				<div className="container mx-auto px-4 py-12">
 					<div className="max-w-4xl mx-auto">
 						<div className="text-center mb-12">
@@ -90,7 +109,7 @@ export default function DocsLandingPage() {
 										<div className="flex flex-wrap gap-3">
 											{featuredDocs.map((doc) => (
 												<Button key={doc.slug} variant="outline" asChild>
-													<Link href={`/docs/${doc.slug}`}>
+													<Link href={`/learning/${doc.slug}`}>
 														{doc.frontmatter.title}
 													</Link>
 												</Button>
@@ -126,7 +145,7 @@ export default function DocsLandingPage() {
 												{docs.slice(0, 3).map((doc) => (
 													<li key={doc.slug}>
 														<Link
-															href={`/docs/${doc.slug}`}
+															href={`/learning/${doc.slug}`}
 															className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
 														>
 															<ArrowRight className="h-3 w-3" />
@@ -140,7 +159,7 @@ export default function DocsLandingPage() {
 											<CardFooter>
 												<Button variant="ghost" size="sm" asChild>
 													<Link
-														href={`/docs/tags/${tag}`}
+														href={`/learning/tags/${tag}`}
 														className="flex items-center gap-1"
 													>
 														View all ({docs.length}){" "}
