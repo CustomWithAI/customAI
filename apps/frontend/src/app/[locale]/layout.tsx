@@ -23,7 +23,6 @@ export default async function LocaleLayout({
 	children,
 	params: { locale },
 }: Props) {
-	console.log("params:", locale);
 	setRequestLocale(locale);
 	if (!routing.locales.includes(locale as "en-US" | "th-TH")) {
 		notFound();

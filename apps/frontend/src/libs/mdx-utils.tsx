@@ -28,6 +28,7 @@ export interface MDXPage {
 }
 
 export function getMDXData(filePath: string, locale: string): MDXPage {
+	console.log(filePath);
 	const fileContents = fs.readFileSync(filePath, "utf8");
 
 	const { data, content } = matter(fileContents);

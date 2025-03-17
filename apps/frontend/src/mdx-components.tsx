@@ -51,11 +51,9 @@ export function useMDXComponents(components?: MDXComponents): MDXComponents {
 				</blockquote>
 			),
 			img: (props) => (
-				<Image
+				<img
 					alt={props.alt || ""}
 					src={props.src || ""}
-					width={Number(props.width) || 800}
-					height={Number(props.height) || 450}
 					className="rounded-md border my-6"
 				/>
 			),
