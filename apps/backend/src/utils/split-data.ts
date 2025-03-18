@@ -1,5 +1,5 @@
 type ClassImageData = {
-  class_name: string;
+  class: string;
 };
 
 function defaultSampling<T extends ClassImageData>(
@@ -16,10 +16,10 @@ function defaultSampling<T extends ClassImageData>(
 
   const groupedData: { [key: string]: T[] } = {};
   for (const data of dataset) {
-    if (!groupedData[data.class_name]) {
-      groupedData[data.class_name] = [];
+    if (!groupedData[data.class]) {
+      groupedData[data.class] = [];
     }
-    groupedData[data.class_name].push(data);
+    groupedData[data.class].push(data);
   }
 
   for (const classKey of Object.keys(groupedData)) {
@@ -51,10 +51,10 @@ function stratifiedSampling<T extends ClassImageData>(
   const groupedData: { [key: string]: T[] } = {};
 
   for (const data of dataset) {
-    if (!groupedData[data.class_name]) {
-      groupedData[data.class_name] = [];
+    if (!groupedData[data.class]) {
+      groupedData[data.class] = [];
     }
-    groupedData[data.class_name].push(data);
+    groupedData[data.class].push(data);
   }
 
   const minClassCount = Math.min(
