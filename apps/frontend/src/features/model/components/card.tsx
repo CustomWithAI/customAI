@@ -24,8 +24,8 @@ export const ModelCard: React.FC<CardProps> = ({
 		<button
 			type="button"
 			className={cn(
-				"min-w-64 hover:shadow-blue-500 hover:shadow-sm duration-200 my-1 border",
-				" rounded-lg shadow-md overflow-hidden [&>div]:flex-shrink-0",
+				"size-52 md:size-64 hover:shadow-blue-500 aspect-square hover:shadow-sm duration-200 my-1 border",
+				" rounded-lg shadow-md overflow-hidden [&>div]:flex-shrink-0 p-4",
 				className,
 			)}
 			onClick={() => {
@@ -34,7 +34,7 @@ export const ModelCard: React.FC<CardProps> = ({
 		>
 			<div className="flex h-28 relative overflow-hidden">
 				{images?.length === 0 ? (
-					<div className="w-full h-28 rounded-md" />
+					<div className="flex flex-1 w-full h-28 min-h-[6rem] rounded-xl dark:bg-dot-white/[0.2] bg-dot-black/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-transparent dark:border-white/[0.2] bg-neutral-100 dark:bg-black" />
 				) : (
 					images.map((image, index) => (
 						<div className="w-full" key={`dataset-${title + String(index)}`}>
@@ -56,9 +56,13 @@ export const ModelCard: React.FC<CardProps> = ({
 					{type}
 				</div>
 			</div>
-			<div className="w-full text-left p-6 pt-4 min-h-24 bg-white z-10">
-				<Header className="font-semibold text-lg">{title}</Header>
-				<Subtle className="text-sm text-gray-500">{description}</Subtle>
+			<div className="w-full text-left pt-4 min-h-24 bg-white z-10">
+				<Header className="font-semibold capitalize text-lg">
+					{title.split("_").join(" ")}
+				</Header>
+				<Subtle className="text-sm text-gray-500 text-wrap">
+					{description}
+				</Subtle>
 			</div>
 		</button>
 	);

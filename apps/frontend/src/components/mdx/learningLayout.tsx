@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import type { MDXFrontmatter } from "@/libs/mdx-utils";
 import type { TableOfContentsItem } from "@/libs/toc-utils";
 import { CalendarDays, Clock, Tag } from "lucide-react";
+import { useFormatter } from "next-intl";
 import type { ReactNode } from "react";
 import { LanguageSwitcher } from "../ui/languageSwitcher";
 import { LearningNavigation } from "./LearningNavigation";
@@ -36,6 +37,7 @@ export function LearningLayout({
 	readingTime,
 	navigation,
 }: LearningLayoutProps) {
+	const format = useFormatter();
 	return (
 		<div className="flex w-full min-h-screen">
 			{/* Navigation Sidebar */}
@@ -59,9 +61,9 @@ export function LearningLayout({
 										<div className="flex items-center gap-1">
 											<CalendarDays className="h-4 w-4" />
 											<span>
-												{new Date(metadata.date).toLocaleDateString("en-US", {
+												{format.dateTime(new Date(metadata.date), {
 													year: "numeric",
-													month: "long",
+													month: "short",
 													day: "numeric",
 												})}
 											</span>

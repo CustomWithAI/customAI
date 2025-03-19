@@ -1,4 +1,4 @@
-export enum StepKey {
+export enum STEPS {
 	WorkflowInfo = "workflow_info",
 	Dataset = "dataset",
 	Preset = "preset",

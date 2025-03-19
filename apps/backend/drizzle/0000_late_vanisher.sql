@@ -65,6 +65,7 @@ CREATE TABLE "verification" (
 --> statement-breakpoint
 CREATE TABLE "custom_models" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"type" varchar(255) NOT NULL,
 	"data" jsonb NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -125,7 +126,7 @@ CREATE TABLE "images" (
 CREATE TABLE "trainings" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"is_default" boolean DEFAULT false NOT NULL,
-	"version" double precision,
+	"version" varchar(255),
 	"hyperparameter" jsonb,
 	"pipeline" jsonb NOT NULL,
 	"status" "training_status" DEFAULT 'created' NOT NULL,

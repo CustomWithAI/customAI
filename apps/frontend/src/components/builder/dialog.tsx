@@ -63,9 +63,12 @@ export const DialogBuilder = forwardRef<DialogBuilderRef, DialogBuilderProps>(
 						)}
 					</DialogHeader>
 					<div
-						className={cn("flex-1 overflow-auto min-h-0 max-h-[70vh]", {
-							"max-h-[80vh]": description,
-						})}
+						className={cn(
+							"flex-1 relative overflow-auto min-h-0 h-full max-h-[70vh]",
+							{
+								"max-h-[80vh]": description,
+							},
+						)}
 					>
 						{typeof body === "function" ? (id ? body(id) : undefined) : body}
 					</div>

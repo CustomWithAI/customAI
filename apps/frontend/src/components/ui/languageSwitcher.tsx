@@ -29,7 +29,8 @@ export function LanguageSwitcher() {
 			<DropdownMenuTrigger asChild>
 				<Button variant="outline" size="sm" className="flex items-center gap-2">
 					<Globe className="h-4 w-4" />
-					{languageNames[locale as keyof typeof languageNames] || locale}
+					{languageNames[locale as keyof typeof languageNames] ||
+						t(locale as "en-US" | "th-TH")}
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">

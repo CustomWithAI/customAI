@@ -25,7 +25,7 @@ export type TrainingModel = DebugType<
 		workflow: WorkflowModel;
 	} & Pick<
 		Required<ChangeableTrainingModel>,
-		"pipeline" | "version" | "preTrainedModel"
+		"pipeline" | "version" | "preTrainedModel" | "machineLearningModel"
 	>
 >;
 
@@ -43,5 +43,9 @@ export type ChangeableTrainingModel = Partial<{
 	featureSelectionId: string;
 	augmentationId: string;
 	preTrainedModel: string;
+	machineLearningModel: {
+		type?: string;
+		model?: Record<string, any>;
+	};
 	customModelId: string;
 }>;

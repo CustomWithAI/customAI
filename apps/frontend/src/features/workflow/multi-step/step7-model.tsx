@@ -2,8 +2,9 @@ import { BaseSkeleton } from "@/components/specific/skeleton";
 import { Content, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MODEL_TYPE } from "@/configs/model-type";
 import { presetList } from "@/configs/preset";
-import { StepKey } from "@/configs/step-key";
+import { STEPS } from "@/configs/step-key";
 import { useDragStore } from "@/contexts/dragContext";
 import { ModelCard } from "@/features/model/components/card";
 import {
@@ -19,11 +20,17 @@ import { getArrayFromEnum } from "@/utils/array-from-enum";
 import { addStepAfterName, getStep } from "@/utils/step-utils";
 import { Plus } from "lucide-react";
 import { useCallback, useState } from "react";
-import { modelKeyword } from "../../../configs/model";
+import { Virtuoso } from "react-virtuoso";
+import { MODEL_KEYWORD } from "../../../configs/model";
 import { decodeBase64 } from "../../../libs/base64";
+import { cn } from "../../../libs/utils";
 
 export const ModelPage = () => {
 	const [modelId, setModelId] = useState<string | null>(null);
+	const [machineLearning, setMachineLearning] = useState<{
+		type: string;
+		model: Record<string, any>;
+	} | null>(null);
 	const { toast } = useToast();
 	const { getQueryParam, setQueryParam } = useQueryParam({ name: "id" });
 
@@ -45,6 +52,12 @@ export const ModelPage = () => {
 		training?.data.workflow.type,
 	]);
 
+	const enumMachineLearningByType = getArrayFromEnum(enumModel?.data, [
+		"preTrainedModel",
+		"machineLearning",
+		training?.data.workflow.type,
+	]);
+
 	const onSet = useDragStore((state) => state.onSet);
 
 	const handleCreateModel = useCallback(async () => {
@@ -57,8 +70,8 @@ export const ModelPage = () => {
 		}
 		const newPipeline = addStepAfterName(
 			training?.data.pipeline.steps,
-			StepKey.Model,
-			{ name: StepKey.SetupModel },
+			STEPS.Model,
+			{ name: STEPS.SetupModel },
 		);
 
 		await updateTraining(
@@ -118,6 +131,7 @@ export const ModelPage = () => {
 				workflowId: decodeBase64(workflowId),
 				trainingId: decodeBase64(trainingId),
 				...modelJSON,
+				...(machineLearning ? { machineLearningModel: machineLearning } : {}),
 				pipeline: {
 					current: getStep(
 						"next",
@@ -158,20 +172,56 @@ export const ModelPage = () => {
 		training?.data,
 		workflowId,
 		trainingId,
+		machineLearning,
 		enumModelByType,
 		toast,
 		updateTraining,
 	]);
 
-	const handlePrevious = useCallback(() => {
-		setQueryParam({
-			params: {
-				step: encodeBase64("preset"),
-				id: workflowId as string,
+	const handlePrevious = useCallback(async () => {
+		if (!training?.data.pipeline.steps) return;
+		await updateTraining(
+			{
+				workflowId: decodeBase64(workflowId),
+				trainingId: decodeBase64(trainingId),
+				pipeline: {
+					current: getStep(
+						"prev",
+						training?.data.pipeline.current,
+						training?.data.pipeline.steps,
+						() => onSet(presetList),
+					),
+					steps: training?.data.pipeline.steps,
+				},
 			},
-			resetParams: true,
-		});
-	}, [setQueryParam, workflowId]);
+			{
+				onSuccess: () => {
+					setQueryParam({
+						params: {
+							step: encodeBase64(
+								getStep(
+									"prev",
+									training?.data.pipeline.current,
+									training?.data.pipeline.steps,
+									() => onSet(presetList),
+								),
+							),
+							id: workflowId,
+							trainings: trainingId,
+						},
+						resetParams: true,
+					});
+				},
+			},
+		);
+	}, [
+		setQueryParam,
+		workflowId,
+		trainingId,
+		onSet,
+		updateTraining,
+		training?.data.pipeline,
+	]);
 
 	return (
 		<div className="flex flex-col gap-y-4">
@@ -184,29 +234,86 @@ export const ModelPage = () => {
 				models pre-trained.
 			</Subtle>
 			<BaseSkeleton loading={enumModelPending}>
-				<div className="w-[80vw] md:w-[70vw] overflow-x-auto">
-					<div className="flex m-1 gap-x-4">
-						{enumModelByType?.map((model) => {
-							const { type, description, typeClass } = modelKeyword[model] ?? {
+				<Virtuoso
+					className="w-full h-[288px]"
+					data={enumModelByType || []}
+					horizontalDirection
+					itemContent={(_, model) => {
+						const { type, description, typeClass } = MODEL_KEYWORD[model] ?? {
+							type: "new",
+							description: "new model that isn't implemented yet",
+							typeClass: "text-zinc-500 bg-zinc-100",
+						};
+						return (
+							<ModelCard
+								key={model}
+								title={model}
+								type={type}
+								typeClass={typeClass}
+								description={description}
+								className={cn(
+									modelId === model ? "border border-green-400" : "",
+									"first:ml-0 mx-4 w-fit",
+								)}
+								onClick={() => {
+									setMachineLearning(null);
+									setModelId(model);
+								}}
+								images={[]}
+							/>
+						);
+					}}
+				/>
+			</BaseSkeleton>
+			<BaseSkeleton loading={enumModelPending}>
+				<>
+					{(!enumMachineLearningByType ||
+						enumMachineLearningByType?.length > 0) && (
+						<>
+							<Content>Machine Learning Models</Content>
+							<Subtle className="-mt-4">
+								Requires few parameters for tuning.
+							</Subtle>
+						</>
+					)}
+					<Virtuoso
+						className="w-full h-[288px]"
+						data={enumMachineLearningByType || []}
+						horizontalDirection
+						itemContent={(_, model) => {
+							const { type, description, typeClass } = MODEL_TYPE[
+								model?.key
+							] ?? {
 								type: "new",
 								description: "new model that isn't implemented yet",
 								typeClass: "text-zinc-500 bg-zinc-100",
 							};
 							return (
 								<ModelCard
-									key={model}
-									title={model}
+									key={model?.key}
+									title={model?.key}
 									type={type}
 									typeClass={typeClass}
 									description={description}
-									className={modelId === model ? "border border-green-400" : ""}
-									onClick={() => setModelId(model)}
+									className={cn(
+										machineLearning?.type === model?.key
+											? "border border-green-400"
+											: "",
+										"first:ml-0 mx-4 w-fit",
+									)}
+									onClick={() => {
+										setModelId(null);
+										setMachineLearning({
+											type: model?.key,
+											model: model?.value,
+										});
+									}}
 									images={[]}
 								/>
 							);
-						})}
-					</div>
-				</div>
+						}}
+					/>
+				</>
 			</BaseSkeleton>
 			<Content>Custom Models</Content>
 			<Subtle className="-mt-4">

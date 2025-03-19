@@ -1,5 +1,5 @@
 import { presetList } from "@/configs/preset";
-import { StepKey } from "@/configs/step-key";
+import { STEPS } from "@/configs/step-key";
 import { DragStoreProvider } from "@/contexts/dragContext";
 import { OpenCVProvider } from "@/libs/opencv-providers";
 import {
@@ -25,6 +25,7 @@ import { ImagePreprocessingPage } from "./step4-preprocessing";
 import { AugmentationPage } from "./step5-augmentation";
 import { FeaturePage } from "./step6-feature-extraction";
 import { ModelPage } from "./step7-model";
+import { ModelSetupPage } from "./step7a-model-setup";
 import { ModelConfigPage } from "./step8-model-config";
 import { ModelDetailsPage } from "./stepN-model";
 
@@ -36,15 +37,15 @@ type StepConfig = {
 	readonly component: () => React.JSX.Element;
 };
 
-export const stepConfig: Record<StepKey, StepConfig> = {
-	[StepKey.WorkflowInfo]: {
+export const stepConfig: Record<STEPS, StepConfig> = {
+	[STEPS.WorkflowInfo]: {
 		title: "Build a workflow",
 		stepTitle: "Select workflow type",
 		description: "Let's build your new model workflow",
 		icon: <PackageSearch />,
 		component: () => <Step1 />,
 	},
-	[StepKey.Dataset]: {
+	[STEPS.Dataset]: {
 		title: "Import dataset",
 		stepTitle: "Import or create a dataset",
 		description: null,
@@ -55,7 +56,7 @@ export const stepConfig: Record<StepKey, StepConfig> = {
 			</DragStoreProvider>
 		),
 	},
-	[StepKey.Preset]: {
+	[STEPS.Preset]: {
 		title: "Workflow preset",
 		stepTitle: "Choose Workflow Process",
 		description: "Choose train workflow pipeline preset",
@@ -66,7 +67,7 @@ export const stepConfig: Record<StepKey, StepConfig> = {
 			</DragStoreProvider>
 		),
 	},
-	[StepKey.Preprocessing]: {
+	[STEPS.Preprocessing]: {
 		title: "Image Pre-Processing",
 		stepTitle: "Image Pre-Processing",
 		description: null,
@@ -77,7 +78,7 @@ export const stepConfig: Record<StepKey, StepConfig> = {
 			</DragStoreProvider>
 		),
 	},
-	[StepKey.Augmentation]: {
+	[STEPS.Augmentation]: {
 		title: "Data Augmentation",
 		stepTitle: "Setup Augmentation",
 		description: "Let create variant sample of data",
@@ -88,7 +89,7 @@ export const stepConfig: Record<StepKey, StepConfig> = {
 			</DragStoreProvider>
 		),
 	},
-	[StepKey.FeatureEx]: {
+	[STEPS.FeatureEx]: {
 		title: "Feature Extraction",
 		stepTitle: "Setup Feature Extraction",
 		description: "focus on main feature",
@@ -99,7 +100,7 @@ export const stepConfig: Record<StepKey, StepConfig> = {
 			</DragStoreProvider>
 		),
 	},
-	[StepKey.Model]: {
+	[STEPS.Model]: {
 		title: "Import model",
 		stepTitle: "Import or create a model",
 		description: "",
@@ -110,18 +111,18 @@ export const stepConfig: Record<StepKey, StepConfig> = {
 			</DragStoreProvider>
 		),
 	},
-	[StepKey.SetupModel]: {
+	[STEPS.SetupModel]: {
 		title: "Setup Model",
 		stepTitle: "Setup Model",
 		description: "create custom model",
 		icon: <Box />,
 		component: () => (
 			<DragStoreProvider>
-				<>a</>
+				<ModelSetupPage />
 			</DragStoreProvider>
 		),
 	},
-	[StepKey.ModelConfig]: {
+	[STEPS.ModelConfig]: {
 		title: "Model Configuration",
 		stepTitle: "Model Configuration",
 		description: null,
@@ -132,7 +133,7 @@ export const stepConfig: Record<StepKey, StepConfig> = {
 			</DragStoreProvider>
 		),
 	},
-	[StepKey.Finish]: {
+	[STEPS.Finish]: {
 		title: "Model Details",
 		stepTitle: "check workflow requirements",
 		description: null,

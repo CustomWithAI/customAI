@@ -6,7 +6,7 @@ import {
 import { NumberInput } from "@/components/builder/form-utils";
 import { Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
-import { StepKey } from "@/configs/step-key";
+import { STEPS } from "@/configs/step-key";
 import { useDragStore } from "@/contexts/dragContext";
 import { ListBox } from "@/features/image-preprocessing/components/listBox";
 import { PresetBox } from "@/features/image-preprocessing/components/presetBox";
@@ -67,10 +67,10 @@ export const Step3Page = () => {
 		const { current, steps } = fields.reduce(
 			(acc, item) => {
 				if (item.metadata.check.value === true && item.metadata.name.value) {
-					if (String(item.metadata.name.value) === StepKey.ModelConfig) {
+					if (String(item.metadata.name.value) === STEPS.ModelConfig) {
 						acc.steps.push({
 							index: index++,
-							name: StepKey.Model,
+							name: STEPS.Model,
 						});
 					}
 					acc.steps.push({

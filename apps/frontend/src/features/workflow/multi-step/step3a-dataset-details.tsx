@@ -42,7 +42,7 @@ const workflowDetailsFormField: FormFieldInput<DatasetDetailsSchema> = [
 				return (
 					<FormField
 						control={control}
-						name="pipeline_type"
+						name="annotationMethod"
 						render={({ field: { onChange, value } }) => (
 							<WorkflowTypeSection value={value} onChange={onChange} />
 						)}
@@ -56,7 +56,10 @@ const workflowDetailsFormField: FormFieldInput<DatasetDetailsSchema> = [
 export const DatasetDetails = () => {
 	const { setQueryParam } = useQueryParam({ name: "step" });
 	const onSubmitData = (data: WorkflowDetails) => {
-		setQueryParam({ value: encodeBase64("preset"), resetParams: true });
+		setQueryParam({
+			params: { step: encodeBase64("preset") },
+			resetParams: true,
+		});
 	};
 	const { Provider, Build } = useFormBuilder({
 		schema: datasetDetailsSchema,

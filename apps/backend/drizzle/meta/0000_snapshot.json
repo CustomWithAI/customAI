@@ -1,5 +1,5 @@
 {
-  "id": "1573c0da-c206-4672-a2cb-47df479a23e8",
+  "id": "49d292c1-2252-4ba2-aa88-142f69d83dc4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -450,6 +450,12 @@
           "name": "id",
           "type": "varchar(255)",
           "primaryKey": true,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar(255)",
+          "primaryKey": false,
           "notNull": true
         },
         "data": {
@@ -927,7 +933,7 @@
         },
         "version": {
           "name": "version",
-          "type": "double precision",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },

@@ -93,7 +93,7 @@ type TemplateElement<T extends object> = {
 	description?: ReactNode;
 	placeholder?: string;
 	name: Path<T>;
-	testDataId: string;
+	testDataId?: string;
 	valueType?: HTMLInputElement["type"];
 	className?: string;
 	required?: boolean;
@@ -190,7 +190,7 @@ type TemplateForm<T extends object> =
 type TemplateCustom<T extends object> = {
 	template: "custom";
 	element: {
-		testDataId: string;
+		testDataId?: string;
 		renderCustomInput: (input: {
 			control: Control<T, unknown>;
 			setValue: UseFormSetValue<T>;

@@ -5,7 +5,7 @@ import {
 	Image,
 	SquareDashedMousePointer,
 } from "lucide-react";
-import { StepKey } from "./step-key";
+import { STEPS } from "./step-key";
 
 export const presetList: DragColumn[] = [
 	{
@@ -13,7 +13,7 @@ export const presetList: DragColumn[] = [
 		id: "1",
 		metadata: {
 			check: { type: "Boolean", value: false },
-			name: { type: "String", value: StepKey.Preprocessing },
+			name: { type: "String", value: STEPS.Preprocessing },
 		},
 		description: "edit image before training",
 		icon: <Image />,
@@ -23,7 +23,7 @@ export const presetList: DragColumn[] = [
 		id: "2",
 		metadata: {
 			check: { type: "Boolean", value: false },
-			name: { type: "String", value: StepKey.FeatureEx },
+			name: { type: "String", value: STEPS.FeatureEx },
 		},
 		description: "focus on main feature",
 		icon: <SquareDashedMousePointer />,
@@ -33,7 +33,7 @@ export const presetList: DragColumn[] = [
 		id: "3",
 		metadata: {
 			check: { type: "Boolean", value: false },
-			name: { type: "String", value: StepKey.Augmentation },
+			name: { type: "String", value: STEPS.Augmentation },
 		},
 		description: "create random sampling",
 		icon: <BetweenHorizontalStart />,
@@ -43,7 +43,7 @@ export const presetList: DragColumn[] = [
 		id: "4",
 		metadata: {
 			check: { type: "Boolean", value: false },
-			name: { type: "String", value: StepKey.ModelConfig },
+			name: { type: "String", value: STEPS.ModelConfig },
 		},
 		description: "setting model hyperparameter",
 		icon: <FileSliders />,

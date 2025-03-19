@@ -1,6 +1,5 @@
 import type { DragColumn } from "@/stores/dragStore";
 import { type KeyboardEvent, memo, useEffect } from "react";
-import { areEqual } from "react-window";
 import { Content, Subtle } from "../typography/text";
 import { Checkbox } from "../ui/checkbox";
 import EnhanceImage from "../ui/enhanceImage";
@@ -22,7 +21,7 @@ export const Row = memo(
 			element: DragColumn,
 		) => void;
 		toggleSelection: (element: DragColumn) => void;
-		style: React.CSSProperties;
+		style?: React.CSSProperties;
 	}) => {
 		const filters = element.previewImg || [];
 		return (
@@ -47,5 +46,4 @@ export const Row = memo(
 			</div>
 		);
 	},
-	areEqual,
 );

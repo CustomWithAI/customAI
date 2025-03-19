@@ -69,7 +69,6 @@ export default function AnnotationSection({
 	}, [onNext, editor, onUpdate, defaultValue]);
 
 	const handleSubmit = useCallback(() => {
-		console.log("update:", editor);
 		onUpdate?.(editor);
 	}, [onUpdate, editor]);
 
@@ -107,7 +106,6 @@ export default function AnnotationSection({
 					handleEditorChange(editor.id, { mode });
 				}}
 				onChange={(update) => {
-					console.log(update);
 					handleEditorChange(editor.id, update);
 				}}
 			/>

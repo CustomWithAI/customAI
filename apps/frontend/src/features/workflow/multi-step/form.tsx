@@ -2,7 +2,7 @@
 import { AppNavbar } from "@/components/layout/appNavbar";
 import { Primary, Subtle } from "@/components/typography/text";
 import { SelectiveBar } from "@/components/ui/selectiveBar";
-import { StepKey } from "@/configs/step-key";
+import { STEPS } from "@/configs/step-key";
 import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { decodeBase64, encodeBase64 } from "@/libs/base64";
@@ -27,16 +27,16 @@ export const MultiStepForm = () => {
 	}, [currentStep]);
 
 	const currentIndex = useCallback(() => {
-		if (currentStep === StepKey.WorkflowInfo) {
+		if (currentStep === STEPS.WorkflowInfo) {
 			return 1;
 		}
-		if (currentStep === StepKey.Preset) {
+		if (currentStep === STEPS.Preset) {
 			return 2;
 		}
-		if (currentStep === StepKey.Dataset) {
+		if (currentStep === STEPS.Dataset) {
 			return 3;
 		}
-		if (currentStep === StepKey.Finish) {
+		if (currentStep === STEPS.Finish) {
 			return (training?.data.pipeline.steps.length || 0) + 4;
 		}
 		const pipelineStep = training?.data.pipeline.steps.find(
