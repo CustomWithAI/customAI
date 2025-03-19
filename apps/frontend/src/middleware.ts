@@ -14,9 +14,10 @@ const authAndLocaleMiddleware = createMiddleware(routing);
 
 export default async function middleware(request: NextRequest) {
 	const { nextUrl: url } = request;
+	console.log("in middleware", url.pathname);
 	const [, locale, ...segments] = url.pathname.split("/");
 	const pathname = `/${segments[0] || ""}`;
-	console.log("in middleware", pathname);
+
 	if (guestRoutes.includes(url.pathname)) {
 		return authAndLocaleMiddleware(request);
 	}
@@ -52,5 +53,7 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-	matcher: ["/((?!_next|api|static|favicon.ico).*)"],
+	matcher: [
+		"/((?!api|_next/static|public/|.*\\..*|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+	],
 };

@@ -49,3 +49,44 @@ export const getStep = (
 		}
 	}
 };
+
+export function addStepAtIndex(
+	steps: Pipeline["steps"],
+	index: number,
+	newStep: Omit<Pipeline["steps"][number], "index">,
+): Pipeline["steps"] {
+	const stepWithIndex = { ...newStep, index };
+
+	const newSteps = [
+		...steps.slice(0, index),
+		stepWithIndex,
+		...steps.slice(index),
+	];
+
+	return newSteps;
+}
+
+export function addStepAfterName(
+	steps: Pipeline["steps"],
+	afterName: string,
+	newStep: Omit<Pipeline["steps"][number], "index">,
+): Pipeline["steps"] {
+	const afterIndex = steps.findIndex((step) => step.name === afterName);
+
+	if (afterIndex === -1) {
+		console.error(`Step with name "${afterName}" not found.`);
+		return steps;
+	}
+
+	const stepWithIndex = { ...newStep, index: steps[afterIndex].index + 1 };
+
+	const newSteps = [
+		...steps.slice(0, afterIndex + 1),
+		stepWithIndex,
+		...steps
+			.slice(afterIndex + 1)
+			.map((step) => ({ ...step, index: step.index + 1 })),
+	];
+
+	return newSteps;
+}

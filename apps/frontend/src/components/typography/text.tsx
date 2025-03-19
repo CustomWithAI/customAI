@@ -51,6 +51,10 @@ export const Content = ({ children, className }: TextProps) => {
 	return <p className={cn("text-base", className)}>{children}</p>;
 };
 
+export const SubContent = ({ children, className }: TextProps) => {
+	return <p className={cn("text-sm font-medium", className)}>{children}</p>;
+};
+
 export const Subtle = ({ children, className }: TextProps) => {
 	return (
 		<p className={cn("text-sm font-light text-gray-500", className)}>

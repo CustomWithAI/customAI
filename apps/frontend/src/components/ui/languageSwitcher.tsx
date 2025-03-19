@@ -8,9 +8,10 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { routing } from "@/i18n/routings";
+import { usePathname, useRouter } from "@/libs/i18nNavigation";
+import { getPrefixLang } from "@/utils/getPrefixLang";
 import { Globe } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { usePathname, useRouter } from "next/navigation";
 
 const languageNames = {};
 export function LanguageSwitcher() {
@@ -20,8 +21,7 @@ export function LanguageSwitcher() {
 	const t = useTranslations("languages");
 
 	const switchLanguage = (newLocale: string) => {
-		const pathWithoutLocale = pathname.replace(/^\/[^\/]+/, "");
-		router.push(`/${newLocale}${pathWithoutLocale}`);
+		router.replace(pathname, { locale: getPrefixLang(newLocale) });
 	};
 
 	return (

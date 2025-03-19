@@ -3,6 +3,7 @@ import type { MDXFrontmatter } from "@/libs/mdx-utils";
 import type { TableOfContentsItem } from "@/libs/toc-utils";
 import { CalendarDays, Clock, Tag } from "lucide-react";
 import type { ReactNode } from "react";
+import { LanguageSwitcher } from "../ui/languageSwitcher";
 import { LearningNavigation } from "./LearningNavigation";
 import { LearningSidebar } from "./learningSidebar";
 import { TableOfContents } from "./tableOfContent";
@@ -89,6 +90,9 @@ export function LearningLayout({
 										))}
 									</div>
 								)}
+								<div className="mt-4">
+									<LanguageSwitcher />
+								</div>
 							</div>
 							<article className="prose prose-slate dark:prose-invert max-w-none">
 								{children}

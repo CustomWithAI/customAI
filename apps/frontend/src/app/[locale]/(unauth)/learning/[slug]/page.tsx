@@ -47,7 +47,6 @@ export async function generateStaticParams() {
 				slug: filename.replace(/\.mdx$/, ""),
 			}));
 
-		console.log("static params:", params);
 		staticParams.push(...params);
 	}
 
@@ -58,7 +57,6 @@ export async function generateMetadata({
 	params,
 }: { params: { slug: string; locale: string } }) {
 	const { slug, locale } = params;
-	console.log("metadata params:", params);
 	let filePath = path.join(
 		process.cwd(),
 		`src/content/learning/${getPrefixLang(locale)}`,

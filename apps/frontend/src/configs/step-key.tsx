@@ -7,5 +7,6 @@ export enum StepKey {
 	Augmentation = "augmentation",
 	FeatureEx = "featureEx",
 	ModelConfig = "modelconfig",
+	SetupModel = "setupModel",
 	Finish = "finish",
 }

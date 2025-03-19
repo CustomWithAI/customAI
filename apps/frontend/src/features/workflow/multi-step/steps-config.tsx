@@ -5,6 +5,7 @@ import { OpenCVProvider } from "@/libs/opencv-providers";
 import {
 	BetweenHorizontalStart,
 	Blend,
+	Box,
 	FileBox,
 	FileChartColumnIncreasing,
 	FileDown,
@@ -106,6 +107,17 @@ export const stepConfig: Record<StepKey, StepConfig> = {
 		component: () => (
 			<DragStoreProvider initial={[]}>
 				<ModelPage />
+			</DragStoreProvider>
+		),
+	},
+	[StepKey.SetupModel]: {
+		title: "Setup Model",
+		stepTitle: "Setup Model",
+		description: "create custom model",
+		icon: <Box />,
+		component: () => (
+			<DragStoreProvider>
+				<>a</>
 			</DragStoreProvider>
 		),
 	},

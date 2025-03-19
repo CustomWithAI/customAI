@@ -3,6 +3,7 @@ import { Content, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { presetList } from "@/configs/preset";
+import { StepKey } from "@/configs/step-key";
 import { useDragStore } from "@/contexts/dragContext";
 import { ModelCard } from "@/features/model/components/card";
 import {
@@ -15,7 +16,7 @@ import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { encodeBase64 } from "@/libs/base64";
 import { getArrayFromEnum } from "@/utils/array-from-enum";
-import { getStep } from "@/utils/step-utils";
+import { addStepAfterName, getStep } from "@/utils/step-utils";
 import { Plus } from "lucide-react";
 import { useCallback, useState } from "react";
 import { modelKeyword } from "../../../configs/model";
@@ -46,17 +47,86 @@ export const ModelPage = () => {
 
 	const onSet = useDragStore((state) => state.onSet);
 
-	const handleSubmit = useCallback(async () => {
-		if (!modelId) return;
-		const modelJSON = enumModelByType?.includes(modelId)
-			? { preTrainedModel: modelId }
-			: { customModelId: modelId };
+	const handleCreateModel = useCallback(async () => {
+		if (!training?.data.pipeline) {
+			toast({
+				title: "trainings is not existed",
+				variant: "destructive",
+			});
+			return;
+		}
+		const newPipeline = addStepAfterName(
+			training?.data.pipeline.steps,
+			StepKey.Model,
+			{ name: StepKey.SetupModel },
+		);
 
 		await updateTraining(
 			{
 				workflowId: decodeBase64(workflowId),
 				trainingId: decodeBase64(trainingId),
+				pipeline: {
+					current: getStep(
+						"next",
+						training?.data.pipeline.current,
+						newPipeline,
+						() => onSet(presetList),
+					),
+					steps: newPipeline,
+				},
+			},
+			{
+				onSuccess: (t) => {
+					setQueryParam({
+						params: {
+							step: encodeBase64(t?.data.pipeline.current || ""),
+							id: workflowId,
+							trainings: trainingId,
+						},
+						resetParams: true,
+					});
+				},
+				onError: (error) => {
+					toast({ title: error.message, variant: "destructive" });
+				},
+			},
+		);
+	}, [
+		toast,
+		training?.data.pipeline,
+		onSet,
+		setQueryParam,
+		trainingId,
+		updateTraining,
+		workflowId,
+	]);
+
+	const handleSubmit = useCallback(async () => {
+		if (!modelId) return;
+		const modelJSON = enumModelByType?.includes(modelId)
+			? { preTrainedModel: modelId }
+			: { customModelId: modelId };
+		if (!training?.data.pipeline) {
+			toast({
+				title: "trainings is not existed",
+				variant: "destructive",
+			});
+			return;
+		}
+		await updateTraining(
+			{
+				workflowId: decodeBase64(workflowId),
+				trainingId: decodeBase64(trainingId),
 				...modelJSON,
+				pipeline: {
+					current: getStep(
+						"next",
+						training?.data.pipeline.current,
+						training?.data.pipeline.steps,
+						() => onSet(presetList),
+					),
+					steps: training?.data?.pipeline?.steps,
+				},
 			},
 			{
 				onSuccess: (t) => {
@@ -144,13 +214,12 @@ export const ModelPage = () => {
 			</Subtle>
 			<button
 				type="button"
+				onClick={async () => await handleCreateModel()}
 				className="w-64 h-48 hover:border-blue-700 hover:bg-zinc-50 hover:shadow-sm duration-150 active:scale-95 transition-transform border rounded-lg flex flex-col justify-center items-center"
 			>
 				<Plus className="mb-6" />
-				<Content>Create a dataset</Content>
-				<Subtle className="text-center">
-					Start from uploading image to annotation
-				</Subtle>
+				<Content>Create a model</Content>
+				<Subtle className="text-center">Start on custom model</Subtle>
 			</button>
 			<div className="flex justify-end w-full space-x-4 mt-6">
 				<Button

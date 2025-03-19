@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDeleteImageByPath } from "@/hooks/mutations/dataset-api";
 import { useToast } from "@/hooks/use-toast";
-import { useRouterAsync } from "@/libs/i18nNavigation";
+import { useRouterAsync } from "@/libs/i18nAsyncRoute";
 import { cn } from "@/libs/utils";
 import type { ResponseImage } from "@/types/response/dataset";
 import { getImageSize } from "@/utils/image-size";

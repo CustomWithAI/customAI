@@ -16,7 +16,7 @@ interface LearningNavigationProps {
 
 export function LearningNavigation({ prev, next }: LearningNavigationProps) {
 	return (
-		<div className="flex flex-row items-center justify-between mt-12 border-t pt-4">
+		<div className="flex flex-row max-md:hidden items-center justify-between mt-12 border-t pt-4">
 			{prev ? (
 				<Link
 					href={prev.href}
