@@ -11,6 +11,7 @@ import { workflows } from "@/domains/schema/workflows";
 import { db } from "@/infrastructures/database/connection";
 import type { PaginationParams } from "@/utils/db-type";
 import withPagination from "@/utils/pagination";
+import { queryParser } from "@/utils/query-parser";
 import { and, desc, eq, getTableColumns } from "drizzle-orm";
 
 export class TrainingRepository {
@@ -79,6 +80,9 @@ export class TrainingRepository {
 				table: trainings,
 				primaryKey: "id",
 				cursorFields: [],
+				filters: queryParser(pagination.filter),
+				orderBy: queryParser(pagination.orderBy),
+				search: queryParser(pagination.search),
 				cursor: pagination.cursor,
 				limit: pagination.limit,
 			},

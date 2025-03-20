@@ -2,6 +2,7 @@ import { images } from "@/domains/schema/images";
 import { db } from "@/infrastructures/database/connection";
 import type { PaginationParams } from "@/utils/db-type";
 import withPagination from "@/utils/pagination";
+import { queryParser } from "@/utils/query-parser";
 import { and, asc, desc, eq, gt, lt } from "drizzle-orm";
 
 export class ImageRepository {
@@ -26,6 +27,9 @@ export class ImageRepository {
 				table: images,
 				primaryKey: "path",
 				cursorFields: [],
+				filters: queryParser(pagination.filter),
+				orderBy: queryParser(pagination.orderBy),
+				search: queryParser(pagination.search),
 				cursor: pagination.cursor,
 				limit: pagination.limit,
 			},

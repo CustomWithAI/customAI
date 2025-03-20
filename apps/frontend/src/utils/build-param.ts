@@ -8,30 +8,28 @@ type QueryValue =
 
 export function buildQueryParams(params: QueryParams): string | null {
 	if (!params) return null;
-	const queryParams = new URLSearchParams();
-	const appendQueryParam = (key: string, value: QueryValue) => {
-		if (typeof value === "object") {
-			for (const subKey in value) {
-				if (Object.hasOwn(value, subKey)) {
-					const subValue = value[subKey];
-					if (subValue) {
-						queryParams.append(`${key}[${subKey}]`, String(subValue));
-					}
-				}
+	const searchParams = new URLSearchParams();
+
+	for (const [key, value] of Object.entries(params)) {
+		if (value === "" || value === null || value === undefined) continue;
+
+		if (typeof value === "object" && !Array.isArray(value)) {
+			const nestedParams = Object.entries(value)
+				.map(([subKey, subValue]) => {
+					if (subValue === "" || subValue === null || subValue === undefined)
+						return null;
+					return `${subKey}:${subValue}`;
+				})
+				.filter(Boolean)
+				.join(",");
+
+			if (nestedParams) {
+				searchParams.append(key, nestedParams);
 			}
 		} else {
-			queryParams.append(key, String(value));
-		}
-	};
-
-	for (const key in params) {
-		if (Object.hasOwn(params, key)) {
-			const value = params[key];
-			if (value !== undefined && value !== null) {
-				appendQueryParam(key, value);
-			}
+			searchParams.append(key, String(value));
 		}
 	}
 
-	return `?${queryParams.toString()}`;
+	return `?${searchParams.toString()}`;
 }

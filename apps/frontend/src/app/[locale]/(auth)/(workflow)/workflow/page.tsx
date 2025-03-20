@@ -8,6 +8,7 @@ import { ContentDataset } from "@/features/dataset/components/content";
 import { WorkflowCard } from "@/features/workflow/components/content-workflow";
 import { useGetWorkflows } from "@/hooks/queries/workflow-api";
 import { useRouterAsync } from "@/libs/i18nAsyncRoute";
+import { buildQueryParams } from "@/utils/build-param";
 import { Filter, PackagePlus } from "lucide-react";
 import { useCallback } from "react";
 
@@ -46,7 +47,7 @@ export default function Page() {
 					Found {workflows?.data.total}{" "}
 					{(workflows?.data.total || 0) > 1 ? "workflows" : "workflow"}
 				</Subtle>
-				<div className="grid grid-cols-4 gap-4">
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 					{workflows?.data.data.map((workflow) => {
 						return (
 							<WorkflowCard

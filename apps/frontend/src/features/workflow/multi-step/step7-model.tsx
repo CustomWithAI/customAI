@@ -115,7 +115,7 @@ export const ModelPage = () => {
 	]);
 
 	const handleSubmit = useCallback(async () => {
-		if (!modelId) return;
+		if (!modelId && !machineLearning) return;
 		const modelJSON = enumModelByType?.includes(modelId)
 			? { preTrainedModel: modelId }
 			: { customModelId: modelId };

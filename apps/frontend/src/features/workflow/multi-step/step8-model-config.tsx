@@ -2,11 +2,8 @@
 import { type FormFieldInput, useFormBuilder } from "@/components/builder/form";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form";
-import {
-	ClassificationParams,
-	ObjectDetectionParams,
-	SegmentationParams,
-} from "@/configs/hyperparameter";
+import { hyperparameterByType } from "@/configs/hyperparameter";
+import { MLType, machineLearningByType } from "@/configs/ml";
 import { presetList } from "@/configs/preset";
 import { workflowEnum } from "@/configs/workflow-type";
 import { useDragStore } from "@/contexts/dragContext";
@@ -25,24 +22,6 @@ import { getStep } from "@/utils/step-utils";
 import { useCallback, useMemo } from "react";
 import type { ZodObject, z } from "zod";
 
-const hyperparameterByType: Record<
-	string,
-	{ formField: FormFieldInput<any>; schema: ZodObject<any> }
-> = {
-	[workflowEnum.ObjectDetection]: {
-		formField: ObjectDetectionParams,
-		schema: objectDetectionSchema,
-	},
-	[workflowEnum.Classification]: {
-		formField: ClassificationParams,
-		schema: classificationSchema,
-	},
-	[workflowEnum.Segmentation]: {
-		formField: SegmentationParams,
-		schema: segmentationSchema,
-	},
-};
-
 export const ModelConfigPage = () => {
 	const { setQueryParam, getQueryParam } = useQueryParam({ name: "step" });
 	const { toast } = useToast();
@@ -60,11 +39,18 @@ export const ModelConfigPage = () => {
 	const onSet = useDragStore((state) => state.onSet);
 
 	const hyperparameterField = useMemo(() => {
+		if (training?.data.machineLearningModel.type) {
+			return machineLearningByType[training?.data.machineLearningModel.type];
+		}
 		if (training?.data.preTrainedModel) {
-			return hyperparameterByType[training?.data.workflow.type || ""] ?? null;
+			return hyperparameterByType[training?.data.workflow.type] ?? null;
 		}
 		return null;
-	}, [training?.data.preTrainedModel, training?.data.workflow]);
+	}, [
+		training?.data.preTrainedModel,
+		training?.data.workflow,
+		training?.data.machineLearningModel,
+	]);
 
 	const handlePrevious = useCallback(async () => {
 		if (!training?.data.pipeline.steps) return;
@@ -118,7 +104,16 @@ export const ModelConfigPage = () => {
 				{
 					workflowId: decodeBase64(workflowId),
 					trainingId: decodeBase64(trainingId),
-					hyperparameter: data,
+					...(training?.data.machineLearningModel?.type
+						? {
+								machineLearningModel: {
+									type: training?.data.machineLearningModel.type,
+									model: data,
+								},
+							}
+						: training?.data.preTrainedModel
+							? { hyperparameter: data }
+							: {}),
 					pipeline: {
 						current: getStep(
 							"next",
@@ -154,6 +149,8 @@ export const ModelConfigPage = () => {
 			updateTraining,
 			training?.data.pipeline,
 			onSet,
+			training?.data.machineLearningModel,
+			training?.data.preTrainedModel,
 			workflowId,
 			trainingId,
 			setQueryParam,

@@ -4,6 +4,10 @@ import {
 	VersionSection,
 	type VersionSectionProps,
 } from "@/features/workflow/components/version-section";
+import {
+	useGetTrainingById,
+	useGetTrainingByWorkflowId,
+} from "@/hooks/queries/training-api";
 
 const versionList: VersionSectionProps[] = [
 	{
@@ -40,7 +44,8 @@ const versionList: VersionSectionProps[] = [
 	},
 ];
 
-export const VersionPage = () => {
+export const VersionPage = ({ id }: { id: string }) => {
+	const { data: version } = useGetTrainingByWorkflowId(id);
 	return (
 		<>
 			<Header>Versions list</Header>
@@ -54,13 +59,13 @@ export const VersionPage = () => {
 					<ScrollArea className="h-72 w-48 rounded-md border">
 						<div className="p-4">
 							<h4 className="mb-4 text-sm font-medium leading-none">Tags</h4>
-							{versionList.map((tag) => (
+							{version?.data?.data?.map((tag) => (
 								<>
 									<div
-										key={tag.versionId}
+										key={tag.version}
 										className="border-l pl-3 py-1 text-sm hover:bg-zinc-100 duration-200"
 									>
-										{tag.versionId}
+										{tag.version}
 									</div>
 								</>
 							))}

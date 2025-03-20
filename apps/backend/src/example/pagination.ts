@@ -40,10 +40,10 @@ const result = await withPagination(query, {
 		primaryKey: "id", // Primary key for tie-breaking
 		cursorFields: ["createdAt"], // Columns for cursor sorting
 		filters: { name: "john" },
-		search: { fields: ["name"], term: "john" }, // regex for search term
+		search: { name: "j" }, // regex for search term
 		cursor:
 			"eyJjcmVhdGVkQXQiOiIyMDI1LTAyLTA1VDA0OjM5OjQ3LjYxM1oiLCJpZCI6ImQwZTgwNmRjLTkyZTktNDNjMy05ZmIxLTIwNjcxOTU1MTE5OSJ9",
 		limit: 3, // Limit the results to 3 rows
-		direction: "forward",
+		direction: "asc",
 	},
 });

@@ -1,7 +1,7 @@
 import { axiosClient } from "@/libs/api-client";
 import type { WorkflowDetails } from "@/models/workflow";
 import type { WorkflowModel } from "@/types/response/workflow";
-import type { responsePagination } from "../types/common";
+import type { ResponsePagination } from "../types/common";
 
 export const workflowService = {
 	createWorkflow: async (data: WorkflowDetails) => {
@@ -16,7 +16,7 @@ export const workflowService = {
 	},
 	getWorkflows: async () => {
 		try {
-			return axiosClient.get<responsePagination<WorkflowModel>>("/workflows");
+			return axiosClient.get<ResponsePagination<WorkflowModel>>("/workflows");
 		} catch (error) {}
 	},
 	updateWorkflow: async ({

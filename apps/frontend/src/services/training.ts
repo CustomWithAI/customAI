@@ -1,4 +1,5 @@
 import { axiosClient } from "@/libs/api-client";
+import type { ResponsePagination } from "@/types/common";
 import type { TrainingPipeline } from "@/types/request/requestTrainingPreset";
 import type {
 	ChangeableTrainingModel,
@@ -38,6 +39,16 @@ export const trainingService = {
 		try {
 			return axiosClient.get<TrainingModel>(
 				`/workflows/${workflowId}/trainings/${trainingId}`,
+			);
+		} catch (error) {}
+	},
+	getTrainingByWorkflowId: async ({
+		workflowId,
+		params,
+	}: { workflowId: string; params: string }) => {
+		try {
+			return axiosClient.get<ResponsePagination<TrainingModel>>(
+				`/workflows/${workflowId}/trainings${params}`,
 			);
 		} catch (error) {}
 	},

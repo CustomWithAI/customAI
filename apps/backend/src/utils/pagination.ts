@@ -24,7 +24,7 @@ export type TableConfig = {
 	dialect: string;
 };
 
-type DirectionCursor = "forward" | "backward";
+type DirectionCursor = "asc" | "desc";
 
 export type TableColumns<TColumn extends PgTableWithColumns<TableConfig>> =
 	TColumn["_"]["columns"];
@@ -37,7 +37,8 @@ type CursorOptions<TTable extends PgTableWithColumns<TableConfig>> = {
 	direction?: DirectionCursor;
 	cursor?: string;
 	filters?: Record<string, string>;
-	search?: { fields: Array<keyof TableColumns<TTable>>; term: string };
+	search?: Record<string, string>;
+	orderBy?: Record<string, string>;
 };
 
 type OffsetOptions<TTable extends PgTableWithColumns<TableConfig>> = {
@@ -45,7 +46,8 @@ type OffsetOptions<TTable extends PgTableWithColumns<TableConfig>> = {
 	page?: number;
 	limit?: number;
 	filters?: Record<string, string>;
-	search?: { fields: Array<keyof TableColumns<TTable>>; term: string };
+	search?: Record<string, string>;
+	orderBy?: Record<string, string>;
 };
 
 type withPaginationProperties<TTable extends PgTableWithColumns<TableConfig>> =
@@ -98,11 +100,9 @@ async function withPagination<
 		}
 	}
 	if (options.search) {
-		const { fields, term } = options.search;
-		const searchConditions = fields.map((field) =>
-			ilike(options.table[field], `%${term}%`),
-		);
-		optionsCause.push(or(...searchConditions));
+		for (const [key, value] of Object.entries(options.search)) {
+			optionsCause.push(or(ilike(options.table[key], `%${value}%`)));
+		}
 	}
 	switch (mode) {
 		case "offset": {
@@ -111,14 +111,21 @@ async function withPagination<
 				qb
 					.where(and(...optionsCause))
 					.limit(limit)
-					.offset((page - 1) * limit) as any
+					.offset((page - 1) * limit)
+					.orderBy(
+						...(Object.entries(options.orderBy || {})?.map(([key, value]) =>
+							value === "asc"
+								? asc(options.table[key])
+								: desc(options.table[key]),
+						) ?? []),
+					) as any
 			).execute();
 			return { data };
 		}
 		case "cursor": {
 			const {
 				cursorFields,
-				direction = "forward",
+				direction = "asc",
 				primaryKey,
 				limit = 10,
 				table,
@@ -126,7 +133,7 @@ async function withPagination<
 			} = options;
 			const decodedCursorFields = cursor ? decodeCursor(cursor) : null;
 			const [comparatorFn, inverseComparatorFn, orderFn, inverseOrderFn] =
-				compare("forward", direction, "next", decodedCursorFields?.direction)
+				compare("asc", direction, "next", decodedCursorFields?.direction)
 					? [gt, lt, asc, desc]
 					: [lt, gt, desc, asc];
 			const isNext = decodedCursorFields?.direction !== "before";
@@ -177,6 +184,9 @@ async function withPagination<
 				)
 				.limit(limit + 1)
 				.orderBy(
+					...(Object.entries(options.orderBy || {})?.map(([key, value]) =>
+						value === "asc" ? asc(table[key]) : desc(table[key]),
+					) ?? []),
 					...cursorFields.map((field) => orderFn(table[field])),
 					orderFn(table[primaryKey]),
 				);
@@ -210,6 +220,9 @@ async function withPagination<
 				)
 				.limit(1)
 				.orderBy(
+					...(Object.entries(options.orderBy || {})?.map(([key, value]) =>
+						value === "asc" ? desc(table[key]) : asc(table[key]),
+					) ?? []),
 					...cursorFields.map((field) => inverseOrderFn(table[field])),
 					inverseOrderFn(table[primaryKey]),
 				);

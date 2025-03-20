@@ -1,4 +1,4 @@
-export type responsePagination<T extends object> = {
+export type ResponsePagination<T extends object> = {
 	data: T[];
 	nextCursor: string | undefined;
 	prevCursor: string | undefined;

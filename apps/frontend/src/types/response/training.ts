@@ -42,10 +42,10 @@ export type ChangeableTrainingModel = Partial<{
 	featureExtractionId: string;
 	featureSelectionId: string;
 	augmentationId: string;
-	preTrainedModel: string;
+	preTrainedModel: string | null;
 	machineLearningModel: {
 		type?: string;
 		model?: Record<string, any>;
 	};
-	customModelId: string;
+	customModelId: string | null;
 }>;

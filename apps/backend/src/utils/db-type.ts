@@ -6,6 +6,9 @@ export type DatabaseType = typeof db;
 export type PaginationParams = {
 	limit: number;
 	cursor?: string;
+	search?: string;
+	orderBy?: string;
+	filter?: string;
 };
 
 export const tsvector = customType<{

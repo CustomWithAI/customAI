@@ -66,7 +66,7 @@ export const Step3Page = () => {
 		let index = 0;
 		const { current, steps } = fields.reduce(
 			(acc, item) => {
-				if (item.metadata.check.value === true && item.metadata.name.value) {
+				if (item.metadata.check.value === true && item.metadata.name?.value) {
 					if (String(item.metadata.name.value) === STEPS.ModelConfig) {
 						acc.steps.push({
 							index: index++,

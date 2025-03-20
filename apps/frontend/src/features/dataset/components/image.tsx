@@ -124,7 +124,7 @@ export const ContentImage = ({
 							<div className="mt-2">
 								<Subtle
 									className={cn(
-										"text-left",
+										"text-center",
 										{ "text-green-500": image.annotation },
 										{ "text-red-500": !image.annotation },
 									)}

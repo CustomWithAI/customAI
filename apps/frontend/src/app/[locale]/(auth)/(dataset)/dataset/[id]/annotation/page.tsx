@@ -47,6 +47,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 					...formatToEditor(image?.current.annotation),
 				}}
 				onUpdate={async (data) => {
+					console.log(data);
 					await updateImage({
 						id,
 						imagesPath: decodeBase64(getQueryParam()) || "",

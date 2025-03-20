@@ -5,7 +5,7 @@ import type {
 	ResponseSurroundImage,
 } from "@/types/response/dataset";
 import type { DatasetDetailsSchema } from "../models/dataset";
-import type { responsePagination } from "../types/common";
+import type { ResponsePagination } from "../types/common";
 
 export const datasetService = {
 	createDataset: async ({ data }: { data: DatasetDetailsSchema }) => {
@@ -44,7 +44,7 @@ export const datasetService = {
 	getDatasets: async () => {
 		try {
 			const { data } =
-				await axiosClient.get<responsePagination<ResponseDataset>>(
+				await axiosClient.get<ResponsePagination<ResponseDataset>>(
 					"/datasets/",
 				);
 			return data;
@@ -59,7 +59,7 @@ export const datasetService = {
 
 	getImages: async ({ id, params }: { id: string; params?: string }) => {
 		try {
-			const { data } = await axiosClient.get<responsePagination<ResponseImage>>(
+			const { data } = await axiosClient.get<ResponsePagination<ResponseImage>>(
 				`/datasets/${id}/images${params || ""}`,
 			);
 			return data;

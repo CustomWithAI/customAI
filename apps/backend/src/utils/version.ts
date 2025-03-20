@@ -1,8 +1,8 @@
 /**
  * Increments a semantic version string based on the given type.
  *
- * @param version - The current version string (e.g., "1.2.3").
- * @param type - The type of increment: "major.minor.patch"
+ * @param version - The current version
+ * @param type - The type of increment: `major.minor.patch`
  * @returns The incremented version string.
  *
  * @example

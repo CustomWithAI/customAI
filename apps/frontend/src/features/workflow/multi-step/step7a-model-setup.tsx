@@ -130,7 +130,11 @@ export const ModelSetupPage = () => {
 				]}
 			/>
 			<div className="flex justify-end w-full space-x-4 mt-6">
-				<Button disabled={updatePending} variant="ghost">
+				<Button
+					disabled={updatePending}
+					onClick={async () => await handlePrevious()}
+					variant="ghost"
+				>
 					Previous
 				</Button>
 				<Button disabled={updatePending} type="submit">

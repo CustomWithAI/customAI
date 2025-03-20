@@ -1,6 +1,7 @@
 import { trainingService } from "@/services/training";
 import type { AppQueryOptions } from "@/types/tanstack-type";
 import { useQuery } from "@tanstack/react-query";
+import { QueryParams } from "../use-query-params";
 
 export const useGetTrainingById = (
 	workflowId: string,
@@ -14,6 +15,18 @@ export const useGetTrainingById = (
 		...options,
 	});
 };
+
+export const useGetTrainingByWorkflowId = (
+	workflowId: string,
+	params = "",
+	options?: AppQueryOptions<typeof trainingService.getTrainingByWorkflowId>,
+) =>
+	useQuery({
+		queryFn: async () =>
+			trainingService.getTrainingByWorkflowId({ workflowId, params }),
+		queryKey: ["training", workflowId],
+		...options,
+	});
 
 export const useGetTrainingByDefault = (
 	workflowId: string,
