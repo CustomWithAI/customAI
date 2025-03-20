@@ -262,12 +262,4 @@ export class TrainingService {
 
     return result[0];
   }
-
-  public async updateStatus(
-    id: string,
-    status: TrainingStatusEnum,
-    queueId?: string
-  ) {
-    return this.repository.updateStatus(id, status, queueId);
-  }
 }

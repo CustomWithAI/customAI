@@ -2,7 +2,7 @@ import {
   connectRabbitMQ,
   getRabbitMQChannel,
 } from "@/infrastructures/rabbitmq/connection";
-import { imageService, trainingService } from "@/config/dependencies";
+import { imageService, trainingRepository } from "@/config/dependencies";
 import { logger, queueLogger } from "@/config/logger";
 import { config } from "@/config/env";
 import type { TrainingResponseDto } from "@/domains/dtos/training";
@@ -10,7 +10,7 @@ import { retryConnection } from "@/utils/retry";
 import { connectRedis } from "@/infrastructures/redis/connection";
 import { connectDatabase } from "@/infrastructures/database/connection";
 import { connectS3 } from "@/infrastructures/s3/connection";
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 
 export const startTrainingWorker = async () => {
   const channel = await getRabbitMQChannel();
@@ -40,7 +40,11 @@ export const startTrainingWorker = async () => {
 
         try {
           // ✅ Update Status Into "running"
-          await trainingService.updateStatus(trainingData.id, "running");
+          await trainingRepository.updateById(
+            trainingData.workflow.id,
+            trainingData.id,
+            { status: "running" }
+          );
 
           // TODO: เริ่มตรงนี้ตาม Note
 
@@ -126,37 +130,27 @@ export const startTrainingWorker = async () => {
             );
           }
 
+          let responseTraining: AxiosResponse<any, any>;
+
           if (trainingData.dataset.annotationMethod === "classification") {
             if (trainingData.machineLearningModel) {
-              const responseTraining = await axios.post(
+              responseTraining = await axios.post(
                 `${config.PYTHON_SERVER_URL}/training-ml`,
                 {
                   training: trainingData.hyperparameter,
                   featex: trainingData.featureExtraction?.data,
                 }
               );
-
-              if (responseTraining.status !== 200) {
-                throw new Error(
-                  `Failed to train model on Python Server: ${responseTraining.statusText}`
-                );
-              }
             } else if (trainingData.preTrainedModel) {
-              const responseTraining = await axios.post(
+              responseTraining = await axios.post(
                 `${config.PYTHON_SERVER_URL}/training-dl-cls-pt`,
                 {
                   model: trainingData.preTrainedModel,
                   training: trainingData.hyperparameter,
                 }
               );
-
-              if (responseTraining.status !== 200) {
-                throw new Error(
-                  `Failed to train model on Python Server: ${responseTraining.statusText}`
-                );
-              }
             } else if (trainingData.customModel) {
-              const responseTraining = await axios.post(
+              responseTraining = await axios.post(
                 `${config.PYTHON_SERVER_URL}/training-dl-cls-construct`,
                 {
                   model: trainingData.customModel,
@@ -164,12 +158,6 @@ export const startTrainingWorker = async () => {
                   featex: trainingData.featureExtraction?.data,
                 }
               );
-
-              if (responseTraining.status !== 200) {
-                throw new Error(
-                  `Failed to train model on Python Server: ${responseTraining.statusText}`
-                );
-              }
             } else {
               throw new Error(
                 `Model for ${trainingData.dataset.annotationMethod} not found.`
@@ -179,7 +167,7 @@ export const startTrainingWorker = async () => {
             trainingData.dataset.annotationMethod === "object_detection"
           ) {
             if (trainingData.preTrainedModel) {
-              const responseTraining = await axios.post(
+              responseTraining = await axios.post(
                 `${config.PYTHON_SERVER_URL}/training-yolo-pt`,
                 {
                   type: "object_detection",
@@ -187,14 +175,8 @@ export const startTrainingWorker = async () => {
                   training: trainingData.hyperparameter,
                 }
               );
-
-              if (responseTraining.status !== 200) {
-                throw new Error(
-                  `Failed to train model on Python Server: ${responseTraining.statusText}`
-                );
-              }
             } else if (trainingData.customModel) {
-              const responseTraining = await axios.post(
+              responseTraining = await axios.post(
                 `${config.PYTHON_SERVER_URL}/training-dl-od-construct`,
                 {
                   model: trainingData.customModel,
@@ -204,12 +186,6 @@ export const startTrainingWorker = async () => {
                     : undefined,
                 }
               );
-
-              if (responseTraining.status !== 200) {
-                throw new Error(
-                  `Failed to train model on Python Server: ${responseTraining.statusText}`
-                );
-              }
             } else {
               throw new Error(
                 `Model for ${trainingData.dataset.annotationMethod} not found.`
@@ -217,7 +193,7 @@ export const startTrainingWorker = async () => {
             }
           } else if (trainingData.dataset.annotationMethod === "segmentation") {
             if (trainingData.preTrainedModel) {
-              const responseTraining = await axios.post(
+              responseTraining = await axios.post(
                 `${config.PYTHON_SERVER_URL}/training-yolo-pt`,
                 {
                   type: "segmentation",
@@ -225,12 +201,6 @@ export const startTrainingWorker = async () => {
                   training: trainingData.hyperparameter,
                 }
               );
-
-              if (responseTraining.status !== 200) {
-                throw new Error(
-                  `Failed to train model on Python Server: ${responseTraining.statusText}`
-                );
-              }
             } else {
               throw new Error(
                 `Model for ${trainingData.dataset.annotationMethod} not found.`
@@ -240,17 +210,33 @@ export const startTrainingWorker = async () => {
             throw new Error("Annotation method in dataset not matching.");
           }
 
+          if (responseTraining.status !== 200) {
+            throw new Error(
+              `Failed to train model on Python Server: ${responseTraining.statusText}`
+            );
+          }
+
           // ✅ Update Status Into "completed"
-          await trainingService.updateStatus(trainingData.id, "completed");
+          await trainingRepository.updateById(
+            trainingData.workflow.id,
+            trainingData.id,
+            { status: "completed" }
+          );
           queueLogger.info(`✅ Training completed: ${trainingData.queueId}`);
         } catch (error) {
-          queueLogger.error(
-            `❌ Training failed: ${trainingData.queueId}`,
-            error
-          );
+          if (error instanceof Error) {
+            queueLogger.error(
+              `❌ Training failed: ${trainingData.queueId}`,
+              error.message
+            );
 
-          // ✅ Update Status Into "failed"
-          await trainingService.updateStatus(trainingData.id, "failed");
+            // ✅ Update Status Into "failed"
+            await trainingRepository.updateById(
+              trainingData.workflow.id,
+              trainingData.id,
+              { status: "failed", errorMessage: error.message }
+            );
+          }
         } finally {
           // ✅ Delete Request From Queue
           channel.ack(msg);
