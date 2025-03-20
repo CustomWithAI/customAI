@@ -2,7 +2,7 @@
 
 import { Content, Header } from "@/components/typography/text";
 import type { Editor, Mode } from "@/types/square";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { EditorNavigation } from "./editor-navigation";
 import SquareEditor from "./square-editor";
 
@@ -22,6 +22,7 @@ export default function AnnotationSection({
 	onUpdate,
 	disabled,
 	name,
+	isLoading,
 	defaultValue,
 	onPrevious,
 	length,
@@ -33,8 +34,9 @@ export default function AnnotationSection({
 	name?: string;
 	disabled?: [boolean, boolean];
 	defaultValue?: Partial<Editor>;
+	isLoading?: boolean;
 	onNext?: () => void;
-	onUpdate?: (data: Editor) => void;
+	onUpdate?: (data: Editor, isClose: boolean) => void;
 	onPrevious?: () => void;
 }) {
 	const [editor, setEditor] = useState<Editor>({
@@ -48,28 +50,26 @@ export default function AnnotationSection({
 		...defaultValue,
 	});
 
+	useEffect(() => {
+		if (!isLoading && defaultValue) {
+			setEditor((prev) => {
+				return { ...prev, ...defaultValue };
+			});
+		}
+	}, [isLoading, defaultValue]);
+
 	const handlePrevious = useCallback(() => {
-		onUpdate?.(editor);
-		setEditor((prev) => ({
-			...DEFAULT_EDITOR,
-			labels: prev.labels,
-			defaultValue,
-		}));
+		onUpdate?.(editor, false);
 		onPrevious?.();
-	}, [onPrevious, editor, onUpdate, defaultValue]);
+	}, [onPrevious, editor, onUpdate]);
 
 	const handleNext = useCallback(() => {
-		onUpdate?.(editor);
-		setEditor((prev) => ({
-			...DEFAULT_EDITOR,
-			labels: prev.labels,
-			defaultValue,
-		}));
+		onUpdate?.(editor, false);
 		onNext?.();
-	}, [onNext, editor, onUpdate, defaultValue]);
+	}, [onNext, editor, onUpdate]);
 
 	const handleSubmit = useCallback(() => {
-		onUpdate?.(editor);
+		onUpdate?.(editor, true);
 	}, [onUpdate, editor]);
 
 	const handleEditorChange = (

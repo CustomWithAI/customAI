@@ -12,7 +12,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 	return (
 		<AppNavbar
 			activeTab="Home"
-			PageTitle={dataset?.name || ""}
+			PageTitle={`${dataset?.name || ""} ${dataset?.annotationMethod ? `(${dataset?.annotationMethod.split("_")?.join(" ")})` : ""}`}
 			disabledTab={undefined}
 		>
 			<div className="max-w-screen no-scroll overflow-x-scroll border-b mb-4">

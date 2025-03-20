@@ -79,7 +79,10 @@ const UploadFileBox = ({
 			multiple: true,
 			onDrop,
 			accept: {
-				"image/jpeg": [".jpeg", ".png"],
+				"image/jpeg": [".jpeg", ".jpg"],
+				"image/png": [".png"],
+				"image/webp": [".webp"],
+				"image/svg+xml": [".svg"],
 				"application/pdf": [".pdf"],
 			},
 			onDropRejected: () => setIsFileTooBig(true),

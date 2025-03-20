@@ -7,7 +7,7 @@ import UploadFile from "@/components/ui/uploadfile";
 import { ContentImage } from "@/features/dataset/components/image";
 import { useGetImages } from "@/hooks/queries/dataset-api";
 import { useQueryClient } from "@tanstack/react-query";
-import { FileUp, Filter, Image } from "lucide-react";
+import { FileUp, Filter, Image, PaintbrushVertical } from "lucide-react";
 
 export default function ImagesPage({ id }: { id: string }) {
 	const { data: images } = useGetImages(id);
@@ -43,6 +43,9 @@ export default function ImagesPage({ id }: { id: string }) {
 							});
 						}}
 					/>
+					<Button>
+						<PaintbrushVertical /> Annotate
+					</Button>
 				</div>
 				<div>
 					<ViewList.Trigger />

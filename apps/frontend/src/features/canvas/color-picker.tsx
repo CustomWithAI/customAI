@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
 	Popover,
 	PopoverContent,
+	PopoverContentDialog,
 	PopoverTrigger,
 } from "@/components/ui/popover";
 
@@ -37,7 +38,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
 					<span className="sr-only">Pick a color</span>
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent
+			<PopoverContentDialog
 				className="w-64 bg-white"
 				onClick={(e) => e.stopPropagation()}
 			>
@@ -56,7 +57,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
 						</button>
 					))}
 				</div>
-			</PopoverContent>
+			</PopoverContentDialog>
 		</Popover>
 	);
 }

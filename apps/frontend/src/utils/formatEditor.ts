@@ -5,12 +5,18 @@ import { generateRandomLabel } from "./random";
 
 export const formatToEditor: (
 	data: ResponseImage["annotation"] | undefined,
-) => Partial<Editor> | undefined = (data) => {
-	if (!data) {
+	labels: ResponseDataset["labels"] | undefined,
+) => Partial<Editor> | undefined = (data, labels) => {
+	if (!data || !labels) {
 		return undefined;
 	}
+	const generatedLabels = formatToLabels(labels);
+
 	if (data.label) {
-		return { classifiedLabel: data.label };
+		return {
+			labels: generatedLabels,
+			classifiedLabel: generatedLabels?.find((l) => l.name === data.label)?.id,
+		};
 	}
 	if (data.annotation) {
 		const squares: Square[] = [];
@@ -22,7 +28,7 @@ export const formatToEditor: (
 					id: nanoid(),
 					color,
 					isComplete: true,
-					labelId: shape.label,
+					labelId: generatedLabels?.find((l) => l.name === shape.label)?.id,
 					points: shape.points,
 				});
 			} else {
@@ -31,7 +37,7 @@ export const formatToEditor: (
 					x,
 					y,
 					width,
-					labelId: label,
+					labelId: generatedLabels?.find((l) => l.name === label)?.id,
 					height,
 					isLocked: false,
 					id: nanoid(),
@@ -39,6 +45,7 @@ export const formatToEditor: (
 			}
 		}
 		return {
+			labels: generatedLabels,
 			squares,
 			polygons,
 		};
@@ -48,34 +55,54 @@ export const formatToEditor: (
 export const formatToAnnotate = (data: Editor) => {
 	if (!data.labels) return {};
 	if (data.classifiedLabel) {
-		return {
-			label:
-				data.labels.find((label) => label.id === data.classifiedLabel)?.name ||
-				"",
-		};
+		if (data.labels.find((label) => label.id === data.classifiedLabel)?.name)
+			return {
+				label: data.labels.find((label) => label.id === data.classifiedLabel)
+					?.name,
+			};
+		return { label: "" };
 	}
 	if (data.squares) {
 		return {
-			annotation: data.squares.map(({ x, y, width, height, labelId }) => ({
-				x,
-				y,
-				width,
-				height,
-				label: data.labels.find((label) => label.id === labelId)?.name || "",
-			})),
+			annotation: data.squares
+				.map(({ x, y, width, height, labelId }) => {
+					if (data.labels.find((label) => label.id === labelId)?.name)
+						return {
+							x,
+							y,
+							width,
+							height,
+							label:
+								data.labels.find((label) => label.id === labelId)?.name || "",
+						};
+				})
+				.filter((f) => f !== undefined),
 		};
 	}
 	if (data.polygons || data.freehandPaths) {
 		return {
 			annotation:
-				data.polygons.map(({ points, labelId }) => ({
-					points: points as { x: number; y: number }[],
-					label: data.labels.find((label) => label.id === labelId)?.name || "",
-				})) ||
-				data.freehandPaths.map(({ points, labelId }) => ({
-					points: points as { x: number; y: number }[],
-					label: data.labels.find((label) => label.id === labelId)?.name || "",
-				})),
+				data.polygons
+					.map(({ points, labelId }) => {
+						if (data.labels.find((label) => label.id === labelId)?.name)
+							return {
+								points: points as { x: number; y: number }[],
+								label:
+									data.labels.find((label) => label.id === labelId)?.name || "",
+							};
+					})
+					?.filter((f) => f !== undefined) ||
+				data.freehandPaths
+					.map(({ points, labelId }) => {
+						if (data.labels.find((label) => label.id === labelId)?.name)
+							return {
+								points: points as { x: number; y: number }[],
+								label:
+									data.labels.find((label) => label.id === labelId)?.name || "",
+							};
+					})
+					?.filter((f) => f !== undefined) ||
+				[],
 		};
 	}
 };

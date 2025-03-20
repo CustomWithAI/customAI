@@ -88,7 +88,7 @@ export const MainWorkflowPage = ({
 								</DotBadge>
 								<div className="flex items-baseline space-x-2">
 									<Content className="font-semibold leading-none">
-										{mainDefault?.version?.toFixed(1)}
+										{mainDefault?.version}
 									</Content>
 									<Subtle className="leading-none">
 										{relativeTime(new Date(mainDefault?.createdAt || ""))}

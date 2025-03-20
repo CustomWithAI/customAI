@@ -125,11 +125,26 @@ export const ContentImage = ({
 								<Subtle
 									className={cn(
 										"text-center",
-										{ "text-green-500": image.annotation },
-										{ "text-red-500": !image.annotation },
+										{
+											"text-green-500":
+												image.annotation?.label ||
+												(image.annotation?.annotation &&
+													(image.annotation?.annotation?.length || 0) > 0),
+										},
+										{
+											"text-red-500": !(
+												image.annotation?.label ||
+												(image.annotation?.annotation &&
+													(image.annotation?.annotation?.length || 0) > 0)
+											),
+										},
 									)}
 								>
-									{image.annotation ? "annotated" : "unannotated"}
+									{image.annotation?.label ||
+									(image.annotation?.annotation &&
+										(image.annotation?.annotation?.length || 0) > 0)
+										? "annotated"
+										: "unannotated"}
 								</Subtle>
 								<p className="text-xs text-gray-400">
 									{imageSizes[index]?.width} x {imageSizes[index]?.height} px
@@ -154,14 +169,28 @@ export const ContentImage = ({
 							/>
 							<div className="w-1/2 flex-col flex justify-start">
 								<Content className="min-w-0 text-left flex-1 truncate">
-									{image.annotation?.label || "Unlabeled class"}
+									{image.annotation?.label ||
+										image.annotation.annotation
+											?.map((annotate) => annotate.label)
+											?.join(", ") ||
+										"Unlabeled class"}
 								</Content>
 								<div className="w-fit">
 									<DotBadge
-										variant={image.annotation ? "success" : "danger"}
+										variant={
+											image.annotation?.label ||
+											(image.annotation?.annotation &&
+												(image.annotation?.annotation?.length || 0) > 0)
+												? "success"
+												: "danger"
+										}
 										className={cn("text-left")}
 									>
-										{image.annotation ? "annotated" : "unannotated"}
+										{image.annotation?.label ||
+										(image.annotation?.annotation &&
+											(image.annotation?.annotation?.length || 0) > 0)
+											? "annotated"
+											: "unannotated"}
 									</DotBadge>
 								</div>
 							</div>

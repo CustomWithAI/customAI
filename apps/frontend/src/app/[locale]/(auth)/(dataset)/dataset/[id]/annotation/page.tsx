@@ -42,12 +42,13 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 				image={image?.current?.url || ""}
 				length={dataset?.imageCount || 0}
 				name={decodeURIComponent(image?.current?.path || "")}
-				defaultValue={{
-					labels: formatToLabels(dataset?.labels),
-					...formatToEditor(image?.current.annotation),
-				}}
-				onUpdate={async (data) => {
-					console.log(data);
+				defaultValue={formatToEditor(
+					image?.current.annotation,
+					dataset?.labels,
+				)}
+				onUpdate={async (data, isClose) => {
+					console.log(decodeBase64(getQueryParam()), data);
+					if (!id || !getQueryParam()) return;
 					await updateImage({
 						id,
 						imagesPath: decodeBase64(getQueryParam()) || "",
@@ -61,17 +62,31 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 							},
 						});
 					}
-					router.push(`/dataset/${id}`);
+					if (isClose) {
+						router.push(`/dataset/${id}`);
+					}
+					return;
 				}}
+				isLoading={imagePending || datasetPending}
 				disabled={[!image?.prev?.path, !image?.next?.path]}
-				onPrevious={() =>
-					image &&
-					setQueryParam({ params: { image: encodeBase64(image?.prev?.path) } })
-				}
-				onNext={() =>
-					image &&
-					setQueryParam({ params: { image: encodeBase64(image?.next?.path) } })
-				}
+				onPrevious={() => {
+					if (image) {
+						setQueryParam({
+							params: { image: encodeBase64(image?.prev?.path) },
+						});
+						return formatToEditor(image?.current.annotation, dataset?.labels);
+					}
+					return undefined;
+				}}
+				onNext={() => {
+					if (image) {
+						setQueryParam({
+							params: { image: encodeBase64(image?.next?.path) },
+						});
+						return formatToEditor(image?.current.annotation, dataset?.labels);
+					}
+					return undefined;
+				}}
 			/>
 		</BaseSkeleton>
 	);

@@ -27,7 +27,8 @@ export type ResponseImage = {
 		label?: string;
 		annotation?:
 			| { x: number; y: number; width: number; height: number; label: string }[]
-			| { points: { x: number; y: number }[]; label: string }[];
+			| { points: { x: number; y: number }[]; label: string }[]
+			| undefined;
 	};
 	createdAt: string;
 	updatedAt: string;

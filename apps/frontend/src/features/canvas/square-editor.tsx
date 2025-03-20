@@ -14,6 +14,7 @@ import type {
 	Square,
 } from "@/types/square";
 import { darkenColor } from "@/utils/color-utils";
+import { fixDecimals } from "@/utils/fixDecimal";
 import { getImageSize } from "@/utils/image-size";
 import { generateRandomLabel } from "@/utils/random";
 import { Lock } from "lucide-react";
@@ -68,7 +69,7 @@ export default function SquareEditor({
 		width: number;
 		height: number;
 	}>({ width: 800, height: 600 });
-	const [labels, setLabels] = useState<Label[]>(initialLabels || []);
+	const [labels, setLabels] = useState<Label[]>([]);
 	const [selectedShape, setSelectedShape] = useState<SelectedShape | null>(
 		null,
 	);
@@ -81,6 +82,21 @@ export default function SquareEditor({
 	useEffect(() => {
 		getImageSize(image).then((imageSize) => setSize(imageSize));
 	}, [image]);
+
+	useEffect(() => {
+		setLabels((prevLabels) => {
+			const updatedLabels = initialLabels.map((newLabel) => {
+				const existingLabel = prevLabels.find(
+					(label) => label.name === newLabel.name,
+				);
+				if (existingLabel) {
+					return { ...existingLabel, id: newLabel.id };
+				}
+				return newLabel;
+			});
+			return updatedLabels;
+		});
+	}, [initialLabels]);
 
 	const {
 		squares,
@@ -491,10 +507,10 @@ export default function SquareEditor({
 			squares: squares.map(
 				({ id, x, y, width, height, labelId, zIndex, isLocked }) => ({
 					id,
-					x: Math.round(x),
-					y: Math.round(y),
-					width: Math.round(width),
-					height: Math.round(height),
+					x: fixDecimals(x),
+					y: fixDecimals(y),
+					width: fixDecimals(width),
+					height: fixDecimals(height),
 					labelId,
 					zIndex,
 					isLocked,
@@ -504,8 +520,8 @@ export default function SquareEditor({
 				({ id, points, color, labelId, zIndex, isLocked }) => ({
 					id,
 					points: points.map(({ x, y }) => ({
-						x: Math.round(x),
-						y: Math.round(y),
+						x: fixDecimals(x),
+						y: fixDecimals(y),
 					})),
 					color,
 					labelId,
@@ -517,8 +533,8 @@ export default function SquareEditor({
 				({ id, points, color, labelId, zIndex, isLocked }) => ({
 					id,
 					points: points.map(({ x, y }) => ({
-						x: Math.round(x),
-						y: Math.round(y),
+						x: fixDecimals(x),
+						y: fixDecimals(y),
 					})),
 					color,
 					labelId,
@@ -713,9 +729,11 @@ export default function SquareEditor({
 				}
 				return;
 			}
-			onChange?.({
-				classifiedLabel: labelId,
-			});
+			if (mode === "select") {
+				onChange?.({
+					classifiedLabel: labelId,
+				});
+			}
 			updateLabel(selectedSquare, labelId, updateSquare);
 			updateLabel(selectedPolygon, labelId, updatePolygon);
 			updateLabel(selectedPath, labelId, updatePath);
@@ -753,6 +771,8 @@ export default function SquareEditor({
 		return square.labelId === selectedLabel;
 	});
 
+	const classifiedLabel = labels.find((l) => l.id === editor.classifiedLabel);
+
 	return (
 		<div className="flex w-full h-full">
 			<ModeSelector
@@ -774,13 +794,26 @@ export default function SquareEditor({
 							backgroundSize: "cover",
 							backgroundPosition: "center",
 						}}
-						className="relative border rounded shadow-md bg-white border-gray-300 overflow-hidden"
+						className="relative border rounded shadow-md bg-white border-gray-300"
 						onMouseDown={handleMouseDown}
 						onMouseMove={handleMouseMove}
 						onMouseUp={handleMouseUp}
 						onMouseLeave={handleMouseUp}
 						onContextMenu={handleContextMenu}
 					>
+						{classifiedLabel ? (
+							<Badge
+								variant="secondary"
+								className="absolute -translate-y-full z-[99] -top-1 text-white left-0"
+								style={{
+									backgroundColor: classifiedLabel?.color
+										? `${classifiedLabel.color}90`
+										: "transparent",
+								}}
+							>
+								{classifiedLabel?.name}
+							</Badge>
+						) : null}
 						{visibleSquares.map((square) => {
 							const label = labels.find((l) => l.id === square.labelId);
 							return (
@@ -813,10 +846,10 @@ export default function SquareEditor({
 									{label && (
 										<Badge
 											variant="secondary"
-											className="absolute -top-7 left-0 text-xs font-medium"
+											className="absolute -translate-y-full -top-1 text-white left-0 text-xs font-medium"
 											style={{
 												backgroundColor: label?.color
-													? `${label.color}30`
+													? `${label.color}90`
 													: "transparent",
 											}}
 										>

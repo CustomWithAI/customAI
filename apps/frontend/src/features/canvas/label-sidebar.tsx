@@ -114,6 +114,7 @@ export function LabelSidebar({
 												className="opacity-0 group-hover:opacity-100 hover:bg-zinc-100/80 h-6 w-6 p-0"
 												onClick={(e) => {
 													e.stopPropagation();
+													setOpen(false);
 													setEditingLabel(label);
 												}}
 											>
@@ -142,7 +143,10 @@ export function LabelSidebar({
 				<EditLabelDialog
 					label={editingLabel}
 					open={true}
-					onClose={() => setEditingLabel(null)}
+					onClose={() => {
+						setEditingLabel(null);
+						setOpen(true);
+					}}
 					onSave={onUpdateLabel}
 				/>
 			)}
