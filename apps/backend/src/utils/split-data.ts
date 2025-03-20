@@ -19,37 +19,25 @@ interface SegmentationAnnotation {
   }[];
 }
 
-interface ImageData {
+interface DatasetImageData {
   url: string;
-  annotation:
-    | ClassificationAnnotation
-    | ObjectDetectionAnnotation
-    | SegmentationAnnotation;
+  annotation: unknown;
 }
 
 function isClassificationAnnotation(
-  annotation:
-    | ClassificationAnnotation
-    | ObjectDetectionAnnotation
-    | SegmentationAnnotation
+  annotation: unknown
 ): annotation is ClassificationAnnotation {
   return (annotation as ClassificationAnnotation).label !== undefined;
 }
 
 function isObjectDetectionAnnotation(
-  annotation:
-    | ClassificationAnnotation
-    | ObjectDetectionAnnotation
-    | SegmentationAnnotation
+  annotation: unknown
 ): annotation is ObjectDetectionAnnotation {
   return (annotation as ObjectDetectionAnnotation).annotation !== undefined;
 }
 
 function isSegmentationAnnotation(
-  annotation:
-    | ClassificationAnnotation
-    | ObjectDetectionAnnotation
-    | SegmentationAnnotation
+  annotation: unknown
 ): annotation is SegmentationAnnotation {
   return (
     (annotation as SegmentationAnnotation).annotation !== undefined &&
@@ -58,23 +46,22 @@ function isSegmentationAnnotation(
 }
 
 type SplitResult<T> = {
-  train: T[];
-  test: T[];
-  valid: T[];
+  trainData: T[];
+  testData: T[];
+  validData: T[];
 };
 
-function defaultSplit<T extends ImageData>(
+function defaultSplit<T extends DatasetImageData>(
   dataset: T[],
   trainRatio: number,
   testRatio: number,
   validRatio: number,
-  labels: string[],
-  type: "classification" | "objectDetection" | "segmentation"
+  labels: string[]
 ): SplitResult<T> {
   const result = {
-    train: [] as T[],
-    test: [] as T[],
-    valid: [] as T[],
+    trainData: [] as T[],
+    testData: [] as T[],
+    validData: [] as T[],
   };
 
   const groupedData: { [key: string]: T[] } = {};
@@ -82,20 +69,11 @@ function defaultSplit<T extends ImageData>(
   for (const data of dataset) {
     let dataLabels: string[] = [];
 
-    if (
-      type === "classification" &&
-      isClassificationAnnotation(data.annotation)
-    ) {
+    if (isClassificationAnnotation(data.annotation)) {
       dataLabels = [data.annotation.label];
-    } else if (
-      type === "objectDetection" &&
-      isObjectDetectionAnnotation(data.annotation)
-    ) {
+    } else if (isObjectDetectionAnnotation(data.annotation)) {
       dataLabels = data.annotation.annotation.map((item) => item.label);
-    } else if (
-      type === "segmentation" &&
-      isSegmentationAnnotation(data.annotation)
-    ) {
+    } else if (isSegmentationAnnotation(data.annotation)) {
       dataLabels = data.annotation.annotation.map((item) => item.label);
     }
 
@@ -115,26 +93,27 @@ function defaultSplit<T extends ImageData>(
     const trainCount = Math.floor(total * trainRatio);
     const testCount = Math.floor(total * testRatio);
 
-    result.train.push(...classData.slice(0, trainCount));
-    result.test.push(...classData.slice(trainCount, trainCount + testCount));
-    result.valid.push(...classData.slice(trainCount + testCount, total));
+    result.trainData.push(...classData.slice(0, trainCount));
+    result.testData.push(
+      ...classData.slice(trainCount, trainCount + testCount)
+    );
+    result.validData.push(...classData.slice(trainCount + testCount, total));
   }
 
   return result;
 }
 
-function stratifiedSplit<T extends ImageData>(
+function stratifiedSplit<T extends DatasetImageData>(
   dataset: T[],
   trainRatio: number,
   testRatio: number,
   validRatio: number,
-  labels: string[],
-  type: "classification" | "objectDetection" | "segmentation"
+  labels: string[]
 ): SplitResult<T> {
   const result = {
-    train: [] as T[],
-    test: [] as T[],
-    valid: [] as T[],
+    trainData: [] as T[],
+    testData: [] as T[],
+    validData: [] as T[],
   };
 
   const groupedData: { [key: string]: T[] } = {};
@@ -142,24 +121,15 @@ function stratifiedSplit<T extends ImageData>(
   for (const data of dataset) {
     let dataLabels: string[] = [];
 
-    if (
-      type === "classification" &&
-      isClassificationAnnotation(data.annotation)
-    ) {
+    if (isClassificationAnnotation(data.annotation)) {
       dataLabels = [data.annotation.label];
-    } else if (
-      type === "objectDetection" &&
-      isObjectDetectionAnnotation(data.annotation)
-    ) {
+    } else if (isObjectDetectionAnnotation(data.annotation)) {
       dataLabels = data.annotation.annotation.map((item) => item.label);
-    } else if (
-      type === "segmentation" &&
-      isSegmentationAnnotation(data.annotation)
-    ) {
+    } else if (isSegmentationAnnotation(data.annotation)) {
       dataLabels = data.annotation.annotation.map((item) => item.label);
     }
 
-    for (const label of labels) {
+    for (const label of dataLabels) {
       if (labels.includes(label)) {
         if (!groupedData[label]) {
           groupedData[label] = [];
@@ -182,9 +152,11 @@ function stratifiedSplit<T extends ImageData>(
     const trainCount = Math.floor(total * trainRatio);
     const testCount = Math.floor(total * testRatio);
 
-    result.train.push(...shuffledData.slice(0, trainCount));
-    result.test.push(...shuffledData.slice(trainCount, trainCount + testCount));
-    result.valid.push(...shuffledData.slice(trainCount + testCount, total));
+    result.trainData.push(...shuffledData.slice(0, trainCount));
+    result.testData.push(
+      ...shuffledData.slice(trainCount, trainCount + testCount)
+    );
+    result.validData.push(...shuffledData.slice(trainCount + testCount, total));
   }
 
   return result;
