@@ -85,7 +85,7 @@ function SignupPage() {
 				<div
 					className={cn(
 						"p-12 2xl:px-20 2xl:py-24 max-md:w-full dark:bg-white/10 bg-transparent max-md:h-full",
-						"md:backdrop-blur-sm md:rounded-md md:shadow-lg w-fit mx-auto flex flex-col",
+						"md:backdrop-blur-xs md:rounded-md md:shadow-lg w-fit mx-auto flex flex-col",
 						"justify-center text-center items-center",
 					)}
 				>

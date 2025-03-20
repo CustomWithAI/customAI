@@ -47,14 +47,17 @@ export const EditFeature = ({
 		<div className="flex max-h-[70vh] max-md:flex-col gap-x-6 max-md:gap-y-6 w-full">
 			<div
 				className={cn(
-					"relative h-[70vh] w-full md:w-1/2 dark:bg-black border rounded-lg shadow-sm bg-white overflow-scroll",
-					"dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative flex items-center justify-center",
+					"relative h-[70vh] w-full md:w-1/2 dark:bg-black border rounded-lg shadow-xs bg-white overflow-scroll",
+					"[background-size:20px_20px]",
+					"[background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]",
+					"dark:[background-image:radial-gradient(#404040_1px,transparent_1px)]",
+					"relative flex items-center justify-center",
 				)}
 			>
 				<div className="absolute flex flex-col z-50 rounded-md bg-white bottom-2 left-2 border border-blue-500">
 					<motion.div
 						layoutId="activeIndicator"
-						className="absolute w-24 h-9 bg-blue-500 rounded m-0.5"
+						className="absolute w-24 h-9 bg-blue-500 rounded-sm m-0.5"
 						transition={{ type: "spring", stiffness: 300, damping: 20 }}
 						animate={{ top: mode === "main" ? 0 : "2.35rem" }}
 					/>
@@ -62,7 +65,7 @@ export const EditFeature = ({
 						aria-selected={mode === "main"}
 						type="button"
 						onClick={() => setMode("main")}
-						className="aria-selected:text-white w-24 z-[60] text-sm rounded-sm m-0.5 mb-0 text-center py-2"
+						className="aria-selected:text-white w-24 z-60 text-sm rounded-xs m-0.5 mb-0 text-center py-2"
 					>
 						specific
 					</button>
@@ -70,7 +73,7 @@ export const EditFeature = ({
 						aria-selected={mode === "combine"}
 						type="button"
 						onClick={() => setMode("combine")}
-						className="aria-selected:text-white w-24 z-[60] text-sm rounded-sm m-0.5 text-center py-2"
+						className="aria-selected:text-white w-24 z-60 text-sm rounded-xs m-0.5 text-center py-2"
 					>
 						preview
 					</button>

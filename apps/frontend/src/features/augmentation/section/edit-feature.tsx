@@ -23,8 +23,11 @@ export const EditFeature = ({ id }: { id: string }) => {
 		<div className="flex max-h-[70vh] gap-x-6">
 			<div
 				className={cn(
-					"h-[70vh] w-1/2 dark:bg-black border rounded-lg shadow-sm bg-white",
-					"dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative flex items-center justify-center",
+					"h-[70vh] w-1/2 dark:bg-black border rounded-lg shadow-xs bg-white",
+					"relative flex items-center justify-center",
+					"[background-size:20px_20px]",
+					"[background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]",
+					"dark:[background-image:radial-gradient(#404040_1px,transparent_1px)]",
 				)}
 			>
 				a

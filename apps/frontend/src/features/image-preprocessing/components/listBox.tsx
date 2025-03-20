@@ -53,7 +53,7 @@ export const ListBox = memo(
 				<div className="w-6" {...listeners}>
 					<TooltipProvider delayDuration={250}>
 						<Tooltip>
-							<TooltipContent className="z-[99] bg-white">
+							<TooltipContent className="z-99 bg-white">
 								drag up-down to order a process
 							</TooltipContent>
 							<TooltipTrigger asChild>

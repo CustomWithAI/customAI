@@ -27,7 +27,7 @@ const NewUserPage = () => {
 	}, [asyncRoute, selected]);
 
 	return (
-		<div className="p-6 md:w-3/4 m-auto max-w-screen-2xl h-3/4 space-y-6">
+		<div className="p-6 md:w-3/4 m-auto max-w-(--breakpoint-2xl) h-3/4 space-y-6">
 			<SubHeader>Get Started in Just a Few Steps</SubHeader>
 			<Subtle>What’s Your Experience Level?</Subtle>
 			<div className=" grid grid-cols-3 gap-x-6">
@@ -41,7 +41,7 @@ const NewUserPage = () => {
 				>
 					{selected === "beginner" && (
 						<div className="absolute top-4 right-4 rounded-full bg-green-500">
-							<Check className="w-5 h-5 m-1.5 text-white shadow-sm" />
+							<Check className="w-5 h-5 m-1.5 text-white shadow-xs" />
 						</div>
 					)}
 					<div className="relative w-full aspect-square">
@@ -99,7 +99,7 @@ const NewUserPage = () => {
 				>
 					{selected === "intermediate" && (
 						<div className="absolute top-4 right-4 rounded-full bg-blue-500">
-							<Check className="w-5 h-5 m-1.5 text-white shadow-sm" />
+							<Check className="w-5 h-5 m-1.5 text-white shadow-xs" />
 						</div>
 					)}
 					<div className="relative w-full aspect-square">
@@ -157,7 +157,7 @@ const NewUserPage = () => {
 				>
 					{selected === "expert" && (
 						<div className="absolute top-4 right-4 rounded-full bg-violet-500">
-							<Check className="w-5 h-5 m-1.5 text-white shadow-sm" />
+							<Check className="w-5 h-5 m-1.5 text-white shadow-xs" />
 						</div>
 					)}
 					<div className="relative w-full aspect-square">

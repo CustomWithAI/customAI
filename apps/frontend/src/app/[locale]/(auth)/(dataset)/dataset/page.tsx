@@ -34,7 +34,7 @@ export default function Page() {
 				<div className="flex justify-between mb-2">
 					<div className="flex space-x-4 w-full">
 						<Input placeholder="search datasets ..." className=" max-w-lg" />
-						<Button className="bg-indigo-900 hover:bg-indigo-950 dark:opacity-40 dark:bg-indigo-900 dark:hover:bg-indigo-950">
+						<Button>
 							<Filter /> filter
 						</Button>
 					</div>

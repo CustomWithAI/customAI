@@ -113,7 +113,7 @@ export function ModeSelector({
 				return (
 					<TooltipProvider key={id}>
 						<Tooltip delayDuration={100}>
-							<TooltipContent side="right" className="bg-white z-[70]">
+							<TooltipContent side="right" className="bg-white z-70">
 								{id}
 							</TooltipContent>
 							<TooltipTrigger asChild>
@@ -137,7 +137,7 @@ export function ModeSelector({
 											}}
 										/>
 									)}
-									<span className={cn("relative z-[60]", { "": mode === id })}>
+									<span className={cn("relative z-60", { "": mode === id })}>
 										{cloneElement(icon, {
 											className: cn("w-4 h-4"),
 											fill: mode === id ? "white" : "transparent",
@@ -145,7 +145,7 @@ export function ModeSelector({
 									</span>
 									<Tiny
 										className={cn(
-											"absolute right-1 bottom-0.5 z-[60] text-gray-400",
+											"absolute right-1 bottom-0.5 z-60 text-gray-400",
 											{
 												"text-gray-900": mode === id,
 											},

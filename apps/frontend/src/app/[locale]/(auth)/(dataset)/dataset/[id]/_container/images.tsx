@@ -21,14 +21,11 @@ export default function ImagesPage({ id }: { id: string }) {
 			<div className="flex justify-between mb-2">
 				<div className="flex flex-wrap gap-y-4 space-x-4 w-full">
 					<Input placeholder="search images ..." className=" max-w-lg" />
-					<Button className="bg-indigo-900 hover:bg-indigo-950 dark:opacity-40 dark:bg-indigo-900 dark:hover:bg-indigo-950">
+					<Button>
 						<Filter /> Filter
 					</Button>
 					<UploadFile.dialog
-						button=<Button
-							variant="outline"
-							className="border-indigo-900 hover:border-indigo-950 dark:border-indigo-100 dark:hover:border-indigo-100 text-indigo-900 hover:text-indigo-950 dark:text-indigo-100 dark:hover:text-indigo-100"
-						>
+						button=<Button variant="outline">
 							<FileUp /> Upload Image
 						</Button>
 						dialog={{
@@ -43,7 +40,7 @@ export default function ImagesPage({ id }: { id: string }) {
 							});
 						}}
 					/>
-					<Button>
+					<Button effect="gooeyLeft">
 						<PaintbrushVertical /> Annotate
 					</Button>
 				</div>

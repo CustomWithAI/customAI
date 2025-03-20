@@ -46,7 +46,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
 					{colors.map((color) => (
 						<button
 							key={color}
-							className="w-8 h-8 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+							className="w-8 h-8 rounded-md border border-gray-200 focus:outline-hidden focus:ring-2 focus:ring-gray-400"
 							style={{ backgroundColor: color }}
 							onClick={(e) => {
 								e.stopPropagation();

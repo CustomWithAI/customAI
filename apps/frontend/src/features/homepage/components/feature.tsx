@@ -1,4 +1,5 @@
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
+import { cn } from "@/libs/utils";
 import {
 	IconClipboardCopy,
 	IconFileBroken,
@@ -8,7 +9,14 @@ import {
 
 export const FeatureBento = () => {
 	const Skeleton = () => (
-		<div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl dark:bg-dot-white/[0.2] bg-dot-black/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-transparent dark:border-white/[0.2] bg-neutral-100 dark:bg-black" />
+		<div
+			className={cn(
+				"flex flex-1 w-full h-full min-h-[6rem] rounded-xl [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-transparent dark:border-white/[0.2] bg-neutral-100 dark:bg-black",
+				"[background-size:20px_20px]",
+				"[background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]",
+				"dark:[background-image:radial-gradient(#404040_1px,transparent_1px)]",
+			)}
+		/>
 	);
 	const items = [
 		{
@@ -44,7 +52,7 @@ export const FeatureBento = () => {
 
 	return (
 		<div className="bg-white">
-			<BentoGrid className="mx-auto max-w-screen-2xl md:auto-rows-[20rem] p-6 lg:p-10 backdrop-blur-sm">
+			<BentoGrid className="mx-auto max-w-(--breakpoint-2xl) md:auto-rows-[20rem] p-6 lg:p-10 backdrop-blur-xs">
 				{items.map((item, i) => (
 					<BentoGridItem
 						key={`${item.title}-HomePage`}

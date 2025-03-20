@@ -140,7 +140,7 @@ export default function Component() {
 							content={({ active, payload }) => {
 								if (active && payload && payload.length) {
 									return (
-										<div className="bg-background border border-border p-2 rounded shadow">
+										<div className="bg-background border border-border p-2 rounded-sm shadow-sm">
 											<p className="font-bold">{payload[0].name}</p>
 											<p>{`${Math.round(Number(payload[0].value))}%`}</p>
 										</div>

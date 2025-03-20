@@ -783,7 +783,14 @@ export default function SquareEditor({
 				handleExport={handleExport}
 				handleImport={handleImport}
 			/>
-			<div className="flex-1 space-y-4 p-36 dark:bg-dot-white/[0.2] bg-dot-black/[0.2]">
+			<div
+				className={cn(
+					"flex-1 space-y-4 p-36",
+					"[background-size:20px_20px]",
+					"[background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]",
+					"dark:[background-image:radial-gradient(#404040_1px,transparent_1px)]",
+				)}
+			>
 				<div className="relative w-full h-full flex items-center justify-center">
 					<div
 						ref={containerRef}
@@ -794,7 +801,7 @@ export default function SquareEditor({
 							backgroundSize: "cover",
 							backgroundPosition: "center",
 						}}
-						className="relative border rounded shadow-md bg-white border-gray-300"
+						className="relative border rounded-sm shadow-md bg-white border-gray-300"
 						onMouseDown={handleMouseDown}
 						onMouseMove={handleMouseMove}
 						onMouseUp={handleMouseUp}
@@ -804,7 +811,7 @@ export default function SquareEditor({
 						{classifiedLabel ? (
 							<Badge
 								variant="secondary"
-								className="absolute -translate-y-full z-[99] -top-1 text-white left-0"
+								className="absolute -translate-y-full z-99 -top-1 text-white left-0"
 								style={{
 									backgroundColor: classifiedLabel?.color
 										? `${classifiedLabel.color}90`

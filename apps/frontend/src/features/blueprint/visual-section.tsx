@@ -286,7 +286,7 @@ export const VisualSection = ({ node, customNode, image }: VisualProps) => {
 						});
 						onNodesChange(e);
 					}}
-					className="border-y border-l rounded"
+					className="border-y border-l rounded-sm"
 					onEdgesChange={onEdgesChange}
 					onConnect={onConnect}
 					nodeTypes={nodeTypes}

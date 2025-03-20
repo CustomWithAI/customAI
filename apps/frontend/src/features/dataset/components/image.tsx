@@ -194,13 +194,13 @@ export const ContentImage = ({
 									</DotBadge>
 								</div>
 							</div>
-							<div className="mx-auto flex-shrink-0">
+							<div className="mx-auto shrink-0">
 								<Subtle className="text-xs text-gray-500">
 									{imageSizes[index]?.width} x {imageSizes[index]?.height} px
 								</Subtle>
 							</div>
 							<div>
-								<Subtle className="text-xs flex-shrink-0">
+								<Subtle className="text-xs shrink-0">
 									{format.relativeTime(new Date(image.createdAt))}
 								</Subtle>
 							</div>

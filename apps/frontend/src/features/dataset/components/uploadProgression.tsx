@@ -42,7 +42,7 @@ const UploadProgress = () => {
 
 	if (uploads.length === 0) return null;
 	return (
-		<div className="fixed bottom-4 right-4 max-sm:w-screen z-[99] bg-white border border-gray-200 rounded-lg p-6 pt-5 shadow-md">
+		<div className="fixed bottom-4 right-4 max-sm:w-screen z-99 bg-white border border-gray-200 rounded-lg p-6 pt-5 shadow-md">
 			<div className="flex justify-between border-b pb-2">
 				<SubHeader>
 					{t("Upload.Popup.Upload")}{" "}

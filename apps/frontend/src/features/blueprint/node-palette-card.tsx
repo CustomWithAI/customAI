@@ -17,7 +17,7 @@ export const NodeItem = memo(
 			onDragStart={(e) => onDragStart(e, type as string)}
 		>
 			<div className="flex items-start space-x-4">
-				<div className="relative mt-2 p-1 w-8 h-8 rounded-lg bg-blue-50 flex-shrink-0">
+				<div className="relative mt-2 p-1 w-8 h-8 rounded-lg bg-blue-50 shrink-0">
 					{cloneElement(icon as ReactElement, {
 						className: "w-6 h-6 text-blue-700",
 					})}

@@ -25,7 +25,7 @@ export const WorkflowCard = memo(
 			type="button"
 			onClick={() => onClick(name)}
 			className={cn(
-				"relative hover:shadow-blue-500 duration-200 hover:shadow-sm text-start shadow-md min-h-96 flex flex-col m-px rounded-lg p-6 border w-full max-w-xs space-y-4",
+				"relative hover:shadow-blue-500 duration-200 hover:shadow-xs text-start shadow-md min-h-96 flex flex-col m-px rounded-lg p-6 border w-full max-w-xs space-y-4",
 				{ "border-green-500": current },
 			)}
 		>
@@ -47,7 +47,7 @@ export const WorkflowCard = memo(
 					{tags.map((tag) => (
 						<div
 							key={`tags-${tag}`}
-							className="rounded-sm bg-gray-100 text-gray-400 px-2 text-sm"
+							className="rounded-xs bg-gray-100 text-gray-400 px-2 text-sm"
 						>
 							# {tag}
 						</div>

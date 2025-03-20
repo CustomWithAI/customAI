@@ -37,7 +37,7 @@ export const VisualCard = ({
 			key={`preprocessing-${id}`}
 			className={cn(
 				"flex relative space-x-8 border group pb-4 pt-5 my-1 pl-3 hover:bg-zinc-50 duration-150",
-				" active:border-zinc-300 shadow-sm rounded-lg",
+				" active:border-zinc-300 shadow-xs rounded-lg",
 			)}
 			ref={setNodeRef}
 			{...attributes}
@@ -46,7 +46,7 @@ export const VisualCard = ({
 			<div className="w-6" {...listeners}>
 				<TooltipProvider delayDuration={250}>
 					<Tooltip>
-						<TooltipContent className="z-[99] bg-white">
+						<TooltipContent className="z-99 bg-white">
 							drag up-down to order context
 						</TooltipContent>
 						<TooltipTrigger asChild>

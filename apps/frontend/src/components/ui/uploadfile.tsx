@@ -100,7 +100,7 @@ const UploadFileBox = ({
 				}}
 				className={cn(
 					"group flex aspect-square sm:aspect-video z-10 size-full flex-col items-center justify-center rounded-lg border",
-					"cursor-pointer border-dashed shadow-sm duration-150 hover:bg-zinc-50 active:bg-zinc-100/70 dark:bg-zinc-700",
+					"cursor-pointer border-dashed shadow-xs duration-150 hover:bg-zinc-50 active:bg-zinc-100/70 dark:bg-zinc-700",
 					"dark:bg-zinc-700",
 					{
 						"bg-zinc-100 dark:border-zinc-400 dark:bg-zinc-800": isDragActive,

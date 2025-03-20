@@ -874,7 +874,7 @@ export const node = (
 		},
 		{
 			type: "median_blur",
-			title: "Median blur",
+			title: "Median blur-sm",
 			description: "Evaluates a condition and routes the flow",
 			icon: <ArrowDownWideNarrow />,
 			id: "median-blur-1",
@@ -898,7 +898,7 @@ export const node = (
 					template: "number",
 					element: {
 						testDataId: "median-blur-form",
-						label: "Mean blur size",
+						label: "Mean blur-sm size",
 						name: "kernel_size",
 						key: "kernel_size-median",
 					},
@@ -1298,9 +1298,9 @@ export const node = (
 		},
 		{
 			type: "gaussian_blur",
-			title: "Gaussian blur",
+			title: "Gaussian blur-sm",
 			id: "gaussian_blur-1",
-			description: "Apply Gaussian blur with kernel size and sigma",
+			description: "Apply Gaussian blur-sm with kernel size and sigma",
 			icon: <IconBlur />,
 			metadata: {
 				kernel_size: {

@@ -34,7 +34,7 @@ export const VersionSection = ({
 					{isDefault && <Badge variant="secondary">default</Badge>}
 				</div>
 				<div className="rounded-lg flex-1 w-full shadow-md border relative px-6 py-5">
-					<div className="flex flex-grow items-end gap-x-4 mb-4">
+					<div className="flex grow items-end gap-x-4 mb-4">
 						<ContentHeader>{versionName}</ContentHeader>
 						<Subtle className="mb-0.5">
 							{formatDistanceToNow(time, { addSuffix: true })}

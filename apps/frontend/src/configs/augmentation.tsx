@@ -1332,9 +1332,9 @@ export const node = (
 		},
 		{
 			type: "gaussian_blur",
-			title: "Gaussian blur",
+			title: "Gaussian blur-sm",
 			id: "gaussian_blur-1",
-			description: "Apply Gaussian blur with kernel size and sigma",
+			description: "Apply Gaussian blur-sm with kernel size and sigma",
 			icon: <IconBlur />,
 			metadata: {
 				probability: {
@@ -1478,9 +1478,9 @@ export const node = (
 		},
 		{
 			type: "motion_blur",
-			title: "Motion blur",
+			title: "Motion blur-sm",
 			id: "motion_blur-1",
-			description: "Simulate motion blur",
+			description: "Simulate motion blur-sm",
 			icon: <IconBlur />,
 			metadata: {
 				probability: {
@@ -1621,7 +1621,7 @@ export const node = (
 		{
 			type: "zoom_blur",
 			title: "Zoom Blur",
-			description: "Apply zoom blur effect",
+			description: "Apply zoom blur-sm effect",
 			icon: <IconColorPicker />,
 			id: "zoom_blur-1",
 			metadata: {

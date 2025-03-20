@@ -31,7 +31,7 @@ export function LabelSidebar({
 	return (
 		<div
 			className={cn(
-				"fixed right-4 z-[98] top-1/2 bg-white w-64 border transition-all duration-150",
+				"fixed right-4 z-98 top-1/2 bg-white w-64 border transition-all duration-150",
 				" -translate-y-1/2 rounded-md border-gray-200 h-2/3 flex flex-col",
 				open ? "w-64 max-w-64 opacity-100" : "w-0 max-w-0",
 			)}
@@ -41,7 +41,7 @@ export function LabelSidebar({
 				onClick={() => setOpen((o) => !o)}
 				className={cn(
 					"group transition-all duration-100 absolute hover:bg-zinc-50 p-1 top-4",
-					" flex justify-center items-center -left-9 border bg-white z-[97] rounded-md rounded-r-none border-r-0",
+					" flex justify-center items-center -left-9 border bg-white z-97 rounded-md rounded-r-none border-r-0",
 					{ "hover:left-[-94px]": !open },
 				)}
 			>
@@ -107,7 +107,7 @@ export function LabelSidebar({
 											/>
 											<span className="text-sm">{label.name}</span>
 										</div>
-										<div className=" absolute left-40 z-[99] group-hover:bg-white duration-100 rounded p-1 flex items-center gap-1 ml-auto">
+										<div className=" absolute left-40 z-99 group-hover:bg-white duration-100 rounded-sm p-1 flex items-center gap-1 ml-auto">
 											<Button
 												variant="ghost"
 												size="sm"

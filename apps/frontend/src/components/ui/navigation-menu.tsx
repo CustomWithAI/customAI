@@ -41,7 +41,7 @@ NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
 const navigationMenuTriggerStyle = cva(
-	"group inline-flex h-10 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-indigo-100 hover:text-indigo-900 focus:bg-indigo-100 focus:text-indigo-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-indigo-100/50 data-[state=open]:bg-indigo-100/50 dark:bg-indigo-950 dark:hover:bg-indigo-800 dark:hover:text-indigo-50 dark:focus:bg-indigo-800 dark:focus:text-indigo-50 dark:data-[active]:bg-indigo-800/50 dark:data-[state=open]:bg-indigo-800/50",
+	"group inline-flex h-10 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-indigo-100 hover:text-indigo-900 focus:bg-indigo-100 focus:text-indigo-900 focus:outline-hidden disabled:pointer-events-none disabled:opacity-50 data-active:bg-indigo-100/50 data-[state=open]:bg-indigo-100/50 dark:bg-indigo-950 dark:hover:bg-indigo-800 dark:hover:text-indigo-50 dark:focus:bg-indigo-800 dark:focus:text-indigo-50 dark:data-active:bg-indigo-800/50 dark:data-[state=open]:bg-indigo-800/50",
 );
 
 const NavigationMenuTrigger = React.forwardRef<
@@ -105,7 +105,7 @@ const NavigationMenuIndicator = React.forwardRef<
 	<NavigationMenuPrimitive.Indicator
 		ref={ref}
 		className={cn(
-			"top-full z-[4] flex h-1.5 items-end justify-center overflow-hidden data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in",
+			"top-full z-4 flex h-1.5 items-end justify-center overflow-hidden data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in",
 			className,
 		)}
 		{...props}

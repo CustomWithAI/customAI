@@ -90,7 +90,7 @@ export const DatasetPage = () => {
 			<Subtle>Create new dataset</Subtle>
 			<button
 				type="button"
-				className="w-64 h-48 hover:border-blue-700 hover:bg-zinc-50 hover:shadow-sm duration-150 active:scale-95 transition-transform border rounded-lg flex flex-col justify-center items-center"
+				className="w-64 h-48 hover:border-blue-700 hover:bg-zinc-50 hover:shadow-xs duration-150 active:scale-95 transition-transform border rounded-lg flex flex-col justify-center items-center"
 			>
 				<Plus className="mb-6" />
 				<Content>Create a dataset</Content>

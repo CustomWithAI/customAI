@@ -134,7 +134,7 @@ export const PreDataBlock = ({
 			<button
 				onClick={() => setOpen((n) => !n)}
 				type="button"
-				className="hover:bg-zinc-50 border px-3 py-2 -my-2 rounded flex gap-x-3"
+				className="hover:bg-zinc-50 border px-3 py-2 -my-2 rounded-sm flex gap-x-3"
 			>
 				<Subtle>{priority || "data"}</Subtle>
 

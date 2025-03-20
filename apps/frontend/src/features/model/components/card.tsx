@@ -24,8 +24,8 @@ export const ModelCard: React.FC<CardProps> = ({
 		<button
 			type="button"
 			className={cn(
-				"size-52 md:size-64 hover:shadow-blue-500 aspect-square hover:shadow-sm duration-200 my-1 border",
-				" rounded-lg shadow-md overflow-hidden [&>div]:flex-shrink-0 p-4",
+				"size-52 md:size-64 hover:shadow-blue-500 aspect-square hover:shadow-xs duration-200 my-1 border",
+				" rounded-lg shadow-md overflow-hidden [&>div]:shrink-0 p-4",
 				className,
 			)}
 			onClick={() => {
@@ -34,7 +34,14 @@ export const ModelCard: React.FC<CardProps> = ({
 		>
 			<div className="flex h-28 relative overflow-hidden">
 				{images?.length === 0 ? (
-					<div className="flex flex-1 w-full h-28 min-h-[6rem] rounded-xl dark:bg-dot-white/[0.2] bg-dot-black/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-transparent dark:border-white/[0.2] bg-neutral-100 dark:bg-black" />
+					<div
+						className={cn(
+							"flex flex-1 w-full h-28 min-h-[6rem] rounded-xl [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-transparent dark:border-white/[0.2] bg-neutral-100 dark:bg-black",
+							"[background-size:20px_20px]",
+							"[background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]",
+							"dark:[background-image:radial-gradient(#404040_1px,transparent_1px)]",
+						)}
+					/>
 				) : (
 					images.map((image, index) => (
 						<div className="w-full" key={`dataset-${title + String(index)}`}>
@@ -51,7 +58,7 @@ export const ModelCard: React.FC<CardProps> = ({
 					))
 				)}
 				<div
-					className={`${typeClass ?? "bg-white"} absolute top-2 right-2 text-xs px-2 py-1 rounded-md shadow`}
+					className={`${typeClass ?? "bg-white"} absolute top-2 right-2 text-xs px-2 py-1 rounded-md shadow-sm`}
 				>
 					{type}
 				</div>

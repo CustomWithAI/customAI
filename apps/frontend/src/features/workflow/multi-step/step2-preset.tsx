@@ -153,7 +153,7 @@ export const Step3Page = () => {
 
 	return (
 		<>
-			<div className=" max-w-screen-lg grid grid-cols-3 gap-x-5">
+			<div className=" max-w-(--breakpoint-lg) grid grid-cols-3 gap-x-5">
 				<PresetBox
 					current={fields.every((fields) => fields.metadata?.check?.value)}
 					onClick={() => {

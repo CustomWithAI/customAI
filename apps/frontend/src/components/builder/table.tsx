@@ -404,7 +404,7 @@ const TableBuilder = <T extends object>({
 	return (
 		<>
 			{header ? header(<RenderUpper />) : null}
-			<Table className="[--gutter:theme(spacing.6)] sm:[--gutter:theme(spacing.8)]">
+			<Table className="[--gutter:--spacing(6)] sm:[--gutter:--spacing(8)]">
 				<TableHead>
 					<TableRow>
 						{filterColumns.map((column, colIndex) => (

@@ -26,7 +26,7 @@ export const WorkflowCard: React.FC<CardProps> = ({
 		<button
 			type="button"
 			className={cn(
-				"relative w-full max-w-64 hover:shadow-blue-500 hover:shadow-sm duration-200 border",
+				"relative w-full max-w-64 hover:shadow-blue-500 hover:shadow-xs duration-200 border",
 				" rounded-lg shadow-md overflow-hidden",
 				className,
 			)}
