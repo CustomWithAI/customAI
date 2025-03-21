@@ -6,11 +6,14 @@ import { Input } from "@/components/ui/input";
 import UploadFile from "@/components/ui/uploadfile";
 import { ContentImage } from "@/features/dataset/components/image";
 import { useGetImages } from "@/hooks/queries/dataset-api";
+import { encodeBase64 } from "@/libs/base64";
+import { useRouter } from "@/libs/i18nNavigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { FileUp, Filter, Image, PaintbrushVertical } from "lucide-react";
 
 export default function ImagesPage({ id }: { id: string }) {
 	const { data: images } = useGetImages(id);
+	const router = useRouter();
 	const queryClient = useQueryClient();
 	return (
 		<ViewList.Provider>
@@ -40,7 +43,14 @@ export default function ImagesPage({ id }: { id: string }) {
 							});
 						}}
 					/>
-					<Button effect="gooeyLeft">
+					<Button
+						onClick={() =>
+							router.push(
+								`/dataset/${id}/annotation/?image=${encodeBase64(images?.data?.[0]?.path ?? "")}`,
+							)
+						}
+						effect="gooeyLeft"
+					>
 						<PaintbrushVertical /> Annotate
 					</Button>
 				</div>

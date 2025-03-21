@@ -101,16 +101,12 @@ const data = [
 export function NavActions() {
 	const [isOpen, setIsOpen] = React.useState(false);
 
-	React.useEffect(() => {
-		setIsOpen(true);
-	}, []);
-
 	return (
 		<div className="flex items-center gap-2 text-sm">
 			<div className="hidden font-medium text-muted-foreground md:inline-block">
 				Edit Oct 08
 			</div>
-			<Button variant="ghost" size="icon" className="h-7 w-7">
+			<Button variant="ghost" size="icon" className="h-7 w-7" aria-label="Star">
 				<Star />
 			</Button>
 			<Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -119,6 +115,7 @@ export function NavActions() {
 						variant="ghost"
 						size="icon"
 						className="h-7 w-7 data-[state=open]:bg-accent"
+						aria-label="More horizontal"
 					>
 						<MoreHorizontal />
 					</Button>

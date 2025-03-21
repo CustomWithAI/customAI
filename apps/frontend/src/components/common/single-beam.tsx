@@ -5,9 +5,25 @@ import { motion } from "framer-motion";
 import React from "react";
 
 export const SingleBeam = React.memo(
-	({ path, className }: { path: string; className?: string }) => {
+	({
+		path,
+		width,
+		height,
+		animationDuration,
+		className,
+	}: {
+		path: string;
+		className?: string;
+		width?: number;
+		height?: number;
+		animationDuration?: number;
+	}) => {
 		return (
 			<div
+				style={{
+					width: width,
+					height: height,
+				}}
 				className={cn(
 					"absolute -z-10 h-full w-full inset-0 [mask-size:40px] [mask-repeat:no-repeat] flex items-center justify-center",
 					className,
@@ -53,7 +69,7 @@ export const SingleBeam = React.memo(
 								y2: ["0%", `${93 + Math.random() * 8}%`],
 							}}
 							transition={{
-								duration: Math.random() * 20 + 20,
+								duration: Math.random() * (20 + (animationDuration || 0)) + 20,
 								ease: "easeInOut",
 								repeat: Number.POSITIVE_INFINITY,
 								delay: Math.random() * 10,
