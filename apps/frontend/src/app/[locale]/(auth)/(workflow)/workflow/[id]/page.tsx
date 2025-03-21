@@ -20,7 +20,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 			PageTitle={workflow?.data.name || ""}
 			disabledTab={undefined}
 		>
-			<div className="max-w-screen no-scroll mb-4 overflow-x-scroll border-b">
+			<div className="max-w-screen no-scroll mb-4 overflow-x-scroll border-b border-gray-200">
 				<Menubar.List>
 					<Menubar.Item
 						onClick={() =>
@@ -85,7 +85,9 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 					default={defaultTraining?.data}
 				/>
 			) : null}
-			{compareQueryParam({ value: "versions" }) ? <VersionPage /> : null}
+			{compareQueryParam({ value: "versions" }) ? (
+				<VersionPage id={id} />
+			) : null}
 			{compareQueryParam({ value: "insights" }) ? <InsightPage /> : null}
 			{compareQueryParam({ value: "settings" }) ? <SettingPage /> : null}
 		</AppNavbar>

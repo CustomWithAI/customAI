@@ -56,14 +56,14 @@ export const VersionPage = ({ id }: { id: string }) => {
 					))}
 				</div>
 				<div>
-					<ScrollArea className="h-72 w-48 rounded-md border">
+					<ScrollArea className="h-72 w-48 rounded-md border border-gray-200">
 						<div className="p-4">
 							<h4 className="mb-4 text-sm font-medium leading-none">Tags</h4>
 							{version?.data?.data?.map((tag) => (
 								<>
 									<div
 										key={tag.version}
-										className="border-l pl-3 py-1 text-sm hover:bg-zinc-100 duration-200"
+										className="border-l border-gray-200 pl-3 py-1 text-sm hover:bg-zinc-100 duration-200"
 									>
 										{tag.version}
 									</div>

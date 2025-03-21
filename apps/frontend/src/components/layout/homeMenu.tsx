@@ -13,10 +13,10 @@ export const HomeMenu = () => {
 	const { data: session } = authClient.useSession();
 	const router = useRouter();
 	return (
-		<div className="w-full sticky z-10 top-0 bg-white flex justify-between px-10 py-4 border-b">
+		<div className="w-full sticky z-10 top-0 bg-white flex justify-between px-10 py-4 border-b border-gray-200">
 			<GuestNavbar />
 			<div className="flex space-x-3">
-				<div className="border" />
+				<div className="border border-gray-200" />
 				{!session ? (
 					<>
 						<Button onClick={() => router.push("/signin")} variant="ghost">

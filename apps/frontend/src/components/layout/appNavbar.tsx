@@ -61,7 +61,7 @@ export const AppNavbar = memo(
 		);
 		return (
 			<SidebarProvider>
-				<Sidebar className="border-r-0" {...props}>
+				<Sidebar className="border-r-0 border-gray-200" {...props}>
 					<SidebarHeader>
 						<TeamSwitcher teams={sidebarConfig.teams} />
 						<NavMain items={navMainWithActive} />

@@ -37,7 +37,7 @@ export const ActivityBox = ({
 					<Subtle>{formatDistanceToNow(time, { addSuffix: true })}</Subtle>
 				</div>
 			</div>
-			<div className="border-l ml-2.5">
+			<div className="border-l border-gray-200 ml-2.5">
 				<div className="pb-4 ml-7">a</div>
 			</div>
 		</div>

@@ -129,7 +129,7 @@ export function NavActions() {
 							{data.map((group, index) => (
 								<SidebarGroup
 									key={`${group.length}${index}`}
-									className="border-b last:border-none"
+									className="border-b border-gray-200 last:border-none"
 								>
 									<SidebarGroupContent className="gap-0">
 										<SidebarMenu>

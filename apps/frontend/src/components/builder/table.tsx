@@ -324,7 +324,7 @@ const TableBuilder = <T extends object>({
 					<UseSecretCode
 						onClick={() => copyToClipBoard(codeValue || "")}
 						className={cn(
-							"line-clamp-3 min-h-12 text-wrap break-all p-1",
+							"line-clamp-3 min-h-12 text-wrap break-all p-1 border-gray-200",
 							" duration-200 hover:cursor-pointer hover:border-dashed",
 							" hover:bg-zinc-950/5 dark:hover:bg-zinc-950/60",
 						)}

@@ -46,7 +46,7 @@ export function useMDXComponents(components?: MDXComponents): MDXComponents {
 			),
 			li: ({ children }) => <li className="mt-2">{children}</li>,
 			blockquote: ({ children }) => (
-				<blockquote className="mt-6 border-l-2 pl-6 italic">
+				<blockquote className="mt-6 border-l-2 border-gray-200 pl-6 italic">
 					{children}
 				</blockquote>
 			),

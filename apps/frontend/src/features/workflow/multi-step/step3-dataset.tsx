@@ -12,8 +12,10 @@ import { useGetDatasets } from "@/hooks/queries/dataset-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { encodeBase64 } from "@/libs/base64";
+import { cn } from "@/libs/utils";
 import { Plus } from "lucide-react";
 import { useCallback, useState } from "react";
+import { Virtuoso } from "react-virtuoso";
 import { useShallow } from "zustand/react/shallow";
 import { decodeBase64 } from "../../../libs/base64";
 
@@ -69,22 +71,26 @@ export const DatasetPage = () => {
 		<div className="flex flex-col gap-y-4">
 			<Subtle>Recent dataset used</Subtle>
 			<BaseSkeleton loading={datasetPending}>
-				<div className="overflow-x-auto">
-					{datasets?.data.map((dataset) => (
+				<Virtuoso
+					className="w-full h-[288px]"
+					data={datasets?.data || []}
+					horizontalDirection
+					itemContent={(_, dataset) => (
 						<DatasetCard
 							key={dataset.id}
 							title={dataset.name}
 							description={dataset.description}
 							imagesCount={dataset.imageCount}
 							href={""}
-							className={
-								datasetId === dataset.id ? "border border-green-400" : ""
-							}
+							className={cn(
+								datasetId === dataset.id ? "border-2 border-green-400" : "",
+								"mr-4",
+							)}
 							onClick={() => setDatasetId(dataset.id)}
 							images={dataset.images}
 						/>
-					))}
-				</div>
+					)}
+				/>
 			</BaseSkeleton>
 
 			<Subtle>Create new dataset</Subtle>

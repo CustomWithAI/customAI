@@ -121,11 +121,11 @@ function SignupPage() {
 							<IconBrandGithub /> {t("Login.signInWithGitHub")}
 						</Button>
 						<div className="inline-flex space-x-3 pt-3 pb-1 items-center">
-							<div className="border w-full h-0" />
+							<div className="border border-gray-200 w-full h-0" />
 							<p className=" text-zinc-400 text-xs font-extralight w-max flex-1 text-nowrap">
 								{t("Login.orSignInWithEmail")}
 							</p>
-							<div className="border w-full h-0" />
+							<div className="border border-gray-200 w-full h-0" />
 						</div>
 						<Form {...form}>
 							<form

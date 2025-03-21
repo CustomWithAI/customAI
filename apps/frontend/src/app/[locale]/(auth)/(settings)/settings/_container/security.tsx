@@ -54,7 +54,7 @@ export default function SecurityPage() {
 
 	return (
 		<div className="flex flex-col gap-y-6">
-			<Header className="w-full border-b">
+			<Header className="w-full border-b border-gray-200">
 				{t("Security.AccountSecurity")}
 			</Header>
 			<>
@@ -105,10 +105,12 @@ export default function SecurityPage() {
 					</Button>
 				</div>
 			</>
-			<Header className="w-full border-b">
+			<Header className="w-full border-b border-gray-200">
 				{t("Security.TwoFactorAuthentication")}
 			</Header>
-			<Header className="w-full border-b">{t("Security.LinkAccounts")}</Header>
+			<Header className="w-full border-b border-gray-200">
+				{t("Security.LinkAccounts")}
+			</Header>
 			<SocialAccount />
 		</div>
 	);

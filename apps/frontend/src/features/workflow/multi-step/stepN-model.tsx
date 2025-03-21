@@ -105,7 +105,10 @@ export const ModelDetailsPage = () => {
 			<BaseSkeleton loading={trainingPending}>
 				{training &&
 					Object.entries(training?.data).map(([key, value]) => (
-						<div key={key} className="w-full flex gap-x-8 pt-6 pb-8 border-b">
+						<div
+							key={key}
+							className="w-full flex gap-x-8 pt-6 pb-8 border-b border-gray-200"
+						>
 							<Subtle className=" w-1/4 font-medium text-zinc-500">
 								{formatCapital(key)}
 							</Subtle>

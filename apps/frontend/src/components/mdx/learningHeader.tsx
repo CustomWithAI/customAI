@@ -26,7 +26,7 @@ export function DocHeader({
 	const t = useTranslations();
 
 	return (
-		<div className="mb-8 pb-6 border-b">
+		<div className="mb-8 pb-6 border-b border-gray-200">
 			<h1 className="text-4xl font-bold tracking-tight mb-3">{title}</h1>
 			<p className="text-xl text-muted-foreground mb-6">{description}</p>
 

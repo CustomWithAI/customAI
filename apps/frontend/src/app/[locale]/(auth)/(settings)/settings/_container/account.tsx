@@ -39,7 +39,7 @@ export default function AccountPage() {
 	const onSubmit = async (data: AccountSchema) => {};
 	return (
 		<>
-			<Header className="w-full border-b mb-1">
+			<Header className="w-full border-b border-gray-200 mb-1">
 				{t("Account.ProfileInformation")}
 			</Header>
 			<div className="md:w-11/12 grid grid-cols-4 max-lg:grid-cols-2 max-md:grid-cols-1 gap-y-4 gap-x-6 xl:gap-x-8">
@@ -97,13 +97,14 @@ export default function AccountPage() {
 						</div>
 						<div className="absolute bottom-2 right-2 flex">
 							<UploadFile.dialog
-								button=<button className="bg-white rounded-l-full shadow-md p-2 pl-4 pr-3 hover:bg-gray-100 border-r">
+								button=<button className="bg-white rounded-l-full shadow-md p-2 pl-4 pr-3 hover:bg-gray-100 border-r border-gray-200">
 									<Pencil className="w-4 h-4" strokeWidth="2.5" />
 								</button>
 								dialog={{
 									title: "Upload Images",
 									description: "",
 								}}
+								datasetId=""
 								id=""
 								onFileChange={() => {}}
 							/>

@@ -47,7 +47,7 @@ export const EditFeature = ({
 		<div className="flex max-h-[70vh] max-md:flex-col gap-x-6 max-md:gap-y-6 w-full">
 			<div
 				className={cn(
-					"relative h-[70vh] w-full md:w-1/2 dark:bg-black border rounded-lg shadow-xs bg-white overflow-scroll",
+					"relative h-[70vh] w-full md:w-1/2 dark:bg-black border border-gray-200 rounded-lg shadow-xs bg-white overflow-scroll",
 					"[background-size:20px_20px]",
 					"[background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]",
 					"dark:[background-image:radial-gradient(#404040_1px,transparent_1px)]",

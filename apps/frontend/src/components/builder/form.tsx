@@ -596,7 +596,7 @@ const RenderInput = memo(
 						render={({ field: { onChange, onBlur, value } }) => (
 							<FormItem
 								className={cn(className, {
-									"flex flex-row items-center justify-between rounded-lg border p-4":
+									"flex flex-row items-center justify-between rounded-lg border border-gray-200 p-4":
 										options && ("box" in options ? options?.box : false),
 								})}
 							>

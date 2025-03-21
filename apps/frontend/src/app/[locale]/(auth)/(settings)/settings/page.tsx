@@ -12,7 +12,7 @@ export default function Page() {
 	const { compareQueryParam, setQueryParam } = useQueryParam({ name: "tab" });
 	return (
 		<AppNavbar activeTab="Home" PageTitle="" disabledTab={undefined}>
-			<div className="max-w-screen no-scroll overflow-x-scroll border-b mb-4">
+			<div className="max-w-screen no-scroll overflow-x-scroll border-b border-gray-200 mb-4">
 				<Menubar.List>
 					<Menubar.Item
 						onClick={() =>

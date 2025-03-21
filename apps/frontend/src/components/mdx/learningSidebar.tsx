@@ -124,7 +124,7 @@ export function LearningSidebar({ className }: LearningSidebarProps) {
 			{/* Desktop sidebar */}
 			<div
 				className={cn(
-					"hidden lg:block w-64 shrink-0 border-r h-screen sticky top-0 overflow-y-auto",
+					"hidden lg:block w-64 shrink-0 border-r border-gray-200 h-screen sticky top-0 overflow-y-auto",
 					className,
 				)}
 			>

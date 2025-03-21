@@ -35,7 +35,7 @@ export default function DatasetManagement({
 				<Settings2 /> Dataset Management
 			</Header>
 			<div className="space-y-6">
-				<div className="border-b w-full pb-2">
+				<div className="border-b border-gray-200 w-full pb-2">
 					<SubHeader className="font-medium leading-8">
 						Train/Test Split
 					</SubHeader>
@@ -57,7 +57,7 @@ export default function DatasetManagement({
 						/>
 					</div>
 				</div>
-				<div className="border-b w-full pb-2">
+				<div className="border-b border-gray-200 w-full pb-2">
 					<SubHeader className="font-medium leading-8">Annotation</SubHeader>
 					<Subtle>Tagging images to prepare them for model training</Subtle>
 				</div>

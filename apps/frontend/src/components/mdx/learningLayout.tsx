@@ -48,7 +48,7 @@ export function LearningLayout({
 				<div className="container mx-auto px-4 py-8">
 					<div className="flex flex-col lg:flex-row gap-12">
 						<div className="flex-1">
-							<div className="mb-8 pb-8 border-b">
+							<div className="mb-8 pb-8 border-b border-gray-200">
 								<h1 className="text-4xl font-bold tracking-tight mb-3">
 									{title}
 								</h1>

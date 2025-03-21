@@ -43,7 +43,7 @@ describe("ActivityBox", () => {
 
 		const box = screen.getByTestId("activity-box");
 		expect(box).toHaveClass(
-			"flex items-center gap-4 rounded-lg border bg-card p-4 text-card-foreground",
+			"flex items-center gap-4 rounded-lg border border-gray-200 bg-card p-4 text-card-foreground",
 		);
 	});
 });

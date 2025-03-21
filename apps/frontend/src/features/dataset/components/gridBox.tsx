@@ -26,7 +26,7 @@ export const DatasetCard: React.FC<CardProps> = ({
 		<button
 			type="button"
 			className={cn(
-				"min-w-64 hover:shadow-blue-500 hover:shadow-xs duration-200 border",
+				"min-w-64 hover:shadow-blue-500 hover:shadow-xs duration-200 border border-gray-200",
 				" rounded-lg shadow-md overflow-hidden",
 				className,
 			)}

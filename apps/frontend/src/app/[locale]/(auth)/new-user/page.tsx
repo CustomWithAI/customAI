@@ -35,7 +35,7 @@ const NewUserPage = () => {
 					type="button"
 					onClick={() => setSelected("beginner")}
 					className={cn(
-						"relative group border hover:border-green-500 hover:bg-green-50 rounded-lg p-6 duration-150",
+						"relative group border border-gray-200 hover:border-green-500 hover:bg-green-50 rounded-lg p-6 duration-150",
 						{ "border-green-500 bg-green-50": selected === "beginner" },
 					)}
 				>
@@ -93,7 +93,7 @@ const NewUserPage = () => {
 					type="button"
 					onClick={() => setSelected("intermediate")}
 					className={cn(
-						"relative group border hover:border-blue-500 hover:bg-blue-50 rounded-lg p-6 duration-150",
+						"relative group border border-gray-200 hover:border-blue-500 hover:bg-blue-50 rounded-lg p-6 duration-150",
 						{ "border-blue-500 bg-blue-50": selected === "intermediate" },
 					)}
 				>
@@ -151,7 +151,7 @@ const NewUserPage = () => {
 					type="button"
 					onClick={() => setSelected("expert")}
 					className={cn(
-						"relative group border hover:border-violet-500 hover:bg-violet-50 rounded-lg p-6 duration-150",
+						"relative group border border-gray-200 hover:border-violet-500 hover:bg-violet-50 rounded-lg p-6 duration-150",
 						{ "border-blue-500 bg-blue-50": selected === "expert" },
 					)}
 				>

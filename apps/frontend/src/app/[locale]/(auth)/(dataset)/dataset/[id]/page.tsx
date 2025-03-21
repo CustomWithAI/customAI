@@ -15,7 +15,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 			PageTitle={`${dataset?.name || ""} ${dataset?.annotationMethod ? `(${dataset?.annotationMethod.split("_")?.join(" ")})` : ""}`}
 			disabledTab={undefined}
 		>
-			<div className="max-w-screen no-scroll overflow-x-scroll border-b mb-4">
+			<div className="max-w-screen no-scroll overflow-x-scroll border-b border-gray-200 mb-4">
 				<Menubar.List>
 					<Menubar.Item
 						onClick={() =>

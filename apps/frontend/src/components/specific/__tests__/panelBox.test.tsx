@@ -32,7 +32,7 @@ describe("PanelBox", () => {
 
 		const panel = screen.getByTestId("panel-box");
 		expect(panel).toHaveClass(
-			"flex flex-col gap-4 rounded-lg border bg-card p-6 text-card-foreground shadow-sm",
+			"flex flex-col gap-4 rounded-lg border border-gray-200 bg-card p-6 text-card-foreground shadow-sm",
 		);
 	});
 

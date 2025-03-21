@@ -174,7 +174,7 @@ export default function DocsLandingPage({
 						</div>
 
 						{/* Additional resources section */}
-						<div className="mt-16 border-t pt-12">
+						<div className="mt-16 border-t border-gray-200 pt-12">
 							<h2 className="text-2xl font-bold mb-6">Need more help?</h2>
 							<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 								<Card>

@@ -66,7 +66,7 @@ export const MainWorkflowPage = ({
 				<div>
 					<SubHeader>About</SubHeader>
 					<Quote className="text-zinc-700 my-5">{data?.description}</Quote>
-					<div className="space-y-3 text-zinc-700 pb-6 border-b">
+					<div className="space-y-3 text-zinc-700 pb-6 border-b border-gray-200">
 						<div className="flex space-x-4">
 							<Layers2 className="w-6 h-6" />
 							<Content>Pre-trained : Yolo12</Content>
@@ -79,7 +79,7 @@ export const MainWorkflowPage = ({
 					<div className="flex mt-6 mb-3">
 						<SubHeader>Versions</SubHeader>
 					</div>
-					<div className="space-y-3 text-zinc-700 pb-6 border-b">
+					<div className="space-y-3 text-zinc-700 pb-6 border-b border-gray-200">
 						<div className="relative flex space-x-4">
 							<Tractor className="absolute top-6 w-6 h-6" />
 							<div className="pl-5 space-y-2">
