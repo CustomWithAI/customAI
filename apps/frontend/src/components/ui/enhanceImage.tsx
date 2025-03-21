@@ -16,6 +16,11 @@ interface FilterCrop {
 	params: [number, number, number, number];
 }
 
+interface FilterResizing {
+	type: "resizing";
+	params: [number, number];
+}
+
 interface FilterRotation {
 	type: "rotate";
 	angle: number;
@@ -195,6 +200,7 @@ export type Filter =
 	| FilterStyle
 	| FilterOpenCV<keyof typeof import("@techstark/opencv-js")>
 	| FilterCrop
+	| FilterResizing
 	| FilterRotation
 	| FilterPerspective
 	| FilterGrayscale
@@ -306,6 +312,16 @@ const EnhanceImage: React.FC<EnhanceImageProps> = memo(
 								cv.warpAffine(mat, dst, M, new cv.Size(mat.cols, mat.rows));
 								mat.delete();
 								M.delete();
+								mat = dst;
+								break;
+							}
+
+							case "resizing": {
+								const [width, height] = filter.params as [number, number];
+								const dst = new cv.Mat();
+								const dsize = new cv.Size(width, height);
+								cv.resize(mat, dst, dsize, 0, 0, cv.INTER_LINEAR);
+								mat.delete();
 								mat = dst;
 								break;
 							}

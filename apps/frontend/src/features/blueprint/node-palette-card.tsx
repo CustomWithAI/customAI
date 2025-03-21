@@ -12,7 +12,7 @@ type NodeItem = {
 export const NodeItem = memo(
 	({ type, icon, title, description, onDragStart }: NodeItem) => (
 		<div
-			className="p-4 border rounded-lg cursor-move hover:bg-accent hover:shadow-md duration-150"
+			className="p-4 border border-gray-200 rounded-lg cursor-move hover:bg-accent hover:shadow-md duration-150"
 			draggable
 			onDragStart={(e) => onDragStart(e, type as string)}
 		>

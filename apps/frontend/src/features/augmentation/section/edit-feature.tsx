@@ -23,7 +23,7 @@ export const EditFeature = ({ id }: { id: string }) => {
 		<div className="flex max-h-[70vh] gap-x-6">
 			<div
 				className={cn(
-					"h-[70vh] w-1/2 dark:bg-black border rounded-lg shadow-xs bg-white",
+					"h-[70vh] w-1/2 dark:bg-black border border-gray-200 rounded-lg shadow-xs bg-white",
 					"relative flex items-center justify-center",
 					"[background-size:20px_20px]",
 					"[background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]",
@@ -33,7 +33,9 @@ export const EditFeature = ({ id }: { id: string }) => {
 				a
 			</div>
 			<div className="w-1/2 h-full">
-				<ContentHeader className="border-b mb-4">config</ContentHeader>
+				<ContentHeader className="border-b border-gray-200 mb-4">
+					config
+				</ContentHeader>
 				<FormBuilder.Provider
 					formName={`form-${id}`}
 					schema={input.inputSchema}

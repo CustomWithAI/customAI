@@ -34,7 +34,7 @@ export default function VisualEdge({
 			<CardContent className="space-y-2">
 				<div
 					key={edge?.id || id}
-					className="flex items-center justify-between p-2 border rounded-md"
+					className="flex items-center justify-between p-2 border border-gray-200 rounded-md"
 				>
 					<div>
 						<p className="text-sm">

@@ -286,7 +286,7 @@ export const VisualSection = ({ node, customNode, image }: VisualProps) => {
 						});
 						onNodesChange(e);
 					}}
-					className="border-y border-l rounded-sm"
+					className="border-y border-l border-gray-200 rounded-sm"
 					onEdgesChange={onEdgesChange}
 					onConnect={onConnect}
 					nodeTypes={nodeTypes}
@@ -307,14 +307,14 @@ export const VisualSection = ({ node, customNode, image }: VisualProps) => {
 					<Controls />
 				</ReactFlow>
 			</div>
-			<div className="lg:w-1/4 h-full lg:border-l border-collapse">
+			<div className="lg:w-1/4 h-full lg:border-l border-gray-200 border-collapse">
 				{isLessThan("xl") ? (
 					<DialogBuilder
 						ref={dialogRef}
 						config={{
 							trigger: (
 								<button
-									className="absolute top-3 right-3 rounded-lg border hover:bg-zinc-50"
+									className="absolute top-3 right-3 rounded-lg border border-gray-200 hover:bg-zinc-50"
 									type="button"
 								>
 									<SwatchBook className="w-5 h-5 m-2" />

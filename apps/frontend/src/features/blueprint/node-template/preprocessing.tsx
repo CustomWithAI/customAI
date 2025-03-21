@@ -97,7 +97,7 @@ export default function CustomNode({
 								<button
 									type="button"
 									onClick={() => setOpen((prev) => !prev)}
-									className="w-full group/child border-b py-1 flex justify-between"
+									className="w-full group/child border-b border-gray-200 py-1 flex justify-between"
 								>
 									<Badge>Config</Badge>
 									<button

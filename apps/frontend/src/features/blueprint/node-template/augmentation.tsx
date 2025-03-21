@@ -78,7 +78,9 @@ export default function CustomNode({
 									</pre>
 								</div>
 							)} */}
-							<Subtle className="w-full border-b py-2">Config</Subtle>
+							<Subtle className="w-full border-b border-gray-200 py-2">
+								Config
+							</Subtle>
 							{input?.inputField && input?.inputSchema ? (
 								<FormBuilder.Provider
 									key={`form-${input.title}`}

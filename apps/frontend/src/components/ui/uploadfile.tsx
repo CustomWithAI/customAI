@@ -99,7 +99,7 @@ const UploadFileBox = ({
 					inputRef.current?.click();
 				}}
 				className={cn(
-					"group flex aspect-square sm:aspect-video z-10 size-full flex-col items-center justify-center rounded-lg border",
+					"group flex aspect-square sm:aspect-video z-10 size-full flex-col items-center justify-center rounded-lg border border-gray-200",
 					"cursor-pointer border-dashed shadow-xs duration-150 hover:bg-zinc-50 active:bg-zinc-100/70 dark:bg-zinc-700",
 					"dark:bg-zinc-700",
 					{
@@ -117,7 +117,7 @@ const UploadFileBox = ({
 					<>
 						<div
 							className={cn(
-								"bg-white size-12 grid place-items-center rounded-xl relative left-2.5 top-1.5 -rotate-6 shadow-lg ring-1 ring-border ring-zinc-300",
+								"bg-white size-12 grid place-items-center rounded-xl relative left-2.5 top-1.5 -rotate-6 shadow-lg ring-1 ring-zinc-300",
 								" group-hover:-translate-x-5 group-hover:-rotate-12 group-hover:-translate-y-0.5 transition duration-500 group-hover:duration-200",
 								{ "-translate-x-5 -translate-y-0.5": isDragActive },
 							)}
@@ -128,7 +128,7 @@ const UploadFileBox = ({
 						</div>
 						<div
 							className={cn(
-								"bg-white size-12 grid place-items-center rounded-xl relative z-10 shadow-lg ring-1 ring-border ring-zinc-300",
+								"bg-white size-12 grid place-items-center rounded-xl relative z-10 shadow-lg ring-1 ring-zinc-300",
 								" group-hover:-translate-y-0.5 transition duration-500 group-hover:duration-200",
 								{ "-translate-y-0.5": isDragActive },
 							)}
@@ -140,7 +140,7 @@ const UploadFileBox = ({
 						<div
 							className={cn(
 								"bg-white size-12 grid place-items-center rounded-xl relative right-2.5 top-1.5 rotate-6 ",
-								" shadow-lg ring-1 ring-border ring-zinc-300 group-hover:translate-x-5 group-hover:rotate-12 group-hover:-translate-y-0.5 transition duration-500 group-hover:duration-200",
+								" shadow-lg ring-1 ring-zinc-300 group-hover:translate-x-5 group-hover:rotate-12 group-hover:-translate-y-0.5 transition duration-500 group-hover:duration-200",
 								{ "-translate-y-0.5 translate-x-5": isDragActive },
 							)}
 						>

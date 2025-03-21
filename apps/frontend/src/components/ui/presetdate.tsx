@@ -121,7 +121,7 @@ export function DatePickerWithPresets({
 						</SelectContent>
 					</Select>
 				)}
-				<div className="rounded-md border">
+				<div className="rounded-md border border-gray-200">
 					<Calendar
 						mode="single"
 						disabled={

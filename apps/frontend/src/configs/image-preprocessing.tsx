@@ -84,22 +84,16 @@ export const node = (
 			},
 			previewImg: [
 				{
-					type: "opencv",
-					method: "resize",
+					type: "resizing",
 					params: [
-						new Size(
-							Number(
-								(findById(fields, "resizing-1")?.metadata as any)?.size?.value
-									?.x?.value,
-							),
-							Number(
-								(findById(fields, "resizing-1")?.metadata as any)?.size?.value
-									?.y?.value,
-							),
+						Number(
+							(findById(fields, "resizing-1")?.metadata as any)?.size?.value?.x
+								?.value,
 						),
-						0,
-						0,
-						INTER_LINEAR,
+						Number(
+							(findById(fields, "resizing-1")?.metadata as any)?.size?.value?.y
+								?.value,
+						),
 					],
 				},
 			],

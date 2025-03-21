@@ -1,13 +1,8 @@
 import { BaseSkeleton } from "@/components/specific/skeleton";
 import { Content, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useDragStore } from "@/contexts/dragContext";
 import { DatasetCard } from "@/features/dataset/components/gridBox";
-import {
-	useCreateTraining,
-	useUpdateTraining,
-} from "@/hooks/mutations/training-api";
+import { useUpdateTraining } from "@/hooks/mutations/training-api";
 import { useGetDatasets } from "@/hooks/queries/dataset-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
@@ -16,7 +11,6 @@ import { cn } from "@/libs/utils";
 import { Plus } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Virtuoso } from "react-virtuoso";
-import { useShallow } from "zustand/react/shallow";
 import { decodeBase64 } from "../../../libs/base64";
 
 export const DatasetPage = () => {
@@ -83,8 +77,10 @@ export const DatasetPage = () => {
 							imagesCount={dataset.imageCount}
 							href={""}
 							className={cn(
-								datasetId === dataset.id ? "border-2 border-green-400" : "",
-								"mr-4",
+								datasetId === dataset.id
+									? "border-green-400"
+									: "border-transparent",
+								"mr-4 border",
 							)}
 							onClick={() => setDatasetId(dataset.id)}
 							images={dataset.images}
@@ -96,7 +92,7 @@ export const DatasetPage = () => {
 			<Subtle>Create new dataset</Subtle>
 			<button
 				type="button"
-				className="w-64 h-48 hover:border-blue-700 hover:bg-zinc-50 hover:shadow-xs duration-150 active:scale-95 transition-transform border rounded-lg flex flex-col justify-center items-center"
+				className="w-64 h-48 border-gray-200 hover:border-blue-700 hover:bg-zinc-50 hover:shadow-xs duration-150 active:scale-95 transition-transform border rounded-lg flex flex-col justify-center items-center"
 			>
 				<Plus className="mb-6" />
 				<Content>Create a dataset</Content>

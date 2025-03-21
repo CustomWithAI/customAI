@@ -22,20 +22,20 @@ export function PresetBox({
 	return (
 		<Alert
 			className={cn(
-				"hover:border-black hover:shadow-md duration-150 py-5 hover:cursor-pointer",
+				"hover:border-black hover:shadow-md duration-150 py-5 w-full hover:cursor-pointer",
 				{ "border-black shadow-md": current },
 			)}
 			onClick={onClick}
 		>
 			{icon ? (
 				cloneElement(icon as ReactElement, {
-					className: "h-4 w-4 mt-1",
+					className: "h-4 w-4",
 				})
 			) : (
-				<Terminal className="h-4 w-4 mt-1" />
+				<Terminal className="h-4 w-4" />
 			)}
 			<AlertTitle>{title}</AlertTitle>
-			<Subtle>{description}</Subtle>
+			<Subtle className=" col-start-2 mt-1">{description}</Subtle>
 		</Alert>
 	);
 }
