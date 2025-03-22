@@ -16,6 +16,15 @@ export type AppQueryOptions<T extends (...args: any) => any> = Partial<
 	>
 >;
 
+export type AppInfiniteQueryOptions<T extends (...args: any) => any> = Partial<
+	UseInfiniteQueryOptions<
+		Awaited<ReturnType<T>>,
+		AxiosError<ResponseError>,
+		Awaited<ReturnType<T>>,
+		unknown
+	>
+>;
+
 export type MutateAsyncResult<T> = UseMutationResult<
 	any,
 	AxiosError<ResponseError>,

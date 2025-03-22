@@ -164,6 +164,62 @@ export function usePolygon({
 		setPolygons((prev) => prev.filter((p) => p.id !== id));
 	}, []);
 
+	const movePolygonForward = useCallback((id: string) => {
+		setPolygons((prev) => {
+			const index = prev.findIndex((p) => p.id === id);
+			if (index === -1 || index === prev.length - 1) return prev;
+
+			const newPolygons = [...prev];
+			const polygon = newPolygons[index];
+			const nextPolygon = newPolygons[index + 1];
+
+			// Swap z-indices if they exist
+			if (polygon.zIndex !== undefined && nextPolygon.zIndex !== undefined) {
+				const tempZIndex = polygon.zIndex;
+				polygon.zIndex = nextPolygon.zIndex;
+				nextPolygon.zIndex = tempZIndex;
+			} else {
+				// If z-indices don't exist, create them based on array position
+				polygon.zIndex = index + 1;
+				nextPolygon.zIndex = index;
+			}
+
+			// Swap positions in array
+			newPolygons[index] = nextPolygon;
+			newPolygons[index + 1] = polygon;
+
+			return newPolygons;
+		});
+	}, []);
+
+	const movePolygonBackward = useCallback((id: string) => {
+		setPolygons((prev) => {
+			const index = prev.findIndex((p) => p.id === id);
+			if (index <= 0) return prev;
+
+			const newPolygons = [...prev];
+			const polygon = newPolygons[index];
+			const prevPolygon = newPolygons[index - 1];
+
+			// Swap z-indices if they exist
+			if (polygon.zIndex !== undefined && prevPolygon.zIndex !== undefined) {
+				const tempZIndex = polygon.zIndex;
+				polygon.zIndex = prevPolygon.zIndex;
+				prevPolygon.zIndex = tempZIndex;
+			} else {
+				// If z-indices don't exist, create them based on array position
+				polygon.zIndex = index - 1;
+				prevPolygon.zIndex = index;
+			}
+
+			// Swap positions in array
+			newPolygons[index] = prevPolygon;
+			newPolygons[index - 1] = polygon;
+
+			return newPolygons;
+		});
+	}, []);
+
 	return {
 		polygons,
 		activePolygon,
@@ -173,6 +229,8 @@ export function usePolygon({
 		setSelectedPolygon,
 		addPoint,
 		updatePreview,
+		movePolygonBackward,
+		movePolygonForward,
 		cancelPolygon,
 		startDrag,
 		updateDrag,

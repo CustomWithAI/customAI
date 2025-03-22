@@ -7,13 +7,15 @@ import { ChevronLeft, Edit2, Plus, X } from "lucide-react";
 import { useState } from "react";
 import { EditLabelDialog } from "./edit-label-dialog";
 
-interface LabelSidebarProps {
+export interface LabelSidebarProps {
 	labels: Label[];
 	onAddLabel: () => void;
 	onRemoveLabel: (id: string) => void;
 	onLabelClick: (id: string) => void;
 	onUpdateLabel: (label: Label) => void;
 	selectedLabel?: string;
+	open: boolean;
+	setOpen: (isSetOpen: boolean) => void;
 	usedLabels: string[]; // Array of label IDs that are currently assigned to squares
 }
 
@@ -24,40 +26,13 @@ export function LabelSidebar({
 	onLabelClick,
 	onUpdateLabel,
 	selectedLabel,
+	open,
+	setOpen,
 	usedLabels,
 }: LabelSidebarProps) {
 	const [editingLabel, setEditingLabel] = useState<Label | null>(null);
-	const [open, setOpen] = useState<boolean>(true);
 	return (
-		<div
-			className={cn(
-				"fixed right-4 z-98 top-1/2 bg-white w-64 border transition-all duration-150",
-				" -translate-y-1/2 rounded-md border-gray-200 h-2/3 flex flex-col",
-				open ? "w-64 max-w-64 opacity-100" : "w-0 max-w-0",
-			)}
-		>
-			<button
-				type="button"
-				onClick={() => setOpen((o) => !o)}
-				className={cn(
-					"group transition-all duration-100 absolute hover:bg-zinc-50 p-1 top-4",
-					" flex justify-center items-center -left-9 border bg-white z-97 rounded-md rounded-r-none border-r-0",
-					{ "hover:left-[-94px]": !open },
-				)}
-			>
-				<ChevronLeft
-					className={cn("size-6 m-0.5 transition-transform duration-150", {
-						"rotate-180 ": open,
-					})}
-				/>
-				<Subtle
-					className={cn("w-0 duration-100 transition-all overflow-hidden", {
-						"group-hover:w-14 ": !open,
-					})}
-				>
-					label
-				</Subtle>
-			</button>
+		<>
 			{open && (
 				<>
 					<div className="p-4 border-b border-gray-200">
@@ -150,6 +125,6 @@ export function LabelSidebar({
 					onSave={onUpdateLabel}
 				/>
 			)}
-		</div>
+		</>
 	);
 }

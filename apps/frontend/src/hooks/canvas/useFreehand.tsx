@@ -150,6 +150,62 @@ export function useFreehand({
 		[onChange],
 	);
 
+	const movePathForward = useCallback((id: string) => {
+		setPaths((prev) => {
+			const index = prev.findIndex((p) => p.id === id);
+			if (index === -1 || index === prev.length - 1) return prev;
+
+			const newPaths = [...prev];
+			const path = newPaths[index];
+			const nextPath = newPaths[index + 1];
+
+			// Swap z-indices if they exist
+			if (path.zIndex !== undefined && nextPath.zIndex !== undefined) {
+				const tempZIndex = path.zIndex;
+				path.zIndex = nextPath.zIndex;
+				nextPath.zIndex = tempZIndex;
+			} else {
+				// If z-indices don't exist, create them based on array position
+				path.zIndex = index + 1;
+				nextPath.zIndex = index;
+			}
+
+			// Swap positions in array
+			newPaths[index] = nextPath;
+			newPaths[index + 1] = path;
+
+			return newPaths;
+		});
+	}, []);
+
+	const movePathBackward = useCallback((id: string) => {
+		setPaths((prev) => {
+			const index = prev.findIndex((p) => p.id === id);
+			if (index <= 0) return prev;
+
+			const newPaths = [...prev];
+			const path = newPaths[index];
+			const prevPath = newPaths[index - 1];
+
+			// Swap z-indices if they exist
+			if (path.zIndex !== undefined && prevPath.zIndex !== undefined) {
+				const tempZIndex = path.zIndex;
+				path.zIndex = prevPath.zIndex;
+				prevPath.zIndex = tempZIndex;
+			} else {
+				// If z-indices don't exist, create them based on array position
+				path.zIndex = index - 1;
+				prevPath.zIndex = index;
+			}
+
+			// Swap positions in array
+			newPaths[index] = prevPath;
+			newPaths[index - 1] = path;
+
+			return newPaths;
+		});
+	}, []);
+
 	const deletePath = useCallback((id: string) => {
 		setPaths((prev) => prev.filter((p) => p.id !== id));
 	}, []);
@@ -161,6 +217,8 @@ export function useFreehand({
 		addPoint,
 		endPath,
 		selectedPath,
+		movePathBackward,
+		movePathForward,
 		setSelectedPath,
 		startDrag,
 		updateDrag,

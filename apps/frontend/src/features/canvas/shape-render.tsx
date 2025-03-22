@@ -30,6 +30,12 @@ interface ShapeRendererProps {
 	onContextMenu: (mouse: MouseEvent) => void;
 }
 
+const sortByZIndex = (a: { zIndex?: number }, b: { zIndex?: number }) => {
+	const zIndexA = a.zIndex ?? 0;
+	const zIndexB = b.zIndex ?? 0;
+	return zIndexA - zIndexB;
+};
+
 export function ShapeRenderer({
 	polygons,
 	freehandPaths,
@@ -76,7 +82,7 @@ export function ShapeRenderer({
 			}}
 		>
 			{/* Render completed polygons */}
-			{polygons.map((polygon) => {
+			{[...polygons].sort(sortByZIndex).map((polygon) => {
 				const label = labels.find((l) => l.id === polygon.labelId);
 				const selected = isSelected("polygon", polygon.id);
 				return (
@@ -178,7 +184,7 @@ export function ShapeRenderer({
 			)}
 
 			{/* Render freehand paths */}
-			{freehandPaths.map((path) => {
+			{[...freehandPaths].sort(sortByZIndex).map((path) => {
 				const label = labels.find((l) => l.id === path.labelId);
 				const selected = isSelected("path", path.id);
 				return (

@@ -82,9 +82,7 @@ export type DragState = {
 };
 export type DragStore = DragState & DragAction;
 
-const defaultState: Array<DragColumn> = [
-	{ id: "1", title: "", description: "", icon: "", metadata: {} },
-];
+const defaultState: Array<DragColumn> = [];
 
 export const createDragStore = (initState = defaultState) => {
 	return createStore<DragStore>()(

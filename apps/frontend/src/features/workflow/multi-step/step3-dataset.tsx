@@ -1,9 +1,10 @@
+import { WindowList } from "@/components/layout/windowList";
 import { BaseSkeleton } from "@/components/specific/skeleton";
 import { Content, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { DatasetCard } from "@/features/dataset/components/gridBox";
 import { useUpdateTraining } from "@/hooks/mutations/training-api";
-import { useGetDatasets } from "@/hooks/queries/dataset-api";
+import { useGetDatasets, useGetInfDatasets } from "@/hooks/queries/dataset-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { encodeBase64 } from "@/libs/base64";
@@ -64,31 +65,27 @@ export const DatasetPage = () => {
 	return (
 		<div className="flex flex-col gap-y-4">
 			<Subtle>Recent dataset used</Subtle>
-			<BaseSkeleton loading={datasetPending}>
-				<Virtuoso
-					className="w-full h-[288px]"
-					data={datasets?.data || []}
-					horizontalDirection
-					itemContent={(_, dataset) => (
-						<DatasetCard
-							key={dataset.id}
-							title={dataset.name}
-							description={dataset.description}
-							imagesCount={dataset.imageCount}
-							href={""}
-							className={cn(
-								datasetId === dataset.id
-									? "border-green-400"
-									: "border-transparent",
-								"mr-4 border",
-							)}
-							onClick={() => setDatasetId(dataset.id)}
-							images={dataset.images}
-						/>
-					)}
-				/>
-			</BaseSkeleton>
-
+			<WindowList
+				queryHook={useGetInfDatasets}
+				direction="horizontal"
+				itemContent={(_, dataset) => (
+					<DatasetCard
+						key={dataset.id}
+						title={dataset.name}
+						description={dataset.description}
+						imagesCount={dataset.imageCount}
+						href={""}
+						className={cn(
+							datasetId === dataset.id
+								? "border-green-400"
+								: "border-transparent",
+							"mr-4 border",
+						)}
+						onClick={() => setDatasetId(dataset.id)}
+						images={dataset.images}
+					/>
+				)}
+			/>
 			<Subtle>Create new dataset</Subtle>
 			<button
 				type="button"

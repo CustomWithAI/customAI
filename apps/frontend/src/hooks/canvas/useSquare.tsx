@@ -1,3 +1,5 @@
+"use client";
+
 import type { Position, Square } from "@/types/square";
 import { useCallback, useState } from "react";
 
@@ -63,12 +65,17 @@ export function useSquares(onChange?: (change: Square) => void) {
 					const squareIndex = newSquares.length - 1;
 
 					if (squareIndex >= 0) {
+						const x = width >= 0 ? dragState.startPos.x : currentX;
+						const y = height >= 0 ? dragState.startPos.y : currentY;
+						const absWidth = Math.abs(width);
+						const absHeight = Math.abs(height);
+
 						const updatedSquare = {
 							...newSquares[squareIndex],
-							x: dragState.startPos.x,
-							y: dragState.startPos.y,
-							width,
-							height,
+							x,
+							y,
+							width: absWidth,
+							height: absHeight,
 						};
 						newSquares[squareIndex] = updatedSquare;
 						onChange?.(updatedSquare);
@@ -92,24 +99,32 @@ export function useSquares(onChange?: (change: Square) => void) {
 				} else if (dragState.type === "resize") {
 					switch (dragState.corner) {
 						case "top-left":
-							square.width = dragState.originalSquare.width - dx;
-							square.height = dragState.originalSquare.height - dy;
-							square.x = dragState.originalSquare.x + dx;
-							square.y = dragState.originalSquare.y + dy;
+							square.width = Math.max(0, dragState.originalSquare.width - dx);
+							square.height = Math.max(0, dragState.originalSquare.height - dy);
+							square.x =
+								dragState.originalSquare.x +
+								(dragState.originalSquare.width - square.width);
+							square.y =
+								dragState.originalSquare.y +
+								(dragState.originalSquare.height - square.height);
 							break;
 						case "top-right":
-							square.width = dragState.originalSquare.width + dx;
-							square.height = dragState.originalSquare.height - dy;
-							square.y = dragState.originalSquare.y + dy;
+							square.width = Math.max(0, dragState.originalSquare.width + dx);
+							square.height = Math.max(0, dragState.originalSquare.height - dy);
+							square.y =
+								dragState.originalSquare.y +
+								(dragState.originalSquare.height - square.height);
 							break;
 						case "bottom-left":
-							square.width = dragState.originalSquare.width - dx;
-							square.height = dragState.originalSquare.height + dy;
-							square.x = dragState.originalSquare.x + dx;
+							square.width = Math.max(0, dragState.originalSquare.width - dx);
+							square.height = Math.max(0, dragState.originalSquare.height + dy);
+							square.x =
+								dragState.originalSquare.x +
+								(dragState.originalSquare.width - square.width);
 							break;
 						case "bottom-right":
-							square.width = dragState.originalSquare.width + dx;
-							square.height = dragState.originalSquare.height + dy;
+							square.width = Math.max(0, dragState.originalSquare.width + dx);
+							square.height = Math.max(0, dragState.originalSquare.height + dy);
 							break;
 					}
 				}

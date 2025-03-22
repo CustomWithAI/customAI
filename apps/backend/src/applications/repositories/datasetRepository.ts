@@ -61,6 +61,8 @@ export class DatasetRepository {
 					generatePresignedUrl(image),
 				),
 			})),
+			nextCursor: paginatedData.nextCursor,
+			prevCursor: paginatedData.prevCursor,
 		};
 	}
 

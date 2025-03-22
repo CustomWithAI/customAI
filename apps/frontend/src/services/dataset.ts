@@ -41,14 +41,15 @@ export const datasetService = {
 		} catch (error) {}
 	},
 
-	getDatasets: async () => {
-		try {
-			const { data } =
-				await axiosClient.get<ResponsePagination<ResponseDataset>>(
-					"/datasets/",
-				);
-			return data;
-		} catch (error) {}
+	getDatasets: async ({
+		pageParam,
+	}: { pageParam?: string } = {}): Promise<
+		ResponsePagination<ResponseDataset>
+	> => {
+		const response = await axiosClient.get<ResponsePagination<ResponseDataset>>(
+			`/datasets/${pageParam || ""}`,
+		);
+		return response.data;
 	},
 
 	deleteDataset: () => {

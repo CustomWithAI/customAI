@@ -235,7 +235,7 @@ export const ModelPage = () => {
 			</Subtle>
 			<BaseSkeleton loading={enumModelPending}>
 				<Virtuoso
-					className="w-full h-[288px]"
+					className="w-full h-[270px]"
 					data={enumModelByType || []}
 					horizontalDirection
 					itemContent={(_, model) => {
@@ -277,7 +277,7 @@ export const ModelPage = () => {
 						</>
 					)}
 					<Virtuoso
-						className="w-full h-[288px]"
+						className="w-full h-[270px]"
 						data={enumMachineLearningByType || []}
 						horizontalDirection
 						itemContent={(_, model) => {

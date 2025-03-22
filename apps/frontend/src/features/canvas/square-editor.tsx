@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useFreehand } from "@/hooks/canvas/useFreehand";
 import { usePolygon } from "@/hooks/canvas/usePolygon";
 import { useSquares } from "@/hooks/canvas/useSquare";
+import { useWindowSize } from "@/hooks/useWindowSize";
 import { cn } from "@/libs/utils";
 import type {
 	Editor,
@@ -26,6 +27,7 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { CanvasSidebar } from "./canvasSidebar";
 import { ContextMenu } from "./context-menu";
 import { LabelSidebar } from "./label-sidebar";
 import { removeLabelFromShapes, updateLabel } from "./label-utils";
@@ -61,6 +63,7 @@ export default function SquareEditor({
 	onModeChange,
 }: SquareEditorProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
+	const overlayRef = useRef<HTMLDivElement>(null);
 	const [contextMenu, setContextMenu] = useState<{
 		x: number;
 		y: number;
@@ -78,6 +81,8 @@ export default function SquareEditor({
 		x: number;
 		y: number;
 	} | null>(null);
+	const [zoom, setZoom] = useState<number>(1);
+	const { width: windowWidth = 0, height: windowHeight = 0 } = useWindowSize();
 
 	useEffect(() => {
 		getImageSize(image).then((imageSize) => setSize(imageSize));
@@ -127,6 +132,8 @@ export default function SquareEditor({
 		addPoint,
 		updatePreview,
 		cancelPolygon,
+		movePolygonBackward,
+		movePolygonForward,
 		startDrag: startPolygonDrag,
 		updateDrag: updatePolygonDrag,
 		endDrag: endPolygonDrag,
@@ -149,6 +156,8 @@ export default function SquareEditor({
 		startPath,
 		addPoint: addFreehandPoint,
 		endPath,
+		movePathBackward,
+		movePathForward,
 		startDrag: startPathDrag,
 		updateDrag: updatePathDrag,
 		endDrag: endPathDrag,
@@ -766,6 +775,38 @@ export default function SquareEditor({
 		[onChange],
 	);
 
+	const handleZoomToFit = () => {
+		const container = containerRef.current;
+		if (!container) return;
+
+		const containerWidth = container.clientWidth;
+		const containerHeight = container.clientHeight;
+
+		const zoomX = windowWidth / (containerWidth * 1.25);
+		const zoomY = windowHeight / (containerHeight * 1.25);
+		const newZoom = Math.min(zoomX, zoomY);
+
+		setZoom(Math.max(0.25, Math.min(4, Number.parseFloat(newZoom.toFixed(2)))));
+	};
+
+	useEffect(() => {
+		if (zoom) {
+			const div = overlayRef.current;
+			if (div) {
+				const rect = div.getBoundingClientRect();
+				const scrollX =
+					rect.left + window.scrollX - window.innerWidth / 2 + rect.width / 2;
+				const scrollY =
+					rect.top + window.scrollY - window.innerHeight / 2 + rect.height / 2;
+				window.scrollTo({
+					top: scrollY,
+					left: scrollX,
+					behavior: "smooth",
+				});
+			}
+		}
+	}, [zoom]);
+
 	const visibleSquares = squares.filter((square) => {
 		if (!selectedLabel) return true;
 		return square.labelId === selectedLabel;
@@ -784,24 +825,33 @@ export default function SquareEditor({
 				handleImport={handleImport}
 			/>
 			<div
+				ref={overlayRef}
+				style={{
+					width: size?.width ? size?.width * zoom + 184 : undefined,
+					height: size?.height ? size?.height * zoom + 144 : undefined,
+					padding: size?.width * zoom,
+				}}
 				className={cn(
-					"flex-1 space-y-4 p-36",
+					"space-y-4 p-36 pt-56 flex items-center absolute top-1/2 left-1/2",
+					"origin-center",
 					"[background-size:20px_20px]",
 					"[background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]",
 					"dark:[background-image:radial-gradient(#404040_1px,transparent_1px)]",
 				)}
 			>
-				<div className="relative w-full h-full flex items-center justify-center">
+				<div className="w-full relative origin-center flex shrink-0 items-center justify-center">
 					<div
 						ref={containerRef}
 						style={{
 							width: size?.width,
 							height: size?.height,
+							minWidth: size?.width,
+							minHeight: size?.height,
+							backgroundSize: `${size?.width}px ${size?.height}px`,
 							backgroundImage: `url(${image})`,
-							backgroundSize: "cover",
-							backgroundPosition: "center",
+							transform: `scale(${zoom})`,
 						}}
-						className="relative border rounded-sm shadow-md bg-white border-gray-300"
+						className="relative origin-center bg-no-repeat bg-contain bg-center border rounded-sm shadow-md bg-white border-gray-300"
 						onMouseDown={handleMouseDown}
 						onMouseMove={handleMouseMove}
 						onMouseUp={handleMouseUp}
@@ -836,11 +886,10 @@ export default function SquareEditor({
 										} ${square.isLocked ? "cursor-not-allowed" : "cursor-move"}`,
 									)}
 									style={{
-										left: Math.max(0, square.x),
-										top: Math.max(0, square.y),
-										width: Math.max(0, square.width),
-										height: Math.max(0, square.height),
-										transform: `translate(${square.width < 0 ? "100%" : "0"}, ${square.height < 0 ? "100%" : "0"})`,
+										left: square.x,
+										top: square.y,
+										width: square.width,
+										height: square.height,
 										backgroundColor: label?.color
 											? `${label.color}50`
 											: "transparent",
@@ -949,16 +998,24 @@ export default function SquareEditor({
 								}
 							}}
 							onMoveForward={() => {
-								// Implement z-index handling
+								if (selectedShape.type === "polygon") {
+									movePolygonForward(selectedShape.id);
+								} else {
+									movePathForward(selectedShape.id);
+								}
 							}}
 							onMoveBackward={() => {
-								// Implement z-index handling
+								if (selectedShape.type === "polygon") {
+									movePolygonBackward(selectedShape.id);
+								} else {
+									movePathBackward(selectedShape.id);
+								}
 							}}
 						/>
 					)}
 				</div>
 			</div>
-			<LabelSidebar
+			<CanvasSidebar
 				labels={labels}
 				onAddLabel={handleAddLabel}
 				onRemoveLabel={handleRemoveLabel}
@@ -966,6 +1023,11 @@ export default function SquareEditor({
 				onUpdateLabel={handleUpdateLabel}
 				selectedLabel={selectedLabel ?? undefined}
 				usedLabels={usedLabelIds}
+				width={width}
+				height={height}
+				onZoomToFit={handleZoomToFit}
+				zoom={zoom}
+				onZoomChange={setZoom}
 			/>
 		</div>
 	);
