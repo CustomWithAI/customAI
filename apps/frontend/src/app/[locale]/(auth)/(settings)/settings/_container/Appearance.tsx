@@ -1,4 +1,5 @@
 import { Header } from "@/components/typography/text";
+import { LanguageSwitcher } from "@/components/ui/languageSwitcher";
 import { useTranslations } from "next-intl";
 
 export const AppearancePage = () => {
@@ -8,6 +9,9 @@ export const AppearancePage = () => {
 			<Header className="w-full border-b border-gray-200">
 				{t("Appearance.Language")}
 			</Header>
+			<div>
+				<LanguageSwitcher />
+			</div>
 		</div>
 	);
 };

@@ -20,7 +20,8 @@
 		"model": "Model",
 		"help": "Help",
 		"settings": "Settings",
-		"feature-config": "Feature Configuration"
+		"feature-config": "Feature Configuration",
+		"logout": "Log out"
 	},
 	"HomePage": {
 		"login": "Login",

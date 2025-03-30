@@ -45,9 +45,9 @@ function SignupPage() {
 	});
 	const signinGoogle = async () => {
 		try {
-			const { data, error } = await authClient.signIn.social({
+			const { error } = await authClient.signIn.social({
 				provider: "google",
-				callbackURL: `${env.NEXT_PUBLIC_FRONTEND_URL}/${locale.split("-")[0]}/home`,
+				callbackURL: `${env.NEXT_PUBLIC_FRONTEND_URL}/${locale.split("-")[0]}/new-user`,
 			});
 			if (error) {
 				toast({
@@ -64,7 +64,7 @@ function SignupPage() {
 
 	async function onSubmit(data: LoginSchemaType) {
 		try {
-			const { data: auth, error } = await authClient.signIn.email(
+			await authClient.signIn.email(
 				{
 					email: data.email,
 					password: data.password,

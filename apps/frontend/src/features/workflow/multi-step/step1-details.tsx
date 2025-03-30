@@ -3,9 +3,10 @@ import { type FormFieldInput, useFormBuilder } from "@/components/builder/form";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form";
 import { useCreateWorkflow } from "@/hooks/mutations/workflow-api";
+import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { toast, useToast } from "@/hooks/use-toast";
-import { encodeBase64 } from "@/libs/base64";
+import { decodeBase64, encodeBase64 } from "@/libs/base64";
 import { type WorkflowDetails, workflowDetails } from "@/models/workflow";
 import { WorkflowTypeSection } from "../components/workflow-type";
 
@@ -55,7 +56,13 @@ export const Step1 = () => {
 	const { mutateAsync: createWorkflow, isPending: createPending } =
 		useCreateWorkflow();
 	const { toast } = useToast();
-	const { setQueryParam } = useQueryParam();
+	const { setQueryParam, getQueryParam } = useQueryParam();
+	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
+	const { data: defaultValue } = useGetTrainingById(
+		decodeBase64(workflowId),
+		decodeBase64(trainingId),
+		{ enabled: workflowId !== "" && trainingId !== "" },
+	);
 	const onSubmitData = async (data: WorkflowDetails) => {
 		await createWorkflow(data, {
 			onError: (e) => {
@@ -80,6 +87,11 @@ export const Step1 = () => {
 	const { Provider, Build } = useFormBuilder({
 		schema: workflowDetails,
 		onSubmit: onSubmitData,
+		defaultValues: {
+			name: defaultValue?.data.workflow.name,
+			description: defaultValue?.data.workflow.description,
+			type: defaultValue?.data.workflow.type,
+		},
 		formName: "create-Step1-id",
 	});
 

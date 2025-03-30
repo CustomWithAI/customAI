@@ -42,6 +42,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 				image={image?.current?.url || ""}
 				length={dataset?.imageCount || 0}
 				name={decodeURIComponent(image?.current?.path || "")}
+				mode={dataset?.annotationMethod || ""}
 				defaultValue={formatToEditor(
 					image?.current.annotation,
 					dataset?.labels,

@@ -7,18 +7,24 @@ export const formatToEditor: (
 	data: ResponseImage["annotation"] | undefined,
 	labels: ResponseDataset["labels"] | undefined,
 ) => Partial<Editor> | undefined = (data, labels) => {
-	if (!data || !labels) {
+	if (!data && !labels) {
 		return undefined;
 	}
 	const generatedLabels = formatToLabels(labels);
 
-	if (data.label) {
+	if (!data) {
+		return {
+			labels: generatedLabels,
+		};
+	}
+
+	if (data?.label) {
 		return {
 			labels: generatedLabels,
 			classifiedLabel: generatedLabels?.find((l) => l.name === data.label)?.id,
 		};
 	}
-	if (data.annotation) {
+	if (data?.annotation) {
 		const squares: Square[] = [];
 		const polygons: Polygon[] = [];
 		const { color } = generateRandomLabel();

@@ -6,6 +6,7 @@ import {
 	FileCog,
 	Home,
 	Inbox,
+	LogOut,
 	MessageCircleQuestion,
 	Search,
 	Settings2,
@@ -24,6 +25,7 @@ export enum SidebarPage {
 	Model = "navbar.model",
 	FeatureConfig = "navbar.feature-config",
 	Settings = "navbar.settings",
+	Logout = "navbar.logout",
 	Help = "navbar.help",
 }
 
@@ -86,6 +88,11 @@ export const sidebarConfig = {
 			title: SidebarPage.Help,
 			url: "#",
 			icon: MessageCircleQuestion,
+		},
+		{
+			title: SidebarPage.Logout,
+			url: "/logout",
+			icon: LogOut,
 		},
 	],
 };

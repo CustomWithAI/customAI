@@ -91,3 +91,60 @@ function isSimpleObject(value: any): boolean {
 		value !== null
 	);
 }
+
+export function arrayToMetadata(
+	metadata: Metadata,
+	array: unknown[],
+): Metadata {
+	let index = 0;
+
+	function reconstruct(struct: Metadata): Metadata {
+		const newMetadata: Metadata = {};
+
+		for (const [key, value] of Object.entries(struct)) {
+			switch (value.type) {
+				case "Boolean":
+				case "String":
+				case "Number":
+					newMetadata[key] = { ...value, value: array[index++] as any };
+					break;
+
+				case "Object":
+					if (isSimpleObject(value.value)) {
+						const objEntries = Object.entries(value.value).map(
+							([subKey, subValue]) => [
+								subKey,
+								{ ...subValue, value: array[index++] },
+							],
+						);
+
+						newMetadata[key] = {
+							...value,
+							value: Object.fromEntries(objEntries),
+						};
+					} else {
+						newMetadata[key] = {
+							...value,
+							value: reconstruct(value.value),
+						};
+					}
+					break;
+
+				case "Position":
+					newMetadata[key] = {
+						...value,
+						value: { x: array[index++] as number, y: array[index++] as number },
+					};
+					break;
+
+				default:
+					newMetadata[key] = value;
+					break;
+			}
+		}
+
+		return newMetadata;
+	}
+
+	return reconstruct(metadata);
+}

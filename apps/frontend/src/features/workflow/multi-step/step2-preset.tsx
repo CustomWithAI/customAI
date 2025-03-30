@@ -6,6 +6,7 @@ import {
 import { NumberInput } from "@/components/builder/form-utils";
 import { Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
+import { presetList } from "@/configs/preset";
 import { STEPS } from "@/configs/step-key";
 import { useDragStore } from "@/contexts/dragContext";
 import { ListBox } from "@/features/image-preprocessing/components/listBox";
@@ -14,6 +15,7 @@ import {
 	useCreateTraining,
 	useUpdateTraining,
 } from "@/hooks/mutations/training-api";
+import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { encodeBase64 } from "@/libs/base64";
@@ -25,7 +27,7 @@ import {
 } from "@dnd-kit/sortable";
 import type { AxiosError } from "axios";
 import { BrainCircuit, Ham, Layers } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 export const Step3Page = () => {
@@ -39,6 +41,32 @@ export const Step3Page = () => {
 	const { toast } = useToast();
 
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
+
+	const { data: defaultValue, isSuccess } = useGetTrainingById(
+		decodeBase64(workflowId),
+		decodeBase64(trainingId),
+		{ enabled: workflowId !== "" && trainingId !== "" },
+	);
+	const onSet = useDragStore((state) => state.onSet);
+
+	useEffect(() => {
+		if (isSuccess && defaultValue) {
+			onSet(
+				presetList.map((step) => {
+					const find = defaultValue.data.pipeline.steps.find(
+						(value) => value.name === step.title,
+					);
+					return {
+						...step,
+						metadata: {
+							check: { type: "Boolean", value: !!find },
+							name: { type: "String", value: step.title },
+						},
+					};
+				}),
+			);
+		}
+	}, [isSuccess, defaultValue, onSet]);
 
 	const { mutateAsync: createTraining, isPending: createPending } =
 		useCreateTraining();

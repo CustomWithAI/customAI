@@ -9,6 +9,7 @@ export interface ZoomControlsProps {
 	zoom: number;
 	onZoomChange: (zoom: number) => void;
 	onZoomToFit: () => void;
+	onZoomUpdate?: () => void;
 	width: number;
 	height: number;
 	setOpen: (isSetOpen: boolean) => void;
@@ -34,6 +35,7 @@ export function ZoomControls({
 	onZoomToFit,
 	open,
 	setOpen,
+	onZoomUpdate,
 	width,
 	height,
 }: ZoomControlsProps) {
@@ -56,6 +58,7 @@ export function ZoomControls({
 		setSliderValue(value);
 		const newZoom = linearToLogarithmic(value[0]);
 		onZoomChange(Number.parseFloat(newZoom.toFixed(2)));
+		onZoomUpdate?.();
 	};
 
 	const zoomIn = () => {
@@ -67,6 +70,7 @@ export function ZoomControls({
 				Math.min(MAX_ZOOM, Number.parseFloat((zoom + ZOOM_STEP).toFixed(2))),
 			);
 		}
+		onZoomUpdate?.();
 	};
 
 	const zoomOut = () => {
@@ -78,6 +82,7 @@ export function ZoomControls({
 				Math.max(MIN_ZOOM, Number.parseFloat((zoom - ZOOM_STEP).toFixed(2))),
 			);
 		}
+		onZoomUpdate?.();
 	};
 
 	return (
@@ -129,7 +134,10 @@ export function ZoomControls({
 						<div className="w-full">
 							<Button
 								variant="outline"
-								onClick={onZoomToFit}
+								onClick={() => {
+									onZoomToFit();
+									onZoomUpdate?.();
+								}}
 								title="Zoom to Fit"
 							>
 								<Maximize className="h-4 w-4" /> Zoom on fit

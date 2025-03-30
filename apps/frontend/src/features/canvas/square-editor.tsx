@@ -195,19 +195,27 @@ export default function SquareEditor({
 		[freehandPaths, polygons, squares, mode],
 	);
 
-	const getMousePosition = useCallback((event: React.MouseEvent) => {
-		const container = containerRef.current;
-		if (!container) return { x: 0, y: 0 };
+	const getMousePosition = useCallback(
+		(event: React.MouseEvent) => {
+			const container = containerRef.current;
+			if (!container) return { x: 0, y: 0 };
 
-		const rect = container.getBoundingClientRect();
-		return {
-			x: event.clientX - rect.left,
-			y: event.clientY - rect.top,
-		};
-	}, []);
+			const rect = container.getBoundingClientRect();
+			return {
+				x: (event.clientX - rect.left) / zoom,
+				y: (event.clientY - rect.top) / zoom,
+			};
+		},
+		[zoom],
+	);
 
 	const getUnusedLabel = useCallback(() => {
-		return labels.find((label) => !usedLabelIds.includes(label.id));
+		const label = labels.find((label) => !usedLabelIds.includes(label.id));
+		if (!label) {
+			const newLabel = handleAddLabel();
+			return newLabel;
+		}
+		return label;
 	}, [labels, usedLabelIds]);
 
 	const isUsedLabel = useCallback(
@@ -229,9 +237,7 @@ export default function SquareEditor({
 						corner as "top-left" | "top-right" | "bottom-left" | "bottom-right",
 					);
 					const newSquareId = Date.now().toString();
-					setTimeout(() => {
-						updateSquare(newSquareId, { labelId: unusedLabel.id });
-					}, 0);
+					updateSquare?.(newSquareId, { labelId: unusedLabel.id });
 				}
 			} else {
 				startDrag(
@@ -276,15 +282,19 @@ export default function SquareEditor({
 	const handleMouseDown = useCallback(
 		(event: React.MouseEvent) => {
 			if (event.button !== 0) return;
-			const unusedLabel = getUnusedLabel() || handleAddLabel();
+			const unusedLabel = getUnusedLabel();
 			const { x, y } = getMousePosition(event);
-
+			console.log(unusedLabel);
 			switch (mode) {
 				case "square": {
 					if (
 						!unusedLabel &&
 						!(event.target as Element).closest("[data-square-id]")
 					) {
+						console.log(
+							!unusedLabel,
+							!(event.target as Element).closest("[data-square-id]"),
+						);
 						return;
 					}
 					const targetElement = document.elementFromPoint(
@@ -789,23 +799,25 @@ export default function SquareEditor({
 		setZoom(Math.max(0.25, Math.min(4, Number.parseFloat(newZoom.toFixed(2)))));
 	};
 
+	const scrollToCenter = useCallback(() => {
+		window.scrollTo({
+			left: (document.documentElement.scrollWidth - window.innerWidth) / 2,
+			top: (document.documentElement.scrollHeight - window.innerHeight) / 2,
+		});
+	}, []);
+
 	useEffect(() => {
-		if (zoom) {
-			const div = overlayRef.current;
-			if (div) {
-				const rect = div.getBoundingClientRect();
-				const scrollX =
-					rect.left + window.scrollX - window.innerWidth / 2 + rect.width / 2;
-				const scrollY =
-					rect.top + window.scrollY - window.innerHeight / 2 + rect.height / 2;
-				window.scrollTo({
-					top: scrollY,
-					left: scrollX,
-					behavior: "smooth",
-				});
+		if (!zoom) return;
+		if (!containerRef.current) return;
+		const observer = new ResizeObserver(() => {
+			if (containerRef.current) {
+				scrollToCenter();
 			}
-		}
-	}, [zoom]);
+		});
+
+		observer.observe(containerRef.current);
+		return () => observer.disconnect();
+	}, [scrollToCenter, zoom]);
 
 	const visibleSquares = squares.filter((square) => {
 		if (!selectedLabel) return true;
@@ -827,12 +839,15 @@ export default function SquareEditor({
 			<div
 				ref={overlayRef}
 				style={{
-					width: size?.width ? size?.width * zoom + 184 : undefined,
-					height: size?.height ? size?.height * zoom + 144 : undefined,
-					padding: size?.width * zoom,
+					width: Math.max(size?.width * zoom + 184, windowWidth),
+					height: Math.max(size?.height * zoom + 144, windowHeight),
+					paddingTop: size?.height * zoom + 144,
+					paddingLeft: size?.width * zoom + 144,
+					paddingRight: size?.width * zoom + 144,
+					paddingBottom: size?.height * zoom + 144,
 				}}
 				className={cn(
-					"space-y-4 p-36 pt-56 flex items-center absolute top-1/2 left-1/2",
+					"space-y-4 flex items-center absolute top-0 left-0",
 					"origin-center",
 					"[background-size:20px_20px]",
 					"[background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]",
@@ -1027,6 +1042,7 @@ export default function SquareEditor({
 				height={height}
 				onZoomToFit={handleZoomToFit}
 				zoom={zoom}
+				onZoomUpdate={scrollToCenter}
 				onZoomChange={setZoom}
 			/>
 		</div>

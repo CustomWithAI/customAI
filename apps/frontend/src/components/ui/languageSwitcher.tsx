@@ -12,16 +12,22 @@ import { usePathname, useRouter } from "@/libs/i18nNavigation";
 import { getPrefixLang } from "@/utils/getPrefixLang";
 import { Globe } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 
 const languageNames = {};
 export function LanguageSwitcher() {
 	const pathname = usePathname();
 	const router = useRouter();
 	const locale = useLocale();
+	const searchParams = useSearchParams();
+
+	const params = new URLSearchParams(searchParams.toString());
 	const t = useTranslations("languages");
 
 	const switchLanguage = (newLocale: string) => {
-		router.replace(pathname, { locale: getPrefixLang(newLocale) });
+		router.replace(`${pathname}?${params.toString()}`, {
+			locale: getPrefixLang(newLocale),
+		});
 	};
 
 	return (

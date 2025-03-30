@@ -17,5 +17,8 @@
 		"connected": "เชื่อมต่อแล้ว",
 		"unknown": "ไม่ทราบ",
 		"linkWith": "ลิ้งก์กับ"
+	},
+	"Appearance": {
+		"Language": "ภาษา"
 	}
 }

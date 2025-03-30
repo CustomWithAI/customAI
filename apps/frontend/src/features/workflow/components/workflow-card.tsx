@@ -33,14 +33,25 @@ export const WorkflowCard = memo(
 				<ContentHeader>{name}</ContentHeader>
 				<Subtle className="">{description}</Subtle>
 			</div>
-			<Image
-				src={imageUrl}
-				alt={`${name}-image`}
-				layout="responsive"
-				width={16}
-				height={9}
-				className="rounded-md"
-			/>
+			{imageUrl ? (
+				<Image
+					src={imageUrl}
+					alt={`${name}-image`}
+					layout="responsive"
+					width={16}
+					height={9}
+					className="rounded-md"
+				/>
+			) : (
+				<div
+					className={cn(
+						"flex flex-1 w-full h-28 min-h-[6rem] aspect-video rounded-xl [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-transparent dark:border-white/[0.2] bg-neutral-100 dark:bg-black",
+						"[background-size:20px_20px]",
+						"[background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]",
+						"dark:[background-image:radial-gradient(#404040_1px,transparent_1px)]",
+					)}
+				/>
+			)}
 			<div className="space-y-2">
 				<Subtle>tags</Subtle>
 				<div className="flex flex-wrap gap-2">

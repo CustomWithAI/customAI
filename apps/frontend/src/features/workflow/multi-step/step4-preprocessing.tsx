@@ -1,5 +1,6 @@
 import { Content } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
+import { node } from "@/configs/image-preprocessing";
 import { presetList } from "@/configs/preset";
 import { useDragStore } from "@/contexts/dragContext";
 import { TablePreprocessingSection } from "@/features/image-preprocessing/sections/table";
@@ -14,13 +15,19 @@ import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { decodeBase64, encodeBase64 } from "@/libs/base64";
 import { cn } from "@/libs/utils";
+import type { DragColumn } from "@/stores/dragStore";
 import { getStep } from "@/utils/step-utils";
 import { formatDate } from "@/utils/to-datetime";
 import { keyframes, motion } from "framer-motion";
 import { StepBack } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import type { ZodRawShape } from "zod";
 import { useShallow } from "zustand/react/shallow";
-import { metadataToArray, metadataToJSON } from "../../../utils/formatMetadata";
+import {
+	arrayToMetadata,
+	metadataToArray,
+	metadataToJSON,
+} from "../../../utils/formatMetadata";
 
 export const ImagePreprocessingPage = () => {
 	const { getQueryParam, setQueryParam, compareQueryParam } = useQueryParam({
@@ -31,18 +38,42 @@ export const ImagePreprocessingPage = () => {
 
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
 
-	const { data: training } = useGetTrainingById(
+	const { data: training, isSuccess } = useGetTrainingById(
 		decodeBase64(workflowId),
 		decodeBase64(trainingId),
 		{ enabled: workflowId !== "" && trainingId !== "" },
 	);
+
+	const onSet = useDragStore((state) => state.onSet);
+	const fields = useDragStore(useShallow((state) => state.fields));
+	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
+	const hasRunRef = useRef(false);
+
+	useEffect(() => {
+		if (isSuccess && training?.data.imagePreprocessing && !hasRunRef.current) {
+			hasRunRef.current = true;
+			onSet(
+				node(fields, onUpdateMetadata)
+					.map((field) => {
+						const find = Object.entries(
+							training?.data.imagePreprocessing?.data,
+						).find(([key, value]) => key === field.id);
+						if (!find) return undefined;
+						return {
+							...field,
+							metadata: arrayToMetadata(field.metadata, find?.[1]),
+						};
+					})
+					.filter((field) => field !== undefined) as DragColumn<ZodRawShape>[],
+			);
+		}
+	}, [isSuccess, training, fields, onUpdateMetadata, onSet]);
+
 	const { mutateAsync: createPreprocess } = useCreatePreprocessing();
 	const { mutateAsync: updatePreprocess } = useUpdatePreprocessing();
 	const { mutateAsync: updateTraining } = useUpdateTraining();
 
-	const fields = useDragStore(useShallow((state) => state.fields));
 	const onReset = useDragStore((state) => state.onReset);
-	const onSet = useDragStore((state) => state.onSet);
 
 	const handleSubmit = useCallback(async () => {
 		const json = fields.reduce(

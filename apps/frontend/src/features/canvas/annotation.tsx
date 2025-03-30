@@ -15,6 +15,12 @@ const DEFAULT_EDITOR = {
 	polygons: [],
 	freehandPaths: [],
 };
+
+const MODE_EDITOR: Record<string, Mode> = {
+	classification: "select",
+	object_detection: "square",
+	segmentation: "polygon",
+};
 export default function AnnotationSection({
 	type,
 	image,
@@ -24,6 +30,7 @@ export default function AnnotationSection({
 	name,
 	isLoading,
 	defaultValue,
+	mode,
 	onPrevious,
 	length,
 }: {
@@ -32,6 +39,7 @@ export default function AnnotationSection({
 	length: number;
 	current?: number;
 	name?: string;
+	mode?: string;
 	disabled?: [boolean, boolean];
 	defaultValue?: Partial<Editor>;
 	isLoading?: boolean;
@@ -43,7 +51,7 @@ export default function AnnotationSection({
 		id: "1",
 		squares: [],
 		labels: [],
-		mode: "square" as Mode,
+		mode: mode ? MODE_EDITOR[mode] : "square",
 		classifiedLabel: "",
 		polygons: [],
 		freehandPaths: [],

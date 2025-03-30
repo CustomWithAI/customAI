@@ -20,6 +20,7 @@ export function CanvasSidebar({
 	width,
 	height,
 	zoom,
+	onZoomUpdate,
 	onZoomChange,
 }: Omit<LabelSidebarProps, "open" | "setOpen"> &
 	Omit<ZoomControlsProps, "open" | "setOpen">) {
@@ -91,6 +92,7 @@ export function CanvasSidebar({
 			/>
 			<ZoomControls
 				zoom={zoom}
+				onZoomUpdate={onZoomUpdate}
 				onZoomChange={onZoomChange}
 				open={open === "zoom"}
 				setOpen={(isSetOpen) => setOpen(isSetOpen ? "zoom" : "none")}

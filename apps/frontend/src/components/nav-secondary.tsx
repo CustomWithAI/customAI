@@ -10,6 +10,8 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { authClient } from "../libs/auth-client";
 
 export function NavSecondary({
 	items,
@@ -23,21 +25,38 @@ export function NavSecondary({
 	}[];
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
 	const t = useTranslations();
+	const router = useRouter();
 	return (
 		<SidebarGroup {...props}>
 			<SidebarGroupContent>
 				<SidebarMenu>
-					{items.map((item) => (
-						<SidebarMenuItem key={item.title}>
-							<SidebarMenuButton asChild>
-								<a href={item.url}>
-									<item.icon />
-									<span>{t(item.title as any)}</span>
-								</a>
-							</SidebarMenuButton>
-							{item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}
-						</SidebarMenuItem>
-					))}
+					{items.map((item) => {
+						const [href, onClick] =
+							item.url === "/logout"
+								? [
+										"#",
+										async () =>
+											await authClient.signOut({
+												fetchOptions: {
+													onSuccess: () => router.push("/login"),
+												},
+											}),
+									]
+								: [item.url, undefined];
+						return (
+							<SidebarMenuItem key={item.title}>
+								<SidebarMenuButton asChild>
+									<a href={href} onClick={onClick}>
+										<item.icon />
+										<span>{t(item.title as any)}</span>
+									</a>
+								</SidebarMenuButton>
+								{item.badge && (
+									<SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+								)}
+							</SidebarMenuItem>
+						);
+					})}
 				</SidebarMenu>
 			</SidebarGroupContent>
 		</SidebarGroup>
