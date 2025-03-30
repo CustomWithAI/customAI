@@ -19,6 +19,7 @@ import { fixDecimals } from "@/utils/fixDecimal";
 import { getImageSize } from "@/utils/image-size";
 import { generateRandomLabel } from "@/utils/random";
 import { Lock } from "lucide-react";
+import { nanoid } from "nanoid";
 import {
 	type MouseEvent,
 	useCallback,
@@ -236,7 +237,7 @@ export default function SquareEditor({
 						undefined,
 						corner as "top-left" | "top-right" | "bottom-left" | "bottom-right",
 					);
-					const newSquareId = Date.now().toString();
+					const newSquareId = nanoid();
 					updateSquare?.(newSquareId, { labelId: unusedLabel.id });
 				}
 			} else {
@@ -284,17 +285,12 @@ export default function SquareEditor({
 			if (event.button !== 0) return;
 			const unusedLabel = getUnusedLabel();
 			const { x, y } = getMousePosition(event);
-			console.log(unusedLabel);
 			switch (mode) {
 				case "square": {
 					if (
 						!unusedLabel &&
 						!(event.target as Element).closest("[data-square-id]")
 					) {
-						console.log(
-							!unusedLabel,
-							!(event.target as Element).closest("[data-square-id]"),
-						);
 						return;
 					}
 					const targetElement = document.elementFromPoint(
@@ -583,7 +579,6 @@ export default function SquareEditor({
 			if (!Array.isArray(data.squares) || !Array.isArray(data.labels)) {
 				throw new Error("Invalid file format");
 			}
-			setLabels([]);
 			setLabels(
 				data.labels?.map((label: Label) => ({
 					id: label.id,
@@ -676,7 +671,7 @@ export default function SquareEditor({
 	const handleAddLabel = useCallback(() => {
 		const { name, color } = generateRandomLabel();
 		const newLabel: Label = {
-			id: Date.now().toString(),
+			id: nanoid(),
 			name,
 			color,
 		};
