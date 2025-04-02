@@ -22,6 +22,7 @@ export function useSquares(onChange?: (change: Square) => void) {
 			y: number,
 			existingSquare?: Square,
 			corner?: DragState["corner"],
+			id = "",
 		) => {
 			if (existingSquare) {
 				setDragState({
@@ -33,7 +34,7 @@ export function useSquares(onChange?: (change: Square) => void) {
 				});
 			} else {
 				const newSquare: Square = {
-					id: Date.now().toString(),
+					id,
 					x,
 					y,
 					width: 0,
@@ -159,11 +160,14 @@ export function useSquares(onChange?: (change: Square) => void) {
 	}, []);
 
 	const updateSquare = useCallback((id: string, updates: Partial<Square>) => {
-		setSquares((prev) =>
-			prev.map((square) =>
+		console.log(id, updates);
+		setSquares((prev) => {
+			const updated = prev.map((square) =>
 				square.id === id ? { ...square, ...updates } : square,
-			),
-		);
+			);
+			console.log(updated);
+			return updated;
+		});
 	}, []);
 
 	const moveSquareForward = useCallback((id: string) => {

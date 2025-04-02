@@ -25,7 +25,6 @@ import { ImagePreprocessingPage } from "./step4-preprocessing";
 import { AugmentationPage } from "./step5-augmentation";
 import { FeaturePage } from "./step6-feature-extraction";
 import { ModelPage } from "./step7-model";
-import { ModelSetupPage } from "./step7a-model-setup";
 import { ModelConfigPage } from "./step8-model-config";
 import { ModelDetailsPage } from "./stepN-model";
 
@@ -118,7 +117,7 @@ export const stepConfig: Record<STEPS, StepConfig> = {
 		icon: <Box />,
 		component: () => (
 			<DragStoreProvider>
-				<ModelSetupPage />
+				<ModelPage />
 			</DragStoreProvider>
 		),
 	},

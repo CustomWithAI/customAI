@@ -1,5 +1,6 @@
 import { Content } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
+import { node } from "@/configs/augmentation";
 import { presetList } from "@/configs/preset";
 import { useDragStore } from "@/contexts/dragContext";
 import { TableAugmentationSection } from "@/features/augmentation/section/table";
@@ -12,13 +13,17 @@ import { useUpdateTraining } from "@/hooks/mutations/training-api";
 import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
+import { Undefined } from "@/libs/Undefined";
 import { decodeBase64, encodeBase64 } from "@/libs/base64";
 import { cn } from "@/libs/utils";
-import { metadataToArray } from "@/utils/formatMetadata";
+import type { DragColumn } from "@/stores/dragStore";
+import { arrayToMetadata, metadataToArray } from "@/utils/formatMetadata";
+import { sortedMetadata } from "@/utils/sortMetadata";
 import { getStep } from "@/utils/step-utils";
 import { formatDate } from "@/utils/to-datetime";
 import { motion } from "framer-motion";
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import type { ZodRawShape } from "zod";
 
 export const AugmentationPage = () => {
 	const { getQueryParam, setQueryParam, compareQueryParam } = useQueryParam({
@@ -29,11 +34,13 @@ export const AugmentationPage = () => {
 
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
 
-	const { data: training, isPending: trainingPending } = useGetTrainingById(
-		decodeBase64(workflowId),
-		decodeBase64(trainingId),
-		{ enabled: workflowId !== "" && trainingId !== "" },
-	);
+	const {
+		data: training,
+		isPending: trainingPending,
+		isSuccess,
+	} = useGetTrainingById(decodeBase64(workflowId), decodeBase64(trainingId), {
+		enabled: workflowId !== "" && trainingId !== "",
+	});
 
 	const { mutateAsync: updateTraining } = useUpdateTraining();
 	const { mutateAsync: createAugmentation } = useCreateAugmentation();
@@ -42,6 +49,32 @@ export const AugmentationPage = () => {
 	const fields = useDragStore((state) => state.fields);
 	const onSet = useDragStore((state) => state.onSet);
 	const onReset = useDragStore((state) => state.onReset);
+	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
+	const hasRunRef = useRef(false);
+
+	useEffect(() => {
+		if (isSuccess && training?.data.imagePreprocessing && !hasRunRef.current) {
+			hasRunRef.current = true;
+			const fieldObject = Object.entries(
+				training?.data.imagePreprocessing?.data,
+			);
+			onSet(
+				sortedMetadata(
+					node(fields, onUpdateMetadata),
+					training?.data.imagePreprocessing?.data?.priority,
+				)
+					.map((field) => {
+						const find = fieldObject.find(([key, _]) => key === field.type);
+						if (!find) return undefined;
+						return {
+							...field,
+							metadata: arrayToMetadata(field.metadata, find[1]),
+						};
+					})
+					.filter(Undefined) as DragColumn<ZodRawShape>[],
+			);
+		}
+	}, [isSuccess, training, fields, onUpdateMetadata, onSet]);
 
 	const handleSubmit = useCallback(async () => {
 		const json = fields.reduce(

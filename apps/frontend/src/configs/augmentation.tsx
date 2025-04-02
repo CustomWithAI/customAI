@@ -921,11 +921,11 @@ export const node = (
 			}),
 		},
 		{
-			type: "hist_equalization",
+			type: "histogram_equalization",
 			title: "Hist Equalization",
 			description: "Apply histogram equalization to improve contrast",
 			icon: <IconBrightness />,
-			id: "hist_equalization-1",
+			id: "histogram_equalization-1",
 			metadata: {
 				probability: {
 					type: "Number",
@@ -933,7 +933,7 @@ export const node = (
 				},
 			},
 			previewImg:
-				findById(fields, "hist_equalization-1")?.metadata?.probability
+				findById(fields, "histogram_equalization-1")?.metadata?.probability
 					?.value !== 0
 					? [{ type: "histEqualization" }]
 					: [],
@@ -941,18 +941,18 @@ export const node = (
 				{
 					template: "sliderInput",
 					element: {
-						testDataId: "hist_equalization-form",
+						testDataId: "histogram_equalization-form",
 						label: "Probability",
-						key: "hist_equalization-1",
-						name: "hist_equalization",
+						key: "histogram_equalization-1",
+						name: "histogram_equalization",
 						required: true,
 					},
 					config: {
-						setValue: findById(fields, "hist_equalization-1")?.metadata
+						setValue: findById(fields, "histogram_equalization-1")?.metadata
 							?.probability?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
-								id: "hist_equalization-1",
+								id: "histogram_equalization-1",
 								metadata: {
 									probability: {
 										type: "Number",
@@ -1326,9 +1326,9 @@ export const node = (
 		},
 		{
 			type: "gaussian_blur",
-			title: "Gaussian blur-sm",
+			title: "Gaussian blur",
 			id: "gaussian_blur-1",
-			description: "Apply Gaussian blur-sm with kernel size and sigma",
+			description: "Apply Gaussian blur with kernel size and sigma",
 			icon: <IconBlur />,
 			metadata: {
 				probability: {
@@ -1472,9 +1472,9 @@ export const node = (
 		},
 		{
 			type: "motion_blur",
-			title: "Motion blur-sm",
+			title: "Motion blur",
 			id: "motion_blur-1",
-			description: "Simulate motion blur-sm",
+			description: "Simulate motion blur",
 			icon: <IconBlur />,
 			metadata: {
 				probability: {
@@ -1615,7 +1615,7 @@ export const node = (
 		{
 			type: "zoom_blur",
 			title: "Zoom Blur",
-			description: "Apply zoom blur-sm effect",
+			description: "Apply zoom blur effect",
 			icon: <IconColorPicker />,
 			id: "zoom_blur-1",
 			metadata: {

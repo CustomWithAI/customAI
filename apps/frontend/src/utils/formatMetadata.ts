@@ -22,16 +22,25 @@ export const formatMetadata = (metadata: Metadata): string =>
 		.filter((entry) => entry !== "")
 		.join(", ");
 
-export function metadataToJSON(metadata: Metadata): Record<string, unknown> {
+export function metadataToJSON(
+	metadata: Metadata,
+	sub?: "array" | "json",
+): Record<string, unknown> {
 	return Object.fromEntries(
 		Object.entries(metadata).map(([key, value]) => {
 			switch (value.type) {
 				case "Boolean":
-				case "String":
-				case "Number":
 					return [key, value.value];
+				case "String":
+					return [key, String(value.value)];
+				case "Number":
+					return [key, Number(value.value)];
 				case "Object":
+					if (sub === "array") {
+						return [key, metadataToArray(value.value)];
+					}
 					return [key, metadataToJSON(value.value)];
+
 				case "Position":
 					return [key, { x: value.value.x, y: value.value.y }];
 				default:
@@ -44,17 +53,21 @@ export function metadataToJSON(metadata: Metadata): Record<string, unknown> {
 export function metadataToArray(metadata: Metadata): unknown[] | unknown {
 	const result: unknown[] = [];
 
-	for (const [key, value] of Object.entries(metadata)) {
+	for (const [_, value] of Object.entries(metadata)) {
 		switch (value.type) {
 			case "Boolean":
-			case "String":
-			case "Number":
 				result.push(value.value);
+				break;
+			case "String":
+				result.push(String(value.value));
+				break;
+			case "Number":
+				result.push(Number(value.value));
 				break;
 			case "Object":
 				if (isSimpleObject(value.value)) {
 					const flatObject = Object.entries(value.value)
-						.map(([subKey, subValue]) => {
+						.map(([_, subValue]) => {
 							if (subValue && subValue.type === "Number") {
 								return subValue.value;
 							}
@@ -83,63 +96,68 @@ export function metadataToArray(metadata: Metadata): unknown[] | unknown {
 }
 
 // Helper function to detect simple objects
-function isSimpleObject(value: any): boolean {
-	return (
-		value &&
-		typeof value === "object" &&
-		!Array.isArray(value) &&
-		value !== null
-	);
+function isSimpleObject(value: unknown): boolean {
+	return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 export function arrayToMetadata(
 	metadata: Metadata,
-	array: unknown[],
+	array: unknown[] | unknown,
 ): Metadata {
 	let index = 0;
+	const isArray = Array.isArray(array);
 
-	function reconstruct(struct: Metadata): Metadata {
+	function reconstruct(struct: Metadata, values: unknown = array): Metadata {
 		const newMetadata: Metadata = {};
 
 		for (const [key, value] of Object.entries(struct)) {
 			switch (value.type) {
 				case "Boolean":
-				case "String":
-				case "Number":
-					newMetadata[key] = { ...value, value: array[index++] as any };
-					break;
-
-				case "Object":
-					if (isSimpleObject(value.value)) {
-						const objEntries = Object.entries(value.value).map(
-							([subKey, subValue]) => [
-								subKey,
-								{ ...subValue, value: array[index++] },
-							],
-						);
-
-						newMetadata[key] = {
-							...value,
-							value: Object.fromEntries(objEntries),
-						};
-					} else {
-						newMetadata[key] = {
-							...value,
-							value: reconstruct(value.value),
-						};
-					}
-					break;
-
-				case "Position":
 					newMetadata[key] = {
 						...value,
-						value: { x: array[index++] as number, y: array[index++] as number },
+						value: isArray
+							? Boolean((array as unknown[])[index++])
+							: Boolean(values),
 					};
 					break;
+				case "String":
+					newMetadata[key] = {
+						...value,
+						value: isArray
+							? String((array as unknown[])[index++])
+							: String(values),
+					};
+					break;
+				case "Number":
+					newMetadata[key] = {
+						...value,
+						value: isArray
+							? Number((array as unknown[])[index++])
+							: Number(values),
+					};
+					break;
+				case "Object":
+					if (isSimpleObject(value.value)) {
+						const newValue: Record<string, any> = {};
+						const currentValues =
+							isArray && Array.isArray((array as unknown[])[index])
+								? (array as unknown[])[index++]
+								: {};
 
+						for (const subKey in value.value) {
+							newValue[subKey] = reconstruct(
+								value.value[subKey] as any,
+								(currentValues as any)[subKey],
+							);
+						}
+
+						newMetadata[key] = { ...value, value: newValue };
+					} else {
+						newMetadata[key] = { ...value, value: values as any };
+					}
+					break;
 				default:
 					newMetadata[key] = value;
-					break;
 			}
 		}
 

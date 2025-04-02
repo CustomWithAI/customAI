@@ -1,4 +1,5 @@
 import type { Label, Point, Polygon, Transform } from "@/types/square";
+import { nanoid } from "nanoid";
 import { useCallback, useState } from "react";
 
 interface UsePolygonOptions {
@@ -26,7 +27,7 @@ export function usePolygon({
 	const startPolygon = useCallback(
 		(point: Point, labelId?: string) => {
 			const newPolygon: Polygon = {
-				id: Date.now().toString(),
+				id: nanoid(),
 				points: [point],
 				color: "#000000",
 				isComplete: false,

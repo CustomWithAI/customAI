@@ -14,7 +14,7 @@ import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { decodeBase64, encodeBase64 } from "@/libs/base64";
 import { cn } from "@/libs/utils";
-import { metadataToArray } from "@/utils/formatMetadata";
+import { metadataToArray, metadataToJSON } from "@/utils/formatMetadata";
 import { getStep } from "@/utils/step-utils";
 import { formatDate } from "@/utils/to-datetime";
 import { motion } from "framer-motion";
@@ -49,18 +49,17 @@ export const FeaturePage = () => {
 				if (!field.type) {
 					return acc;
 				}
-				acc[field.type] = metadataToArray(field.metadata);
+				acc[field.type] = metadataToJSON(field.metadata, "array");
 				return acc;
 			},
 			{} as Record<string, any>,
 		);
-		const priority = Object.keys(json);
 		const preProcessFn = training?.data.featureExtraction
 			? updateFeature
 			: createFeature;
 		await preProcessFn(
 			{
-				data: { ...json, priority },
+				data: json,
 				name: `${training?.data.workflow.name}-${formatDate()}`,
 				id: training?.data.featureExtraction?.id || "",
 			},

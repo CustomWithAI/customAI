@@ -5,6 +5,7 @@ import { useFreehand } from "@/hooks/canvas/useFreehand";
 import { usePolygon } from "@/hooks/canvas/usePolygon";
 import { useSquares } from "@/hooks/canvas/useSquare";
 import { useWindowSize } from "@/hooks/useWindowSize";
+import { Undefined } from "@/libs/Undefined";
 import { cn } from "@/libs/utils";
 import type {
 	Editor,
@@ -58,7 +59,7 @@ export default function SquareEditor({
 	editor,
 	image,
 	initialSquares,
-	initialLabels,
+	initialLabels = [],
 	onChange,
 	mode,
 	onModeChange,
@@ -86,20 +87,23 @@ export default function SquareEditor({
 	const { width: windowWidth = 0, height: windowHeight = 0 } = useWindowSize();
 
 	useEffect(() => {
+		if (!image) return;
 		getImageSize(image).then((imageSize) => setSize(imageSize));
 	}, [image]);
 
 	useEffect(() => {
+		if (!initialLabels) return;
 		setLabels((prevLabels) => {
-			const updatedLabels = initialLabels.map((newLabel) => {
-				const existingLabel = prevLabels.find(
-					(label) => label.name === newLabel.name,
-				);
-				if (existingLabel) {
-					return { ...existingLabel, id: newLabel.id };
-				}
-				return newLabel;
-			});
+			const updatedLabels =
+				initialLabels?.map((newLabel) => {
+					const existingLabel = prevLabels.find(
+						(label) => label.name === newLabel.name,
+					);
+					if (existingLabel) {
+						return { ...existingLabel, id: newLabel.id };
+					}
+					return newLabel;
+				}) || [];
 			return updatedLabels;
 		});
 	}, [initialLabels]);
@@ -179,7 +183,7 @@ export default function SquareEditor({
 			...squares.map((square) => square.labelId),
 			...polygons.map((polygon) => polygon.labelId),
 			...freehandPaths.map((path) => path.labelId),
-		].filter(Boolean) as string[];
+		].filter(Undefined) as string[];
 	}, [freehandPaths, polygons, squares, editor.classifiedLabel]);
 
 	const findShapeById = useCallback(
@@ -211,10 +215,9 @@ export default function SquareEditor({
 	);
 
 	const getUnusedLabel = useCallback(() => {
-		const label = labels.find((label) => !usedLabelIds.includes(label.id));
+		let label = labels.find((label) => !usedLabelIds.includes(label.id));
 		if (!label) {
-			const newLabel = handleAddLabel();
-			return newLabel;
+			label = handleAddLabel();
 		}
 		return label;
 	}, [labels, usedLabelIds]);
@@ -228,26 +231,28 @@ export default function SquareEditor({
 
 	const handleStartDrag = useCallback(
 		(x: number, y: number, existingSquare?: Square, corner?: string) => {
-			if (!existingSquare) {
-				const unusedLabel = getUnusedLabel();
-				if (unusedLabel) {
-					startDrag(
-						x,
-						y,
-						undefined,
-						corner as "top-left" | "top-right" | "bottom-left" | "bottom-right",
-					);
-					const newSquareId = nanoid();
-					updateSquare?.(newSquareId, { labelId: unusedLabel.id });
-				}
-			} else {
+			if (existingSquare) {
 				startDrag(
 					x,
 					y,
 					existingSquare,
 					corner as "top-left" | "top-right" | "bottom-left" | "bottom-right",
 				);
+				return;
 			}
+
+			const unusedLabel = getUnusedLabel();
+			if (!unusedLabel) return;
+
+			const newSquareId = nanoid();
+			startDrag(
+				x,
+				y,
+				undefined,
+				corner as "top-left" | "top-right" | "bottom-left" | "bottom-right",
+				newSquareId,
+			);
+			updateSquare?.(newSquareId, { labelId: unusedLabel.id });
 		},
 		[startDrag, getUnusedLabel, updateSquare],
 	);
@@ -270,14 +275,17 @@ export default function SquareEditor({
 			event.stopPropagation();
 			if (event.button === 2 && event.type === "contextmenu") {
 				setSelectedShape({ type, id });
-				setShapeContextMenu({ x: event.clientX, y: event.clientY });
+				setShapeContextMenu({
+					x: event.clientX / zoom,
+					y: event.clientY / zoom,
+				});
 			} else if (selectedShape) {
 				setSelectedShape(null);
 			} else {
 				setSelectedShape((prev) => (prev?.id === id ? null : { type, id }));
 			}
 		},
-		[selectedShape],
+		[selectedShape, zoom],
 	);
 
 	const handleMouseDown = useCallback(
@@ -675,13 +683,13 @@ export default function SquareEditor({
 			name,
 			color,
 		};
+		onChange?.({ labels: [...labels, newLabel] });
 		setLabels((prev) => {
 			const updated = [...prev, newLabel];
-			onChange?.({ labels: updated });
 			return updated;
 		});
 		return newLabel;
-	}, [onChange]);
+	}, [onChange, labels]);
 
 	const handleRemoveLabel = useCallback(
 		(labelId: string) => {

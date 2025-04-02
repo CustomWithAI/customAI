@@ -13,6 +13,7 @@ import { useUpdateTraining } from "@/hooks/mutations/training-api";
 import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
+import { Undefined } from "@/libs/Undefined";
 import { decodeBase64, encodeBase64 } from "@/libs/base64";
 import { cn } from "@/libs/utils";
 import type { DragColumn } from "@/stores/dragStore";
@@ -28,6 +29,7 @@ import {
 	metadataToArray,
 	metadataToJSON,
 } from "../../../utils/formatMetadata";
+import { sortedMetadata } from "../../../utils/sortMetadata";
 
 export const ImagePreprocessingPage = () => {
 	const { getQueryParam, setQueryParam, compareQueryParam } = useQueryParam({
@@ -52,19 +54,23 @@ export const ImagePreprocessingPage = () => {
 	useEffect(() => {
 		if (isSuccess && training?.data.imagePreprocessing && !hasRunRef.current) {
 			hasRunRef.current = true;
+			const fieldObject = Object.entries(
+				training?.data.imagePreprocessing?.data,
+			);
 			onSet(
-				node(fields, onUpdateMetadata)
+				sortedMetadata(
+					node(fields, onUpdateMetadata),
+					training?.data.imagePreprocessing?.data?.priority,
+				)
 					.map((field) => {
-						const find = Object.entries(
-							training?.data.imagePreprocessing?.data,
-						).find(([key, value]) => key === field.id);
+						const find = fieldObject.find(([key, _]) => key === field.type);
 						if (!find) return undefined;
 						return {
 							...field,
-							metadata: arrayToMetadata(field.metadata, find?.[1]),
+							metadata: arrayToMetadata(field.metadata, find[1]),
 						};
 					})
-					.filter((field) => field !== undefined) as DragColumn<ZodRawShape>[],
+					.filter(Undefined) as DragColumn<ZodRawShape>[],
 			);
 		}
 	}, [isSuccess, training, fields, onUpdateMetadata, onSet]);

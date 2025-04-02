@@ -1,4 +1,5 @@
 import type { FreehandPath, Label, Point, Transform } from "@/types/square";
+import { nanoid } from "nanoid";
 import { useCallback, useState } from "react";
 
 interface UseFreehandOptions {
@@ -25,7 +26,7 @@ export function useFreehand({
 	const startPath = useCallback(
 		(point: Point, labelId?: string) => {
 			const newPath: FreehandPath = {
-				id: Date.now().toString(),
+				id: nanoid(),
 				points: [point],
 				color: "#000000",
 				labelId,
