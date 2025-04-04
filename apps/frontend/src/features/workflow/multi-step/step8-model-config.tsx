@@ -1,26 +1,19 @@
 "use client";
-import { type FormFieldInput, useFormBuilder } from "@/components/builder/form";
+import { useFormBuilder } from "@/components/builder/form";
 import { Button } from "@/components/ui/button";
-import { FormField } from "@/components/ui/form";
 import { hyperparameterByType } from "@/configs/hyperparameter";
-import { MLType, machineLearningByType } from "@/configs/ml";
+import { machineLearningByType } from "@/configs/ml";
 import { presetList } from "@/configs/preset";
-import { workflowEnum } from "@/configs/workflow-type";
 import { useDragStore } from "@/contexts/dragContext";
 import { useUpdateTraining } from "@/hooks/mutations/training-api";
 import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { decodeBase64, encodeBase64 } from "@/libs/base64";
-import {
-	classificationSchema,
-	objectDetectionSchema,
-	segmentationSchema,
-} from "@/models/model-config";
 import type { NotNull } from "@/types/common";
 import { getStep } from "@/utils/step-utils";
 import { useCallback, useMemo } from "react";
-import type { ZodObject, z } from "zod";
+import type { z } from "zod";
 
 export const ModelConfigPage = () => {
 	const { setQueryParam, getQueryParam } = useQueryParam({ name: "step" });
@@ -39,7 +32,7 @@ export const ModelConfigPage = () => {
 	const onSet = useDragStore((state) => state.onSet);
 
 	const hyperparameterField = useMemo(() => {
-		if (training?.data.machineLearningModel.type) {
+		if (training?.data.machineLearningModel?.type) {
 			return machineLearningByType[training?.data.machineLearningModel.type];
 		}
 		if (training?.data.preTrainedModel) {

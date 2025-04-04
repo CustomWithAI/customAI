@@ -53,15 +53,13 @@ export const AugmentationPage = () => {
 	const hasRunRef = useRef(false);
 
 	useEffect(() => {
-		if (isSuccess && training?.data.imagePreprocessing && !hasRunRef.current) {
+		if (isSuccess && training?.data.augmentation && !hasRunRef.current) {
 			hasRunRef.current = true;
-			const fieldObject = Object.entries(
-				training?.data.imagePreprocessing?.data,
-			);
+			const fieldObject = Object.entries(training?.data.augmentation?.data);
 			onSet(
 				sortedMetadata(
 					node(fields, onUpdateMetadata),
-					training?.data.imagePreprocessing?.data?.priority,
+					training?.data.augmentation?.data?.priority as string[],
 				)
 					.map((field) => {
 						const find = fieldObject.find(([key, _]) => key === field.type);
@@ -256,14 +254,13 @@ export const AugmentationPage = () => {
 					})}
 				>
 					<Content className="text-sm relative z-10">Table</Content>
-					{viewParam === "table" ||
-						(viewParam === null && (
-							<motion.div
-								layoutId="activeTab"
-								className="absolute inset-0 bg-white rounded-md"
-								transition={{ type: "spring", stiffness: 300, damping: 20 }}
-							/>
-						))}
+					{(viewParam === "table" || viewParam === null) && (
+						<motion.div
+							layoutId="activeTab"
+							className="absolute inset-0 bg-white rounded-md"
+							transition={{ type: "spring", stiffness: 300, damping: 20 }}
+						/>
+					)}
 				</button>
 			</div>
 			{compareQueryParam({ value: "table", allowNull: true }) ? (

@@ -1,6 +1,7 @@
 import type { Pipeline } from "../request/requestTrainingPreset";
 import type { AugmentationModel } from "./augmentation";
 import type { DebugType } from "./common";
+import type { ResponseCustomModel } from "./customModel";
 import type { ResponseDataset } from "./dataset";
 import type { FeatureExModel } from "./feature-ex";
 import type { PreprocessingModel } from "./preprocessing";
@@ -22,6 +23,7 @@ export type TrainingModel = DebugType<
 		workflowId: string;
 		createdAt: string;
 		updatedAt: string;
+		customModel: ResponseCustomModel;
 		workflow: WorkflowModel;
 	} & Pick<
 		Required<ChangeableTrainingModel>,

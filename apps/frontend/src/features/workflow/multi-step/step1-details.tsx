@@ -58,11 +58,13 @@ export const Step1 = () => {
 	const { toast } = useToast();
 	const { setQueryParam, getQueryParam } = useQueryParam();
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
+
 	const { data: defaultValue } = useGetTrainingById(
 		decodeBase64(workflowId),
 		decodeBase64(trainingId),
 		{ enabled: workflowId !== "" && trainingId !== "" },
 	);
+
 	const onSubmitData = async (data: WorkflowDetails) => {
 		await createWorkflow(data, {
 			onError: (e) => {

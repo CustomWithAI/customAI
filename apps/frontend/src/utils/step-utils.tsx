@@ -71,6 +71,10 @@ export function addStepAfterName(
 	afterName: string,
 	newStep: Omit<Pipeline["steps"][number], "index">,
 ): Pipeline["steps"] {
+	const isExisted = steps.find((step) => step.name === newStep.name);
+	if (isExisted) {
+		console.error(`Step with name "${newStep}" is already exist`);
+	}
 	const afterIndex = steps.findIndex((step) => step.name === afterName);
 
 	if (afterIndex === -1) {

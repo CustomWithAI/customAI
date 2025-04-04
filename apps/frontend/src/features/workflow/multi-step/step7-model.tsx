@@ -2,6 +2,7 @@ import { BaseSkeleton } from "@/components/specific/skeleton";
 import { Content, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MODEL_KEYWORD } from "@/configs/model";
 import { MODEL_TYPE } from "@/configs/model-type";
 import { presetList } from "@/configs/preset";
 import { STEPS } from "@/configs/step-key";
@@ -16,14 +17,13 @@ import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { encodeBase64 } from "@/libs/base64";
+import { decodeBase64 } from "@/libs/base64";
+import { cn } from "@/libs/utils";
 import { getArrayFromEnum } from "@/utils/array-from-enum";
 import { addStepAfterName, getStep } from "@/utils/step-utils";
 import { Plus } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Virtuoso } from "react-virtuoso";
-import { MODEL_KEYWORD } from "../../../configs/model";
-import { decodeBase64 } from "../../../libs/base64";
-import { cn } from "../../../libs/utils";
 
 export const ModelPage = () => {
 	const [modelId, setModelId] = useState<string | null>(null);
@@ -92,7 +92,11 @@ export const ModelPage = () => {
 				onSuccess: (t) => {
 					setQueryParam({
 						params: {
-							step: encodeBase64(t?.data.pipeline.current || ""),
+							step: encodeBase64(
+								getStep("next", t?.data.pipeline.current, newPipeline, () =>
+									onSet(presetList),
+								),
+							),
 							id: workflowId,
 							trainings: trainingId,
 						},
@@ -252,7 +256,7 @@ export const ModelPage = () => {
 								typeClass={typeClass}
 								description={description}
 								className={cn(
-									modelId === model ? "border border-green-400" : "",
+									{ "border border-green-400": modelId === model },
 									"first:ml-0 mx-4 w-fit",
 								)}
 								onClick={() => {

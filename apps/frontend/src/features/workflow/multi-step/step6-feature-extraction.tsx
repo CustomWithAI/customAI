@@ -222,14 +222,13 @@ export const FeaturePage = () => {
 					})}
 				>
 					<Content className="text-sm relative z-10">Table</Content>
-					{viewParam === "table" ||
-						(viewParam === null && (
-							<motion.div
-								layoutId="activeTab"
-								className="absolute inset-0 bg-white rounded-md"
-								transition={{ type: "spring", stiffness: 300, damping: 20 }}
-							/>
-						))}
+					{(viewParam === "table" || viewParam === null) && (
+						<motion.div
+							layoutId="activeTab"
+							className="absolute inset-0 bg-white rounded-md"
+							transition={{ type: "spring", stiffness: 300, damping: 20 }}
+						/>
+					)}
 				</button>
 			</div>
 			{compareQueryParam({ value: "table", allowNull: true }) ? (

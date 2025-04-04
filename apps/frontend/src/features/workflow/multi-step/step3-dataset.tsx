@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { DatasetCard } from "@/features/dataset/components/gridBox";
 import { useUpdateTraining } from "@/hooks/mutations/training-api";
 import { useGetDatasets, useGetInfDatasets } from "@/hooks/queries/dataset-api";
+import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { encodeBase64 } from "@/libs/base64";
@@ -21,8 +22,7 @@ export const DatasetPage = () => {
 	const { data: datasets, isPending: datasetPending } = useGetDatasets();
 	const { mutateAsync: updateTraining, isPending: updatePending } =
 		useUpdateTraining();
-	const workflowId = decodeBase64(getQueryParam()) || "";
-	const trainingId = decodeBase64(getQueryParam("trainings")) || "";
+	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
 
 	const handleSubmit = useCallback(async () => {
 		if (!datasetId) {

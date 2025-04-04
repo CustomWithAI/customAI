@@ -9,7 +9,7 @@ import {
 	IconTransform,
 } from "@tabler/icons-react";
 import { INTER_LINEAR, Size } from "@techstark/opencv-js";
-import { AudioWaveform, Crop, Droplet, Scaling } from "lucide-react";
+import { AudioWaveform, Crop, Droplet, Eraser, Scaling, X } from "lucide-react";
 import { z } from "zod";
 
 export const node = (
@@ -2058,9 +2058,227 @@ export const node = (
 			}),
 		},
 		{
+			type: "random_erasing",
+			title: "Random Erasing",
+			description: "Randomly erase parts of the image.",
+			icon: <Eraser />,
+			id: "random_erasing-1",
+			metadata: {
+				probability: {
+					type: "Number",
+					value: 0,
+				},
+				region: {
+					type: "Object",
+					value: {
+						x: {
+							type: "Number",
+							value: 0,
+						},
+						y: {
+							type: "Number",
+							value: 0,
+						},
+						width: {
+							type: "Number",
+							value: 0,
+						},
+						height: {
+							type: "Number",
+							value: 0,
+						},
+					},
+				},
+			},
+			previewImg: [
+				{
+					type: "random_erasing",
+					params: [
+						Number(
+							(findById(fields, "random_erasing-1") as any)?.metadata?.region
+								?.value?.x?.value,
+						) || 30,
+						Number(
+							(findById(fields, "random_erasing-1") as any)?.metadata?.region
+								?.value?.y?.value,
+						) || 30,
+						Number(
+							(findById(fields, "random_erasing-1") as any)?.metadata?.region
+								?.value?.width?.value,
+						) || 30,
+						Number(
+							(findById(fields, "random_erasing-1") as any)?.metadata?.region
+								?.value?.height?.value,
+						) || 30,
+					],
+				},
+			],
+			inputField: [
+				{
+					template: "sliderInput",
+					element: {
+						testDataId: "random_erasing-form",
+						label: "Probability",
+						key: "random_erasing-prob-1",
+						name: "random_erasing",
+						required: true,
+					},
+					config: {
+						setValue: findById(fields, "random_erasing-1")?.metadata
+							?.probability?.value as boolean,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "random_erasing-1",
+								metadata: {
+									probability: {
+										type: "Number",
+										value: value as number,
+									},
+								},
+							});
+						},
+						options: {
+							min: 0,
+							max: 1,
+							step: 0.1,
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "random_erasing-form",
+						label: "X",
+						key: "random_erasing-alpha-1",
+						name: "random_erasing",
+						required: true,
+					},
+					config: {
+						setValue: (findById(fields, "random_erasing-1") as any)?.metadata
+							?.region?.value?.y?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "random_erasing-1",
+								metadata: {
+									region: {
+										type: "Object",
+										value: {
+											x: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "random_erasing-form",
+						label: "Y",
+						key: "random_erasing-alpha-1",
+						name: "random_erasing",
+						required: true,
+					},
+					config: {
+						setValue: (findById(fields, "random_erasing-1") as any)?.metadata
+							?.region?.value?.y?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "random_erasing-1",
+								metadata: {
+									region: {
+										type: "Object",
+										value: {
+											y: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "random_erasing-form",
+						label: "Width",
+						key: "random_erasing-alpha-1",
+						name: "random_erasing",
+						required: true,
+					},
+					config: {
+						setValue: (findById(fields, "random_erasing-1") as any)?.metadata
+							?.region?.value?.width?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "random_erasing-1",
+								metadata: {
+									region: {
+										type: "Object",
+										value: {
+											width: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "random_erasing-form",
+						label: "Height",
+						key: "random_erasing-alpha-1",
+						name: "random_erasing",
+						required: true,
+					},
+					config: {
+						setValue: (findById(fields, "random_erasing-1") as any)?.metadata
+							?.region?.value?.height?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "random_erasing-1",
+								metadata: {
+									region: {
+										type: "Object",
+										value: {
+											height: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				probability: z.number().positive(),
+				region: z.object({
+					x: z.number().positive(),
+					y: z.number().positive(),
+					width: z.number().positive(),
+					height: z.number().positive(),
+				}),
+			}),
+		},
+		{
 			type: "elastic_distortion",
-			title: "Gaussian Noise",
-			description: "add gaussian noise to image.",
+			title: "Elastic Distortion",
+			description: "Apply elastic transformation.",
 			icon: <AudioWaveform />,
 			id: "elastic_distortion-1",
 			metadata: {
@@ -2195,6 +2413,55 @@ export const node = (
 					alpha: z.number().positive(),
 					sigma: z.number().positive(),
 				}),
+			}),
+		},
+		{
+			type: "number",
+			title: "Amount of Datasets",
+			description: "Number of final datasets to be generated",
+			icon: <IconTransform />,
+			id: "number-1",
+			metadata: {
+				number: {
+					type: "Number",
+					value: 0,
+				},
+			},
+			previewImg: [],
+			inputField: [
+				{
+					template: "number",
+					element: {
+						testDataId: "number-form",
+						label: "Amount",
+						key: "number-1",
+						name: "number",
+						required: true,
+					},
+					config: {
+						setValue: (findById(fields, "number-1") as any)?.metadata?.config
+							?.value?.salt_pepper_ratio?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "number-1",
+								metadata: {
+									config: {
+										type: "Object",
+										value: {
+											sigma: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+			],
+			inputSchema: z.object({
+				number: z.number().positive(),
 			}),
 		},
 	];

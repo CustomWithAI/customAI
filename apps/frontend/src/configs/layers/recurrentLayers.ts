@@ -1,0 +1,68 @@
+import type { LayerTemplate } from "./index";
+
+export const recurrentLayers: Record<string, LayerTemplate> = {
+	lstm: {
+		name: "LSTM Layer",
+		description: "Long Short-Term Memory layer for sequential data",
+		category: "recurrent",
+		purposes: ["sequence", "memory"],
+		compatibleWith: ["nlp", "timeseries", "general"],
+		config: {
+			lstmLayer_units: 128,
+			lstmLayer_activation: "tanh",
+			lstmLayer_recurrentActivation: "sigmoid",
+			lstmLayer_useBias: true,
+			lstmLayer_returnSequences: true,
+			lstmLayer_returnState: false,
+			lstmLayer_dropout: 0.0,
+			lstmLayer_recurrentDropout: 0.0,
+		},
+	},
+	gru: {
+		name: "GRU Layer",
+		description: "Gated Recurrent Unit layer for sequential data",
+		category: "recurrent",
+		purposes: ["sequence"],
+		compatibleWith: ["nlp", "timeseries", "general"],
+		config: {
+			gruLayer_units: 128,
+			gruLayer_activation: "tanh",
+			gruLayer_recurrentActivation: "sigmoid",
+			gruLayer_useBias: true,
+			gruLayer_returnSequences: true,
+			gruLayer_returnState: false,
+			gruLayer_dropout: 0.0,
+			gruLayer_recurrentDropout: 0.0,
+		},
+	},
+	simple_rnn: {
+		name: "Simple RNN Layer",
+		description: "Basic recurrent neural network layer",
+		category: "recurrent",
+		purposes: ["sequence"],
+		compatibleWith: ["nlp", "timeseries", "general"],
+		config: {
+			simpleRNNLayer_units: 128,
+			simpleRNNLayer_activation: "tanh",
+			simpleRNNLayer_useBias: true,
+			simpleRNNLayer_returnSequences: true,
+			simpleRNNLayer_returnState: false,
+			simpleRNNLayer_dropout: 0.0,
+			simpleRNNLayer_recurrentDropout: 0.0,
+		},
+	},
+	bidirectional: {
+		name: "Bidirectional Wrapper",
+		description: "Bidirectional wrapper for RNNs",
+		category: "recurrent",
+		purposes: ["sequence"],
+		compatibleWith: ["nlp", "general"],
+		config: {
+			bidirectionalLayer_layer: "lstm",
+			bidirectionalLayer_units: 128,
+			bidirectionalLayer_mergeMode: "concat",
+			bidirectionalLayer_activation: "tanh",
+			bidirectionalLayer_returnSequences: true,
+		},
+	},
+};

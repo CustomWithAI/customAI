@@ -48,9 +48,11 @@ export const Step3Page = () => {
 		{ enabled: workflowId !== "" && trainingId !== "" },
 	);
 	const onSet = useDragStore((state) => state.onSet);
+	const hasRunRef = useRef(false);
 
 	useEffect(() => {
-		if (isSuccess && defaultValue) {
+		if (isSuccess && defaultValue && !hasRunRef.current) {
+			hasRunRef.current = true;
 			onSet(
 				presetList.map((step) => {
 					const find = defaultValue.data.pipeline.steps.find(
