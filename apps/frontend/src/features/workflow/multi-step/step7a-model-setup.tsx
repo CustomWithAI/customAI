@@ -16,6 +16,7 @@ import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
 import { decodeBase64, encodeBase64 } from "@/libs/base64";
 import type { LayerConfig } from "@/stores/modelStore";
+import { removeKey } from "@/utils/removerKey";
 import { getStep } from "@/utils/step-utils";
 import { formatDate } from "@/utils/to-datetime";
 import { useCallback, useRef, useState } from "react";
@@ -56,8 +57,11 @@ export const ModelSetupPage = () => {
 		const data = modelRef.current?.getData();
 		await customFn(
 			{
-				data: { data: { model: data?.layers } },
+				data: {
+					data: { model: removeKey(data?.layers as [], "layerPurpose") },
+				},
 				name: `${training?.data.workflow.name}-${formatDate()}`,
+				type: training?.data.workflow.type,
 				id: training?.data.customModel?.id || "",
 			},
 			{
@@ -86,7 +90,7 @@ export const ModelSetupPage = () => {
 						{
 							workflowId: decodeBase64(workflowId),
 							trainingId: decodeBase64(trainingId),
-							imagePreprocessingId: data.data.id,
+							customModelId: data.data.id,
 							pipeline: {
 								current: getStep(
 									"next",
