@@ -10,7 +10,9 @@ import { retryConnection } from "@/utils/retry";
 import { connectRedis } from "@/infrastructures/redis/connection";
 import { connectDatabase } from "@/infrastructures/database/connection";
 import { connectS3 } from "@/infrastructures/s3/connection";
-import axios, { type AxiosResponse } from "axios";
+import axios, { AxiosError, type AxiosResponse } from "axios";
+import { defaultSplit, stratifiedSplit } from "@/utils/split-data";
+import { uploadFile } from "@/infrastructures/s3/s3";
 
 export const startTrainingWorker = async () => {
   const channel = await getRabbitMQChannel();
@@ -28,6 +30,9 @@ export const startTrainingWorker = async () => {
 
   queueLogger.info("🐰 RabbitMQ worker started, waiting for messages...");
 
+  // TODO: Delete after debug OK?
+  config.PYTHON_SERVER_URL = "http://host.docker.internal:8000";
+
   channel.consume(
     config.RABBITMQ_TRAINING_QUEUE_NAME,
     async (msg) => {
@@ -39,14 +44,12 @@ export const startTrainingWorker = async () => {
         queueLogger.info(`🚀 Processing training: ${trainingData.queueId}`);
 
         try {
-          // ✅ Update Status Into "running"
+          // ✅ Update Status Into "prepare_dataset"
           await trainingRepository.updateById(
             trainingData.workflow.id,
             trainingData.id,
-            { status: "running" }
+            { status: "prepare_dataset" }
           );
-
-          // TODO: เริ่มตรงนี้ตาม Note
 
           if (!trainingData.dataset) {
             throw new Error("Training dataset not found");
@@ -77,8 +80,16 @@ export const startTrainingWorker = async () => {
             throw new Error("Dataset split method not found");
           }
 
+          // TODO: แค่ชั่วคราว เอาไว้มาแก้ให้ไม่ Hard Code ทีหลัง OK?
           const filterImages = images.map(({ url, annotation }) => {
-            return { url, annotation };
+            const updatedUrl = url.includes("http://localhost:4566")
+              ? url.replace(
+                  "http://localhost:4566",
+                  "http://host.docker.internal:4566"
+                )
+              : url;
+
+            return { url: updatedUrl, annotation };
           });
 
           const { trainData, testData, validData } =
@@ -130,25 +141,41 @@ export const startTrainingWorker = async () => {
             );
           }
 
+          // ✅ Update Status Into "training"
+          await trainingRepository.updateById(
+            trainingData.workflow.id,
+            trainingData.id,
+            { status: "training" }
+          );
+
           let responseTraining: AxiosResponse<any, any>;
+          let fileType: string;
 
           if (trainingData.dataset.annotationMethod === "classification") {
             if (trainingData.machineLearningModel) {
               responseTraining = await axios.post(
                 `${config.PYTHON_SERVER_URL}/training-ml`,
                 {
-                  training: trainingData.hyperparameter,
+                  model: trainingData.machineLearningModel,
                   featex: trainingData.featureExtraction?.data,
+                },
+                {
+                  responseType: "arraybuffer",
                 }
               );
+              fileType = "pkl";
             } else if (trainingData.preTrainedModel) {
               responseTraining = await axios.post(
                 `${config.PYTHON_SERVER_URL}/training-dl-cls-pt`,
                 {
                   model: trainingData.preTrainedModel,
                   training: trainingData.hyperparameter,
+                },
+                {
+                  responseType: "arraybuffer",
                 }
               );
+              fileType = "h5";
             } else if (trainingData.customModel) {
               responseTraining = await axios.post(
                 `${config.PYTHON_SERVER_URL}/training-dl-cls-construct`,
@@ -156,8 +183,12 @@ export const startTrainingWorker = async () => {
                   model: trainingData.customModel,
                   training: trainingData.hyperparameter,
                   featex: trainingData.featureExtraction?.data,
+                },
+                {
+                  responseType: "arraybuffer",
                 }
               );
+              fileType = "h5";
             } else {
               throw new Error(
                 `Model for ${trainingData.dataset.annotationMethod} not found.`
@@ -173,8 +204,12 @@ export const startTrainingWorker = async () => {
                   type: "object_detection",
                   model: trainingData.preTrainedModel,
                   training: trainingData.hyperparameter,
+                },
+                {
+                  responseType: "arraybuffer",
                 }
               );
+              fileType = "pt";
             } else if (trainingData.customModel) {
               responseTraining = await axios.post(
                 `${config.PYTHON_SERVER_URL}/training-dl-od-construct`,
@@ -184,8 +219,12 @@ export const startTrainingWorker = async () => {
                   featex: trainingData.featureExtraction
                     ? trainingData.featureExtraction.data
                     : undefined,
+                },
+                {
+                  responseType: "arraybuffer",
                 }
               );
+              fileType = "h5";
             } else {
               throw new Error(
                 `Model for ${trainingData.dataset.annotationMethod} not found.`
@@ -199,8 +238,12 @@ export const startTrainingWorker = async () => {
                   type: "segmentation",
                   model: trainingData.preTrainedModel,
                   training: trainingData.hyperparameter,
+                },
+                {
+                  responseType: "arraybuffer",
                 }
               );
+              fileType = "pt";
             } else {
               throw new Error(
                 `Model for ${trainingData.dataset.annotationMethod} not found.`
@@ -216,25 +259,36 @@ export const startTrainingWorker = async () => {
             );
           }
 
+          const filePath = `trainings/${trainingData.id}/model.${fileType}`;
+
+          await uploadFile(
+            filePath,
+            Buffer.from(responseTraining.data),
+            "application/octet-stream"
+          );
+
           // ✅ Update Status Into "completed"
           await trainingRepository.updateById(
             trainingData.workflow.id,
             trainingData.id,
-            { status: "completed" }
+            {
+              status: "completed",
+              trainedModelPath: filePath,
+              errorMessage: null,
+            }
           );
           queueLogger.info(`✅ Training completed: ${trainingData.queueId}`);
         } catch (error) {
           if (error instanceof Error) {
             queueLogger.error(
-              `❌ Training failed: ${trainingData.queueId}`,
-              error.message
+              `❌ Training failed: ${trainingData.queueId} with error: ${error.message}`
             );
 
             // ✅ Update Status Into "failed"
             await trainingRepository.updateById(
               trainingData.workflow.id,
               trainingData.id,
-              { status: "failed", errorMessage: error.message }
+              { status: "created", errorMessage: error.message }
             );
           }
         } finally {

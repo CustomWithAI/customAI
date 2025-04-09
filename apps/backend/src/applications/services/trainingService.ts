@@ -152,20 +152,34 @@ export class TrainingService {
     }
 
     // Have Model or Not
-    if (!training.preTrainedModel && !training.customModel) {
-      throw error(400, "Pre-trained model or custom model is required");
+    if (
+      !training.machineLearningModel &&
+      !training.preTrainedModel &&
+      !training.customModel
+    ) {
+      throw error(
+        400,
+        "Pre-trained model, custom model or machine learning model is required"
+      );
     }
 
     // Have Hyperparameter or Not
     if (
-      typeof training.hyperparameter !== "object" ||
-      training.hyperparameter === null
+      !(
+        training.workflow.type === "classification" &&
+        training.machineLearningModel
+      )
     ) {
-      throw new InternalServerError("Hyperparameter must be an object");
-    }
+      if (
+        typeof training.hyperparameter !== "object" ||
+        training.hyperparameter === null
+      ) {
+        throw new InternalServerError("Hyperparameter must be an object");
+      }
 
-    if (Object.keys(training.hyperparameter).length === 0) {
-      throw error(400, "Hyperparameter is required");
+      if (Object.keys(training.hyperparameter).length === 0) {
+        throw error(400, "Hyperparameter is required");
+      }
     }
 
     // Dataset Have Train Test Valid or Not

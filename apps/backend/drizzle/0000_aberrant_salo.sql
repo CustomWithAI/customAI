@@ -1,4 +1,4 @@
-CREATE TYPE "public"."training_status" AS ENUM('created', 'pending', 'running', 'completed', 'failed');--> statement-breakpoint
+CREATE TYPE "public"."status" AS ENUM('created', 'pending', 'prepare_dataset', 'training', 'completed', 'failed');--> statement-breakpoint
 CREATE TABLE "augmentations" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"name" varchar(255) NOT NULL,
@@ -129,7 +129,7 @@ CREATE TABLE "trainings" (
 	"version" varchar(255),
 	"hyperparameter" jsonb,
 	"pipeline" jsonb NOT NULL,
-	"status" "training_status" DEFAULT 'created' NOT NULL,
+	"status" "status" DEFAULT 'created' NOT NULL,
 	"queue_id" varchar(255),
 	"retry_count" integer DEFAULT 0 NOT NULL,
 	"error_message" text,

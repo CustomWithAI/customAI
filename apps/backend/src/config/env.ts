@@ -54,7 +54,10 @@ const envSchema = z.object({
 
   // Python Server
   MAX_RETRY_COUNT: z.coerce.number().default(3),
-  PYTHON_SERVER_URL: z.string().url().default("http://something:8000"),
+  PYTHON_SERVER_URL: z
+    .string()
+    .url()
+    .default("http://host.docker.internal:8000"),
 
   APP_VERSION: z.string().default(packageJson.version),
 });

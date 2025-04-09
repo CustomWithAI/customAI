@@ -827,7 +827,7 @@ export default function SquareEditor({
 		return square.labelId === selectedLabel;
 	});
 
-	const classifiedLabel = labels.find((l) => l.id === editor.classifiedLabel);
+	const classifiedLabel = labels?.find((l) => l.id === editor.classifiedLabel);
 
 	return (
 		<div className="flex w-full h-full">

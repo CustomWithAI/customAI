@@ -51,7 +51,7 @@ type SplitResult<T> = {
   validData: T[];
 };
 
-function defaultSplit<T extends DatasetImageData>(
+export function defaultSplit<T extends DatasetImageData>(
   dataset: T[],
   trainRatio: number,
   testRatio: number,
@@ -103,7 +103,7 @@ function defaultSplit<T extends DatasetImageData>(
   return result;
 }
 
-function stratifiedSplit<T extends DatasetImageData>(
+export function stratifiedSplit<T extends DatasetImageData>(
   dataset: T[],
   trainRatio: number,
   testRatio: number,
