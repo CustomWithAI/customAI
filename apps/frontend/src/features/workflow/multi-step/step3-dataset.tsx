@@ -8,18 +8,15 @@ import { useGetDatasets, useGetInfDatasets } from "@/hooks/queries/dataset-api";
 import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
-import { encodeBase64 } from "@/libs/base64";
+import { decodeBase64, encodeBase64 } from "@/libs/base64";
 import { cn } from "@/libs/utils";
 import { Plus } from "lucide-react";
 import { useCallback, useState } from "react";
-import { Virtuoso } from "react-virtuoso";
-import { decodeBase64 } from "../../../libs/base64";
 
 export const DatasetPage = () => {
 	const [datasetId, setDatasetId] = useState<string | null>(null);
 	const { toast } = useToast();
 	const { getQueryParam, setQueryParam } = useQueryParam({ name: "id" });
-	const { data: datasets, isPending: datasetPending } = useGetDatasets();
 	const { mutateAsync: updateTraining, isPending: updatePending } =
 		useUpdateTraining();
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
@@ -30,8 +27,8 @@ export const DatasetPage = () => {
 		}
 		await updateTraining(
 			{
-				workflowId,
-				trainingId,
+				workflowId: decodeBase64(workflowId),
+				trainingId: decodeBase64(trainingId),
 				datasetId,
 			},
 			{
@@ -39,8 +36,8 @@ export const DatasetPage = () => {
 					setQueryParam({
 						params: {
 							step: encodeBase64(t?.data.pipeline.current || "start"),
-							id: encodeBase64(workflowId),
-							trainings: encodeBase64(trainingId),
+							id: workflowId,
+							trainings: trainingId,
 						},
 						resetParams: true,
 					});
