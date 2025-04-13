@@ -284,11 +284,12 @@ export const startTrainingWorker = async () => {
               `❌ Training failed: ${trainingData.queueId} with error: ${error.message}`
             );
 
+            // TODO: แก้ created ให้กลายเป็น completed หลังทำเสร็จทั้งหมด
             // ✅ Update Status Into "failed"
             await trainingRepository.updateById(
               trainingData.workflow.id,
               trainingData.id,
-              { status: "created", errorMessage: error.message }
+              { status: "failed", errorMessage: error.message }
             );
           }
         } finally {

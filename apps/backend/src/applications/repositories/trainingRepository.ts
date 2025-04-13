@@ -9,7 +9,6 @@ import { trainings } from "@/domains/schema/trainings";
 import type { TrainingStatusEnum } from "@/domains/schema/trainings";
 import { workflows } from "@/domains/schema/workflows";
 import { db } from "@/infrastructures/database/connection";
-import { generatePresignedUrl } from "@/infrastructures/s3/s3";
 import type { PaginationParams } from "@/utils/db-type";
 import withPagination from "@/utils/pagination";
 import { queryParser } from "@/utils/query-parser";
@@ -91,19 +90,9 @@ export class TrainingRepository {
       },
     });
 
-    const newData = paginatedData.data.map((training) => {
-      return {
-        ...training,
-        trainedModelPath: training.trainedModelPath
-          ? generatePresignedUrl(training.trainedModelPath)
-          : null,
-      };
-    });
-
     return {
       total,
       ...paginatedData,
-      data: newData,
     };
   }
 

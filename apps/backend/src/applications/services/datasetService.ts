@@ -1,5 +1,6 @@
 import type { DatasetRepository } from "@/applications/repositories/datasetRepository";
 import type { datasets } from "@/domains/schema/datasets";
+import { generatePresignedUrl } from "@/infrastructures/s3/s3";
 import type { PaginationParams } from "@/utils/db-type";
 import { InternalServerError, NotFoundError } from "elysia";
 
@@ -18,7 +19,16 @@ export class DatasetService {
     userId: string,
     pagination: PaginationParams
   ) {
-    return this.repository.findByUserId(userId, pagination);
+    const result = await this.repository.findByUserId(userId, pagination);
+    return {
+      ...result,
+      data: result.data.map((data) => ({
+        ...data,
+        images: data.images?.map((image: string) =>
+          generatePresignedUrl(image)
+        ),
+      })),
+    };
   }
 
   public async getDatasetById(userId: string, id: string) {

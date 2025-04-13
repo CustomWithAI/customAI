@@ -5,6 +5,7 @@ import { config } from "@/config/env";
 import type { CreateTrainingDto } from "@/domains/dtos/training";
 import type { TrainingStatusEnum, trainings } from "@/domains/schema/trainings";
 import { sendToRabbitMQ } from "@/infrastructures/rabbitmq/queue";
+import { generatePresignedUrl } from "@/infrastructures/s3/s3";
 import type { PaginationParams } from "@/utils/db-type";
 import { incrementVersion } from "@/utils/version";
 import { InternalServerError, NotFoundError, error } from "elysia";
@@ -66,7 +67,21 @@ export class TrainingService {
     pagination: PaginationParams
   ) {
     await this.ensureWorkflowExists(userId, workflowId);
-    return this.repository.findByWorkflowId(workflowId, pagination);
+    const result = await this.repository.findByWorkflowId(
+      workflowId,
+      pagination
+    );
+    return {
+      ...result,
+      data: result.data.map((training) => {
+        return {
+          ...training,
+          trainedModelPath: training.trainedModelPath
+            ? generatePresignedUrl(training.trainedModelPath)
+            : null,
+        };
+      }),
+    };
   }
 
   public async getTrainingById(userId: string, workflowId: string, id: string) {
@@ -76,6 +91,9 @@ export class TrainingService {
     if (result.length === 0) {
       throw new NotFoundError(`Training not found: ${id}`);
     }
+    result[0].trainedModelPath = result[0].trainedModelPath
+      ? generatePresignedUrl(result[0].trainedModelPath)
+      : null;
     return result[0];
   }
 
@@ -86,6 +104,9 @@ export class TrainingService {
     if (result.length === 0) {
       throw new NotFoundError("Default training not found");
     }
+    result[0].trainedModelPath = result[0].trainedModelPath
+      ? generatePresignedUrl(result[0].trainedModelPath)
+      : null;
     return result[0];
   }
 
