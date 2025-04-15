@@ -2,7 +2,7 @@
 
 import { Content, Header } from "@/components/typography/text";
 import type { Editor, Mode } from "@/types/square";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { EditorNavigation } from "./editor-navigation";
 import SquareEditor from "./square-editor";
 
@@ -60,11 +60,19 @@ export default function AnnotationSection({
 
 	useEffect(() => {
 		if (!isLoading && defaultValue) {
-			setEditor((prev) => {
-				return { ...prev, ...defaultValue };
+			setEditor({
+				id: "1",
+				squares: [],
+				labels: [],
+				mode: mode ? MODE_EDITOR[mode] : "square",
+				classifiedLabel: "",
+				polygons: [],
+				freehandPaths: [],
+				...defaultValue,
 			});
+			console.log(defaultValue);
 		}
-	}, [isLoading, defaultValue]);
+	}, [isLoading, defaultValue, mode]);
 
 	const handlePrevious = useCallback(() => {
 		onUpdate?.(editor, false);
@@ -105,10 +113,12 @@ export default function AnnotationSection({
 			<SquareEditor
 				editorId={editor.id}
 				initialSquares={editor.squares}
+				initialPolygons={editor.polygons}
 				initialLabels={editor.labels}
 				editor={editor}
 				type={type}
 				image={image}
+				onLoad={isLoading}
 				mode={editor.mode}
 				onModeChange={(mode) => {
 					handleEditorChange(editor.id, { mode });

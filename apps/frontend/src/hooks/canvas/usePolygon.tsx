@@ -227,6 +227,7 @@ export function usePolygon({
 		previewPoint,
 		startPolygon,
 		selectedPolygon,
+		setPolygons,
 		setSelectedPolygon,
 		addPoint,
 		updatePreview,

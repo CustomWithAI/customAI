@@ -19,6 +19,7 @@ export const DatasetPage = () => {
 	const { getQueryParam, setQueryParam } = useQueryParam({ name: "id" });
 	const { mutateAsync: updateTraining, isPending: updatePending } =
 		useUpdateTraining();
+	const datasetQuery = useGetInfDatasets();
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
 
 	const handleSubmit = useCallback(async () => {
@@ -63,7 +64,7 @@ export const DatasetPage = () => {
 		<div className="flex flex-col gap-y-4">
 			<Subtle>Recent dataset used</Subtle>
 			<WindowList
-				queryHook={useGetInfDatasets}
+				queryHook={datasetQuery}
 				direction="horizontal"
 				itemContent={(_, dataset) => (
 					<DatasetCard

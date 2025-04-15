@@ -17,22 +17,24 @@ import {
 	formatToEditor,
 	formatToLabels,
 } from "@/utils/formatEditor";
+import { isSameUnorderedArray } from "@/utils/isSameArray";
 
 export default function Page({ params: { id } }: { params: { id: string } }) {
 	const router = useRouter();
 	const { getQueryParam, setQueryParam } = useQueryParam({ name: "image" });
 	const { data: dataset, isPending: datasetPending } = useGetDataset(id);
-	const { data: image, isPending: imagePending } = useGetSurroundingImages(
-		id,
-		decodeBase64(getQueryParam()) || "",
-		{
-			enabled: !!getQueryParam(),
-		},
-	);
+	const {
+		data: image,
+		isPending: imagePending,
+		refetch: fetchNewImage,
+	} = useGetSurroundingImages(id, decodeBase64(getQueryParam()) || "", {
+		enabled: !!getQueryParam(),
+	});
 
 	const { mutateAsync: updateImage } = useUpdateImage();
 	const { mutateAsync: updateDataset } = useUpdateDataset();
 
+	console.log(formatToEditor(image?.current.annotation, dataset?.labels));
 	return (
 		<BaseSkeleton
 			loading={datasetPending || imagePending || !image?.current?.url}
@@ -48,14 +50,17 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 					dataset?.labels,
 				)}
 				onUpdate={async (data, isClose) => {
-					console.log(decodeBase64(getQueryParam()), data);
 					if (!id || !getQueryParam()) return;
+					console.log("submitted");
+					console.log(formatToAnnotate(data), data);
 					await updateImage({
 						id,
 						imagesPath: decodeBase64(getQueryParam()) || "",
 						data: { annotation: formatToAnnotate(data) },
 					});
-					if ((dataset?.labels?.length || 0) !== (data.labels?.length || 0)) {
+					const labels = data.labels?.map((label) => label.name);
+
+					if (!isSameUnorderedArray(dataset?.labels || [], labels)) {
 						await updateDataset({
 							id,
 							data: {
@@ -75,6 +80,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 						setQueryParam({
 							params: { image: encodeBase64(image?.prev?.path) },
 						});
+						fetchNewImage();
 						return formatToEditor(image?.current.annotation, dataset?.labels);
 					}
 					return undefined;
@@ -84,6 +90,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 						setQueryParam({
 							params: { image: encodeBase64(image?.next?.path) },
 						});
+						fetchNewImage();
 						return formatToEditor(image?.current.annotation, dataset?.labels);
 					}
 					return undefined;

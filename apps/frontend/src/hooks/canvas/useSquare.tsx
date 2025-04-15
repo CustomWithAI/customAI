@@ -11,7 +11,7 @@ interface DragState {
 	originalSquare?: Square;
 }
 
-export function useSquares(onChange?: (change: Square) => void) {
+export function useSquares(onChange?: (change: Square | Square[]) => void) {
 	const [squares, setSquares] = useState<Square[]>([]);
 	const [dragState, setDragState] = useState<DragState | null>(null);
 	const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
@@ -154,21 +154,30 @@ export function useSquares(onChange?: (change: Square) => void) {
 		setDragState(null);
 	}, [dragState]);
 
-	const deleteSquare = useCallback((id: string) => {
-		setSquares((prev) => prev.filter((square) => square.id !== id));
-		setSelectedSquare(null);
-	}, []);
+	const deleteSquare = useCallback(
+		(id: string) => {
+			setSquares((prev) => {
+				const state = prev.filter((square) => square.id !== id);
+				onChange?.(state);
+				return state;
+			});
+			setSelectedSquare(null);
+		},
+		[onChange],
+	);
 
-	const updateSquare = useCallback((id: string, updates: Partial<Square>) => {
-		console.log(id, updates);
-		setSquares((prev) => {
-			const updated = prev.map((square) =>
-				square.id === id ? { ...square, ...updates } : square,
-			);
-			console.log(updated);
-			return updated;
-		});
-	}, []);
+	const updateSquare = useCallback(
+		(id: string, updates: Partial<Square>) => {
+			setSquares((prev) => {
+				const updated = prev.map((square) =>
+					square.id === id ? { ...square, ...updates } : square,
+				);
+				onChange?.(updated);
+				return updated;
+			});
+		},
+		[onChange],
+	);
 
 	const moveSquareForward = useCallback((id: string) => {
 		setSquares((prev) => {

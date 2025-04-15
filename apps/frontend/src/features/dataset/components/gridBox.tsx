@@ -36,7 +36,7 @@ export const DatasetCard: React.FC<CardProps> = ({
 			}}
 		>
 			<div className="flex h-28 relative overflow-hidden">
-				{images.map((image, index) => (
+				{images.slice(0, 5).map((image, index) => (
 					<div className="w-full" key={`dataset-${title + String(index)}`}>
 						<div
 							className="flex-1 h-28 shadow-md"

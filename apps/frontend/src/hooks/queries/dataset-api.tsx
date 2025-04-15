@@ -1,6 +1,6 @@
 import { datasetService } from "@/services/dataset";
 import type { ResponsePagination } from "@/types/common";
-import type { ResponseDataset } from "@/types/response/dataset";
+import type { ResponseDataset, ResponseImage } from "@/types/response/dataset";
 import type {
 	AppInfiniteOptions,
 	AppInfiniteQueryOptions,
@@ -10,6 +10,7 @@ import { buildQueryParams } from "@/utils/build-param";
 import {
 	type InfiniteData,
 	type UseInfiniteQueryResult,
+	keepPreviousData,
 	useInfiniteQuery,
 	useQuery,
 } from "@tanstack/react-query";
@@ -23,30 +24,25 @@ export const useGetDatasets = (
 		...options,
 	});
 
-export const useGetInfDatasets: () => UseInfiniteQueryResult<
+export const useGetInfDatasets = (): UseInfiniteQueryResult<
 	InfiniteData<ResponsePagination<ResponseDataset> | undefined>,
 	Error
-> = () =>
+> =>
 	useInfiniteQuery({
 		queryKey: ["datasets"],
-		queryFn: async ({ pageParam }) =>
+		initialPageParam: null as string | null,
+		queryFn: async ({ pageParam = null }) =>
 			await datasetService.getDatasets({ pageParam }),
-		initialPageParam: "",
-		getNextPageParam: (lastPage, page) => {
-			return lastPage?.nextCursor
+		getNextPageParam: (lastPage) =>
+			lastPage?.nextCursor
 				? buildQueryParams({ cursor: lastPage.nextCursor })
-				: null;
-		},
-		getPreviousPageParam: (firstPage, page) =>
+				: null,
+		getPreviousPageParam: (firstPage) =>
 			firstPage?.prevCursor
 				? buildQueryParams({ cursor: firstPage.prevCursor })
 				: null,
-		select: (data) => {
-			return {
-				pages: data?.pages || [],
-				pageParams: data?.pageParams || [],
-			};
-		},
+		refetchOnWindowFocus: false,
+		placeholderData: keepPreviousData,
 	});
 
 export const useGetImages = (
@@ -58,6 +54,29 @@ export const useGetImages = (
 		queryKey: ["datasets", "images", id, params],
 		queryFn: async () => await datasetService.getImages({ id, params }),
 		...options,
+	});
+
+export const useGetInfImages = ({
+	id,
+}: { id: string }): UseInfiniteQueryResult<
+	InfiniteData<ResponsePagination<ResponseImage> | undefined>,
+	Error
+> =>
+	useInfiniteQuery({
+		queryKey: ["datasets", "images", id],
+		initialPageParam: null as string | null,
+		queryFn: async ({ pageParam = null }) =>
+			await datasetService.getImages({ id, params: pageParam || "" }),
+		getNextPageParam: (lastPage) =>
+			lastPage?.nextCursor
+				? buildQueryParams({ cursor: lastPage.nextCursor })
+				: null,
+		getPreviousPageParam: (firstPage) =>
+			firstPage?.prevCursor
+				? buildQueryParams({ cursor: firstPage.prevCursor })
+				: null,
+		refetchOnWindowFocus: false,
+		placeholderData: keepPreviousData,
 	});
 
 export const useGetSurroundingImages = (

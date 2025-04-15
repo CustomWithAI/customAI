@@ -68,7 +68,7 @@ export const formatToAnnotate = (data: Editor) => {
 			};
 		return { label: "" };
 	}
-	if (data.squares) {
+	if (data.squares && data.squares.length > 0) {
 		return {
 			annotation: data.squares
 				.map(({ x, y, width, height, labelId }) => {
@@ -87,8 +87,8 @@ export const formatToAnnotate = (data: Editor) => {
 	}
 	if (data.polygons || data.freehandPaths) {
 		return {
-			annotation:
-				data.polygons
+			annotation: [
+				...(data.polygons
 					.map(({ points, labelId }) => {
 						if (data.labels.find((label) => label.id === labelId)?.name)
 							return {
@@ -97,8 +97,8 @@ export const formatToAnnotate = (data: Editor) => {
 									data.labels.find((label) => label.id === labelId)?.name || "",
 							};
 					})
-					?.filter((f) => f !== undefined) ||
-				data.freehandPaths
+					?.filter((f) => f !== undefined) || []),
+				...(data.freehandPaths
 					.map(({ points, labelId }) => {
 						if (data.labels.find((label) => label.id === labelId)?.name)
 							return {
@@ -107,8 +107,8 @@ export const formatToAnnotate = (data: Editor) => {
 									data.labels.find((label) => label.id === labelId)?.name || "",
 							};
 					})
-					?.filter((f) => f !== undefined) ||
-				[],
+					?.filter((f) => f !== undefined) || []),
+			],
 		};
 	}
 };

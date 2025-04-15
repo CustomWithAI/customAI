@@ -12,6 +12,7 @@ import type {
 	Label,
 	Mode,
 	Point,
+	Polygon,
 	SelectedShape,
 	Square,
 } from "@/types/square";
@@ -43,8 +44,10 @@ interface SquareEditorProps {
 	editorId: string;
 	editor: Editor;
 	initialSquares: Square[];
+	initialPolygons: Polygon[];
 	type: string;
 	image: string;
+	onLoad?: boolean;
 	initialLabels: Label[];
 	onChange?: (updatedEditor: Partial<Editor>) => void;
 	mode: Mode;
@@ -57,6 +60,8 @@ export default function SquareEditor({
 	editorId,
 	type,
 	editor,
+	onLoad,
+	initialPolygons,
 	image,
 	initialSquares,
 	initialLabels = [],
@@ -121,7 +126,12 @@ export default function SquareEditor({
 		moveSquareForward,
 		moveSquareBackward,
 	} = useSquares((square) => {
-		onChange?.({ squares, labels });
+		onChange?.({
+			squares: Array.isArray(square)
+				? square
+				: [...squares.filter((p) => p.id !== square.id), square],
+			labels,
+		});
 	});
 
 	useEffect(() => {
@@ -132,6 +142,7 @@ export default function SquareEditor({
 		polygons,
 		activePolygon,
 		selectedPolygon,
+		setPolygons,
 		previewPoint,
 		startPolygon,
 		addPoint,
@@ -153,6 +164,10 @@ export default function SquareEditor({
 		},
 		labels,
 	});
+
+	useEffect(() => {
+		setPolygons(initialPolygons);
+	}, [initialPolygons, setPolygons]);
 
 	const {
 		paths: freehandPaths,
@@ -755,6 +770,7 @@ export default function SquareEditor({
 				onChange?.({
 					classifiedLabel: labelId,
 				});
+				return;
 			}
 			updateLabel(selectedSquare, labelId, updateSquare);
 			updateLabel(selectedPolygon, labelId, updatePolygon);
@@ -978,11 +994,13 @@ export default function SquareEditor({
 							square={squares.find((s) => s.id === selectedSquare)}
 							onDelete={() => {
 								deleteSquare(selectedSquare);
+								onChange?.({ squares });
 								setContextMenu(null);
 							}}
 							onClose={() => setContextMenu(null)}
 							onUpdate={(updates) => {
 								updateSquare(selectedSquare, updates);
+								onChange?.({ squares });
 							}}
 							onMoveForward={() => moveSquareForward(selectedSquare)}
 							onMoveBackward={() => moveSquareBackward(selectedSquare)}
@@ -1001,8 +1019,10 @@ export default function SquareEditor({
 							onDelete={() => {
 								if (selectedShape.type === "polygon") {
 									deletePolygon(selectedShape.id);
+									onChange?.({ polygons });
 								} else {
 									deletePath(selectedShape.id);
+									onChange?.({ freehandPaths });
 								}
 								setSelectedShape(null);
 								setShapeContextMenu(null);
@@ -1011,22 +1031,28 @@ export default function SquareEditor({
 							onUpdate={(updates) => {
 								if (selectedShape.type === "polygon") {
 									updatePolygon(selectedShape.id, updates);
+									onChange?.({ polygons });
 								} else {
 									updatePath(selectedShape.id, updates);
+									onChange?.({ freehandPaths });
 								}
 							}}
 							onMoveForward={() => {
 								if (selectedShape.type === "polygon") {
 									movePolygonForward(selectedShape.id);
+									onChange?.({ polygons });
 								} else {
 									movePathForward(selectedShape.id);
+									onChange?.({ freehandPaths });
 								}
 							}}
 							onMoveBackward={() => {
 								if (selectedShape.type === "polygon") {
 									movePolygonBackward(selectedShape.id);
+									onChange?.({ polygons });
 								} else {
 									movePathBackward(selectedShape.id);
+									onChange?.({ polygons });
 								}
 							}}
 						/>

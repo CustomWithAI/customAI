@@ -40,7 +40,7 @@ export default function Page() {
 					</div>
 					<ViewList.Trigger />
 				</div>
-				<ContentDataset datasets={datasets?.data} total={datasets?.total} />
+				<ContentDataset total={datasets?.total} />
 			</ViewList.Provider>
 		</AppNavbar>
 	);

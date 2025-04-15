@@ -41,11 +41,9 @@ export const datasetService = {
 		} catch (error) {}
 	},
 
-	getDatasets: async ({
-		pageParam,
-	}: { pageParam?: string } = {}): Promise<
-		ResponsePagination<ResponseDataset>
-	> => {
+	getDatasets: async (
+		{ pageParam }: { pageParam: string | null } = { pageParam: null },
+	): Promise<ResponsePagination<ResponseDataset>> => {
 		const response = await axiosClient.get<ResponsePagination<ResponseDataset>>(
 			`/datasets/${pageParam || ""}`,
 		);

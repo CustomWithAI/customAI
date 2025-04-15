@@ -118,7 +118,7 @@ const UploadProgress = () => {
 										: `${(file.size / 1024 / 1024).toFixed(2)} MB`}
 								</Subtle>
 							</div>
-							<div className="my-auto flex flex-1 items-center justify-end">
+							<div className="my-auto flex flex-1 space-x-2 items-center justify-end">
 								{canceled ? (
 									<div className="w-28 max-sm:w-20" />
 								) : (
