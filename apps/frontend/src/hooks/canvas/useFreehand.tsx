@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { useCallback, useState } from "react";
 
 interface UseFreehandOptions {
-	onChange?: (path: FreehandPath) => void;
+	onChange?: (path: FreehandPath | FreehandPath[]) => void;
 	onComplete?: (path: FreehandPath) => void;
 	labels?: Label[];
 }
@@ -137,16 +137,18 @@ export function useFreehand({
 
 	const updatePath = useCallback(
 		(id: string, updates: Partial<FreehandPath>) => {
-			setPaths((prev) =>
-				prev.map((path) => {
+			setPaths((prev) => {
+				const state = prev.map((path) => {
 					if (path.id === id) {
 						const updated = { ...path, ...updates };
 						onChange?.(updated);
 						return updated;
 					}
 					return path;
-				}),
-			);
+				});
+				onChange?.(state);
+				return state;
+			});
 		},
 		[onChange],
 	);
@@ -207,9 +209,16 @@ export function useFreehand({
 		});
 	}, []);
 
-	const deletePath = useCallback((id: string) => {
-		setPaths((prev) => prev.filter((p) => p.id !== id));
-	}, []);
+	const deletePath = useCallback(
+		(id: string) => {
+			setPaths((prev) => {
+				const state = prev.filter((p) => p.id !== id);
+				onChange?.(state);
+				return state;
+			});
+		},
+		[onChange],
+	);
 
 	return {
 		paths,

@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { useCallback, useState } from "react";
 
 interface UsePolygonOptions {
-	onChange?: (polygon: Polygon) => void;
+	onChange?: (polygon: Polygon | Polygon[]) => void;
 	onComplete?: (polygon: Polygon) => void;
 	labels?: Label[];
 }
@@ -93,8 +93,8 @@ export function usePolygon({
 		(point: Point) => {
 			if (!dragState) return;
 
-			setPolygons((prev) =>
-				prev.map((polygon) => {
+			setPolygons((prev) => {
+				const state = prev.map((polygon) => {
 					if (polygon.id !== dragState.polygonId) return polygon;
 
 					const dx = point.x - dragState.startPos.x;
@@ -117,8 +117,9 @@ export function usePolygon({
 							y: firstPoint.y + (p.y - firstPoint.y) * (1 + dy / 100),
 						})),
 					};
-				}),
-			);
+				});
+				return state;
+			});
 		},
 		[dragState],
 	);
@@ -147,23 +148,32 @@ export function usePolygon({
 
 	const updatePolygon = useCallback(
 		(id: string, updates: Partial<Polygon>) => {
-			setPolygons((prev) =>
-				prev.map((polygon) => {
+			setPolygons((prev) => {
+				const state = prev.map((polygon) => {
 					if (polygon.id === id) {
 						const updated = { ...polygon, ...updates };
 						onChange?.(updated);
 						return updated;
 					}
 					return polygon;
-				}),
-			);
+				});
+				onChange?.(state);
+				return state;
+			});
 		},
 		[onChange],
 	);
 
-	const deletePolygon = useCallback((id: string) => {
-		setPolygons((prev) => prev.filter((p) => p.id !== id));
-	}, []);
+	const deletePolygon = useCallback(
+		(id: string) => {
+			setPolygons((prev) => {
+				const state = prev.filter((p) => p.id !== id);
+				onChange?.(state);
+				return state;
+			});
+		},
+		[onChange],
+	);
 
 	const movePolygonForward = useCallback((id: string) => {
 		setPolygons((prev) => {

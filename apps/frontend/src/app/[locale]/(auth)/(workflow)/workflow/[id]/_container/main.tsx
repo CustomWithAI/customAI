@@ -7,18 +7,60 @@ import {
 	SubHeader,
 	Subtle,
 } from "@/components/typography/text";
-import { DotBadge } from "@/components/ui/dot-badge";
+import { DotBadge, type VariantProps } from "@/components/ui/dot-badge";
 import { encodeBase64 } from "@/libs/base64";
 import type { TrainingModel } from "@/types/response/training";
 import type { WorkflowModel } from "@/types/response/workflow";
 import { Layers2, PackagePlus, ScanSearch, Tractor } from "lucide-react";
 import { useFormatter } from "next-intl";
 
+const STATUS_COLOR: Record<string, VariantProps> = {
+	created: "warning",
+	pending: "warning",
+	prepare_dataset: "warning",
+	training: "warning",
+	completed: "success",
+	failed: "danger",
+};
+const STATUS: Record<string, string> = {
+	created: "Created",
+	pending: "In queue",
+	prepare_dataset: "Prepare data",
+	training: "Training",
+	completed: "Ready to use",
+	failed: "Failed",
+};
 export const MainWorkflowPage = ({
 	data,
 	default: mainDefault,
 }: { data: WorkflowModel | undefined; default: TrainingModel | undefined }) => {
 	const { relativeTime } = useFormatter();
+
+	const modelFormat =
+		mainDefault?.customModel ||
+		mainDefault?.preTrainedModel ||
+		mainDefault?.machineLearningModel
+			? `${
+					mainDefault?.customModel
+						? "Custom-train"
+						: mainDefault?.preTrainedModel
+							? "Pre-train"
+							: mainDefault?.machineLearningModel
+								? "ML-train"
+								: "unknown"
+				}{" "}
+  ${
+		mainDefault?.preTrainedModel || mainDefault?.machineLearningModel
+			? ": "
+			: ""
+	}
+  ${
+		mainDefault?.preTrainedModel ||
+		mainDefault?.machineLearningModel?.type ||
+		"unknown"
+	}`
+			: "none";
+
 	return (
 		<>
 			<Header>{data?.name}</Header>
@@ -69,7 +111,7 @@ export const MainWorkflowPage = ({
 					<div className="space-y-3 text-zinc-700 pb-6 border-b border-gray-200">
 						<div className="flex space-x-4">
 							<Layers2 className="w-6 h-6" />
-							<Content>Pre-trained : Yolo12</Content>
+							<Content>{modelFormat}</Content>
 						</div>
 						<div className="flex space-x-4">
 							<ScanSearch className="w-6 h-6" />
@@ -83,10 +125,13 @@ export const MainWorkflowPage = ({
 						<div className="relative flex space-x-4">
 							<Tractor className="absolute top-6 w-6 h-6" />
 							<div className="pl-5 space-y-2">
-								<DotBadge className="text-[0.7rem]" variant="success">
-									Ready to use
+								<DotBadge
+									className="text-[0.7rem]"
+									variant={STATUS_COLOR[mainDefault?.status || ""] || "warning"}
+								>
+									{STATUS[mainDefault?.status || ""] || "unknown"}
 								</DotBadge>
-								<div className="flex items-baseline space-x-2">
+								<div className="flex items-baseline space-x-2 ml-2">
 									<Content className="font-semibold leading-none">
 										{mainDefault?.version}
 									</Content>

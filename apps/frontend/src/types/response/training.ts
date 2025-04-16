@@ -38,7 +38,7 @@ export type TrainingQueue = {
 export type ChangeableTrainingModel = Partial<{
 	hyperparameter: object;
 	pipeline: Pipeline;
-	version: number;
+	version: string;
 	datasetId: string;
 	imagePreprocessingId: string;
 	featureExtractionId: string;

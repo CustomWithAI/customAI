@@ -1,69 +1,61 @@
+import { WindowList } from "@/components/layout/windowList";
 import { Header } from "@/components/typography/text";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
 	VersionSection,
 	type VersionSectionProps,
 } from "@/features/workflow/components/version-section";
-import {
-	useGetTrainingById,
-	useGetTrainingByWorkflowId,
-} from "@/hooks/queries/training-api";
-
-const versionList: VersionSectionProps[] = [
-	{
-		versionId: "1.1",
-		versionName: "Starter Models",
-		isDefault: true,
-		time: new Date(),
-		contributor: {
-			imageSrc: "",
-			name: "me",
-		},
-		changeInfo: [
-			"model epoch from",
-			{ value: "40", status: "default" },
-			"to",
-			{ value: "40", status: "changed" },
-		],
-	},
-	{
-		versionId: "1.2",
-		versionName: "fixed Models",
-		isDefault: false,
-		time: new Date(),
-		contributor: {
-			imageSrc: "",
-			name: "me",
-		},
-		changeInfo: [
-			"model epoch from",
-			{ value: "50", status: "default" },
-			"to",
-			{ value: "120", status: "changed" },
-		],
-	},
-];
+import { useGetInfTrainingByWorkflowId } from "@/hooks/queries/training-api";
+import { cn } from "@/libs/utils";
+import { findPreviousVersion } from "@/utils/lastVersion";
+import { type ReactNode, useMemo, useRef, useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 export const VersionPage = ({ id }: { id: string }) => {
-	const { data: version } = useGetTrainingByWorkflowId(id);
+	const versionData = useGetInfTrainingByWorkflowId(id);
+	const [activeVersion, setActiveVersion] = useState<string | null>(null);
+	const items = useMemo(
+		() =>
+			versionData?.data?.pages
+				?.flatMap((page) => page?.data)
+				.filter((i) => i !== undefined) || [],
+		[versionData.data],
+	);
+
 	return (
 		<>
 			<Header>Versions list</Header>
 			<div className="grid md:grid-cols-4 max-md:grid-cols-1 max-lg:gap-6 lg:gap-8">
-				<div className="col-span-1 md:col-span-3 space-y-5">
-					{versionList.map((version) => (
-						<VersionSection key={version.versionId} {...version} />
-					))}
+				<div className="md:col-span-3">
+					<WindowList
+						queryHook={versionData}
+						direction="vertical"
+						noNavigation
+						itemContent={(index, item, list) => {
+							const prevVersion = findPreviousVersion(list, item.version);
+							return (
+								<VersionSection
+									key={item.version}
+									current={item}
+									prev={prevVersion}
+									onInView={setActiveVersion}
+								/>
+							);
+						}}
+					/>
 				</div>
 				<div>
 					<ScrollArea className="h-72 w-48 rounded-md border border-gray-200">
 						<div className="p-4">
 							<h4 className="mb-4 text-sm font-medium leading-none">Tags</h4>
-							{version?.data?.data?.map((tag) => (
+							{items?.map((tag) => (
 								<>
 									<div
 										key={tag.version}
-										className="border-l border-gray-200 pl-3 py-1 text-sm hover:bg-zinc-100 duration-200"
+										className={cn(
+											"border-l border-gray-200 pl-3 py-1 text-sm hover:bg-zinc-100 duration-200",
+											{ "bg-zinc-100": activeVersion === tag.version },
+										)}
 									>
 										{tag.version}
 									</div>

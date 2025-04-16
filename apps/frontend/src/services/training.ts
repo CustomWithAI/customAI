@@ -47,9 +47,10 @@ export const trainingService = {
 		params,
 	}: { workflowId: string; params: string }) => {
 		try {
-			return axiosClient.get<ResponsePagination<TrainingModel>>(
+			const response = await axiosClient.get<ResponsePagination<TrainingModel>>(
 				`/workflows/${workflowId}/trainings${params}`,
 			);
+			return response?.data;
 		} catch (error) {}
 	},
 	getTrainingByDefault: async ({ workflowId }: { workflowId: string }) => {

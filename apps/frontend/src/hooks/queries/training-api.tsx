@@ -1,6 +1,15 @@
 import { trainingService } from "@/services/training";
-import type { AppQueryOptions } from "@/types/tanstack-type";
-import { useQuery } from "@tanstack/react-query";
+import type { ResponsePagination } from "@/types/common";
+import type { ResponseDataset } from "@/types/response/dataset";
+import type { AppInfiniteQuery, AppQueryOptions } from "@/types/tanstack-type";
+import { buildQueryParams } from "@/utils/build-param";
+import {
+	type InfiniteData,
+	type UseInfiniteQueryResult,
+	keepPreviousData,
+	useInfiniteQuery,
+	useQuery,
+} from "@tanstack/react-query";
 import { QueryParams } from "../use-query-params";
 
 export const useGetTrainingById = (
@@ -26,6 +35,29 @@ export const useGetTrainingByWorkflowId = (
 			trainingService.getTrainingByWorkflowId({ workflowId, params }),
 		queryKey: ["training", workflowId],
 		...options,
+	});
+
+export const useGetInfTrainingByWorkflowId = (
+	workflowId: string,
+): AppInfiniteQuery<typeof trainingService.getTrainingByWorkflowId> =>
+	useInfiniteQuery({
+		queryKey: ["training", workflowId],
+		queryFn: async ({ pageParam = "" }) =>
+			await trainingService.getTrainingByWorkflowId({
+				workflowId,
+				params: pageParam || "",
+			}),
+		initialPageParam: null as string | null,
+		getNextPageParam: (lastPage) =>
+			lastPage?.nextCursor
+				? buildQueryParams({ cursor: lastPage.nextCursor })
+				: null,
+		getPreviousPageParam: (firstPage) =>
+			firstPage?.prevCursor
+				? buildQueryParams({ cursor: firstPage.prevCursor })
+				: null,
+		refetchOnWindowFocus: false,
+		placeholderData: keepPreviousData,
 	});
 
 export const useGetTrainingByDefault = (

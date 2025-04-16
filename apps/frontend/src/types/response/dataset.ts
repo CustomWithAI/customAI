@@ -8,6 +8,7 @@ export type ResponseDataset = {
 	labels?: string[];
 	id: string;
 	split_method: string;
+	splitMethod: string;
 	createdAt: string;
 	updatedAt: string;
 	userId: string;

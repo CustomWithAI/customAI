@@ -16,28 +16,33 @@ type WindowListProps<T extends object> = {
 		InfiniteData<ResponsePagination<T> | undefined>,
 		Error
 	>;
+	noNavigation?: boolean;
 	direction: "horizontal" | "vertical";
-	itemContent: (index: number, item: T) => ReactNode;
+	itemContent: (index: number, item: T, list: T[]) => ReactNode;
 };
 
 export const WindowList = <T extends object>({
 	queryHook,
 	className,
+	noNavigation,
 	direction = "vertical",
 	itemContent,
 }: WindowListProps<T>) => {
 	const [isTop, setIsTop] = useState<boolean>(false);
-	const [isBottom] = useState<boolean>(true);
 	const windowRef = useRef<VirtuosoHandle>(null);
 	const { width = 0, height = 0 } = useWindowSize();
 
-	const { data, fetchNextPage, hasNextPage } = queryHook;
+	const { data, isPending, fetchNextPage, hasNextPage } = queryHook;
 
 	const items =
 		data?.pages?.flatMap((page) => page?.data).filter((i) => i !== undefined) ||
 		[];
 
 	const scrollRange = direction === "horizontal" ? width : height;
+
+	if (isPending) {
+		return <></>;
+	}
 
 	return (
 		<div
@@ -49,7 +54,7 @@ export const WindowList = <T extends object>({
 				height: direction === "vertical" ? height * 0.7 : "auto",
 			}}
 		>
-			{isTop && (
+			{isTop && !noNavigation && (
 				<button
 					className={cn(
 						"absolute z-[99] flex justify-center items-center size-10 pt-0.5 pr-0.5 bg-white/60 duration-150 hover:bg-zinc-200 active:bg-zinc-400 rounded-full",
@@ -69,24 +74,26 @@ export const WindowList = <T extends object>({
 					{direction === "horizontal" ? "◀" : "▲"}
 				</button>
 			)}
-			<button
-				className={cn(
-					"absolute z-[99] flex justify-center items-center size-10 pt-0.5 pl-0.5 bg-white/60 duration-150 active:bg-zinc-400 hover:bg-zinc-200 rounded-full",
-					{
-						"right-0 top-1/2 -translate-y-1/2": direction === "horizontal",
-						"left-1/2 bottom-0 -translate-x-1/2": direction === "vertical",
-					},
-				)}
-				onClick={() =>
-					windowRef.current?.scrollBy({
-						left: direction === "horizontal" ? scrollRange : 0,
-						top: direction === "horizontal" ? 0 : scrollRange,
-						behavior: "smooth",
-					})
-				}
-			>
-				{direction === "horizontal" ? "▶" : "▼"}
-			</button>
+			{!noNavigation && (
+				<button
+					className={cn(
+						"absolute z-[99] flex justify-center items-center size-10 pt-0.5 pl-0.5 bg-white/60 duration-150 active:bg-zinc-400 hover:bg-zinc-200 rounded-full",
+						{
+							"right-0 top-1/2 -translate-y-1/2": direction === "horizontal",
+							"left-1/2 bottom-0 -translate-x-1/2": direction === "vertical",
+						},
+					)}
+					onClick={() =>
+						windowRef.current?.scrollBy({
+							left: direction === "horizontal" ? scrollRange : 0,
+							top: direction === "horizontal" ? 0 : scrollRange,
+							behavior: "smooth",
+						})
+					}
+				>
+					{direction === "horizontal" ? "▶" : "▼"}
+				</button>
+			)}
 			<Virtuoso
 				ref={windowRef}
 				onScroll={() =>
@@ -101,7 +108,7 @@ export const WindowList = <T extends object>({
 				)}
 				data={items || []}
 				horizontalDirection={direction === "horizontal"}
-				itemContent={itemContent}
+				itemContent={(index, data) => itemContent(index, data, items)}
 				endReached={() => {
 					if (hasNextPage) fetchNextPage();
 				}}

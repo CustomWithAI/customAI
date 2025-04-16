@@ -159,7 +159,9 @@ export default function SquareEditor({
 	} = usePolygon({
 		onChange: (polygon) => {
 			onChange?.({
-				polygons: [...polygons.filter((p) => p.id !== polygon.id), polygon],
+				polygons: Array.isArray(polygon)
+					? polygon
+					: [...polygons.filter((p) => p.id !== polygon.id), polygon],
 			});
 		},
 		labels,
@@ -186,7 +188,9 @@ export default function SquareEditor({
 	} = useFreehand({
 		onChange: (path) => {
 			onChange?.({
-				freehandPaths: [...freehandPaths.filter((p) => p.id !== path.id), path],
+				freehandPaths: Array.isArray(path)
+					? path
+					: [...freehandPaths.filter((p) => p.id !== path.id), path],
 			});
 		},
 		labels,

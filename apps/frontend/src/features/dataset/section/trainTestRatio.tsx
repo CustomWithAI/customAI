@@ -8,6 +8,7 @@ import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 export interface RatioCalculatorRef {
 	data: [number, number, number];
+	reset: () => void;
 }
 
 interface RatioCalculatorProps {
@@ -19,12 +20,17 @@ export const RatioCalculator = forwardRef<
 	RatioCalculatorRef,
 	RatioCalculatorProps
 >(({ defaultValue }, ref) => {
-	const [values, setValues] = useState<[number, number, number]>([33, 33, 34]);
+	const [values, setValues] = useState<[number, number, number]>(
+		defaultValue || [33, 33, 34],
+	);
 	const [colors] = useState(["#2563eb", "#16a34a", "#dc2626"]);
 
 	useImperativeHandle(ref, () => {
 		return {
 			data: values,
+			reset: () => {
+				setValues(defaultValue || [0, 0, 0]);
+			},
 		};
 	});
 
@@ -178,9 +184,6 @@ export const RatioCalculator = forwardRef<
 							/>
 						</div>
 					))}
-					<div className="text-center font-medium mt-4">
-						Total: {values.reduce((sum, val) => sum + val, 0)}
-					</div>
 				</div>
 
 				<div className="flex items-center justify-center h-64">

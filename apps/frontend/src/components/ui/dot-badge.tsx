@@ -2,7 +2,7 @@ import { cn } from "@/libs/utils";
 import type { ReactNode } from "react";
 import { Badge } from "./badge";
 
-type VariantProps = "success" | "warning" | "danger";
+export type VariantProps = "success" | "warning" | "danger";
 export const DotBadge = ({
 	children,
 	className,

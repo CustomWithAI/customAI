@@ -7,6 +7,7 @@ import { forwardRef, useImperativeHandle, useState } from "react";
 
 export interface SplitMethodRef {
 	data: string;
+	reset: () => void;
 }
 
 interface SplitMethodProps {
@@ -21,6 +22,9 @@ export const SplitMethod = forwardRef<SplitMethodRef, SplitMethodProps>(
 		useImperativeHandle(ref, () => {
 			return {
 				data: value,
+				reset: () => {
+					setValue(defaultValue);
+				},
 			};
 		});
 

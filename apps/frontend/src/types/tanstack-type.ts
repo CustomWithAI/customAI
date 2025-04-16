@@ -1,6 +1,7 @@
 import type {
 	InfiniteData,
 	UseInfiniteQueryOptions,
+	UseInfiniteQueryResult,
 	UseMutationOptions,
 	UseMutationResult,
 	UseQueryOptions,
@@ -25,6 +26,11 @@ export type AppInfiniteQueryOptions<T extends (...args: any) => any> = Partial<
 	>
 >;
 
+export type AppInfiniteQuery<T extends (...args: any) => any> =
+	UseInfiniteQueryResult<
+		InfiniteData<Awaited<ReturnType<T>> | undefined>,
+		Error
+	>;
 export type MutateAsyncResult<T> = UseMutationResult<
 	any,
 	AxiosError<ResponseError>,
