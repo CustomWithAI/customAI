@@ -11,6 +11,7 @@ import { DotBadge, type VariantProps } from "@/components/ui/dot-badge";
 import { encodeBase64 } from "@/libs/base64";
 import type { TrainingModel } from "@/types/response/training";
 import type { WorkflowModel } from "@/types/response/workflow";
+import { toCapital } from "@/utils/toCapital";
 import { Layers2, PackagePlus, ScanSearch, Tractor } from "lucide-react";
 import { useFormatter } from "next-intl";
 
@@ -22,6 +23,7 @@ const STATUS_COLOR: Record<string, VariantProps> = {
 	completed: "success",
 	failed: "danger",
 };
+
 const STATUS: Record<string, string> = {
 	created: "Created",
 	pending: "In queue",
@@ -30,6 +32,7 @@ const STATUS: Record<string, string> = {
 	completed: "Ready to use",
 	failed: "Failed",
 };
+
 export const MainWorkflowPage = ({
 	data,
 	default: mainDefault,
@@ -48,7 +51,7 @@ export const MainWorkflowPage = ({
 							: mainDefault?.machineLearningModel
 								? "ML-train"
 								: "unknown"
-				}{" "}
+				}
   ${
 		mainDefault?.preTrainedModel || mainDefault?.machineLearningModel
 			? ": "
@@ -115,7 +118,7 @@ export const MainWorkflowPage = ({
 						</div>
 						<div className="flex space-x-4">
 							<ScanSearch className="w-6 h-6" />
-							<Content>{data?.type}</Content>
+							<Content>{toCapital(data?.type || "")}</Content>
 						</div>
 					</div>
 					<div className="flex mt-6 mb-3">

@@ -4,6 +4,7 @@ import { useRouter } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import type { WorkflowModel } from "@/types/response/workflow";
 import { useFormatter } from "next-intl";
+import { toCapital } from "../../../utils/toCapital";
 
 type CardProps = WorkflowModel & {
 	href?: string;
@@ -38,7 +39,7 @@ export const WorkflowCard: React.FC<CardProps> = ({
 			<div className="w-full text-left p-6 min-h-32 bg-white z-10">
 				<Header className="font-semibold text-lg">{name}</Header>
 				<Badge className="text-xs text-gray-500" variant="secondary">
-					{type}
+					{toCapital(type)}
 				</Badge>
 			</div>
 

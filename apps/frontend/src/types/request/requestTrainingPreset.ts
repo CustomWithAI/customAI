@@ -9,6 +9,6 @@ export type Pipeline = {
 };
 
 export type TrainingPipeline = {
-	version?: number;
+	version?: string;
 	pipeline: Pipeline;
 };

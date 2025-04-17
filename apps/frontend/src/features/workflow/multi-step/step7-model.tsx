@@ -92,11 +92,7 @@ export const ModelPage = () => {
 				onSuccess: (t) => {
 					setQueryParam({
 						params: {
-							step: encodeBase64(
-								getStep("next", t?.data.pipeline.current, newPipeline, () =>
-									onSet(presetList),
-								),
-							),
+							step: encodeBase64(t?.data.pipeline.current || ""),
 							id: workflowId,
 							trainings: trainingId,
 						},

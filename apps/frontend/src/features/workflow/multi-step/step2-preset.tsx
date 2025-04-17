@@ -62,7 +62,10 @@ export const Step3Page = () => {
 						...step,
 						metadata: {
 							check: { type: "Boolean", value: !!find },
-							name: { type: "String", value: step.title },
+							name: {
+								type: "String",
+								value: (step.metadata.name as any)?.value,
+							},
 						},
 					};
 				}),
@@ -78,38 +81,41 @@ export const Step3Page = () => {
 	const fields = useDragStore(useShallow((state) => state.fields));
 	const onDrag = useDragStore((state) => state.onDrag);
 	const onReset = useDragStore((state) => state.onReset);
-	const onUpdate = useDragStore((state) => state.onUpdate);
+	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
 	const onCheckAll = useDragStore((state) => state.onCheckAll);
 	const onUnCheckAll = useDragStore((state) => state.onUnCheckAll);
 
 	const handleChecked = useCallback(
 		(id: string, check: boolean) => {
-			onUpdate({
+			onUpdateMetadata({
 				id: id,
 				metadata: { check: { type: "Boolean", value: check } },
 			});
 		},
-		[onUpdate],
+		[onUpdateMetadata],
 	);
 
 	const handleSubmit = useCallback(async () => {
 		let index = 0;
 		const { current, steps } = fields.reduce(
 			(acc, item) => {
+				if (
+					String(item.metadata.name?.value) === STEPS.ModelConfig &&
+					item.metadata.check.value === true
+				) {
+					acc.steps.push({
+						index: index++,
+						name: STEPS.Model,
+					});
+				}
 				if (item.metadata.check.value === true && item.metadata.name?.value) {
-					if (String(item.metadata.name.value) === STEPS.ModelConfig) {
-						acc.steps.push({
-							index: index++,
-							name: STEPS.Model,
-						});
-					}
 					acc.steps.push({
 						index: index++,
 						name: String(item.metadata.name.value),
 					});
-					if (acc.current === null) {
-						acc.current = item.metadata.name.value as string;
-					}
+				}
+				if (acc.current === null) {
+					acc.current = item.metadata.name?.value as string | null;
 				}
 				return acc;
 			},
@@ -118,17 +124,14 @@ export const Step3Page = () => {
 				steps: [] as { index: number; name: string }[],
 			},
 		);
-		if (current === null) {
-			return;
-		}
 		const trainingFn = trainingId ? updateTraining : createTraining;
 		await trainingFn(
 			{
 				workflowId: decodeBase64(workflowId),
 				trainingId: decodeBase64(trainingId) || "",
-				...(version ? { version: Number(version) } : {}),
+				...(version ? { version: String(version) } : {}),
 				pipeline: {
-					current,
+					current: current || "datasets",
 					steps,
 				},
 			},

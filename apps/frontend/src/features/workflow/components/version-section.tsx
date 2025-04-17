@@ -1,11 +1,19 @@
 import { Content, ContentHeader, Subtle } from "@/components/typography/text";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuLabel,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { encodeBase64 } from "@/libs/base64";
+import { useRouter } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import type { TrainingModel } from "@/types/response/training";
 import { diffObjects } from "@/utils/diffVersion";
 import { formatDistanceToNow } from "date-fns";
-import { GitCommitVertical } from "lucide-react";
+import { Edit2, Ellipsis, GitCommitVertical, Router, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { forwardRef, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -48,6 +56,7 @@ export const VersionSection = ({
 		["id", "createdAt", "updatedAt", "priority", "name"],
 	);
 	const t = useTranslations();
+	const router = useRouter();
 	return (
 		<div ref={ref} id={current.version} className="flex w-full">
 			<GitCommitVertical />
@@ -57,13 +66,45 @@ export const VersionSection = ({
 					{current.isDefault && <Badge variant="secondary">default</Badge>}
 				</div>
 				<div className="rounded-lg flex-1 w-full shadow-md border border-gray-200 relative px-6 py-5">
-					<div className="flex grow items-end gap-x-4 mb-4">
+					<div className="flex max-md:flex-col grow md:items-end gap-x-4 mb-4">
 						<ContentHeader>{current.id}</ContentHeader>
 						<Subtle className="mb-0.5">
 							{formatDistanceToNow(new Date(current.createdAt), {
 								addSuffix: true,
 							})}
 						</Subtle>
+					</div>
+					<div className=" absolute right-4 top-4 z-99 bg-white/40 group-hover:bg-white duration-100 rounded-sm p-1 flex items-center gap-1 ml-auto">
+						<Button
+							variant="ghost"
+							size="sm"
+							className="hover:bg-zinc-100/80 h-6 w-6 p-0"
+							onClick={(e) => {
+								e.stopPropagation();
+								router.push(
+									`/workflow/create?step=${encodeBase64(current.pipeline.steps?.find((s) => s.index === 1)?.name || "workflow_info")}&id=${encodeBase64(current?.workflow?.id)}&trainings=${encodeBase64(current?.id)}`,
+								);
+							}}
+						>
+							<Edit2 className="w-4 h-4 text-black" />
+						</Button>
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="hover:bg-zinc-100/80 h-6 w-6 p-0"
+									onClick={(e) => {
+										e.stopPropagation();
+									}}
+								>
+									<Ellipsis className="w-4 h-4 text-black" />
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className="w-56">
+								<DropdownMenuLabel>Appearance</DropdownMenuLabel>
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</div>
 					<Content className="font-medium mb-1">change info</Content>
 					<div className={cn("flex flex-col mb-3")}>

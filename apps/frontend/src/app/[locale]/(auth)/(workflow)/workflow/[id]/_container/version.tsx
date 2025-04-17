@@ -1,15 +1,11 @@
 import { WindowList } from "@/components/layout/windowList";
 import { Header } from "@/components/typography/text";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-	VersionSection,
-	type VersionSectionProps,
-} from "@/features/workflow/components/version-section";
+import { VersionSection } from "@/features/workflow/components/version-section";
 import { useGetInfTrainingByWorkflowId } from "@/hooks/queries/training-api";
 import { cn } from "@/libs/utils";
 import { findPreviousVersion } from "@/utils/lastVersion";
-import { type ReactNode, useMemo, useRef, useState } from "react";
-import { useInView } from "react-intersection-observer";
+import { useMemo, useState } from "react";
 
 export const VersionPage = ({ id }: { id: string }) => {
 	const versionData = useGetInfTrainingByWorkflowId(id);

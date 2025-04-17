@@ -55,7 +55,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 					>
 						Versions
 					</Menubar.Item>
-					<Menubar.Item
+					{/* <Menubar.Item
 						onClick={() =>
 							setQueryParam({
 								params: { name: "tab", value: "contributors" },
@@ -65,7 +65,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 						current={compareQueryParam({ value: "contributors" })}
 					>
 						Contributors
-					</Menubar.Item>
+					</Menubar.Item> */}
 					<Menubar.Item
 						onClick={() =>
 							setQueryParam({
@@ -89,7 +89,9 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 				<VersionPage id={id} />
 			) : null}
 			{compareQueryParam({ value: "insights" }) ? <InsightPage /> : null}
-			{compareQueryParam({ value: "settings" }) ? <SettingPage /> : null}
+			{compareQueryParam({ value: "settings" }) ? (
+				<SettingPage id={id} workflows={workflow?.data} />
+			) : null}
 		</AppNavbar>
 	);
 }
