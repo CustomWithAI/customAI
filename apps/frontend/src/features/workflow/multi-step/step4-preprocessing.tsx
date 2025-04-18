@@ -47,6 +47,7 @@ export const ImagePreprocessingPage = () => {
 	);
 
 	const onSet = useDragStore((state) => state.onSet);
+	const onReset = useDragStore((state) => state.onReset);
 	const fields = useDragStore(useShallow((state) => state.fields));
 	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
 	const hasRunRef = useRef(false);
@@ -78,8 +79,6 @@ export const ImagePreprocessingPage = () => {
 	const { mutateAsync: createPreprocess } = useCreatePreprocessing();
 	const { mutateAsync: updatePreprocess } = useUpdatePreprocessing();
 	const { mutateAsync: updateTraining } = useUpdateTraining();
-
-	const onReset = useDragStore((state) => state.onReset);
 
 	const handleSubmit = useCallback(async () => {
 		const json = fields.reduce(
@@ -140,18 +139,11 @@ export const ImagePreprocessingPage = () => {
 							},
 						},
 						{
-							onSuccess: () => {
+							onSuccess: (t) => {
 								onReset();
 								setQueryParam({
 									params: {
-										step: encodeBase64(
-											getStep(
-												"next",
-												training?.data.pipeline.current,
-												training?.data.pipeline.steps,
-												() => onSet(presetList),
-											),
-										),
+										step: encodeBase64(t?.data?.pipeline?.current || ""),
 										id: workflowId,
 										trainings: trainingId,
 									},

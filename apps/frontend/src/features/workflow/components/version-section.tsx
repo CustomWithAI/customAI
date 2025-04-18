@@ -4,20 +4,41 @@ import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getFileMeta } from "@/lib/getFileUrl";
 import { encodeBase64 } from "@/libs/base64";
 import { useRouter } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import type { TrainingModel } from "@/types/response/training";
 import { diffObjects } from "@/utils/diffVersion";
 import { formatDistanceToNow } from "date-fns";
-import { Edit2, Ellipsis, GitCommitVertical, Router, X } from "lucide-react";
+import {
+	Edit2,
+	Ellipsis,
+	GitCommitVertical,
+	Link,
+	Router,
+	X,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { forwardRef, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { DiffDisplay } from "./diffDisplay";
+
+const formatSize = (bytes: number | string): string => {
+	const numberBytes = Number(bytes);
+	if (numberBytes >= 1024 ** 4)
+		return `${(numberBytes / 1024 ** 4).toFixed(2)} TB`;
+	if (numberBytes >= 1024 ** 3)
+		return `${(numberBytes / 1024 ** 3).toFixed(2)} GB`;
+	if (numberBytes >= 1024 ** 2)
+		return `${(numberBytes / 1024 ** 2).toFixed(2)} MB`;
+	if (numberBytes >= 1024) return `${(numberBytes / 1024).toFixed(2)} kB`;
+	return `${bytes} B`;
+};
 
 export type VersionSectionProps = {
 	current: TrainingModel;
@@ -30,9 +51,16 @@ export const VersionSection = ({
 	prev,
 	onInView,
 }: VersionSectionProps) => {
+	const [show, setShow] = useState<boolean>(false);
+	const [meta, setMeta] = useState<Awaited<
+		ReturnType<typeof getFileMeta>
+	> | null>(null);
+	const t = useTranslations();
+	const router = useRouter();
+
 	const { ref, inView } = useInView({
 		triggerOnce: false,
-		threshold: 0.5,
+		threshold: 0.1,
 	});
 
 	useEffect(() => {
@@ -41,7 +69,6 @@ export const VersionSection = ({
 		}
 	}, [inView, current.version, onInView]);
 
-	const [show, setShow] = useState<boolean>(false);
 	const diffVersion = diffObjects(
 		prev,
 		current,
@@ -53,12 +80,19 @@ export const VersionSection = ({
 			"machineLearningModel",
 			"preTrainedModel",
 		],
-		["id", "createdAt", "updatedAt", "priority", "name"],
+		["id", "createdAt", "updatedAt", "priority", "name", "userId"],
 	);
-	const t = useTranslations();
-	const router = useRouter();
+
+	useEffect(() => {
+		void (async () => {
+			const fileMeta = await getFileMeta(current?.trainedModelPath);
+			setMeta(fileMeta);
+		})();
+	}, [current?.trainedModelPath]);
+
+	const Icon = meta?.icon;
 	return (
-		<div ref={ref} id={current.version} className="flex w-full">
+		<div ref={ref} id={current.version} className="flex w-full pb-4">
 			<GitCommitVertical />
 			<div className="space-y-1.5 flex-1">
 				<div className="flex items-center w-full space-x-2">
@@ -82,7 +116,7 @@ export const VersionSection = ({
 							onClick={(e) => {
 								e.stopPropagation();
 								router.push(
-									`/workflow/create?step=${encodeBase64(current.pipeline.steps?.find((s) => s.index === 1)?.name || "workflow_info")}&id=${encodeBase64(current?.workflow?.id)}&trainings=${encodeBase64(current?.id)}`,
+									`/workflow/create?step=${encodeBase64(current.pipeline.steps?.find((s) => s.index === 0)?.name || "workflow_info")}&id=${encodeBase64(current?.workflow?.id)}&trainings=${encodeBase64(current?.id)}`,
 								);
 							}}
 						>
@@ -102,15 +136,16 @@ export const VersionSection = ({
 								</Button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent className="w-56">
-								<DropdownMenuLabel>Appearance</DropdownMenuLabel>
+								<DropdownMenuItem>set default</DropdownMenuItem>
+								<DropdownMenuItem className="text-red-500">
+									remove
+								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
 					<Content className="font-medium mb-1">change info</Content>
 					<div className={cn("flex flex-col mb-3")}>
-						<DiffDisplay
-							data={show ? diffVersion : diffVersion?.splice(0, 5)}
-						/>
+						<DiffDisplay data={show ? diffVersion : diffVersion?.slice(0, 5)} />
 					</div>
 					{diffVersion?.length > 5 && (
 						<button
@@ -120,6 +155,25 @@ export const VersionSection = ({
 						>
 							show more..
 						</button>
+					)}
+					{meta && (
+						<div className="mt-3">
+							<Content className="font-medium mb-1">files</Content>
+							<div className="px-5 py-1 rounded flex space-x-2 justify-between">
+								<div className="inline-flex space-x-3">
+									{Icon && <Icon className="w-4 h-4" />}
+									<Content className="text-blue-600 font-semibold">
+										{meta.name}
+									</Content>
+									<Content className="text-blue-600">
+										({meta.extension})
+									</Content>
+								</div>
+								<Content>
+									{meta.size ? formatSize(meta.size) : "unknown"}
+								</Content>
+							</div>
+						</div>
 					)}
 					<div className="w-full my-4 border-b border-gray-200" />
 					<Content className="font-medium mb-2">Contributor</Content>

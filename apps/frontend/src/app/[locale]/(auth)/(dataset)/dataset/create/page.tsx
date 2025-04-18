@@ -1,6 +1,7 @@
 "use client";
 import { type FormFieldInput, useFormBuilder } from "@/components/builder/form";
 import { AppNavbar } from "@/components/layout/appNavbar";
+import { FlowNavigator } from "@/components/specific/flowNavigation";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form";
 import { WorkflowTypeSection } from "@/features/workflow/components/workflow-type";
@@ -78,6 +79,7 @@ const CreateDatasetPage = () => {
 
 	return (
 		<AppNavbar activeTab="Home" PageTitle="home" disabledTab={undefined}>
+			<FlowNavigator title="Create Basic Info - 1" />
 			<Provider>
 				<Build formFields={datasetDetailsFormField} />
 				<div className="flex justify-end w-full space-x-4 mt-6">

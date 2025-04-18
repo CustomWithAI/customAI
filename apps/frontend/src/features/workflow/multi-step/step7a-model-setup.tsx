@@ -91,6 +91,8 @@ export const ModelSetupPage = () => {
 							workflowId: decodeBase64(workflowId),
 							trainingId: decodeBase64(trainingId),
 							customModelId: data.data.id,
+							preTrainedModel: null,
+							machineLearningModel: null,
 							pipeline: {
 								current: getStep(
 									"next",

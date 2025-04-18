@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import { node } from "@/configs/image-preprocessing";
 import UploadProgress from "@/features/dataset/components/uploadProgression";
+import { FlowNavigationProvider } from "@/hooks/use-flow-navigation";
 import { ReactQueryProvider } from "@/libs/react-query-providers";
 import { cn } from "@/libs/utils";
 import { NextIntlClientProvider } from "next-intl";
@@ -44,9 +45,11 @@ export default async function BaseLayout({ children, locale }: Props) {
 			>
 				<NextIntlClientProvider messages={messages}>
 					<ReactQueryProvider>
-						{children}
-						<UploadProgress />
-						<Toaster />
+						<FlowNavigationProvider>
+							{children}
+							<UploadProgress />
+							<Toaster />
+						</FlowNavigationProvider>
 					</ReactQueryProvider>
 				</NextIntlClientProvider>
 			</body>

@@ -1,6 +1,7 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "@/libs/i18nNavigation";
+import { useSearchParams } from "next/navigation";
 import {
 	type ReactNode,
 	createContext,
@@ -15,7 +16,7 @@ interface FlowData {
 }
 
 interface FlowConfig {
-	returnPath?: string;
+	returnPath?: string | "auto";
 	flowTitle?: string;
 }
 
@@ -29,6 +30,9 @@ interface FlowNavigationContextType {
 	clearFlowData: () => void;
 	returnToOrigin: () => void;
 	configureFlow: (config: FlowConfig) => void;
+	resetFlow: () => void;
+	hasReturnedFromFlow: boolean;
+	setHasReturnedFromFlow: (value: boolean) => void;
 }
 
 const FlowNavigationContext = createContext<
@@ -38,6 +42,7 @@ const FlowNavigationContext = createContext<
 const STORAGE_KEY_DATA = "flowData";
 const STORAGE_KEY_ORIGIN = "flowOrigin";
 const STORAGE_KEY_CONFIG = "flowConfig";
+const STORAGE_KEY_RETURNED = "flowReturned";
 
 export function FlowNavigationProvider({ children }: { children: ReactNode }) {
 	const router = useRouter();
@@ -45,13 +50,15 @@ export function FlowNavigationProvider({ children }: { children: ReactNode }) {
 	const [flowData, setFlowData] = useState<FlowData>({});
 	const [flowOrigin, setFlowOrigin] = useState<string | null>(null);
 	const [flowConfig, setFlowConfig] = useState<FlowConfig>({});
+	const [hasReturnedFromFlow, setHasReturnedFromFlow] =
+		useState<boolean>(false);
 
-	// Load data from localStorage on initial mount
 	useEffect(() => {
 		try {
 			const savedData = localStorage.getItem(STORAGE_KEY_DATA);
 			const savedOrigin = localStorage.getItem(STORAGE_KEY_ORIGIN);
 			const savedConfig = localStorage.getItem(STORAGE_KEY_CONFIG);
+			const savedReturned = localStorage.getItem(STORAGE_KEY_RETURNED);
 
 			if (savedData) {
 				setFlowData(JSON.parse(savedData));
@@ -63,6 +70,10 @@ export function FlowNavigationProvider({ children }: { children: ReactNode }) {
 
 			if (savedConfig) {
 				setFlowConfig(JSON.parse(savedConfig));
+			}
+
+			if (savedReturned === "true") {
+				setHasReturnedFromFlow(true);
 			}
 		} catch (error) {
 			console.error("Error loading flow data from localStorage:", error);
@@ -76,6 +87,20 @@ export function FlowNavigationProvider({ children }: { children: ReactNode }) {
 			console.error("Error saving flow data to localStorage:", error);
 		}
 	}, [flowData]);
+
+	useEffect(() => {
+		try {
+			localStorage.setItem(
+				STORAGE_KEY_RETURNED,
+				hasReturnedFromFlow ? "true" : "false",
+			);
+		} catch (error) {
+			console.error(
+				"Error saving flow returned status to localStorage:",
+				error,
+			);
+		}
+	}, [hasReturnedFromFlow]);
 
 	useEffect(() => {
 		try {
@@ -122,13 +147,24 @@ export function FlowNavigationProvider({ children }: { children: ReactNode }) {
 
 	const returnToOrigin = useCallback(() => {
 		if (flowOrigin) {
+			setHasReturnedFromFlow(true);
 			router.push(flowOrigin);
-			// Don't clear origin here to allow for returning multiple times
 		} else {
-			// If no origin is set, just go back in history
 			router.back();
 		}
 	}, [flowOrigin, router]);
+
+	const resetFlow = useCallback(() => {
+		setFlowData({});
+		setFlowOrigin(null);
+		setFlowConfig({});
+		setHasReturnedFromFlow(false);
+
+		localStorage.removeItem(STORAGE_KEY_DATA);
+		localStorage.removeItem(STORAGE_KEY_ORIGIN);
+		localStorage.removeItem(STORAGE_KEY_CONFIG);
+		localStorage.removeItem(STORAGE_KEY_RETURNED);
+	}, []);
 
 	const configureFlow = useCallback((config: FlowConfig) => {
 		setFlowConfig((prev) => ({
@@ -149,6 +185,9 @@ export function FlowNavigationProvider({ children }: { children: ReactNode }) {
 				clearFlowData,
 				returnToOrigin,
 				configureFlow,
+				resetFlow,
+				hasReturnedFromFlow,
+				setHasReturnedFromFlow,
 			}}
 		>
 			{children}
@@ -169,17 +208,32 @@ export function useFlowNavigation() {
 }
 
 export function useStartFlow() {
-	const { setFlowOrigin, configureFlow } = useFlowNavigation();
+	const { setFlowOrigin, configureFlow, setHasReturnedFromFlow } =
+		useFlowNavigation();
 	const pathname = usePathname();
+	const queryString = useSearchParams();
 	const router = useRouter();
 
 	return useCallback(
 		(destination: string, config: FlowConfig = {}) => {
-			setFlowOrigin(pathname);
+			setHasReturnedFromFlow(false);
+			if (config.returnPath === "auto") {
+				config.returnPath = `${pathname}?${queryString}`;
+			}
+			if (config.returnPath) {
+				setFlowOrigin(config.returnPath);
+			}
 			configureFlow(config);
 			router.push(destination);
 		},
-		[pathname, router, setFlowOrigin, configureFlow],
+		[
+			pathname,
+			router,
+			queryString,
+			setFlowOrigin,
+			configureFlow,
+			setHasReturnedFromFlow,
+		],
 	);
 }
 
@@ -187,4 +241,10 @@ export function useConfigureFlow() {
 	const { configureFlow } = useFlowNavigation();
 
 	return configureFlow;
+}
+
+export function useIsSubFlow() {
+	const { flowOrigin, hasReturnedFromFlow } = useFlowNavigation();
+
+	return !!flowOrigin && !hasReturnedFromFlow;
 }

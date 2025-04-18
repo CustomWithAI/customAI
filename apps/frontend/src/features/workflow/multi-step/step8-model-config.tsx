@@ -46,7 +46,8 @@ export const ModelConfigPage = () => {
 	]);
 
 	const handlePrevious = useCallback(async () => {
-		if (!training?.data.pipeline.steps) return;
+		if (!training?.data.pipeline.steps || !training?.data.pipeline.current)
+			return;
 		await updateTraining(
 			{
 				workflowId: decodeBase64(workflowId),
@@ -62,17 +63,11 @@ export const ModelConfigPage = () => {
 				},
 			},
 			{
-				onSuccess: () => {
+				onSuccess: (t) => {
+					console.log(t);
 					setQueryParam({
 						params: {
-							step: encodeBase64(
-								getStep(
-									"prev",
-									training?.data.pipeline.current,
-									training?.data.pipeline.steps,
-									() => onSet(presetList),
-								),
-							),
+							step: encodeBase64(t?.data?.pipeline?.current || ""),
 							id: workflowId,
 							trainings: trainingId,
 						},
@@ -118,17 +113,10 @@ export const ModelConfigPage = () => {
 					},
 				},
 				{
-					onSuccess: () => {
+					onSuccess: (t) => {
 						setQueryParam({
 							params: {
-								step: encodeBase64(
-									getStep(
-										"next",
-										training?.data.pipeline.current,
-										training?.data.pipeline.steps,
-										() => onSet(presetList),
-									),
-								),
+								step: encodeBase64(t?.data?.pipeline?.current || ""),
 								id: workflowId,
 								trainings: trainingId,
 							},
@@ -151,6 +139,10 @@ export const ModelConfigPage = () => {
 	);
 
 	const { Provider, Build } = useFormBuilder({
+		status: trainingPending,
+		defaultValues:
+			training?.data?.machineLearningModel?.model ||
+			training?.data?.hyperparameter,
 		schema: hyperparameterField?.schema,
 		onSubmit: onSubmitData,
 		formName: "create-Step1-id",
@@ -163,6 +155,7 @@ export const ModelConfigPage = () => {
 				<Button
 					disabled={trainingPending}
 					onClick={async () => await handlePrevious()}
+					type="button"
 					variant="ghost"
 				>
 					Previous

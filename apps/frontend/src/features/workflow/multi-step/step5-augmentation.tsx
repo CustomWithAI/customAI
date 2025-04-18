@@ -133,18 +133,11 @@ export const AugmentationPage = () => {
 							},
 						},
 						{
-							onSuccess: () => {
+							onSuccess: (t) => {
 								onReset();
 								setQueryParam({
 									params: {
-										step: encodeBase64(
-											getStep(
-												"next",
-												training?.data.pipeline.current,
-												training?.data.pipeline.steps,
-												() => onSet(presetList),
-											),
-										),
+										step: encodeBase64(t?.data?.pipeline?.current || ""),
 										id: workflowId,
 										trainings: trainingId,
 									},

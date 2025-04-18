@@ -3,6 +3,7 @@ import type { ResponsePagination } from "@/types/common";
 import type { ResponseDataset, ResponseImage } from "@/types/response/dataset";
 import type {
 	AppInfiniteOptions,
+	AppInfiniteQuery,
 	AppInfiniteQueryOptions,
 	AppQueryOptions,
 } from "@/types/tanstack-type";
@@ -14,6 +15,7 @@ import {
 	useInfiniteQuery,
 	useQuery,
 } from "@tanstack/react-query";
+import type { QueryParams } from "../use-query-params";
 
 export const useGetDatasets = (
 	options?: AppQueryOptions<typeof datasetService.getDatasets>,
@@ -24,25 +26,29 @@ export const useGetDatasets = (
 		...options,
 	});
 
-export const useGetInfDatasets = (): UseInfiniteQueryResult<
-	InfiniteData<ResponsePagination<ResponseDataset> | undefined>,
-	Error
-> =>
+export const useGetInfDatasets = ({
+	params,
+	config: { enabled } = {},
+}: {
+	params?: QueryParams;
+	config?: { enabled?: any };
+} = {}): AppInfiniteQuery<typeof datasetService.getDatasets> =>
 	useInfiniteQuery({
 		queryKey: ["datasets"],
-		initialPageParam: null as string | null,
+		initialPageParam: buildQueryParams(params),
 		queryFn: async ({ pageParam = null }) =>
 			await datasetService.getDatasets({ pageParam }),
 		getNextPageParam: (lastPage) =>
 			lastPage?.nextCursor
-				? buildQueryParams({ cursor: lastPage.nextCursor })
+				? buildQueryParams({ cursor: lastPage.nextCursor, ...params })
 				: null,
 		getPreviousPageParam: (firstPage) =>
 			firstPage?.prevCursor
-				? buildQueryParams({ cursor: firstPage.prevCursor })
+				? buildQueryParams({ cursor: firstPage.prevCursor, ...params })
 				: null,
 		refetchOnWindowFocus: false,
 		placeholderData: keepPreviousData,
+		enabled,
 	});
 
 export const useGetImages = (

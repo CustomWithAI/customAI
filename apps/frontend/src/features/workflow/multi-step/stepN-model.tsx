@@ -50,6 +50,7 @@ export const ModelDetailsPage = () => {
 				onError: (error) => {
 					toast({
 						title: `failed start training: ${(error as AxiosError).response?.data?.toString()}`,
+						variant: "destructive",
 					});
 				},
 			},
@@ -73,17 +74,10 @@ export const ModelDetailsPage = () => {
 				},
 			},
 			{
-				onSuccess: (_, params) => {
+				onSuccess: (t, params) => {
 					setQueryParam({
 						params: {
-							step: encodeBase64(
-								getStep(
-									"prev",
-									training?.data.pipeline.current,
-									training?.data.pipeline.steps,
-									() => onSet(presetList),
-								),
-							),
+							step: encodeBase64(t?.data?.pipeline?.current || ""),
 							id: workflowId,
 							trainings: trainingId,
 						},

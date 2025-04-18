@@ -19,10 +19,12 @@ export type AppQueryOptions<T extends (...args: any) => any> = Partial<
 
 export type AppInfiniteQueryOptions<T extends (...args: any) => any> = Partial<
 	UseInfiniteQueryOptions<
-		Awaited<ReturnType<T>>,
+		InfiniteData<Awaited<ReturnType<T>> | undefined>,
 		AxiosError<ResponseError>,
-		Awaited<ReturnType<T>>,
-		unknown
+		InfiniteData<Awaited<ReturnType<T>> | undefined>,
+		any,
+		any,
+		any
 	>
 >;
 
@@ -31,6 +33,7 @@ export type AppInfiniteQuery<T extends (...args: any) => any> =
 		InfiniteData<Awaited<ReturnType<T>> | undefined>,
 		Error
 	>;
+
 export type MutateAsyncResult<T> = UseMutationResult<
 	any,
 	AxiosError<ResponseError>,

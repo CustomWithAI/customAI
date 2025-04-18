@@ -65,8 +65,8 @@ export const trainingService = {
 		trainingId,
 	}: { workflowId?: string; trainingId?: string }) => {
 		try {
-			return axiosClient.get<TrainingQueue>(
-				`workflows/${workflowId}/training/${trainingId}`,
+			return axiosClient.post<TrainingQueue>(
+				`workflows/${workflowId}/trainings/${trainingId}/start`,
 			);
 		} catch (error) {}
 	},

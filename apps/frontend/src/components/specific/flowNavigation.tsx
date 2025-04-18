@@ -2,9 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useFlowNavigation } from "@/hooks/use-flow-navigation";
+import { useFlowNavigation, useIsSubFlow } from "@/hooks/use-flow-navigation";
+import { usePathname } from "@/libs/i18nNavigation";
 import { ArrowLeft, X } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 interface FlowNavigatorProps {
@@ -20,28 +21,37 @@ export function FlowNavigator({
 	showButtons = true,
 	customReturnPath,
 }: FlowNavigatorProps) {
+	const params = useParams();
 	const searchParams = useSearchParams();
 	const { storeFlowData, returnToOrigin, flowOrigin, flowConfig } =
 		useFlowNavigation();
+	const isSubFlow = useIsSubFlow();
 
 	const hasCollectedRef = useRef(false);
 
 	useEffect(() => {
-		if (!collectParams || !searchParams) return;
+		if (!collectParams || !isSubFlow) return;
 
-		const paramsData: Record<string, string> = {};
-		let hasParams = false;
-
-		searchParams.forEach((value, key) => {
-			paramsData[key] = value;
-			hasParams = true;
-		});
-
-		if (hasParams && !hasCollectedRef.current) {
-			storeFlowData(paramsData);
+		if (params) {
+			storeFlowData(params);
 			hasCollectedRef.current = true;
 		}
-	}, [collectParams, searchParams, storeFlowData]);
+
+		if (searchParams) {
+			const paramsData: Record<string, string> = {};
+			let hasParams = false;
+
+			searchParams.forEach((value, key) => {
+				paramsData[key] = value;
+				hasParams = true;
+			});
+
+			if (hasParams && !hasCollectedRef.current) {
+				storeFlowData(paramsData);
+				hasCollectedRef.current = true;
+			}
+		}
+	}, [collectParams, searchParams, storeFlowData, params, isSubFlow]);
 
 	const handleReturn = () => {
 		if (customReturnPath) {
@@ -51,12 +61,13 @@ export function FlowNavigator({
 		returnToOrigin();
 	};
 
-	// Determine if we should show the origin information
 	const hasOrigin = !!flowOrigin;
 	const originTitle = flowConfig.flowTitle || "Main Flow";
 
+	if (!isSubFlow) return null;
+
 	return (
-		<Card className="fixed top-4 right-4 w-64 shadow-md z-50">
+		<Card className="fixed top-4 right-4 w-64 shadow-md z-50 gap-2 py-4">
 			<CardHeader className="py-2">
 				<CardTitle className="text-sm font-medium">
 					{hasOrigin ? (

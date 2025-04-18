@@ -2445,14 +2445,9 @@ export const node = (
 							onUpdateMetadata({
 								id: "number-1",
 								metadata: {
-									config: {
-										type: "Object",
-										value: {
-											sigma: {
-												type: "Number",
-												value: value as number,
-											},
-										},
+									number: {
+										type: "Number",
+										value: value as number,
 									},
 								},
 							});

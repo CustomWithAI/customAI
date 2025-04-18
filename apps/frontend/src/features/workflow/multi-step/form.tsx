@@ -15,7 +15,7 @@ export const MultiStepForm = () => {
 	const { getQueryParam, setQueryParam } = useQueryParam({ name: "step" });
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
 
-	const { data: training } = useGetTrainingById(
+	const { data: training, isPending: trainingPending } = useGetTrainingById(
 		decodeBase64(workflowId),
 		decodeBase64(trainingId),
 		{ enabled: workflowId !== "" && trainingId !== "" },
@@ -44,6 +44,7 @@ export const MultiStepForm = () => {
 		)?.index;
 
 		if (pipelineStep !== undefined) {
+			console.warn("pipeline is undefined");
 			return pipelineStep + 4;
 		}
 		return 6;

@@ -1,5 +1,6 @@
 "use client";
 import { AppNavbar } from "@/components/layout/appNavbar";
+import { FlowNavigator } from "@/components/specific/flowNavigation";
 import { Menubar } from "@/components/ui/menubar";
 import { useGetDataset } from "@/hooks/queries/dataset-api";
 import { useQueryParam } from "@/hooks/use-query-params";
@@ -15,6 +16,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 			PageTitle={`${dataset?.name || ""} ${dataset?.annotationMethod ? `(${dataset?.annotationMethod.split("_")?.join(" ")})` : ""}`}
 			disabledTab={undefined}
 		>
+			<FlowNavigator title="Dataset Page - 2" collectParams showButtons />
 			<div className="max-w-screen no-scroll overflow-x-scroll border-b border-gray-200 mb-4">
 				<Menubar.List>
 					<Menubar.Item

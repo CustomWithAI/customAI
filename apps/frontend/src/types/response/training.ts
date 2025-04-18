@@ -27,7 +27,11 @@ export type TrainingModel = DebugType<
 		workflow: WorkflowModel;
 	} & Pick<
 		Required<ChangeableTrainingModel>,
-		"pipeline" | "version" | "preTrainedModel" | "machineLearningModel"
+		| "pipeline"
+		| "version"
+		| "preTrainedModel"
+		| "machineLearningModel"
+		| "hyperparameter"
 	>
 >;
 
@@ -36,18 +40,18 @@ export type TrainingQueue = {
 	queueId: string;
 };
 export type ChangeableTrainingModel = Partial<{
-	hyperparameter: object;
 	pipeline: Pipeline;
 	version: string;
 	datasetId: string;
 	imagePreprocessingId: string;
 	featureExtractionId: string;
+	hyperparameter: Record<string, any>;
 	featureSelectionId: string;
 	augmentationId: string;
 	preTrainedModel: string | null;
 	machineLearningModel: {
 		type?: string;
 		model?: Record<string, any>;
-	};
+	} | null;
 	customModelId: string | null;
 }>;

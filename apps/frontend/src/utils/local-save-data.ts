@@ -24,6 +24,12 @@ export const saveFormData = (formName: string, formData: any) => {
 
 export const getSavedFormData = (formName: string, defaultValues: any) => {
 	const savedForms = getAllSavedForms();
+	if (
+		!savedForms?.[formName] ||
+		Object.keys(savedForms?.[formName]).length === 0
+	) {
+		return defaultValues;
+	}
 	return savedForms?.[formName] || defaultValues;
 };
 

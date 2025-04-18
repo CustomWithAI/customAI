@@ -56,7 +56,7 @@ export const Step3Page = () => {
 			onSet(
 				presetList.map((step) => {
 					const find = defaultValue.data.pipeline.steps.find(
-						(value) => value.name === step.title,
+						(value) => value.name === (step.metadata.name as any).value,
 					);
 					return {
 						...step,
@@ -64,7 +64,7 @@ export const Step3Page = () => {
 							check: { type: "Boolean", value: !!find },
 							name: {
 								type: "String",
-								value: (step.metadata.name as any)?.value,
+								value: (step.metadata.name as any).value,
 							},
 						},
 					};
@@ -84,6 +84,8 @@ export const Step3Page = () => {
 	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
 	const onCheckAll = useDragStore((state) => state.onCheckAll);
 	const onUnCheckAll = useDragStore((state) => state.onUnCheckAll);
+
+	console.log(fields);
 
 	const handleChecked = useCallback(
 		(id: string, check: boolean) => {

@@ -71,6 +71,7 @@ type FormProviderProps<
 > = {
 	schema?: SchemaType<T>;
 	defaultValues?: DefaultValues<InferSchema<T>>;
+	status?: boolean;
 	onSubmit?: SubmitHandler<InferSchema<T>>;
 	formName: string;
 	children: ReactNode;
@@ -228,10 +229,14 @@ const FormBuilderProvider = <
 	formName,
 	schema,
 	defaultValues,
+	status = false,
 	onSubmit,
 	children,
 }: FormProviderProps<T>): ReactElement => {
 	if (!schema) {
+		return <Skeleton />;
+	}
+	if (status) {
 		return <Skeleton />;
 	}
 	const getSavedData = useCallback(() => {
@@ -905,6 +910,7 @@ const useFormBuilder = <
 	T extends ZodRawShape | ZodDiscriminatedUnion<string, any>,
 >({
 	schema,
+	status,
 	defaultValues,
 	onSubmit,
 	formName,
@@ -913,6 +919,7 @@ const useFormBuilder = <
 		<FormBuilderProvider
 			formName={formName}
 			schema={schema}
+			status={status}
 			defaultValues={defaultValues}
 			onSubmit={onSubmit}
 		>

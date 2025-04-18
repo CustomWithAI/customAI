@@ -26,11 +26,6 @@ import { useCallback, useState } from "react";
 import { Virtuoso } from "react-virtuoso";
 
 export const ModelPage = () => {
-	const [modelId, setModelId] = useState<string | null>(null);
-	const [machineLearning, setMachineLearning] = useState<{
-		type: string;
-		model: Record<string, any>;
-	} | null>(null);
 	const { toast } = useToast();
 	const { getQueryParam, setQueryParam } = useQueryParam({ name: "id" });
 
@@ -45,6 +40,21 @@ export const ModelPage = () => {
 
 	const { mutateAsync: updateTraining, isPending: updatePending } =
 		useUpdateTraining();
+
+	const [modelId, setModelId] = useState<string | null>(
+		training?.data?.preTrainedModel || null,
+	);
+	const [machineLearning, setMachineLearning] = useState<{
+		type: string | undefined;
+		model: Record<string, any> | undefined;
+	} | null>(
+		training?.data?.machineLearningModel
+			? {
+					type: training.data.machineLearningModel.type,
+					model: training.data.machineLearningModel.model,
+				}
+			: null,
+	);
 
 	const enumModelByType = getArrayFromEnum(enumModel?.data, [
 		"preTrainedModel",
@@ -195,17 +205,10 @@ export const ModelPage = () => {
 				},
 			},
 			{
-				onSuccess: () => {
+				onSuccess: (t) => {
 					setQueryParam({
 						params: {
-							step: encodeBase64(
-								getStep(
-									"prev",
-									training?.data.pipeline.current,
-									training?.data.pipeline.steps,
-									() => onSet(presetList),
-								),
-							),
+							step: encodeBase64(t?.data?.pipeline?.current || ""),
 							id: workflowId,
 							trainings: trainingId,
 						},
@@ -235,7 +238,7 @@ export const ModelPage = () => {
 			</Subtle>
 			<BaseSkeleton loading={enumModelPending}>
 				<Virtuoso
-					className="w-full h-[270px]"
+					className="w-full h-[300px]"
 					data={enumModelByType || []}
 					horizontalDirection
 					itemContent={(_, model) => {
@@ -277,7 +280,7 @@ export const ModelPage = () => {
 						</>
 					)}
 					<Virtuoso
-						className="w-full h-[270px]"
+						className="w-full h-[300px]"
 						data={enumMachineLearningByType || []}
 						horizontalDirection
 						itemContent={(_, model) => {
@@ -331,12 +334,16 @@ export const ModelPage = () => {
 			<div className="flex justify-end w-full space-x-4 mt-6">
 				<Button
 					disabled={updatePending}
-					onClick={handlePrevious}
+					onClick={() => handlePrevious()}
 					variant="ghost"
 				>
 					Previous
 				</Button>
-				<Button disabled={updatePending} onClick={handleSubmit} type="submit">
+				<Button
+					disabled={updatePending}
+					onClick={() => handleSubmit()}
+					type="submit"
+				>
 					Next
 				</Button>
 			</div>
