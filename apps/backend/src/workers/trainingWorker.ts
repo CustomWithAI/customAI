@@ -180,7 +180,7 @@ export const startTrainingWorker = async () => {
               responseTraining = await axios.post(
                 `${config.PYTHON_SERVER_URL}/training-dl-cls-construct`,
                 {
-                  model: trainingData.customModel,
+                  model: trainingData.customModel.data,
                   training: trainingData.hyperparameter,
                   featex: trainingData.featureExtraction?.data,
                 },
@@ -214,7 +214,7 @@ export const startTrainingWorker = async () => {
               responseTraining = await axios.post(
                 `${config.PYTHON_SERVER_URL}/training-dl-od-construct`,
                 {
-                  model: trainingData.customModel,
+                  model: trainingData.customModel.data,
                   training: trainingData.hyperparameter,
                   featex: trainingData.featureExtraction
                     ? trainingData.featureExtraction.data

@@ -150,12 +150,12 @@ export class TrainingService {
       throw error(400, "Training has already started");
     }
 
-    if (
-      training.status === "failed" &&
-      training.retryCount < config.MAX_RETRY_COUNT
-    ) {
-      throw error(400, "Training is in process after some errors occurred");
-    }
+    // if (
+    //   training.status === "failed" &&
+    //   training.retryCount < config.MAX_RETRY_COUNT
+    // ) {
+    //   throw error(400, "Training is in process after some errors occurred");
+    // }
 
     // Part Data Validation
 

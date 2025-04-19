@@ -24,9 +24,9 @@ export class ImageService {
     }
   }
 
-  private async convertToPng(file: File): Promise<Buffer> {
+  private async convertToJpg(file: File): Promise<Buffer> {
     const buffer = await file.arrayBuffer();
-    return sharp(Buffer.from(buffer)).png().toBuffer();
+    return sharp(Buffer.from(buffer)).jpeg().toBuffer();
   }
 
   public async uploadImages(userId: string, datasetId: string, files: File[]) {
@@ -35,10 +35,10 @@ export class ImageService {
     const imageRecords = [];
 
     for (const file of files) {
-      const filePath = `datasets/${datasetId}/${v7()}.png`;
-      const buffer = await this.convertToPng(file);
+      const filePath = `datasets/${datasetId}/${v7()}.jpg`;
+      const buffer = await this.convertToJpg(file);
 
-      await uploadFile(filePath, buffer, "image/png");
+      await uploadFile(filePath, buffer, "image/jpg");
 
       imageRecords.push({ path: filePath, datasetId });
     }
@@ -135,9 +135,9 @@ export class ImageService {
     let updatedFilePath = filePath;
     if (file) {
       await deleteFile(filePath);
-      updatedFilePath = `datasets/${datasetId}/${v7()}.png`;
-      const buffer = await this.convertToPng(file);
-      await uploadFile(updatedFilePath, buffer, "image/png");
+      updatedFilePath = `datasets/${datasetId}/${v7()}.jpg`;
+      const buffer = await this.convertToJpg(file);
+      await uploadFile(updatedFilePath, buffer, "image/jpg");
       data.path = updatedFilePath;
     }
 
