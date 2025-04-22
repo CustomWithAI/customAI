@@ -2,6 +2,7 @@ import { user } from "@/domains/schema/auth";
 import {
   index,
   integer,
+  jsonb,
   pgTable,
   text,
   timestamp,
@@ -20,7 +21,7 @@ export const datasets = pgTable(
     description: varchar("description", { length: 255 }).notNull(),
     annotationMethod: varchar("annotation_method", { length: 255 }).notNull(),
     splitMethod: varchar("split_method", { length: 255 }),
-    labels: varchar("labels", { length: 255 }).array(),
+    labels: jsonb("labels"),
     train: integer("train"),
     test: integer("test"),
     valid: integer("valid"),

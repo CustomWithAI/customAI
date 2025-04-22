@@ -11,7 +11,7 @@ import { connectRedis } from "@/infrastructures/redis/connection";
 import { connectDatabase } from "@/infrastructures/database/connection";
 import { connectS3 } from "@/infrastructures/s3/connection";
 import axios, { AxiosError, type AxiosResponse } from "axios";
-import { defaultSplit, stratifiedSplit } from "@/utils/split-data";
+import { defaultSplit, isLabels, stratifiedSplit } from "@/utils/split-data";
 import { uploadFile } from "@/infrastructures/s3/s3";
 
 export const startTrainingWorker = async () => {
@@ -70,6 +70,10 @@ export const startTrainingWorker = async () => {
 
           if (!labels) {
             throw new Error("Dataset labels not found");
+          }
+
+          if (!isLabels(labels)) {
+            throw new Error("Format of dataset labels not matching");
           }
 
           if (!annotationMethod) {

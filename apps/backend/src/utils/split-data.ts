@@ -1,3 +1,8 @@
+interface Labels {
+  name: string;
+  color: string;
+}
+
 interface ClassificationAnnotation {
   label: string;
 }
@@ -22,6 +27,15 @@ interface SegmentationAnnotation {
 interface DatasetImageData {
   url: string;
   annotation: unknown;
+}
+
+export function isLabels(labels: unknown): labels is Labels[] {
+  return (
+    (labels as Labels[]).length !== 0 &&
+    (labels as Labels[]).every(
+      (l) => l.name !== undefined && l.color !== undefined
+    )
+  );
 }
 
 function isClassificationAnnotation(
@@ -56,7 +70,7 @@ export function defaultSplit<T extends DatasetImageData>(
   trainRatio: number,
   testRatio: number,
   validRatio: number,
-  labels: string[]
+  labels: Labels[]
 ): SplitResult<T> {
   const result = {
     trainData: [] as T[],
@@ -78,7 +92,7 @@ export function defaultSplit<T extends DatasetImageData>(
     }
 
     for (const label of dataLabels) {
-      if (labels.includes(label)) {
+      if (labels.some((l) => l.name === label)) {
         if (!groupedData[label]) {
           groupedData[label] = [];
         }
@@ -108,7 +122,7 @@ export function stratifiedSplit<T extends DatasetImageData>(
   trainRatio: number,
   testRatio: number,
   validRatio: number,
-  labels: string[]
+  labels: Labels[]
 ): SplitResult<T> {
   const result = {
     trainData: [] as T[],
@@ -130,7 +144,7 @@ export function stratifiedSplit<T extends DatasetImageData>(
     }
 
     for (const label of dataLabels) {
-      if (labels.includes(label)) {
+      if (labels.some((l) => l.name === label)) {
         if (!groupedData[label]) {
           groupedData[label] = [];
         }

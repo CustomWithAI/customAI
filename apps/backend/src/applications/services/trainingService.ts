@@ -7,6 +7,7 @@ import type { TrainingStatusEnum, trainings } from "@/domains/schema/trainings";
 import { sendToRabbitMQ } from "@/infrastructures/rabbitmq/queue";
 import { generatePresignedUrl } from "@/infrastructures/s3/s3";
 import type { PaginationParams } from "@/utils/db-type";
+import { isLabels } from "@/utils/split-data";
 import { incrementVersion } from "@/utils/version";
 import { InternalServerError, NotFoundError, error } from "elysia";
 
@@ -215,6 +216,11 @@ export class TrainingService {
     // Dataset Have Split Method or Not
     if (!training.dataset.splitMethod) {
       throw error(400, "Split method in dataset is required");
+    }
+
+    // Labels matching format
+    if (!isLabels(training.dataset.labels)) {
+      throw error(400, "Format of dataset labels not matching");
     }
 
     // Dataset Have Labels or Not
