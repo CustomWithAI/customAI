@@ -61,7 +61,7 @@ export const sidebarConfig = {
 			items: [
 				{
 					title: SidebarPage.ImagePreprocessing,
-					url: "/imagepreprocessing",
+					url: "/preprocessing",
 				},
 				{
 					title: SidebarPage.DataAugmentation,

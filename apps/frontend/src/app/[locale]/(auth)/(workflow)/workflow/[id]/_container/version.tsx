@@ -24,7 +24,7 @@ export const VersionPage = ({ id }: { id: string }) => {
 			<div className="grid md:grid-cols-4 max-md:grid-cols-1 max-lg:gap-6 lg:gap-8">
 				<div className="md:col-span-3">
 					<WindowList
-						queryHook={versionData}
+						query={versionData}
 						direction="vertical"
 						noNavigation
 						itemContent={(index, item, list) => {

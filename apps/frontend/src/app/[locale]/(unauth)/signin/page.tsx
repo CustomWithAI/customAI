@@ -74,6 +74,7 @@ function SignupPage() {
 						setState("loading");
 					},
 					onSuccess: async (ctx) => {
+						console.log(ctx.data);
 						if (ctx.data.user?.experience) {
 							await asyncRoute("/home");
 						} else {

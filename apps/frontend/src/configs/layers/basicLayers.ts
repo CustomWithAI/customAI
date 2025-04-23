@@ -9,7 +9,7 @@ export const basicLayers: Record<string, LayerTemplate> = {
 		compatibleWith: ["all"],
 		config: {
 			inputLayer_batchSize: 32,
-			inputLayer_shape: "(224, 224, 3)",
+			// inputLayer_shape: "(224, 224, 3)",
 		},
 	},
 	dense: {
@@ -21,7 +21,7 @@ export const basicLayers: Record<string, LayerTemplate> = {
 		config: {
 			denseLayer_units: 128,
 			denseLayer_activation: "relu",
-			denseLayer_useBias: true,
+			// denseLayer_useBias: true,
 		},
 	},
 	dropout: {

@@ -3,6 +3,7 @@ import {
 	type ReactNode,
 	createContext,
 	useContext,
+	useEffect,
 	useRef,
 	useState,
 } from "react";
@@ -28,7 +29,13 @@ export const DragStoreProvider = ({
 	initial,
 	children,
 }: DragStoreProviderProps) => {
-	const [store] = useState(() => createDragStore(initial));
+	const initialized = useRef(false);
+	const [store] = useState(() => {
+		const newStore = createDragStore(initial);
+		initialized.current = true;
+		return newStore;
+	});
+
 	return (
 		<DragStoreContext.Provider value={store}>
 			{children}

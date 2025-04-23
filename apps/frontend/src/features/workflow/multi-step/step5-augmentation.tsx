@@ -48,7 +48,6 @@ export const AugmentationPage = () => {
 
 	const fields = useDragStore((state) => state.fields);
 	const onSet = useDragStore((state) => state.onSet);
-	const onReset = useDragStore((state) => state.onReset);
 	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
 	const hasRunRef = useRef(false);
 
@@ -92,7 +91,9 @@ export const AugmentationPage = () => {
 		await preProcessFn(
 			{
 				data: { ...json, priority },
-				name: `${training?.data.workflow.name}-${formatDate()}`,
+				name: training?.data.augmentation.name
+					? training?.data.augmentation.name
+					: `${training?.data.workflow.name}-${formatDate()}`,
 				id: training?.data.augmentation?.id || "",
 			},
 			{
@@ -134,7 +135,6 @@ export const AugmentationPage = () => {
 						},
 						{
 							onSuccess: (t) => {
-								onReset();
 								setQueryParam({
 									params: {
 										step: encodeBase64(t?.data?.pipeline?.current || ""),
@@ -158,7 +158,6 @@ export const AugmentationPage = () => {
 	}, [
 		fields,
 		createAugmentation,
-		onReset,
 		onSet,
 		setQueryParam,
 		toast,
@@ -188,17 +187,10 @@ export const AugmentationPage = () => {
 				},
 			},
 			{
-				onSuccess: () => {
+				onSuccess: (t) => {
 					setQueryParam({
 						params: {
-							step: encodeBase64(
-								getStep(
-									"prev",
-									training?.data.pipeline.current,
-									training?.data.pipeline.steps,
-									() => onSet(presetList),
-								),
-							),
+							step: encodeBase64(t?.data.pipeline.current || ""),
 							id: workflowId,
 							trainings: trainingId,
 						},

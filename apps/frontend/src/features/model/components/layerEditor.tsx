@@ -20,7 +20,7 @@ import type { LayerConfig } from "@/stores/modelStore";
 import { formatLayerName, getLayerType } from "@/utils/layer-utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Trash2 } from "lucide-react";
+import { ChevronDown, GripVertical, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface LayerEditorProps {
@@ -65,6 +65,7 @@ export function LayerEditor({
 		transform: CSS.Transform.toString(transform),
 		transition,
 		opacity: isDragging ? 0.5 : 1,
+		zIndex: isDragging ? 50 : "auto",
 	};
 
 	const handleInputChange = (key: string, value: any) => {
@@ -202,79 +203,85 @@ export function LayerEditor({
 	};
 
 	return (
-		<AccordionItem
-			value={`item-${index}`}
-			className="border rounded-md mb-2"
+		<div
 			ref={setNodeRef}
 			style={style}
+			className="relative"
+			data-dragging={isDragging ? "true" : undefined}
 		>
-			<div className="flex items-center">
-				<div
-					className="px-2 cursor-grab z-10 touch-none"
-					{...attributes}
-					{...listeners}
-				>
-					<GripVertical className="h-4 w-4 text-muted-foreground" />
-				</div>
-				<AccordionTrigger className="flex-1 px-4">
-					Layer {index + 1}: {layerType}
-				</AccordionTrigger>
-				<Button
-					variant="ghost"
-					size="icon"
-					className="mr-4"
-					onClick={(e) => {
-						e.stopPropagation();
-						onRemove();
-					}}
-				>
-					<Trash2 className="h-4 w-4" />
-					<span className="sr-only">Remove layer</span>
-				</Button>
-			</div>
-			<AccordionContent className="px-4 pb-4 pt-1">
-				<div className="grid gap-4">
-					{Object.entries(currentLayer).map(([key, value]) => {
-						if (key === "layerPurpose") return;
-						return renderInput(key, value);
-					})}
-				</div>
-
-				{canCustomize && (
-					<div className="mt-4 pt-2 border-t border-gray-200">
-						<h4 className="text-sm font-medium mb-2">Custom Parameters</h4>
-						<div className="flex items-center gap-2">
-							<Input
-								placeholder="Parameter name"
-								value={customParamName}
-								onChange={(e) => setCustomParamName(e.target.value)}
-								className="flex-1"
-							/>
-							<Select
-								value={customParamType}
-								onValueChange={setCustomParamType as any}
-							>
-								<SelectTrigger className="w-[120px]">
-									<SelectValue placeholder="Type" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="string">String</SelectItem>
-									<SelectItem value="number">Number</SelectItem>
-									<SelectItem value="boolean">Boolean</SelectItem>
-								</SelectContent>
-							</Select>
-							<Button
-								variant="outline"
-								size="sm"
-								onClick={handleAddCustomParam}
-								disabled={!customParamName.trim()}
-							>
-								Add
-							</Button>
-						</div>
+			<AccordionItem value={`item-${index}`} className="border rounded-md">
+				<div className="flex items-center">
+					<div
+						className="px-2 z-10 cursor-grab active:cursor-grabbing touch-none"
+						onClick={(e) => {
+							e.preventDefault();
+							e.stopPropagation();
+						}}
+						{...attributes}
+						{...listeners}
+					>
+						<GripVertical className="h-4 w-4 text-muted-foreground" />
 					</div>
-				)}
-			</AccordionContent>
-		</AccordionItem>
+					<AccordionTrigger className="flex-1 px-4">
+						Layer {index + 1}: {layerType}
+					</AccordionTrigger>
+					<Button
+						variant="ghost"
+						size="icon"
+						className="mr-4"
+						onClick={(e) => {
+							e.stopPropagation();
+							onRemove();
+						}}
+					>
+						<Trash2 className="h-4 w-4" />
+						<span className="sr-only">Remove layer</span>
+					</Button>
+				</div>
+				<AccordionContent className="px-4 pb-4 pt-1">
+					<div className="grid gap-4">
+						{Object.entries(currentLayer).map(([key, value]) => {
+							if (key === "layerPurpose") return;
+							return renderInput(key, value);
+						})}
+					</div>
+
+					{canCustomize && (
+						<div className="mt-4 pt-2 border-t border-gray-200">
+							<h4 className="text-sm font-medium mb-2">Custom Parameters</h4>
+							<div className="flex items-center gap-2">
+								<Input
+									placeholder="Parameter name"
+									value={customParamName}
+									onChange={(e) => setCustomParamName(e.target.value)}
+									className="flex-1"
+								/>
+								<Select
+									value={customParamType}
+									onValueChange={setCustomParamType as any}
+								>
+									<SelectTrigger className="w-[120px]">
+										<SelectValue placeholder="Type" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="string">String</SelectItem>
+										<SelectItem value="number">Number</SelectItem>
+										<SelectItem value="boolean">Boolean</SelectItem>
+									</SelectContent>
+								</Select>
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={handleAddCustomParam}
+									disabled={!customParamName.trim()}
+								>
+									Add
+								</Button>
+							</div>
+						</div>
+					)}
+				</AccordionContent>
+			</AccordionItem>
+		</div>
 	);
 }

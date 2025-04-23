@@ -35,12 +35,13 @@ export const ModelConfigPage = () => {
 		if (training?.data.machineLearningModel?.type) {
 			return machineLearningByType[training?.data.machineLearningModel.type];
 		}
-		if (training?.data.preTrainedModel) {
+		if (training?.data.preTrainedModel || training?.data.customModel) {
 			return hyperparameterByType[training?.data.workflow.type] ?? null;
 		}
 		return null;
 	}, [
 		training?.data.preTrainedModel,
+		training?.data.customModel,
 		training?.data.workflow,
 		training?.data.machineLearningModel,
 	]);
@@ -99,7 +100,7 @@ export const ModelConfigPage = () => {
 									model: data,
 								},
 							}
-						: training?.data.preTrainedModel
+						: training?.data.preTrainedModel || training?.data.customModel
 							? { hyperparameter: data }
 							: {}),
 					pipeline: {
@@ -132,6 +133,7 @@ export const ModelConfigPage = () => {
 			onSet,
 			training?.data.machineLearningModel,
 			training?.data.preTrainedModel,
+			training?.data.customModel,
 			workflowId,
 			trainingId,
 			setQueryParam,

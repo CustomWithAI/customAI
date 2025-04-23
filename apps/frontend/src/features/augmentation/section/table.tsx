@@ -3,6 +3,7 @@ import {
 	DialogBuilder,
 	type DialogBuilderRef,
 } from "@/components/builder/dialog";
+import { RenderStatusAlert } from "@/components/common/alertStatus";
 import { AddFeatureSection } from "@/components/specific/add-feature";
 import { EditFeature } from "@/components/specific/edit-feature";
 import { Content, ContentHeader, Subtle } from "@/components/typography/text";
@@ -21,17 +22,18 @@ import {
 	SortableContext,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight, CloudAlert, ImageIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 export const TableAugmentationSection = () => {
 	const [cursor, setCursor] = useState<string | null>(null);
 	const [count, setCount] = useState<number>(1);
+	const [error, setError] = useState(false);
 	const { getQueryParam } = useQueryParam();
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
 
-	const { data: training } = useGetTrainingById(
+	const { data: training, isPending: trainingPending } = useGetTrainingById(
 		decodeBase64(workflowId),
 		decodeBase64(trainingId),
 	);
@@ -64,23 +66,32 @@ export const TableAugmentationSection = () => {
 							items={fields.map((item) => ({ id: item.id }))}
 							strategy={verticalListSortingStrategy}
 						>
-							{fields.map(({ id, metadata, title }) => {
-								return (
-									<VisualCard
-										key={`pre-processing-${id}`}
-										id={id}
-										title={title}
-										metadata={metadata}
-										onEdit={() => {
-											editRef.current?.open();
-											editRef.current?.setId(id);
-										}}
-										onDelete={() => {
-											onRemove(id);
-										}}
-									/>
-								);
-							})}
+							{(fields?.length || 0) > 0 ? (
+								fields.map(({ id, metadata, title }) => {
+									return (
+										<VisualCard
+											key={`pre-processing-${id}`}
+											id={id}
+											title={title}
+											metadata={metadata}
+											onEdit={() => {
+												editRef.current?.open();
+												editRef.current?.setId(id);
+											}}
+											onDelete={() => {
+												onRemove(id);
+											}}
+										/>
+									);
+								})
+							) : (
+								<RenderStatusAlert status={trainingPending}>
+									<div className="text-center py-8 text-muted-foreground border rounded-md border-gray-200">
+										No augmentation added yet. Click the &quot;Add
+										Augmentation&quot; button to get started.
+									</div>
+								</RenderStatusAlert>
+							)}
 						</SortableContext>
 					</DndContext>
 					<DialogBuilder
@@ -147,12 +158,20 @@ export const TableAugmentationSection = () => {
 							<ChevronLeft className="aria-disabled:text-zinc-500 aria-disabled:cursor-not-allowed" />
 						</button>
 						<div className="relative flex items-center w-full md:m-6 aspect-square">
-							<img
-								src={images?.data.at(0)?.url || ""}
-								alt="Description of the dataset"
-								loading="lazy"
-								className="object-cover rounded-lg shadow-lg"
-							/>
+							{!error && (
+								<img
+									src={images?.data.at(0)?.url || ""}
+									alt="Description of the dataset"
+									loading="lazy"
+									className="object-cover rounded-lg shadow-lg"
+									onError={() => setError(true)}
+								/>
+							)}
+							{error && (
+								<div className="flex items-center justify-center bg-zinc-200 aspect-square rounded h-full">
+									<CloudAlert />
+								</div>
+							)}
 						</div>
 						<button
 							type="button"

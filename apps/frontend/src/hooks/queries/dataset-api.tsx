@@ -34,7 +34,7 @@ export const useGetInfDatasets = ({
 	config?: { enabled?: any };
 } = {}): AppInfiniteQuery<typeof datasetService.getDatasets> =>
 	useInfiniteQuery({
-		queryKey: ["datasets"],
+		queryKey: ["datasets", params],
 		initialPageParam: buildQueryParams(params),
 		queryFn: async ({ pageParam = null }) =>
 			await datasetService.getDatasets({ pageParam }),

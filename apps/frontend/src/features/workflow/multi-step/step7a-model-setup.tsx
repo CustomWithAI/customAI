@@ -57,9 +57,7 @@ export const ModelSetupPage = () => {
 		const data = modelRef.current?.getData();
 		await customFn(
 			{
-				data: {
-					data: { model: removeKey(data?.layers as [], "layerPurpose") },
-				},
+				data: removeKey(data?.layers as [], "layerPurpose"),
 				name: `${training?.data.workflow.name}-${formatDate()}`,
 				type: training?.data.workflow.type,
 				id: training?.data.customModel?.id || "",
@@ -158,17 +156,10 @@ export const ModelSetupPage = () => {
 				},
 			},
 			{
-				onSuccess: () => {
+				onSuccess: (t) => {
 					setQueryParam({
 						params: {
-							step: encodeBase64(
-								getStep(
-									"prev",
-									training?.data.pipeline.current,
-									training?.data.pipeline.steps,
-									() => onSet(presetList),
-								),
-							),
+							step: encodeBase64(t?.data?.pipeline?.current || ""),
 							id: workflowId,
 							trainings: trainingId,
 						},
@@ -205,7 +196,7 @@ export const ModelSetupPage = () => {
 				ref={modelRef}
 				modelType={training?.data?.workflow?.type}
 				defaultValue={{
-					layers: training?.data?.customModel?.data?.model as LayerConfig[],
+					layers: training?.data?.customModel?.data as LayerConfig[],
 				}}
 				status={trainingPending ? "loading" : "idle"}
 			/>

@@ -139,6 +139,7 @@ export const Step3Page = () => {
 			},
 			{
 				onSuccess: (ctx) => {
+					onReset();
 					setQueryParam({
 						params: {
 							step: encodeBase64("dataset"),
@@ -147,7 +148,6 @@ export const Step3Page = () => {
 						},
 						resetParams: true,
 					});
-					onReset();
 				},
 				onError: (error) => {
 					if (

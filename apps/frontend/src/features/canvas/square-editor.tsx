@@ -233,13 +233,12 @@ export default function SquareEditor({
 		[zoom],
 	);
 
-	const getUnusedLabel = useCallback(() => {
-		let label = labels.find((label) => !usedLabelIds.includes(label.id));
-		if (!label) {
-			label = handleAddLabel();
+	const getFirstLabel = useCallback(() => {
+		if (labels.length === 0) {
+			return handleAddLabel();
 		}
-		return label;
-	}, [labels, usedLabelIds]);
+		return labels.at(0);
+	}, [labels]);
 
 	const isUsedLabel = useCallback(
 		(id: string) => {
@@ -260,7 +259,7 @@ export default function SquareEditor({
 				return;
 			}
 
-			const unusedLabel = getUnusedLabel();
+			const unusedLabel = getFirstLabel();
 			if (!unusedLabel) return;
 
 			const newSquareId = nanoid();
@@ -273,7 +272,7 @@ export default function SquareEditor({
 			);
 			updateSquare?.(newSquareId, { labelId: unusedLabel.id });
 		},
-		[startDrag, getUnusedLabel, updateSquare],
+		[startDrag, getFirstLabel, updateSquare],
 	);
 
 	const handleShapeDragStart = useCallback(
@@ -310,7 +309,7 @@ export default function SquareEditor({
 	const handleMouseDown = useCallback(
 		(event: React.MouseEvent) => {
 			if (event.button !== 0) return;
-			const unusedLabel = getUnusedLabel();
+			const unusedLabel = getFirstLabel();
 			const { x, y } = getMousePosition(event);
 			switch (mode) {
 				case "square": {
@@ -454,7 +453,7 @@ export default function SquareEditor({
 			handleStartDrag,
 			setSelectedSquare,
 			getMousePosition,
-			getUnusedLabel,
+			getFirstLabel,
 		],
 	);
 

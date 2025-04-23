@@ -106,7 +106,7 @@ export const DatasetPage = () => {
 		<div className="flex flex-col gap-y-4">
 			<Subtle>Recent dataset used</Subtle>
 			<WindowList
-				queryHook={datasetQuery}
+				query={datasetQuery}
 				direction="horizontal"
 				itemContent={(_, dataset) => (
 					<DatasetCard

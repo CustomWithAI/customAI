@@ -47,7 +47,6 @@ export const ImagePreprocessingPage = () => {
 	);
 
 	const onSet = useDragStore((state) => state.onSet);
-	const onReset = useDragStore((state) => state.onReset);
 	const fields = useDragStore(useShallow((state) => state.fields));
 	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
 	const hasRunRef = useRef(false);
@@ -98,20 +97,22 @@ export const ImagePreprocessingPage = () => {
 		await preProcessFn(
 			{
 				data: { ...json, priority },
-				name: `${training?.data.workflow.name}-${formatDate()}`,
+				name: training?.data.imagePreprocessing.name
+					? training?.data.imagePreprocessing.name
+					: `${training?.data.workflow.name}-${formatDate()}`,
 				id: training?.data.imagePreprocessing?.id || "",
 			},
 			{
 				onError: (error) => {
 					toast({
-						title: `Image-processing failed to create: ${error.message}`,
+						title: `Image-preprocessing failed to create: ${error.message}`,
 						variant: "destructive",
 					});
 				},
 				onSuccess: async (data) => {
 					if (!data?.data.id) {
 						toast({
-							title: "Image-processing is not existed",
+							title: "Image-preprocessing is not existed",
 							variant: "destructive",
 						});
 						return;
@@ -140,7 +141,6 @@ export const ImagePreprocessingPage = () => {
 						},
 						{
 							onSuccess: (t) => {
-								onReset();
 								setQueryParam({
 									params: {
 										step: encodeBase64(t?.data?.pipeline?.current || ""),
@@ -172,28 +172,47 @@ export const ImagePreprocessingPage = () => {
 		updateTraining,
 		toast,
 		onSet,
-		onReset,
 		training?.data.workflow,
 		createPreprocess,
 	]);
 
-	const handlePrevious = useCallback(() => {
-		setQueryParam({
-			params: {
-				step: encodeBase64(
-					getStep(
+	const handlePrevious = useCallback(async () => {
+		if (!training?.data.pipeline.steps) return;
+		await updateTraining(
+			{
+				workflowId: decodeBase64(workflowId),
+				trainingId: decodeBase64(trainingId),
+				pipeline: {
+					current: getStep(
 						"prev",
 						training?.data.pipeline.current,
 						training?.data.pipeline.steps,
 						() => onSet(presetList),
 					),
-				),
-				id: workflowId,
-				trainings: trainingId,
+					steps: training?.data.pipeline.steps,
+				},
 			},
-			resetParams: true,
-		});
-	}, [setQueryParam, workflowId, trainingId, onSet, training?.data.pipeline]);
+			{
+				onSuccess: (t) => {
+					setQueryParam({
+						params: {
+							step: encodeBase64(t?.data.pipeline.current || ""),
+							id: workflowId,
+							trainings: trainingId,
+						},
+						resetParams: true,
+					});
+				},
+			},
+		);
+	}, [
+		setQueryParam,
+		workflowId,
+		trainingId,
+		onSet,
+		updateTraining,
+		training?.data.pipeline,
+	]);
 
 	return (
 		<>

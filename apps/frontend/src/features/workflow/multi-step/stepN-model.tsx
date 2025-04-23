@@ -1,4 +1,8 @@
 import { BaseSkeleton } from "@/components/specific/skeleton";
+import {
+	MultiStepLoaderController,
+	type MultiStepLoaderRefHandle,
+} from "@/components/specific/trainingLoader";
 import { Content, PreDataBlock, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { presetList } from "@/configs/preset";
@@ -15,13 +19,18 @@ import { useRouter } from "@/libs/i18nNavigation";
 import { getStep } from "@/utils/step-utils";
 import type { AxiosError } from "axios";
 import { Brain } from "lucide-react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { formatCapital } from "../../../utils/capital";
 
 export const ModelDetailsPage = () => {
 	const { setQueryParam, getQueryParam } = useQueryParam({ name: "step" });
 	const { toast } = useToast();
 	const router = useRouter();
+	const loaderRef = useRef<MultiStepLoaderRefHandle>(null);
+
+	const startLoadingProcess = () => {
+		loaderRef.current?.startLoading({ message: "Starting my custom process" });
+	};
 
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
 
@@ -96,12 +105,16 @@ export const ModelDetailsPage = () => {
 	]);
 	return (
 		<div className="relative -pb-8">
+			<MultiStepLoaderController
+				ref={loaderRef}
+				endpoint={`/workflows/${decodeBase64(workflowId)}/trainings/${decodeBase64(trainingId)}/start`}
+			/>
 			<BaseSkeleton loading={trainingPending}>
 				{training &&
 					Object.entries(training?.data).map(([key, value]) => (
 						<div
 							key={key}
-							className="w-full flex gap-x-8 pt-6 pb-8 border-b border-gray-200"
+							className="w-full flex gap-x-8 pt-6 pb-7 border-b border-gray-200"
 						>
 							<Subtle className=" w-1/4 font-medium text-zinc-500">
 								{formatCapital(key)}
@@ -144,7 +157,7 @@ export const ModelDetailsPage = () => {
 					effect="expandIcon"
 					icon={Brain}
 					iconPlacement="right"
-					onClick={async () => await handleStart()}
+					onClick={async () => startLoadingProcess()}
 				>
 					Start
 				</Button>

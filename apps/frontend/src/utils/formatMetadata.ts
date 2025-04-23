@@ -84,7 +84,8 @@ export function metadataToArray(metadata: Metadata): unknown[] | unknown {
 				break;
 
 			case "Position":
-				result.push([value.value.x, value.value.y]);
+				if ("x" in value.value && "y" in value.value)
+					result.push([value.value.x, value.value.y]);
 				break;
 
 			default:
@@ -95,7 +96,6 @@ export function metadataToArray(metadata: Metadata): unknown[] | unknown {
 	return result.length > 1 ? result : result[0];
 }
 
-// Helper function to detect simple objects
 function isSimpleObject(value: unknown): boolean {
 	return typeof value === "object" && value !== null && !Array.isArray(value);
 }

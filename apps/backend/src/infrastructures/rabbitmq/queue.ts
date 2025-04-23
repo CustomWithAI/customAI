@@ -3,7 +3,9 @@ import { queueLogger } from "@/config/logger";
 import { getRabbitMQChannel } from "@/infrastructures/rabbitmq/connection";
 import { v7 } from "uuid";
 
-export const sendToRabbitMQ = async (trainingData: any): Promise<string> => {
+export const sendToRabbitMQ = async (
+	trainingData: any,
+): Promise<{ queueId: string; messagePending: number }> => {
 	try {
 		const channel = await getRabbitMQChannel();
 		if (!channel) {
@@ -14,7 +16,7 @@ export const sendToRabbitMQ = async (trainingData: any): Promise<string> => {
 		const queueInfo = await channel.assertQueue(
 			config.RABBITMQ_TRAINING_QUEUE_NAME,
 			{
-				durable: true, // ✅ Keep Queue Persistent After Restart
+				durable: true,
 			},
 		);
 
@@ -35,13 +37,13 @@ export const sendToRabbitMQ = async (trainingData: any): Promise<string> => {
 			config.RABBITMQ_TRAINING_QUEUE_NAME,
 			Buffer.from(JSON.stringify(payload)),
 			{
-				persistent: true, // ✅ Keep Queue Persistent After Restart
+				persistent: true,
 			},
 		);
 
 		queueLogger.info(`📩 Training added to queue: ${queueId}`);
 
-		return queueId;
+		return { queueId, messagePending: queueInfo.messageCount };
 	} catch (error) {
 		queueLogger.error("❌ Failed to send training to RabbitMQ", error);
 		throw error;

@@ -190,6 +190,11 @@ interface FilterORB {
 	params?: [number, number, number];
 }
 
+interface FilterSIFT {
+	type: "sift";
+	params?: [number, number, number];
+}
+
 interface FilterOpenCV<T extends keyof typeof import("@techstark/opencv-js")> {
 	type: "opencv";
 	method: T;
@@ -234,7 +239,8 @@ export type Filter =
 	| FilterRandomErasing
 	| FilterElasticDistortion
 	| FilterHOG
-	| FilterORB;
+	| FilterORB
+	| FilterSIFT;
 
 interface EnhanceImageProps {
 	imagePath: string;
@@ -433,7 +439,7 @@ const EnhanceImage: React.FC<EnhanceImageProps> = memo(
 
 							case "histEqualization": {
 								if (mat.channels() > 1) {
-									cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY); // Convert to grayscale
+									cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY);
 								}
 								const dst = new cv.Mat();
 								cv.equalizeHist(mat, dst);
@@ -446,18 +452,29 @@ const EnhanceImage: React.FC<EnhanceImageProps> = memo(
 								const dst = new cv.Mat();
 								mat.convertTo(dst, cv.CV_32F);
 
-								cv.add(
-									dst,
-									new cv.Mat(dst.rows, dst.cols, dst.type(), new cv.Scalar(1)),
-									dst,
+								const minVal = new cv.MinMaxLoc();
+								const maxVal = new cv.MinMaxLoc();
+								cv.minMaxLoc(dst, minVal, maxVal);
+
+								const ones = new cv.Mat(
+									dst.rows,
+									dst.cols,
+									dst.type(),
+									new cv.Scalar(1.0),
 								);
+								cv.add(dst, ones, dst);
+								ones.delete();
+
 								cv.log(dst, dst);
 
 								cv.normalize(dst, dst, 0, 255, cv.NORM_MINMAX);
-								dst.convertTo(dst, cv.CV_8U);
+
+								const result = new cv.Mat();
+								dst.convertTo(result, cv.CV_8U);
 
 								mat.delete();
-								mat = dst;
+								dst.delete();
+								mat = result;
 								break;
 							}
 
@@ -1124,16 +1141,109 @@ const EnhanceImage: React.FC<EnhanceImageProps> = memo(
 									number,
 								];
 
+								const gray = new cv.Mat();
+								if (mat.channels() > 1) {
+									cv.cvtColor(mat, gray, cv.COLOR_RGBA2GRAY);
+								} else {
+									mat.copyTo(gray);
+								}
+
 								const orb = new cv.ORB(n_keypoints, scale_factor, n_level);
 								const keypoints = new cv.KeyPointVector();
 								const descriptors = new cv.Mat();
 
-								orb.detectAndCompute(mat, new cv.Mat(), keypoints, descriptors);
+								orb.detectAndCompute(
+									gray,
+									new cv.Mat(),
+									keypoints,
+									descriptors,
+								);
 
 								const imgWithKeypoints = new cv.Mat();
-								cv.drawKeypoints(mat, keypoints, imgWithKeypoints);
+								const color = new cv.Scalar(0, 255, 0, 255);
+								const flags = cv.DRAW_RICH_KEYPOINTS;
+								cv.drawKeypoints(
+									mat,
+									keypoints,
+									imgWithKeypoints,
+									color,
+									flags,
+								);
 
 								mat.delete();
+								gray.delete();
+								descriptors.delete();
+								mat = imgWithKeypoints;
+
+								orb.delete();
+								break;
+							}
+							case "sift": {
+								const [n_keypoints, contrast_threshold, edge_threshold] =
+									filter.params as [number, number, number];
+
+								const gray = new cv.Mat();
+								if (mat.channels() > 1) {
+									cv.cvtColor(mat, gray, cv.COLOR_RGBA2GRAY);
+								} else {
+									mat.copyTo(gray);
+								}
+
+								const keypoints = new cv.KeyPointVector();
+								const descriptors = new cv.Mat();
+
+								try {
+									if ((cv as any).SIFT) {
+										const sift = new (cv as any).SIFT(
+											n_keypoints,
+											3,
+											contrast_threshold,
+											edge_threshold,
+											1.6,
+										);
+										sift.detectAndCompute(
+											gray,
+											new cv.Mat(),
+											keypoints,
+											descriptors,
+										);
+									} else {
+										const orb = new cv.ORB(n_keypoints, 1.2, 8);
+										orb.detectAndCompute(
+											gray,
+											new cv.Mat(),
+											keypoints,
+											descriptors,
+										);
+									}
+								} catch (error) {
+									console.warn(
+										"SIFT not available, falling back to ORB",
+										error,
+									);
+									const orb = new cv.ORB(n_keypoints, 1.2, 8);
+									orb.detectAndCompute(
+										gray,
+										new cv.Mat(),
+										keypoints,
+										descriptors,
+									);
+								}
+
+								const imgWithKeypoints = new cv.Mat();
+								const color = new cv.Scalar(0, 255, 0, 255);
+								const flags = cv.DRAW_RICH_KEYPOINTS;
+								cv.drawKeypoints(
+									mat,
+									keypoints,
+									imgWithKeypoints,
+									color,
+									flags,
+								);
+
+								mat.delete();
+								gray.delete();
+								descriptors.delete();
 								mat = imgWithKeypoints;
 								break;
 							}

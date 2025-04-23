@@ -14,9 +14,14 @@ export const workflowService = {
 			return axiosClient.get<WorkflowModel>(`/workflows/${id}`);
 		} catch (error) {}
 	},
-	getWorkflows: async () => {
+	getWorkflows: async (
+		{ pageParam }: { pageParam: string | null } = { pageParam: null },
+	) => {
 		try {
-			return axiosClient.get<ResponsePagination<WorkflowModel>>("/workflows");
+			const response = await axiosClient.get<ResponsePagination<WorkflowModel>>(
+				`/workflows${pageParam || ""}`,
+			);
+			return response?.data;
 		} catch (error) {}
 	},
 	updateWorkflow: async ({

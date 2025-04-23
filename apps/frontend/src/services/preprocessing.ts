@@ -1,4 +1,5 @@
 import { axiosClient } from "@/libs/api-client";
+import type { ResponsePagination } from "@/types/common";
 import type { PreprocessingModel } from "@/types/response/preprocessing";
 
 export const preprocessingService = {
@@ -11,6 +12,16 @@ export const preprocessingService = {
 				name,
 				data,
 			});
+		} catch (error) {}
+	},
+	getPreprocessings: async (
+		{ pageParam }: { pageParam: string | null } = { pageParam: null },
+	) => {
+		try {
+			const response = await axiosClient.get<
+				ResponsePagination<PreprocessingModel>
+			>(`/image-preprocessings${pageParam || ""}`);
+			return response?.data;
 		} catch (error) {}
 	},
 	updatePreprocessing: async ({

@@ -9,7 +9,7 @@ export const customModelService = {
 	}: {
 		name?: string;
 		type?: string;
-		data: Record<string, unknown>;
+		data: unknown[];
 	}) => {
 		try {
 			return axiosClient.post<ResponseCustomModel>("custom-models", {
@@ -28,7 +28,7 @@ export const customModelService = {
 		id: string;
 		name?: string;
 		type?: string;
-		data?: Record<string, unknown>;
+		data?: unknown[];
 	}) => {
 		try {
 			return axiosClient.put<ResponseCustomModel>(`/custom-models/${id}`, {

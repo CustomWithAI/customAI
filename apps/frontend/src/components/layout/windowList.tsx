@@ -12,7 +12,7 @@ import { Virtuoso, type VirtuosoHandle } from "react-virtuoso";
 
 type WindowListProps<T extends object> = {
 	className?: string;
-	queryHook: UseInfiniteQueryResult<
+	query: UseInfiniteQueryResult<
 		InfiniteData<ResponsePagination<T> | undefined>,
 		Error
 	>;
@@ -22,7 +22,7 @@ type WindowListProps<T extends object> = {
 };
 
 export const WindowList = <T extends object>({
-	queryHook,
+	query,
 	className,
 	noNavigation,
 	direction = "vertical",
@@ -32,7 +32,7 @@ export const WindowList = <T extends object>({
 	const windowRef = useRef<VirtuosoHandle>(null);
 	const { width = 0, height = 0 } = useWindowSize();
 
-	const { data, isPending, fetchNextPage, hasNextPage } = queryHook;
+	const { data, isPending, fetchNextPage, hasNextPage } = query;
 
 	const items =
 		data?.pages?.flatMap((page) => page?.data).filter((i) => i !== undefined) ||

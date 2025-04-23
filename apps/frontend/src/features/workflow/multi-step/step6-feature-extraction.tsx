@@ -156,17 +156,10 @@ export const FeaturePage = () => {
 				},
 			},
 			{
-				onSuccess: () => {
+				onSuccess: (t) => {
 					setQueryParam({
 						params: {
-							step: encodeBase64(
-								getStep(
-									"prev",
-									training?.data.pipeline.current,
-									training?.data.pipeline.steps,
-									() => onSet(presetList),
-								),
-							),
+							step: encodeBase64(t?.data?.pipeline?.current || ""),
 							id: workflowId,
 							trainings: trainingId,
 						},

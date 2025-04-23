@@ -187,8 +187,8 @@ export function ModelStats() {
 										)}
 										{!hasOutput && (
 											<li>
-												Output layer (dense layer with softmax/linear
-												activation)
+												Output layer (<b>dense layer</b> with{" "}
+												<b>softmax/linear</b> activation)
 											</li>
 										)}
 										{!hasProperSequence && (
@@ -218,7 +218,8 @@ export function ModelStats() {
 										) &&
 											layers.length > 3 && (
 												<li>
-													Dropout layer recommended to prevent overfitting
+													<b>Dropout layer</b> recommended to prevent
+													overfitting
 												</li>
 											)}
 										{modelPurpose.toLowerCase().includes("object") &&

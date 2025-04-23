@@ -165,7 +165,7 @@ export const ContentImage = ({
 				/>
 			) : (
 				<WindowList
-					queryHook={imageQuery}
+					query={imageQuery}
 					direction="vertical"
 					className="space-y-3"
 					itemContent={(index, image) => {

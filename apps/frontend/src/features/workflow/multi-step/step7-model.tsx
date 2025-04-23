@@ -268,56 +268,56 @@ export const ModelPage = () => {
 					}}
 				/>
 			</BaseSkeleton>
-			<BaseSkeleton loading={enumModelPending}>
-				<>
-					{(!enumMachineLearningByType ||
-						enumMachineLearningByType?.length > 0) && (
+			{enumMachineLearningByType && enumMachineLearningByType?.length > 0 && (
+				<BaseSkeleton loading={enumModelPending}>
+					<>
 						<>
 							<Content>Machine Learning Models</Content>
 							<Subtle className="-mt-4">
 								Requires few parameters for tuning.
 							</Subtle>
 						</>
-					)}
-					<Virtuoso
-						className="w-full h-[300px]"
-						data={enumMachineLearningByType || []}
-						horizontalDirection
-						itemContent={(_, model) => {
-							const { type, description, typeClass } = MODEL_TYPE[
-								model?.key
-							] ?? {
-								type: "new",
-								description: "new model that isn't implemented yet",
-								typeClass: "text-zinc-500 bg-zinc-100",
-							};
-							return (
-								<ModelCard
-									key={model?.key}
-									title={model?.key}
-									type={type}
-									typeClass={typeClass}
-									description={description}
-									className={cn(
-										machineLearning?.type === model?.key
-											? "border border-green-400"
-											: "",
-										"first:ml-0 mx-4 w-fit",
-									)}
-									onClick={() => {
-										setModelId(null);
-										setMachineLearning({
-											type: model?.key,
-											model: model?.value,
-										});
-									}}
-									images={[]}
-								/>
-							);
-						}}
-					/>
-				</>
-			</BaseSkeleton>
+
+						<Virtuoso
+							className="w-full h-[300px]"
+							data={enumMachineLearningByType || []}
+							horizontalDirection
+							itemContent={(_, model) => {
+								const { type, description, typeClass } = MODEL_TYPE[
+									model?.key
+								] ?? {
+									type: "new",
+									description: "new model that isn't implemented yet",
+									typeClass: "text-zinc-500 bg-zinc-100",
+								};
+								return (
+									<ModelCard
+										key={model?.key}
+										title={model?.key}
+										type={type}
+										typeClass={typeClass}
+										description={description}
+										className={cn(
+											machineLearning?.type === model?.key
+												? "border border-green-400"
+												: "",
+											"first:ml-0 mx-4 w-fit",
+										)}
+										onClick={() => {
+											setModelId(null);
+											setMachineLearning({
+												type: model?.key,
+												model: model?.value,
+											});
+										}}
+										images={[]}
+									/>
+								);
+							}}
+						/>
+					</>
+				</BaseSkeleton>
+			)}
 			<Content>Custom Models</Content>
 			<Subtle className="-mt-4">
 				Build your own model tailored to your needs.

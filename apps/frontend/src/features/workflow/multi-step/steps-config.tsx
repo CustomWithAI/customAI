@@ -51,7 +51,7 @@ export const stepConfig: Record<STEPS, StepConfig> = {
 		description: null,
 		icon: <FileDown />,
 		component: () => (
-			<DragStoreProvider>
+			<DragStoreProvider key={STEPS.Dataset}>
 				<DatasetPage />
 			</DragStoreProvider>
 		),
@@ -62,7 +62,7 @@ export const stepConfig: Record<STEPS, StepConfig> = {
 		description: "Choose train workflow pipeline preset",
 		icon: <FileChartColumnIncreasing />,
 		component: () => (
-			<DragStoreProvider initial={presetList}>
+			<DragStoreProvider key={STEPS.Preset} initial={presetList}>
 				<Step3Page />
 			</DragStoreProvider>
 		),
@@ -73,7 +73,7 @@ export const stepConfig: Record<STEPS, StepConfig> = {
 		description: null,
 		icon: <Blend />,
 		component: () => (
-			<DragStoreProvider initial={[]}>
+			<DragStoreProvider key={STEPS.Preprocessing} initial={[]}>
 				<ImagePreprocessingPage />
 			</DragStoreProvider>
 		),
@@ -84,7 +84,7 @@ export const stepConfig: Record<STEPS, StepConfig> = {
 		description: "Let create variant sample of data",
 		icon: <Shuffle />,
 		component: () => (
-			<DragStoreProvider initial={[]}>
+			<DragStoreProvider key={STEPS.Augmentation} initial={[]}>
 				<AugmentationPage />
 			</DragStoreProvider>
 		),
@@ -95,7 +95,7 @@ export const stepConfig: Record<STEPS, StepConfig> = {
 		description: "focus on main feature",
 		icon: <TextSelect />,
 		component: () => (
-			<DragStoreProvider initial={[]}>
+			<DragStoreProvider key={STEPS.FeatureEx} initial={[]}>
 				<FeaturePage />
 			</DragStoreProvider>
 		),
@@ -106,7 +106,7 @@ export const stepConfig: Record<STEPS, StepConfig> = {
 		description: "",
 		icon: <FileBox />,
 		component: () => (
-			<DragStoreProvider initial={[]}>
+			<DragStoreProvider key={STEPS.Model} initial={[]}>
 				<ModelPage />
 			</DragStoreProvider>
 		),
@@ -117,7 +117,7 @@ export const stepConfig: Record<STEPS, StepConfig> = {
 		description: "create custom model",
 		icon: <Box />,
 		component: () => (
-			<DragStoreProvider>
+			<DragStoreProvider key={STEPS.SetupModel}>
 				<ModelSetupPage />
 			</DragStoreProvider>
 		),
@@ -128,7 +128,7 @@ export const stepConfig: Record<STEPS, StepConfig> = {
 		description: null,
 		icon: <FileSliders />,
 		component: () => (
-			<DragStoreProvider initial={[]}>
+			<DragStoreProvider key={STEPS.ModelConfig} initial={[]}>
 				<ModelConfigPage />
 			</DragStoreProvider>
 		),
@@ -139,7 +139,7 @@ export const stepConfig: Record<STEPS, StepConfig> = {
 		description: null,
 		icon: <FileSliders />,
 		component: () => (
-			<DragStoreProvider initial={[]}>
+			<DragStoreProvider key={STEPS.Finish} initial={[]}>
 				<ModelDetailsPage />
 			</DragStoreProvider>
 		),

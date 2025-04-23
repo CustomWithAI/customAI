@@ -8,10 +8,16 @@ import { DatasetList } from "./listBox";
 
 export const ContentDataset = ({
 	total = 0,
-}: { total: number | undefined }) => {
+	filters = {},
+}: { total: number | undefined; filters?: Record<string, any> }) => {
 	const viewList = ViewList.useViewListState();
 	const ContentCard = viewList === "Grid" ? DatasetCard : DatasetList;
-	const datasetQuery = useGetInfDatasets();
+	const datasetQuery = useGetInfDatasets({
+		params: {
+			search: filters.name ? `name:${filters.name}` : null,
+		},
+	});
+	console.log(filters);
 	return (
 		<div>
 			<Subtle className="text-xs mb-3 font-medium">
@@ -34,7 +40,7 @@ export const ContentDataset = ({
 				/>
 			) : (
 				<WindowList
-					queryHook={datasetQuery}
+					query={datasetQuery}
 					direction="vertical"
 					className="space-y-3"
 					itemContent={(index, item) => (

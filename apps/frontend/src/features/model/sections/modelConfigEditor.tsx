@@ -1,5 +1,6 @@
 "use client";
 
+import { RenderStatusAlert } from "@/components/common/alertStatus";
 import { Accordion } from "@/components/ui/accordion";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -126,50 +127,6 @@ export const ModelConfigEditor = forwardRef<
 			}
 		}, [modelType, modelPurpose, setModelPurpose]);
 
-		const renderStatusAlert = () => {
-			if (status === "idle") return null;
-
-			if (status === "loading") {
-				return (
-					<Alert>
-						<div className="flex items-center gap-2">
-							<div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
-							<AlertDescription>
-								{statusMessage || "Processing your request..."}
-							</AlertDescription>
-						</div>
-					</Alert>
-				);
-			}
-
-			if (status === "error") {
-				return (
-					<Alert variant="destructive">
-						<AlertCircle className="h-4 w-4" />
-						<AlertDescription>
-							{statusMessage || "An error occurred"}
-						</AlertDescription>
-					</Alert>
-				);
-			}
-
-			if (status === "success") {
-				return (
-					<Alert
-						variant="default"
-						className="bg-green-50 text-green-800 border-green-200"
-					>
-						<CheckCircle2 className="h-4 w-4 text-green-600" />
-						<AlertDescription>
-							{statusMessage || "Operation completed successfully"}
-						</AlertDescription>
-					</Alert>
-				);
-			}
-
-			return null;
-		};
-
 		const sensors = useSensors(
 			useSensor(PointerSensor),
 			useSensor(KeyboardSensor, {
@@ -190,13 +147,8 @@ export const ModelConfigEditor = forwardRef<
 		};
 
 		return (
-			<div className="space-y-4 md:space-y-6">
-				<div className="flex flex-wrap items-center gap-2 justify-between">
-					<div className="flex items-center gap-2">
-						<h2 className="text-lg font-medium">Model Configuration</h2>
-						<Badge variant="outline">{modelPurpose}</Badge>
-					</div>
-
+			<div className="-mt-14 space-y-4 md:space-y-6">
+				<div className="flex flex-wrap items-center gap-2 justify-end">
 					<div className="flex flex-wrap gap-2">
 						<Button
 							onClick={() => setAddLayerOpen(true)}
@@ -204,13 +156,6 @@ export const ModelConfigEditor = forwardRef<
 							size="sm"
 						>
 							<Plus className="w-4 h-4 mr-1" /> Add Layer
-						</Button>
-						<Button
-							onClick={() => setSettingsOpen(true)}
-							variant="outline"
-							size="sm"
-						>
-							<Settings className="w-4 h-4 mr-1" /> Settings
 						</Button>
 						<Button
 							onClick={handleImport}
@@ -228,17 +173,8 @@ export const ModelConfigEditor = forwardRef<
 						>
 							<Download className="w-4 h-4 mr-1" /> Export
 						</Button>
-						<Button
-							onClick={() => setTemplateDialogOpen(true)}
-							variant="outline"
-							size="sm"
-						>
-							<FileCode className="w-4 h-4 mr-1" /> Layer Templates
-						</Button>
 					</div>
 				</div>
-
-				{renderStatusAlert()}
 
 				{error && (
 					<Alert variant="destructive">
@@ -265,7 +201,7 @@ export const ModelConfigEditor = forwardRef<
 									items={layers.map((_, index) => `layer-${index}`)}
 									strategy={verticalListSortingStrategy}
 								>
-									<Accordion type="multiple" className="w-full">
+									<Accordion type="multiple" className="w-full space-y-2">
 										{layers.map((layer, index) => (
 											<LayerEditor
 												key={`layer-${index}`}
@@ -282,10 +218,12 @@ export const ModelConfigEditor = forwardRef<
 								</SortableContext>
 							</DndContext>
 						) : (
-							<div className="text-center py-8 text-muted-foreground border rounded-md">
-								No layers added yet. Click the &quot;Add Layer&quot; button to
-								get started.
-							</div>
+							<RenderStatusAlert status={status} statusMessage={statusMessage}>
+								<div className="text-center py-8 text-muted-foreground border rounded-md border-gray-200">
+									No layers added yet. Click the &quot;Add Layer&quot; button to
+									get started.
+								</div>
+							</RenderStatusAlert>
 						)}
 					</TabsContent>
 

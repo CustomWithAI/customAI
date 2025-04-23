@@ -305,6 +305,8 @@ const NewUserPage = () => {
 		}
 	};
 
+	if (isPending) return null;
+
 	return (
 		<div className="p-6 md:w-2/3 m-auto max-w-(--breakpoint-2xl) h-3/4 space-y-6">
 			<div className="space-y-2">

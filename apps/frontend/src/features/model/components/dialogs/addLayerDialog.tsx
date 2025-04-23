@@ -16,20 +16,15 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { layerTemplates } from "@/configs/layers";
+import { useDebounceValue } from "@/hooks/useDebounceValue";
 import { useModelStore } from "@/stores/modelStore";
+import { ilikeArrayFilter } from "@/utils/ilikeArray";
 import { getLayerPurposeColor } from "@/utils/layer-utils";
-import { Plus, Trash2 } from "lucide-react";
+import { toText } from "@/utils/toCapital";
+import { Search } from "lucide-react";
 import { useState } from "react";
 
 interface AddLayerDialogProps {
@@ -41,15 +36,9 @@ export function AddLayerDialog({ open, onOpenChange }: AddLayerDialogProps) {
 	const { addLayer, modelPurpose, addCustomLayer, customLayerTemplates } =
 		useModelStore();
 	const [selectedCategory, setSelectedCategory] = useState<string>("basic");
-
-	const [customLayerName, setCustomLayerName] = useState("");
-	const [customLayerPurpose, setCustomLayerPurpose] = useState("general");
-	const [customLayerParams, setCustomLayerParams] = useState<
-		Array<{ name: string; type: string }>
-	>([]);
+	const [filterName, setFilterName] = useState<string>("");
 
 	const categories = [
-		{ id: "custom", name: "Custom" },
 		{ id: "basic", name: "Basic" },
 		{ id: "conv", name: "Convolutional" },
 		{ id: "recurrent", name: "Recurrent" },
@@ -59,51 +48,6 @@ export function AddLayerDialog({ open, onOpenChange }: AddLayerDialogProps) {
 
 	const handleAddLayer = (templateId: string) => {
 		addLayer(templateId);
-		onOpenChange(false);
-	};
-
-	const addCustomParam = () => {
-		setCustomLayerParams([...customLayerParams, { name: "", type: "string" }]);
-	};
-
-	const removeCustomParam = (index: number) => {
-		setCustomLayerParams(customLayerParams.filter((_, i) => i !== index));
-	};
-
-	const handleCustomParamChange = (
-		index: number,
-		field: "name" | "type",
-		value: string,
-	) => {
-		const updatedParams = [...customLayerParams];
-		updatedParams[index][field] = value;
-		setCustomLayerParams(updatedParams);
-	};
-
-	const handleCreateCustomLayer = () => {
-		if (!customLayerName || customLayerParams.length === 0) return;
-
-		const layerId = `custom_${customLayerName.toLowerCase().replace(/\s+/g, "_")}_${Date.now()}`;
-
-		const layerConfig: Record<string, any> = {};
-
-		for (const param of customLayerParams) {
-			const paramKey = `custom_${param.name.toLowerCase().replace(/\s+/g, "_")}`;
-
-			let defaultValue: any = "";
-			if (param.type === "number") defaultValue = 0;
-			if (param.type === "boolean") defaultValue = false;
-
-			layerConfig[paramKey] = defaultValue;
-		}
-
-		addCustomLayer(layerId, customLayerName, customLayerPurpose, layerConfig);
-
-		setCustomLayerName("");
-		setCustomLayerPurpose("general");
-		setCustomLayerParams([]);
-
-		onOpenChange(false);
 	};
 
 	const allTemplates = {
@@ -112,11 +56,16 @@ export function AddLayerDialog({ open, onOpenChange }: AddLayerDialogProps) {
 	};
 
 	const filteredTemplates = Object.entries(allTemplates)
-		.filter(([id, template]) => template.category === selectedCategory)
+		.filter(([_, template]) => template.category === selectedCategory)
 		.filter(
-			([id, template]) =>
+			([_, template]) =>
 				template.compatibleWith.includes("all") ||
 				template.compatibleWith.includes(modelPurpose.toLowerCase()),
+		)
+		.filter(
+			([_, template]) =>
+				!filterName.trim() ||
+				template.name.toLowerCase().includes(filterName.toLowerCase()),
 		);
 
 	return (
@@ -144,31 +93,45 @@ export function AddLayerDialog({ open, onOpenChange }: AddLayerDialogProps) {
 						<TabsContent
 							key={category.id}
 							value={category.id}
-							className="flex-1 overflow-hidden"
+							className="flex-1 overflow-hidden space-y-2"
 						>
+							<div className="relative">
+								<Input
+									type="text"
+									placeholder="find layer node.."
+									value={filterName}
+									onChange={(v) => setFilterName(v.target.value)}
+									className="pl-3 pr-9 py-1.5 h-9 text-sm rounded-lg focus-visible:ring-offset-0"
+								/>
+								<div className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4">
+									<Search className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+								</div>
+							</div>
 							<ScrollArea className="h-[400px] pr-4">
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 									{filteredTemplates.length > 0 ? (
 										filteredTemplates.map(([id, template]) => (
 											<Card key={id} className="overflow-hidden">
 												<CardHeader className="pb-2">
-													<CardTitle className="text-sm font-medium flex items-center justify-between">
+													<CardTitle className="text-sm font-medium flex flex-col justify-between">
 														{template.name}
-														{template.purposes.map((purpose: string) => (
-															<Badge
-																key={purpose}
-																variant="outline"
-																style={{
-																	backgroundColor: getLayerPurposeColor(
-																		purpose,
-																		true,
-																	),
-																	color: getLayerPurposeColor(purpose, false),
-																}}
-															>
-																{purpose}
-															</Badge>
-														))}
+														<div className="flex gap-1 mt-1 flex-warp">
+															{template.purposes.map((purpose: string) => (
+																<Badge
+																	key={purpose}
+																	variant="outline"
+																	style={{
+																		backgroundColor: getLayerPurposeColor(
+																			purpose,
+																			true,
+																		),
+																		color: getLayerPurposeColor(purpose, false),
+																	}}
+																>
+																	{purpose}
+																</Badge>
+															))}
+														</div>
 													</CardTitle>
 													<CardDescription className="text-xs">
 														{template.description}
@@ -187,129 +150,14 @@ export function AddLayerDialog({ open, onOpenChange }: AddLayerDialogProps) {
 										))
 									) : (
 										<div className="col-span-2 text-center py-8 text-muted-foreground">
-											No compatible layers found for {modelPurpose} models in
-											this category.
+											No compatible layers found for {toText(modelPurpose)}{" "}
+											models in this category.
 										</div>
 									)}
 								</div>
 							</ScrollArea>
 						</TabsContent>
 					))}
-					<TabsContent
-						key="custom"
-						value="custom"
-						className="flex-1 overflow-hidden"
-					>
-						<div className="space-y-4">
-							<div className="bg-muted p-4 rounded-md">
-								<h3 className="font-medium mb-2">Create Custom Layer</h3>
-								<div className="space-y-4">
-									<div className="grid gap-2">
-										<Label htmlFor="custom-layer-name">Layer Name</Label>
-										<Input
-											id="custom-layer-name"
-											value={customLayerName}
-											onChange={(e) => setCustomLayerName(e.target.value)}
-											placeholder="My Custom Layer"
-										/>
-									</div>
-
-									<div className="grid gap-2">
-										<Label htmlFor="custom-layer-purpose">Layer Purpose</Label>
-										<Select
-											value={customLayerPurpose}
-											onValueChange={setCustomLayerPurpose}
-										>
-											<SelectTrigger id="custom-layer-purpose">
-												<SelectValue placeholder="Select purpose" />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectItem value="general">General</SelectItem>
-												<SelectItem value="feature_extraction">
-													Feature Extraction
-												</SelectItem>
-												<SelectItem value="classification">
-													Classification
-												</SelectItem>
-												<SelectItem value="detection">Detection</SelectItem>
-												<SelectItem value="segmentation">
-													Segmentation
-												</SelectItem>
-												<SelectItem value="normalization">
-													Normalization
-												</SelectItem>
-											</SelectContent>
-										</Select>
-									</div>
-
-									<div className="space-y-2">
-										<Label>Parameters</Label>
-										<div className="space-y-2 max-h-[200px] overflow-y-auto pr-2">
-											{customLayerParams.map((param, index) => (
-												<div
-													key={index}
-													className="flex items-center gap-2 bg-background p-2 rounded-md"
-												>
-													<Input
-														value={param.name}
-														onChange={(e) =>
-															handleCustomParamChange(
-																index,
-																"name",
-																e.target.value,
-															)
-														}
-														placeholder="Parameter name"
-														className="flex-1"
-													/>
-													<Select
-														value={param.type}
-														onValueChange={(value) =>
-															handleCustomParamChange(index, "type", value)
-														}
-													>
-														<SelectTrigger className="w-[100px]">
-															<SelectValue />
-														</SelectTrigger>
-														<SelectContent>
-															<SelectItem value="string">String</SelectItem>
-															<SelectItem value="number">Number</SelectItem>
-															<SelectItem value="boolean">Boolean</SelectItem>
-														</SelectContent>
-													</Select>
-													<Button
-														variant="ghost"
-														size="icon"
-														onClick={() => removeCustomParam(index)}
-													>
-														<Trash2 className="h-4 w-4" />
-													</Button>
-												</div>
-											))}
-										</div>
-										<Button
-											variant="outline"
-											size="sm"
-											onClick={addCustomParam}
-											className="w-full mt-2"
-										>
-											<Plus className="h-4 w-4 mr-1" /> Add Parameter
-										</Button>
-									</div>
-
-									<Button
-										onClick={handleCreateCustomLayer}
-										disabled={
-											!customLayerName || customLayerParams.length === 0
-										}
-										className="w-full"
-									>
-										Create Layer
-									</Button>
-								</div>
-							</div>
-						</div>
-					</TabsContent>
 				</Tabs>
 			</DialogContent>
 		</Dialog>

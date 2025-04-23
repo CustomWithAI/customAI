@@ -37,21 +37,6 @@ export const customLayers: Record<string, LayerTemplate> = {
 		},
 	},
 
-	// Example of a custom activation layer
-	custom_activation: {
-		name: "Custom Activation Layer",
-		description: "Applies a custom activation function to the input",
-		category: "basic",
-		purposes: ["general"],
-		compatibleWith: ["all"],
-		config: {
-			activationLayer_type: "mish", // Custom activation type
-			activationLayer_alpha: 1.0,
-			activationLayer_beta: 1.0,
-			activationLayer_threshold: 0.0,
-		},
-	},
-
 	// Example of a custom pooling layer
 	stochastic_pooling: {
 		name: "Stochastic Pooling",

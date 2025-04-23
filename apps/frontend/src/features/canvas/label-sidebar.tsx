@@ -46,7 +46,9 @@ export function LabelSidebar({
 					<ScrollArea className="flex-1">
 						<div className="p-4 space-y-2">
 							{labels.map((label, index) => {
-								const isUsed = usedLabels.includes(label.id);
+								const labelCounts = usedLabels.filter(
+									(l) => l === label.id,
+								).length;
 								return (
 									<div
 										onKeyDown={(e) => {
@@ -67,12 +69,7 @@ export function LabelSidebar({
 										onClick={() => onLabelClick(label.id)}
 										className={cn(
 											"group flex relative items-center justify-between p-2 rounded-md gap-x-3",
-											`${
-												!isUsed
-													? "cursor-pointer hover:bg-gray-100"
-													: "opacity-50"
-											}`,
-											` ${selectedLabel === label.id ? "bg-gray-100" : ""}`,
+											"cursor-pointer hover:bg-gray-100",
 										)}
 									>
 										<div className="flex items-center gap-2">
@@ -80,7 +77,9 @@ export function LabelSidebar({
 												className="w-3 h-3 rounded-full"
 												style={{ backgroundColor: label.color }}
 											/>
-											<span className="text-sm">{label.name}</span>
+											<span className="text-sm">
+												{label.name} {labelCounts > 0 ? `(${labelCounts})` : ""}
+											</span>
 										</div>
 										<div className=" absolute left-40 z-99 group-hover:bg-white duration-100 rounded-sm p-1 flex items-center gap-1 ml-auto">
 											<Button
