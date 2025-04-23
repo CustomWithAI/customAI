@@ -8,7 +8,7 @@ import { EditFeature } from "@/components/specific/edit-feature";
 import { Content, ContentHeader, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import EnhanceImage from "@/components/ui/enhanceImage";
-import { node } from "@/configs/fields/feat-extract";
+import { node } from "@/configs/feat-extract";
 import { useDragStore } from "@/contexts/dragContext";
 import { VisualCard } from "@/features/workflow/components/visual-card";
 import { useGetImages } from "@/hooks/queries/dataset-api";

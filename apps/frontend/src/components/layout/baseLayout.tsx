@@ -1,5 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
-import { node } from "@/configs/fields/image-preprocessing";
+import { node } from "@/configs/image-preprocessing";
 import UploadProgress from "@/features/dataset/components/uploadProgression";
 import { FlowNavigationProvider } from "@/hooks/use-flow-navigation";
 import { ReactQueryProvider } from "@/libs/react-query-providers";
