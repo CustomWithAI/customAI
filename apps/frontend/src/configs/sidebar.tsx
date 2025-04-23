@@ -5,6 +5,7 @@ import {
 	Database,
 	FileCog,
 	Home,
+	ImagePlay,
 	Inbox,
 	LogOut,
 	MessageCircleQuestion,
@@ -20,6 +21,7 @@ export enum SidebarPage {
 	Workflow = "navbar.workflow",
 	Dataset = "navbar.dataset",
 	Preset = "navbar.preset",
+	Tools = "navbar.tool",
 	ImagePreprocessing = "navbar.image-preprocessing",
 	DataAugmentation = "navbar.data-augmentation",
 	Model = "navbar.model",
@@ -76,6 +78,11 @@ export const sidebarConfig = {
 					url: "/featureconfig",
 				},
 			],
+		},
+		{
+			title: SidebarPage.Tools,
+			url: "/use",
+			icon: ImagePlay,
 		},
 	],
 	navSecondary: [

@@ -139,34 +139,6 @@ export default function CanvasWithOverlay() {
 		}
 
 		ctx.stroke();
-
-		const originX = -offsetX;
-		const originY = -offsetY;
-
-		if (originX >= 0 && originX <= canvasWidth) {
-			ctx.beginPath();
-			ctx.strokeStyle = "rgba(255, 0, 0, 0.5)";
-			ctx.lineWidth = 2;
-			ctx.moveTo(originX, 0);
-			ctx.lineTo(originX, canvasHeight);
-			ctx.stroke();
-		}
-
-		if (originY >= 0 && originY <= canvasHeight) {
-			ctx.beginPath();
-			ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";
-			ctx.lineWidth = 2;
-			ctx.moveTo(0, originY);
-			ctx.lineTo(canvasWidth, originY);
-			ctx.stroke();
-		}
-
-		ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-		ctx.fillRect(10, 10, 180, 50);
-		ctx.fillStyle = "white";
-		ctx.font = "12px monospace";
-		ctx.fillText(`Grid Cell: ${gridSize}x${gridSize}px`, 20, 30);
-		ctx.fillText(`Position: (${offsetX}, ${offsetY})`, 20, 50);
 	}, [offsetX, offsetY, canvasHeight, canvasWidth]);
 
 	const isPointOverElement = (x: number, y: number) => {

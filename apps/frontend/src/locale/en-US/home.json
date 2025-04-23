@@ -19,6 +19,7 @@
 		"data-augmentation": "Augmentation",
 		"model": "Model",
 		"help": "Help",
+		"tool": "Tools",
 		"settings": "Settings",
 		"feature-config": "Feature Configuration",
 		"logout": "Log out"

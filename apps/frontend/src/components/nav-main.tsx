@@ -51,19 +51,21 @@ export function NavMain({
 								</Link>
 							</SidebarMenuButton>
 						</CollapsibleTrigger>
-						<CollapsibleContent>
-							<SidebarMenuSub>
-								{item.items?.map((subItem) => (
-									<SidebarMenuSubItem key={subItem.title}>
-										<SidebarMenuSubButton asChild isActive={subItem.isActive}>
-											<Link href={subItem.url}>
-												<span>{t(subItem.title as any)}</span>
-											</Link>
-										</SidebarMenuSubButton>
-									</SidebarMenuSubItem>
-								))}
-							</SidebarMenuSub>
-						</CollapsibleContent>
+						{(item.items?.length || 0) > 0 ? (
+							<CollapsibleContent>
+								<SidebarMenuSub>
+									{item.items?.map((subItem) => (
+										<SidebarMenuSubItem key={subItem.title}>
+											<SidebarMenuSubButton asChild isActive={subItem.isActive}>
+												<Link href={subItem.url}>
+													<span>{t(subItem.title as any)}</span>
+												</Link>
+											</SidebarMenuSubButton>
+										</SidebarMenuSubItem>
+									))}
+								</SidebarMenuSub>
+							</CollapsibleContent>
+						) : null}
 					</SidebarMenuItem>
 				</Collapsible>
 			))}

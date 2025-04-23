@@ -18,6 +18,7 @@
 		"image-preprocessing": "การประมวลผลภาพเบื้องต้น",
 		"data-augmentation": "การเพิ่มข้อมูล",
 		"model": "โมเดล",
+		"tool": "เครื่องมือ",
 		"help": "ช่วยเหลือ",
 		"settings": "ตั้งค่า",
 		"feature-config": "การตั้งค่าคุณสมบัติ",
