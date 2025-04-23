@@ -11,7 +11,7 @@ import {
 	KNNParams,
 	RandomForestParams,
 	SVMParams,
-} from "./mlField";
+} from "./fields/mlField";
 
 export enum MLType {
 	DecisionTree = "decision_trees",

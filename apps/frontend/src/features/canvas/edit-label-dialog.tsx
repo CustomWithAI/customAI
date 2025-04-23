@@ -55,11 +55,11 @@ export function EditLabelDialog({
 						/>
 					</div>
 					<div className="space-y-4 flex align-middle">
-						<Label className="mt-5">Color</Label>
+						<Label className="mt-2.5 pr-1">Color</Label>
 						<ColorPicker value={color} onChange={setColor} />
 					</div>
 				</div>
-				<DialogFooter>
+				<DialogFooter className="space-y-2">
 					<Button variant="outline" onClick={onClose}>
 						Cancel
 					</Button>

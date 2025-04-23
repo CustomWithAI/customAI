@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/context-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { node } from "@/configs/augmentation";
+import { node } from "@/configs/fields/augmentation";
 import { useDragStore } from "@/contexts/dragContext";
 import usePreviousNodesData from "@/hooks/useRootNode";
 import type { CustomNodeData } from "@/types/node";

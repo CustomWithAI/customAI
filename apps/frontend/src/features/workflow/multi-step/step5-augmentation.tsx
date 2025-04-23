@@ -1,6 +1,6 @@
 import { Content } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
-import { node } from "@/configs/augmentation";
+import { node } from "@/configs/fields/augmentation";
 import { presetList } from "@/configs/preset";
 import { useDragStore } from "@/contexts/dragContext";
 import { TableAugmentationSection } from "@/features/augmentation/section/table";
@@ -91,7 +91,7 @@ export const AugmentationPage = () => {
 		await preProcessFn(
 			{
 				data: { ...json, priority },
-				name: training?.data.augmentation.name
+				name: training?.data?.augmentation?.name
 					? training?.data.augmentation.name
 					: `${training?.data.workflow.name}-${formatDate()}`,
 				id: training?.data.augmentation?.id || "",

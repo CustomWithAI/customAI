@@ -22,7 +22,11 @@ import { isSameUnorderedArray } from "@/utils/isSameArray";
 export default function Page({ params: { id } }: { params: { id: string } }) {
 	const router = useRouter();
 	const { getQueryParam, setQueryParam } = useQueryParam({ name: "image" });
-	const { data: dataset, isPending: datasetPending } = useGetDataset(id);
+	const {
+		data: dataset,
+		isPending: datasetPending,
+		refetch: fetchDataset,
+	} = useGetDataset(id);
 	const {
 		data: image,
 		isPending: imagePending,
@@ -34,7 +38,6 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 	const { mutateAsync: updateImage } = useUpdateImage();
 	const { mutateAsync: updateDataset } = useUpdateDataset();
 
-	console.log(formatToEditor(image?.current.annotation, dataset?.labels));
 	return (
 		<BaseSkeleton
 			loading={datasetPending || imagePending || !image?.current?.url}
@@ -58,15 +61,22 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 						imagesPath: decodeBase64(getQueryParam()) || "",
 						data: { annotation: formatToAnnotate(data) },
 					});
-					const labels = data.labels?.map((label) => label.name);
+					const labels = data.labels?.map((label) => {
+						const { id, ...rest } = label;
+						return rest;
+					});
 
 					if (!isSameUnorderedArray(dataset?.labels || [], labels)) {
 						await updateDataset({
 							id,
 							data: {
-								labels: data.labels?.map((label) => label.name),
+								labels: data.labels.map((label) => {
+									const { id, ...rest } = label;
+									return rest;
+								}),
 							},
 						});
+						fetchDataset();
 					}
 					if (isClose) {
 						router.push(`/dataset/${id}`);

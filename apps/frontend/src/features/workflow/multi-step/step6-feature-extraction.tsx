@@ -60,7 +60,9 @@ export const FeaturePage = () => {
 		await preProcessFn(
 			{
 				data: json,
-				name: `${training?.data.workflow.name}-${formatDate()}`,
+				name: training?.data?.featureExtraction?.name
+					? training?.data.featureExtraction.name
+					: `${training?.data.workflow.name}-${formatDate()}`,
 				id: training?.data.featureExtraction?.id || "",
 			},
 			{

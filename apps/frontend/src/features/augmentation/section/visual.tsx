@@ -1,5 +1,5 @@
 import { Content } from "@/components/typography/text";
-import { node } from "@/configs/augmentation";
+import { node } from "@/configs/fields/augmentation";
 import CustomNode from "@/features/blueprint/node-template/preprocessing";
 import { VisualSection } from "@/features/blueprint/visual-section";
 import { useGetImages } from "@/hooks/queries/dataset-api";

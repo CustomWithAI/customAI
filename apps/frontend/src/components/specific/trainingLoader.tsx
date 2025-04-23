@@ -2,6 +2,8 @@
 
 import { env } from "@/env.mjs";
 import { cn } from "@/lib/utils";
+import { useRouterAsync } from "@/libs/i18nAsyncRoute";
+import { useRouter } from "@/libs/i18nNavigation";
 import { IconSquareRoundedX } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -226,172 +228,156 @@ export const MultiStepLoaderController = forwardRef<
 	{
 		endpoint?: string;
 		errorCallback?: (error: string | undefined) => void;
+		routeCallback?: string;
 		autoCloseDelay?: number;
 	}
->(({ endpoint = "", errorCallback, autoCloseDelay = 5000 }, ref) => {
-	const [loading, setLoading] = useState(false);
-	const [loadingStates, setLoadingStates] = useState<LoadingState[]>([]);
-	const abortControllerRef = useRef<AbortController | null>(null);
+>(
+	(
+		{ endpoint = "", errorCallback, autoCloseDelay = 5000, routeCallback },
+		ref,
+	) => {
+		const [loading, setLoading] = useState(false);
+		const router = useRouter();
+		const [loadingStates, setLoadingStates] = useState<LoadingState[]>([]);
+		const abortControllerRef = useRef<AbortController | null>(null);
 
-	const handleAutoClose = () => {
-		const timer = setTimeout(() => {
-			setLoading(false);
-			streamMutation.reset();
-		}, autoCloseDelay);
-		return () => clearTimeout(timer);
-	};
+		const handleAutoClose = () => {
+			const timer = setTimeout(() => {
+				setLoading(false);
+				streamMutation.reset();
+			}, autoCloseDelay);
+			return () => clearTimeout(timer);
+		};
 
-	const cancelCurrentRequest = () => {
-		if (abortControllerRef.current) {
-			abortControllerRef.current.abort();
-			abortControllerRef.current = null;
-		}
-	};
+		const cancelCurrentRequest = () => {
+			if (abortControllerRef.current) {
+				abortControllerRef.current.abort();
+				abortControllerRef.current = null;
+			}
+		};
 
-	const streamMutation = useMutation({
-		mutationFn: async (params: any) => {
-			cancelCurrentRequest();
-			const abortController = new AbortController();
-			abortControllerRef.current = abortController;
-			setLoadingStates([]);
+		const streamMutation = useMutation({
+			mutationFn: async (params: any) => {
+				cancelCurrentRequest();
+				const abortController = new AbortController();
+				abortControllerRef.current = abortController;
+				setLoadingStates([]);
 
-			try {
-				const response = await axios.post(
-					`${env.NEXT_PUBLIC_BACKEND_URL}${endpoint}`,
-					params,
-					{
-						responseType: "stream",
-						signal: abortControllerRef.current.signal,
-						onDownloadProgress: (progressEvent) => {
-							const xhr = progressEvent.event?.target as XMLHttpRequest;
-							if (xhr?.responseText) {
-								try {
-									const lines = xhr.responseText
-										.split("\n")
-										.filter((line) => line.trim())
-										.map((line) => {
-											try {
-												const parsed = JSON.parse(line);
-												return {
-													text: parsed.text,
-													status: parsed.status,
-													message: parsed.message,
-												} as LoadingState;
-											} catch (e) {
-												return { text: line };
+				try {
+					const response = await axios.post(
+						`${env.NEXT_PUBLIC_BACKEND_URL}${endpoint}`,
+						params,
+						{
+							responseType: "stream",
+							signal: abortControllerRef.current.signal,
+							onDownloadProgress: (progressEvent) => {
+								const xhr = progressEvent.event?.target as XMLHttpRequest;
+								if (xhr?.responseText) {
+									try {
+										const lines = xhr.responseText
+											.split("\n")
+											.filter((line) => line.trim())
+											.map((line) => {
+												try {
+													const parsed = JSON.parse(line);
+													return {
+														text: parsed.text,
+														status: parsed.status,
+														message: parsed.message,
+													} as LoadingState;
+												} catch (e) {
+													return { text: line };
+												}
+											});
+
+										setLoadingStates(lines);
+										if (lines.some((state) => state.status === "failed")) {
+											handleAutoClose();
+											if (errorCallback) {
+												errorCallback(
+													lines.find((state) => state.status === "failed")
+														?.text,
+												);
 											}
-										});
-
-									setLoadingStates(lines);
-									if (lines.some((state) => state.status === "failed")) {
-										handleAutoClose();
-										if (errorCallback) {
-											errorCallback(
-												lines.find((state) => state.status === "failed")?.text,
-											);
+										}
+										if (
+											lines?.at(-1)?.text === "Training job queued successfully"
+										) {
+											routeCallback && router.push(routeCallback);
+											handleAutoClose();
+										}
+									} catch (error) {
+										if (!axios.isCancel(error)) {
+											console.error("Error parsing stream data:", error);
 										}
 									}
-								} catch (error) {
-									if (!axios.isCancel(error)) {
-										console.error("Error parsing stream data:", error);
-									}
 								}
-							}
+							},
 						},
-					},
-				);
+					);
 
-				return response.data;
-			} catch (error) {
-				if (!axios.isCancel(error)) {
-					console.error("Error parsing stream data:", error);
+					return response.data;
+				} catch (error) {
+					if (!axios.isCancel(error)) {
+						console.error("Error parsing stream data:", error);
+					}
+					handleAutoClose();
+					throw error;
+				} finally {
+					if (abortControllerRef.current === abortController) {
+						abortControllerRef.current = null;
+					}
 				}
-				handleAutoClose();
-				throw error;
-			} finally {
-				if (abortControllerRef.current === abortController) {
-					abortControllerRef.current = null;
-				}
-			}
-		},
-	});
+			},
+		});
 
-	useImperativeHandle(ref, () => ({
-		startLoading: async (params = { message: "start process" }) => {
-			cancelCurrentRequest();
-			setLoading(true);
-			setLoadingStates([]);
-			return streamMutation.mutateAsync(params);
-		},
-		stopLoading: () => {
-			cancelCurrentRequest();
+		useImperativeHandle(ref, () => ({
+			startLoading: async (params = { message: "start process" }) => {
+				cancelCurrentRequest();
+				setLoading(true);
+				setLoadingStates([]);
+				return streamMutation.mutateAsync(params);
+			},
+			stopLoading: () => {
+				cancelCurrentRequest();
+				setLoading(false);
+				setLoadingStates([]);
+				streamMutation.reset();
+			},
+			get isLoading() {
+				return loading || streamMutation.isPending;
+			},
+			get loadingStates() {
+				return loadingStates;
+			},
+		}));
+
+		const fallbackLoadingStates: LoadingState[] = [
+			{ text: "Connecting to server" },
+			{ text: "Initializing process" },
+			{ text: "Please wait..." },
+		];
+
+		const displayLoadingStates =
+			loadingStates.length > 0 ? loadingStates : fallbackLoadingStates;
+
+		const handleStopLoading = () => {
 			setLoading(false);
-			setLoadingStates([]);
 			streamMutation.reset();
-		},
-		get isLoading() {
-			return loading || streamMutation.isPending;
-		},
-		get loadingStates() {
-			return loadingStates;
-		},
-	}));
+		};
 
-	const fallbackLoadingStates: LoadingState[] = [
-		{ text: "Connecting to server" },
-		{ text: "Initializing process" },
-		{ text: "Please wait..." },
-	];
+		console.log(loadingStates);
 
-	const displayLoadingStates =
-		loadingStates.length > 0 ? loadingStates : fallbackLoadingStates;
-
-	const handleStopLoading = () => {
-		setLoading(false);
-		streamMutation.reset();
-	};
-
-	console.log(loadingStates);
-
-	return (
-		<EnhancedMultiStepLoader
-			loadingStates={displayLoadingStates}
-			loading={loading}
-			duration={2000}
-			loop={false}
-			onClose={handleStopLoading}
-		/>
-	);
-});
+		return (
+			<EnhancedMultiStepLoader
+				loadingStates={displayLoadingStates}
+				loading={loading}
+				duration={2000}
+				loop={false}
+				onClose={handleStopLoading}
+			/>
+		);
+	},
+);
 
 MultiStepLoaderController.displayName = "MultiStepLoaderController";
-
-export function MultiStepLoaderDemo({
-	id,
-	trainingId,
-}: { id: string; trainingId: string }) {
-	const loaderRef = React.useRef<MultiStepLoaderRefHandle>(null);
-
-	const startLoadingProcess = () => {
-		loaderRef.current?.startLoading({ message: "Starting my custom process" });
-	};
-
-	return (
-		<div className="w-full h-[60vh] flex items-center justify-center">
-			<MultiStepLoaderController
-				ref={loaderRef}
-				endpoint={`/workflows/${id}/trainings/${trainingId}/start`}
-			/>
-			<button
-				onClick={startLoadingProcess}
-				className="bg-[#39C3EF] hover:bg-[#39C3EF]/90 text-black mx-auto text-sm md:text-base transition font-medium duration-200 h-10 rounded-lg px-8 flex items-center justify-center"
-				style={{
-					boxShadow:
-						"0px -1px 0px 0px #ffffff40 inset, 0px 1px 0px 0px #ffffff40 inset",
-				}}
-			>
-				Start Process
-			</button>
-		</div>
-	);
-}

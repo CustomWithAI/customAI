@@ -41,30 +41,8 @@ export const ModelDetailsPage = () => {
 	);
 
 	const { mutateAsync: updateTraining } = useUpdateTraining();
-	const { mutateAsync: startTraining } = useStartTraining();
 
 	const onSet = useDragStore((state) => state.onSet);
-
-	const handleStart = useCallback(async () => {
-		await startTraining(
-			{
-				workflowId: decodeBase64(workflowId),
-				trainingId: decodeBase64(trainingId),
-			},
-			{
-				onSuccess: (ctx, params) => {
-					toast({ title: `start training queue at ${ctx?.data.queueId}` });
-					router.push(`/workflow/${params.workflowId}`);
-				},
-				onError: (error) => {
-					toast({
-						title: `failed start training: ${(error as AxiosError).response?.data?.toString()}`,
-						variant: "destructive",
-					});
-				},
-			},
-		);
-	}, [startTraining, toast, trainingId, workflowId, router]);
 
 	const handlePrevious = useCallback(async () => {
 		if (!training?.data.pipeline.steps) return;
@@ -107,6 +85,7 @@ export const ModelDetailsPage = () => {
 		<div className="relative -pb-8">
 			<MultiStepLoaderController
 				ref={loaderRef}
+				routeCallback={`/workflow/${decodeBase64(workflowId)}`}
 				endpoint={`/workflows/${decodeBase64(workflowId)}/trainings/${decodeBase64(trainingId)}/start`}
 			/>
 			<BaseSkeleton loading={trainingPending}>

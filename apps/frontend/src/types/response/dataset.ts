@@ -5,7 +5,7 @@ export type ResponseDataset = {
 	train?: number;
 	test?: number;
 	valid?: number;
-	labels?: string[];
+	labels?: { name: string; color: string }[];
 	id: string;
 	split_method: string;
 	splitMethod: string;

@@ -757,7 +757,7 @@ const RenderInput = memo(
 										{description}
 									</FormDescription>
 									<Selection
-										className="my-3"
+										className="mb-3 mt-0"
 										group={
 											options && "group" in options ? options?.group : false
 										}

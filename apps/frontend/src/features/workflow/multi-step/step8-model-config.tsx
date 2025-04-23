@@ -1,6 +1,7 @@
 "use client";
 import { useFormBuilder } from "@/components/builder/form";
 import { Button } from "@/components/ui/button";
+import { customModelHyperparameterByType } from "@/configs/customModelHyperparameter";
 import { hyperparameterByType } from "@/configs/hyperparameter";
 import { machineLearningByType } from "@/configs/ml";
 import { presetList } from "@/configs/preset";
@@ -35,8 +36,13 @@ export const ModelConfigPage = () => {
 		if (training?.data.machineLearningModel?.type) {
 			return machineLearningByType[training?.data.machineLearningModel.type];
 		}
-		if (training?.data.preTrainedModel || training?.data.customModel) {
+		if (training?.data.preTrainedModel) {
 			return hyperparameterByType[training?.data.workflow.type] ?? null;
+		}
+		if (training?.data.customModel) {
+			return (
+				customModelHyperparameterByType[training?.data.workflow.type] ?? null
+			);
 		}
 		return null;
 	}, [

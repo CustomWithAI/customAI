@@ -2,7 +2,7 @@ import { FormBuilder } from "@/components/builder/form";
 import { ContentHeader } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
-import { node } from "@/configs/augmentation";
+import { node } from "@/configs/fields/augmentation";
 import { useDragStore } from "@/contexts/dragContext";
 import { cn } from "@/libs/utils";
 import { useMemo } from "react";

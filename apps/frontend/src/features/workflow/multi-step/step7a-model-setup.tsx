@@ -58,7 +58,9 @@ export const ModelSetupPage = () => {
 		await customFn(
 			{
 				data: removeKey(data?.layers as [], "layerPurpose"),
-				name: `${training?.data.workflow.name}-${formatDate()}`,
+				name: training?.data?.customModel?.name
+					? training?.data.customModel.name
+					: `${training?.data.workflow.name}-${formatDate()}`,
 				type: training?.data.workflow.type,
 				id: training?.data.customModel?.id || "",
 			},

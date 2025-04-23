@@ -120,8 +120,8 @@ export const formatToLabels: (
 		const { color } = generateRandomLabel();
 		return {
 			id: nanoid(),
-			color,
-			name: label,
+			color: label.color || color,
+			name: label.name,
 		} as Label;
 	});
 };

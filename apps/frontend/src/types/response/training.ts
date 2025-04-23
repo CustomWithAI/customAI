@@ -17,6 +17,7 @@ export type TrainingModel = DebugType<
 		augmentation: AugmentationModel;
 		imagePreprocessing: PreprocessingModel;
 		featureExtraction: FeatureExModel;
+		evaluation: Record<string, any>;
 		retryCount: number;
 		errorMessage: string;
 		trainedModelPath: string;

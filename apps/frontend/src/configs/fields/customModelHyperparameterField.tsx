@@ -3,7 +3,7 @@ import type {
 	ClassificationSchema,
 	ObjectDetectionSchema,
 	SegmentationSchema,
-} from "@/models/model-config";
+} from "@/models/customModel-config";
 
 export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 	{
@@ -16,19 +16,6 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 			testDataId: "learning_rate",
 			name: "learning_rate",
 			placeholder: "Eg., 0.01, 0.1, 1",
-		},
-		config: {},
-	},
-	{
-		template: "number",
-		element: {
-			label: "Momentum",
-			description:
-				"Controls the influence of previous updates on the current step, improving stability.",
-			key: "momentum",
-			testDataId: "momentum",
-			name: "momentum",
-			placeholder: "Eg., 0.5, 0.9, 1",
 		},
 		config: {},
 	},
@@ -109,6 +96,19 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 
 export const ObjectDetectionParams: FormFieldInput<ObjectDetectionSchema> = [
 	{
+		template: "number",
+		element: {
+			label: "Learning Rate",
+			description:
+				"Determines the step size for model updates during training.",
+			key: "learning_rate",
+			testDataId: "learning_rate",
+			name: "learning_rate",
+			placeholder: "Eg., 0.01, 0.1, 1",
+		},
+		config: {},
+	},
+	{
 		template: "int",
 		element: {
 			label: "Batch Size",
@@ -118,6 +118,19 @@ export const ObjectDetectionParams: FormFieldInput<ObjectDetectionSchema> = [
 			testDataId: "batch_size",
 			name: "batch_size",
 			placeholder: "E.g., 16, 32, 64",
+		},
+		config: {},
+	},
+	{
+		template: "number",
+		element: {
+			label: "Momentum",
+			description:
+				"Controls the influence of previous updates on the current step, improving stability.",
+			key: "momentum",
+			testDataId: "momentum",
+			name: "momentum",
+			placeholder: "Eg., 0.5, 0.9, 1",
 		},
 		config: {},
 	},
@@ -135,16 +148,29 @@ export const ObjectDetectionParams: FormFieldInput<ObjectDetectionSchema> = [
 		config: {},
 	},
 	{
-		template: "text",
+		template: "select",
 		element: {
-			label: "Weight File",
-			description: "the pre-trained model weight file name (e.g., 'yolov5s').",
-			key: "weight_size",
-			testDataId: "weight_size",
-			name: "weight_size",
-			placeholder: "E.g., yolov5s",
+			label: "Optimizer Type",
+			description: "Algorithm used to adjust model parameters during training.",
+			key: "optimizer_type",
+			testDataId: "optimizer_type",
+			name: "optimizer_type",
 		},
-		config: {},
+		config: {
+			options: {
+				group: false,
+				list: [
+					{
+						value: "adam",
+						label: "Adam",
+					},
+					{
+						value: "sgd",
+						label: "Stochastic Gradient Descent (SGD)",
+					},
+				],
+			},
+		},
 	},
 ];
 

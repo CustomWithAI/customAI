@@ -1,6 +1,6 @@
 import { Content } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
-import { node } from "@/configs/image-preprocessing";
+import { node } from "@/configs/fields/image-preprocessing";
 import { presetList } from "@/configs/preset";
 import { useDragStore } from "@/contexts/dragContext";
 import { TablePreprocessingSection } from "@/features/image-preprocessing/sections/table";
@@ -97,7 +97,7 @@ export const ImagePreprocessingPage = () => {
 		await preProcessFn(
 			{
 				data: { ...json, priority },
-				name: training?.data.imagePreprocessing.name
+				name: training?.data?.imagePreprocessing?.name
 					? training?.data.imagePreprocessing.name
 					: `${training?.data.workflow.name}-${formatDate()}`,
 				id: training?.data.imagePreprocessing?.id || "",
