@@ -135,7 +135,7 @@ export function FilterDialog({
 
 					{(["all", "filter", "search", "sort"] as const).map((tabValue) => (
 						<TabsContent key={tabValue} value={tabValue} className="mt-0">
-							<ScrollArea className="max-h-[60vh] pr-4">
+							<ScrollArea className="h-[60vh] pr-4">
 								<div className="space-y-6 py-4">
 									{filterOptionsByCapability[tabValue].length === 0 ? (
 										<div className="text-center py-4 text-muted-foreground">
