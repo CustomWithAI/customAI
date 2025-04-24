@@ -32,12 +32,14 @@ const filterConfig: FilterConfig<ResponseDataset> = {
 
 const fieldOptions: FieldOptions = {
 	annotationMethod: {
-		type: "select",
-		options: [
-			{ value: "classification", label: "classification" },
-			{ value: "object detection", label: "object_detection" },
-			{ value: "segmentation", label: "segmentation" },
-		],
+		filter: {
+			type: "select",
+			options: [
+				{ value: "classification", label: "Classification" },
+				{ value: "object_detection", label: "Object detection" },
+				{ value: "segmentation", label: "Segmentation" },
+			],
+		},
 	},
 };
 
