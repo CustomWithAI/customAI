@@ -5,7 +5,7 @@ import { ViewList } from "@/components/specific/viewList";
 import { Primary, Subtle } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useGetInfFeatureEx } from "@/hooks/queries/feature-api";
+import { useGetInfCustomModel } from "@/hooks/queries/customModel-api";
 import { useDebounceValue } from "@/hooks/useDebounceValue";
 import { useRouterAsync } from "@/libs/i18nAsyncRoute";
 import { Filter, PackagePlus } from "lucide-react";
@@ -16,20 +16,23 @@ import { toCapital } from "../../../../../utils/toCapital";
 export default function Page() {
 	const { asyncRoute } = useRouterAsync();
 	const { relativeTime } = useFormatter();
-	const [FeatureName, setFeatureName] = useDebounceValue<string>("", 500);
+	const [CustomModelName, setCustomModelName] = useDebounceValue<string>(
+		"",
+		500,
+	);
 
 	const handleCreate = useCallback(() => {
 		asyncRoute("/workflow/create");
 	}, [asyncRoute]);
 
-	const FeatureQuery = useGetInfFeatureEx({
-		params: { search: FeatureName ? `name:${FeatureName}` : null },
+	const CustomModelQuery = useGetInfCustomModel({
+		params: { search: CustomModelName ? `name:${CustomModelName}` : null },
 	});
 
 	return (
 		<AppNavbar activeTab="Home" PageTitle="home" disabledTab={undefined}>
 			<div className="flex justify-between">
-				<Primary className="mb-4">Feature Extraction and Selection</Primary>
+				<Primary className="mb-4">Custom Model</Primary>
 				<Button
 					onClick={handleCreate}
 					variant="outline"
@@ -42,8 +45,8 @@ export default function Page() {
 				<div className="flex justify-between mb-2">
 					<div className="flex space-x-4 w-full">
 						<Input
-							placeholder="search feature extraction and selection ..."
-							onChange={(v) => setFeatureName(v.target.value)}
+							placeholder="search custom model ..."
+							onChange={(v) => setCustomModelName(v.target.value)}
 							className=" max-w-lg"
 						/>
 						<Button>
@@ -52,14 +55,14 @@ export default function Page() {
 					</div>
 				</div>
 				<Subtle className="text-xs mb-3 font-medium">
-					Found {FeatureQuery?.data?.pages?.at?.(0)?.total}{" "}
-					{(FeatureQuery?.data?.pages?.at?.(0)?.total || 0) > 1
-						? "Features"
-						: "Feature"}
+					Found {CustomModelQuery?.data?.pages?.at?.(0)?.total}{" "}
+					{(CustomModelQuery?.data?.pages?.at?.(0)?.total || 0) > 1
+						? "models"
+						: "model"}
 				</Subtle>
 				<InfiniteTable
 					className="-mt-12"
-					query={FeatureQuery}
+					query={CustomModelQuery}
 					keyField="id"
 					bordered={true}
 					striped={true}
@@ -70,17 +73,15 @@ export default function Page() {
 							accessorKey: "name",
 							type: "bold",
 							cell: (item) => toCapital(item.name),
-							href: (item) => `/feature/${item.id}`,
+							href: (item) => `/model/${item.id}`,
 						},
 						{
-							header: "Process",
+							header: "Layer",
 							accessorKey: "data",
 							cell: (item) => (
 								<>
-									{(item.data?.priority as string[])?.length || 0}{" "}
-									{((item.data?.priority as string[])?.length || 0) > 1
-										? "features"
-										: "feature"}
+									{item.data?.priority?.length || 0}{" "}
+									{(item.data?.priority?.length || 0) > 1 ? "layers" : "layer"}
 								</>
 							),
 						},
@@ -91,7 +92,7 @@ export default function Page() {
 							cell: (item) => relativeTime(new Date(item.createdAt)),
 						},
 					]}
-					onRowClick={(item) => asyncRoute(`/feature/${item.id}`)}
+					onRowClick={(item) => asyncRoute(`/model/${item.id}`)}
 				/>
 			</ViewList.Provider>
 		</AppNavbar>

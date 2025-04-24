@@ -75,7 +75,7 @@ export const sidebarConfig = {
 				},
 				{
 					title: SidebarPage.FeatureConfig,
-					url: "/featureconfig",
+					url: "/feature",
 				},
 			],
 		},

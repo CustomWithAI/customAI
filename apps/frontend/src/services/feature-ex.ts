@@ -1,4 +1,5 @@
 import { axiosClient } from "@/libs/api-client";
+import type { ResponsePagination } from "@/types/common";
 import type { FeatureExModel } from "@/types/response/feature-ex";
 
 export const featureExService = {
@@ -11,6 +12,16 @@ export const featureExService = {
 				name,
 				data,
 			});
+		} catch (error) {}
+	},
+	getFeatureEx: async (
+		{ pageParam }: { pageParam: string | null } = { pageParam: null },
+	) => {
+		try {
+			const response = await axiosClient.get<
+				ResponsePagination<FeatureExModel>
+			>(`/feature-extractions${pageParam || ""}`);
+			return response?.data;
 		} catch (error) {}
 	},
 	updateFeatureEx: async ({

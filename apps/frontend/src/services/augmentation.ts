@@ -1,4 +1,5 @@
 import { axiosClient } from "@/libs/api-client";
+import type { ResponsePagination } from "@/types/common";
 import type { AugmentationModel } from "@/types/response/augmentation";
 
 export const augmentationService = {
@@ -11,6 +12,16 @@ export const augmentationService = {
 				name,
 				data,
 			});
+		} catch (error) {}
+	},
+	getAugmentation: async (
+		{ pageParam }: { pageParam: string | null } = { pageParam: null },
+	) => {
+		try {
+			const response = await axiosClient.get<
+				ResponsePagination<AugmentationModel>
+			>(`/augmentations${pageParam || ""}`);
+			return response?.data;
 		} catch (error) {}
 	},
 	updateAugmentation: async ({

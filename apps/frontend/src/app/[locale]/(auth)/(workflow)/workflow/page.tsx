@@ -1,4 +1,5 @@
 "use client";
+import { InfiniteTable } from "@/components/layout/InfinityTable";
 import { AppNavbar } from "@/components/layout/appNavbar";
 import { InfiniteGrid } from "@/components/layout/infinityGrid";
 import { ViewList } from "@/components/specific/viewList";
@@ -14,11 +15,14 @@ import {
 import { useDebounceValue } from "@/hooks/useDebounceValue";
 import { useRouterAsync } from "@/libs/i18nAsyncRoute";
 import { buildQueryParams } from "@/utils/build-param";
+import { toCapital, toText } from "@/utils/toCapital";
 import { Filter, PackagePlus } from "lucide-react";
+import { useFormatter } from "next-intl";
 import { useCallback, useState } from "react";
 
 export default function Page() {
 	const { asyncRoute } = useRouterAsync();
+	const { relativeTime } = useFormatter();
 	const [workflowName, setWorkflowName] = useDebounceValue<string>("", 500);
 
 	const handleCreate = useCallback(() => {
@@ -61,17 +65,55 @@ export default function Page() {
 						? "workflows"
 						: "workflow"}
 				</Subtle>
-				<InfiniteGrid
-					query={workflowQuery}
-					columns="auto"
-					renderItem={(item, index) => (
-						<WorkflowCard
-							href={`workflow/${item.id}`}
-							key={item.id}
-							{...item}
-						/>
-					)}
-				/>
+				<ViewList.Vertical>
+					<InfiniteTable
+						className="-mt-12"
+						query={workflowQuery}
+						keyField="id"
+						bordered={true}
+						striped={true}
+						clickableRows={true}
+						columns={[
+							{
+								header: "Name",
+								accessorKey: "name",
+								type: "bold",
+								href: (item) => `/workflow/${item.id}`,
+							},
+							{
+								header: "Description",
+								accessorKey: "description",
+							},
+							{
+								header: "Type",
+								accessorKey: "type",
+								cell(item) {
+									return toText(item.type);
+								},
+							},
+							{
+								header: "Created At",
+								accessorKey: "createdAt",
+								type: "muted",
+								cell: (item) => relativeTime(new Date(item.createdAt)),
+							},
+						]}
+						onRowClick={(item) => asyncRoute(`/workflow/${item.id}`)}
+					/>
+				</ViewList.Vertical>
+				<ViewList.Grid>
+					<InfiniteGrid
+						query={workflowQuery}
+						columns="auto"
+						renderItem={(item, index) => (
+							<WorkflowCard
+								href={`workflow/${item.id}`}
+								key={item.id}
+								{...item}
+							/>
+						)}
+					/>
+				</ViewList.Grid>
 			</ViewList.Provider>
 		</AppNavbar>
 	);

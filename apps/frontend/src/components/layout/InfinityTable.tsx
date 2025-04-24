@@ -39,7 +39,7 @@ export type ColumnType =
 
 export type ColumnDef<TData extends object> = {
 	header: string;
-	accessorKey: keyof TData | string;
+	accessorKey: keyof TData;
 	type?: ColumnType;
 	href?: (item: TData) => string | null;
 	cell?: (item: TData) => React.ReactNode;

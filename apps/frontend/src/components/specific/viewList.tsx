@@ -25,6 +25,18 @@ export const ViewList = {
 		);
 	},
 
+	Vertical: ({ children }: { children: ReactNode }) => {
+		const context = useContext(ViewListContext);
+		if (context?.viewList === "Vertical") return children;
+		return null;
+	},
+
+	Grid: ({ children }: { children: ReactNode }) => {
+		const context = useContext(ViewListContext);
+		if (context?.viewList === "Grid") return children;
+		return null;
+	},
+
 	Trigger: () => {
 		const context = useContext(ViewListContext);
 

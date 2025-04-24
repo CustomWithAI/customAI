@@ -56,7 +56,6 @@ export default function Page() {
 							<Filter /> filter
 						</Button>
 					</div>
-					<ViewList.Trigger />
 				</div>
 				<Subtle className="text-xs mb-3 font-medium">
 					Found {preprocessingQuery?.data?.pages?.at?.(0)?.total}{" "}
@@ -98,11 +97,7 @@ export default function Page() {
 							cell: (item) => relativeTime(new Date(item.createdAt)),
 						},
 					]}
-					columnStyles={[
-						{ column: "email", type: "italic" },
-						{ column: "role", type: "numeric" },
-					]}
-					onRowClick={(user) => console.log("Row clicked:", user)}
+					onRowClick={(item) => asyncRoute(`/preprocessing/${item.id}`)}
 				/>
 			</ViewList.Provider>
 		</AppNavbar>

@@ -1,4 +1,5 @@
 import { axiosClient } from "@/libs/api-client";
+import type { ResponsePagination } from "@/types/common";
 import type { ResponseCustomModel } from "@/types/response/customModel";
 
 export const customModelService = {
@@ -17,6 +18,16 @@ export const customModelService = {
 				name,
 				type,
 			});
+		} catch (error) {}
+	},
+	getCustomModel: async (
+		{ pageParam }: { pageParam: string | null } = { pageParam: null },
+	) => {
+		try {
+			const response = await axiosClient.get<
+				ResponsePagination<ResponseCustomModel>
+			>(`/custom-models${pageParam || ""}`);
+			return response?.data;
 		} catch (error) {}
 	},
 	updateCustomModel: async ({
