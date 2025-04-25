@@ -60,21 +60,24 @@ export default function DatasetManagement({
 
 	return (
 		<BaseSkeleton loading={!dataset}>
-			<Header className=" inline-flex items-center gap-x-2">
+			<Header className="inline-flex items-center gap-x-2">
 				<Settings2 /> Dataset Management
 			</Header>
 			<div className="space-y-6">
-				<div className="border-b border-gray-200 w-full pb-2">
-					<SubHeader className="font-medium leading-8">
-						Train/Test Split
-					</SubHeader>
-					<Subtle>Rebalance test/train split image dataset</Subtle>
+				<div className=" w-full pb-2">
+					<div className="border-b border-gray-200 w-full pb-2">
+						<SubHeader className=" font-medium leading-8">
+							Train/Test Split
+						</SubHeader>
+						<Subtle>Rebalance test/train split image dataset</Subtle>
+					</div>
 					<div className="max-w-xs mt-6 ml-6">
 						<SplitMethod
 							ref={splitMethodRef}
 							defaultValue={dataset?.splitMethod || ""}
 						/>
 					</div>
+
 					<div className="mt-6 ml-6">
 						<RatioCalculator
 							ref={ratioRef}

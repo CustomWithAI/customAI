@@ -64,22 +64,23 @@ export const useGetImages = (
 
 export const useGetInfImages = ({
 	id,
-}: { id: string }): UseInfiniteQueryResult<
+	params,
+}: { id: string; params?: QueryParams }): UseInfiniteQueryResult<
 	InfiniteData<ResponsePagination<ResponseImage> | undefined>,
 	Error
 > =>
 	useInfiniteQuery({
-		queryKey: ["datasets", "images", id],
-		initialPageParam: null as string | null,
+		queryKey: ["datasets", "images", id, params],
+		initialPageParam: buildQueryParams(params),
 		queryFn: async ({ pageParam = null }) =>
 			await datasetService.getImages({ id, params: pageParam || "" }),
 		getNextPageParam: (lastPage) =>
 			lastPage?.nextCursor
-				? buildQueryParams({ cursor: lastPage.nextCursor })
+				? buildQueryParams({ cursor: lastPage.nextCursor, ...params })
 				: null,
 		getPreviousPageParam: (firstPage) =>
 			firstPage?.prevCursor
-				? buildQueryParams({ cursor: firstPage.prevCursor })
+				? buildQueryParams({ cursor: firstPage.prevCursor, ...params })
 				: null,
 		refetchOnWindowFocus: false,
 		placeholderData: keepPreviousData,

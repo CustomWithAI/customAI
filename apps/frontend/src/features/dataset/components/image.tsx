@@ -1,6 +1,8 @@
 "use client";
+import { InfiniteTable } from "@/components/layout/InfinityTable";
 import { InfiniteGrid } from "@/components/layout/infinityGrid";
 import { WindowList } from "@/components/layout/windowList";
+import { FilterDialog } from "@/components/specific/filter/dialog";
 import { ViewList } from "@/components/specific/viewList";
 import { Content, Subtle, Tiny } from "@/components/typography/text";
 import { DotBadge } from "@/components/ui/dot-badge";
@@ -15,14 +17,28 @@ import {
 import { useDeleteImageByPath } from "@/hooks/mutations/dataset-api";
 import { useGetInfImages } from "@/hooks/queries/dataset-api";
 import { useToast } from "@/hooks/use-toast";
+import { useDebounceCallback } from "@/hooks/useDebounceCallback";
+import { useFilters } from "@/hooks/useFilter";
+import {
+	type FieldOptions,
+	generateFilterOptions,
+} from "@/libs/generateFilterOptions";
 import { useRouterAsync } from "@/libs/i18nAsyncRoute";
 import { cn } from "@/libs/utils";
+import type { FilterConfig } from "@/types/filter";
 import type { ResponseImage } from "@/types/response/dataset";
 import { getImageSize } from "@/utils/image-size";
 import { Ellipsis } from "lucide-react";
 import { useFormatter } from "next-intl";
 import { useState } from "react";
 import { encodeBase64 } from "../../../libs/base64";
+
+const filterConfig: FilterConfig<ResponseImage> = {
+	path: ["filter", "search", "sort"],
+	createdAt: ["sort"],
+};
+
+const fieldOptions: FieldOptions = {};
 
 export const ContentImage = ({
 	id,
@@ -31,14 +47,27 @@ export const ContentImage = ({
 	total: number | undefined;
 	id: string;
 }) => {
+	const [dialogOpen, setDialogOpen] = useState(false);
 	const viewList = ViewList.useViewListState();
 
-	const format = useFormatter();
+	const { relativeTime } = useFormatter();
 	const { toast } = useToast();
 	const { asyncRoute } = useRouterAsync();
+	const { filters, setFilter, resetFilters, getParams, setManualFilter } =
+		useFilters({
+			config: filterConfig,
+		});
+
+	const setFilterName = useDebounceCallback((name) =>
+		setManualFilter("name", name, "search"),
+	);
+	const filterOptions = generateFilterOptions(filterConfig, fieldOptions);
 
 	const { mutateAsync: deleteImage } = useDeleteImageByPath();
-	const imageQuery = useGetInfImages({ id });
+	const imageQuery = useGetInfImages({
+		id,
+		params: getParams() as Record<string, string>,
+	});
 
 	const [imageSizeCache, setImageSizeCache] = useState<
 		Record<string, { width: number; height: number } | null>
@@ -164,67 +193,89 @@ export const ContentImage = ({
 					}}
 				/>
 			) : (
-				<WindowList
+				<InfiniteTable
 					query={imageQuery}
-					direction="vertical"
-					className="space-y-3"
-					itemContent={(index, image) => {
-						getImageSizeWithCache(image.url);
-						const imageSize = imageSizeCache[image.url];
-						return (
-							<div
-								key={index}
-								className="mb-4 flex w-full text-center items-center gap-8"
-							>
-								<img
-									src={image.url}
-									className="rounded-md"
-									alt={image.path}
-									width={52}
-									height={52}
-								/>
-								<div className="w-1/2 flex-col flex justify-start">
-									<Content className="min-w-0 text-left flex-1 truncate">
-										{image.annotation?.label ||
-											image.annotation.annotation
-												?.map((annotate) => annotate.label)
-												?.join(", ") ||
-											"Unlabeled class"}
-									</Content>
-									<div className="w-fit">
-										<DotBadge
-											variant={
-												image.annotation?.label ||
-												(image.annotation?.annotation &&
-													(image.annotation?.annotation?.length || 0) > 0)
-													? "success"
-													: "danger"
-											}
-											className={cn("text-left")}
-										>
-											{image.annotation?.label ||
-											(image.annotation?.annotation &&
-												(image.annotation?.annotation?.length || 0) > 0)
-												? "annotated"
-												: "unannotated"}
-										</DotBadge>
+					className="-mt-12"
+					keyField="path"
+					bordered={true}
+					striped={true}
+					clickableRows={true}
+					columns={[
+						{
+							header: "Image",
+							accessorKey: "url",
+							type: "bold",
+							cell: (image) => {
+								return (
+									<div className="flex gap-x-2">
+										<img
+											src={image.url}
+											className="rounded-md"
+											alt={image.path}
+											width={52}
+											height={52}
+										/>
+										<div className="w-1/2 flex-col flex justify-start">
+											<Content className="min-w-0 text-left flex-1 truncate">
+												{image.annotation?.label ||
+													image.annotation.annotation
+														?.map((annotate) => annotate.label)
+														?.join(", ") ||
+													"Unlabeled class"}
+											</Content>
+											<div className="w-fit">
+												<DotBadge
+													variant={
+														image.annotation?.label ||
+														(image.annotation?.annotation &&
+															(image.annotation?.annotation?.length || 0) > 0)
+															? "success"
+															: "danger"
+													}
+													className={cn("text-left")}
+												>
+													{image.annotation?.label ||
+													(image.annotation?.annotation &&
+														(image.annotation?.annotation?.length || 0) > 0)
+														? "annotated"
+														: "unannotated"}
+												</DotBadge>
+											</div>
+										</div>
 									</div>
-								</div>
-								<div className="mx-auto shrink-0">
+								);
+							},
+						},
+						{
+							header: "Size",
+							accessorKey: "path",
+							cell: (image) => {
+								getImageSizeWithCache(image.url);
+								const imageSize = imageSizeCache[image.url];
+								return (
 									<Subtle className="text-xs text-gray-500">
 										{imageSize?.width} x {imageSize?.height} px
 									</Subtle>
-								</div>
-								<div>
-									<Subtle className="text-xs shrink-0">
-										{format.relativeTime(new Date(image.createdAt))}
-									</Subtle>
-								</div>
-							</div>
-						);
-					}}
+								);
+							},
+						},
+						{
+							header: "Created At",
+							accessorKey: "createdAt",
+							type: "muted",
+							cell: (item) => relativeTime(new Date(item.createdAt)),
+						},
+					]}
 				/>
 			)}
+			<FilterDialog
+				open={dialogOpen}
+				onOpenChange={setDialogOpen}
+				filterOptions={filterOptions}
+				values={filters}
+				onApply={(key, value) => setFilter(key, value)}
+				onReset={resetFilters}
+			/>
 		</>
 	);
 };

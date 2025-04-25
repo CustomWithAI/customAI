@@ -14,7 +14,7 @@ import {
 } from "@/domains/dtos/image";
 import { paginationDto } from "@/domains/dtos/pagination";
 import { userMiddleware } from "@/middleware/authMiddleware";
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 
 export const dataset = new Elysia({
 	name: "dataset-controller",
@@ -54,6 +54,19 @@ export const dataset = new Elysia({
 					return datasetService.updateDataset(user.id, params.id, body);
 				},
 				{ body: updateDatasetDto },
+			)
+			.get(
+				"/:id/stats",
+				async ({ user, params, datasetService }) => {
+					return datasetService.annotationStatus(user.id, params.id);
+				},
+				{
+					response: t.Object({
+						size: t.Record(t.String(), t.Unknown()),
+						count: t.Record(t.String(), t.Number()),
+						type: t.Record(t.String(), t.Number()),
+					}),
+				},
 			)
 			.delete("/:id", async ({ user, params, datasetService }) => {
 				return datasetService.deleteDataset(user.id, params.id);

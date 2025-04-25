@@ -70,7 +70,6 @@ export default function AnnotationSection({
 				freehandPaths: [],
 				...defaultValue,
 			});
-			console.log(defaultValue);
 		}
 	}, [isLoading, defaultValue, mode]);
 

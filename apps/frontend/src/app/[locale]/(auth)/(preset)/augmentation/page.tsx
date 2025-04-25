@@ -22,7 +22,7 @@ export default function Page() {
 	);
 
 	const handleCreate = useCallback(() => {
-		asyncRoute("/workflow/create");
+		asyncRoute("/augmentation/create");
 	}, [asyncRoute]);
 
 	const AugmentationQuery = useGetInfAugmentation({

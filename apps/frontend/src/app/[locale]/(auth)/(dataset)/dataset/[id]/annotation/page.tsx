@@ -18,6 +18,7 @@ import {
 	formatToLabels,
 } from "@/utils/formatEditor";
 import { isSameUnorderedArray } from "@/utils/isSameArray";
+import { useMemo } from "react";
 
 export default function Page({ params: { id } }: { params: { id: string } }) {
 	const router = useRouter();
@@ -38,6 +39,11 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 	const { mutateAsync: updateImage } = useUpdateImage();
 	const { mutateAsync: updateDataset } = useUpdateDataset();
 
+	const memoizedDefaultValue = useMemo(() => {
+		if (!image?.current?.annotation || !dataset?.labels) return undefined;
+		return formatToEditor(image.current.annotation, dataset.labels);
+	}, [image?.current?.annotation, dataset?.labels]);
+
 	return (
 		<BaseSkeleton
 			loading={datasetPending || imagePending || !image?.current?.url}
@@ -48,24 +54,20 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 				length={dataset?.imageCount || 0}
 				name={decodeURIComponent(image?.current?.path || "")}
 				mode={dataset?.annotationMethod || ""}
-				defaultValue={formatToEditor(
-					image?.current.annotation,
-					dataset?.labels,
-				)}
+				defaultValue={memoizedDefaultValue}
 				onUpdate={async (data, isClose) => {
 					if (!id || !getQueryParam()) return;
-					console.log("submitted");
-					console.log(formatToAnnotate(data), data);
-					await updateImage({
-						id,
-						imagesPath: decodeBase64(getQueryParam()) || "",
-						data: { annotation: formatToAnnotate(data) },
-					});
+
 					const labels = data.labels?.map((label) => {
 						const { id, ...rest } = label;
 						return rest;
 					});
 
+					await updateImage({
+						id,
+						imagesPath: decodeBase64(getQueryParam()) || "",
+						data: { annotation: formatToAnnotate(data) },
+					});
 					if (!isSameUnorderedArray(dataset?.labels || [], labels)) {
 						await updateDataset({
 							id,
