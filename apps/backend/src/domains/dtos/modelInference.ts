@@ -39,7 +39,7 @@ export const createUploadModelInferenceDto = t.Object({
     training: modelInferenceTraining,
     yolo: t.Optional(modelInferenceYolo),
   }),
-  model: t.File({ type: "application/*" }),
+  model: t.File(),
 });
 
 export const modelInferenceResponseDto = t.Object({

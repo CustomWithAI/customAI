@@ -18,7 +18,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { v7 } from "uuid";
 
-export const trainingStatusEnum = pgEnum("status", [
+export const trainingStatusEnum = pgEnum("training_status", [
   "created",
   "pending",
   "prepare_dataset",

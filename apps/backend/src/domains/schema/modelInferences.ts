@@ -9,7 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { v7 } from "uuid";
 
-export const modelInferenceStatusEnum = pgEnum("status", [
+export const modelInferenceStatusEnum = pgEnum("inference_status", [
   "pending",
   "running",
   "completed",

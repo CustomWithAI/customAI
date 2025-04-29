@@ -356,9 +356,10 @@ export const startTrainingWorker = async () => {
 
             // ✅ In Case Use Model From Training
             if (data.trainingId) {
-              const trainingsData = await trainingRepository.findOnlyDataById(
-                data.trainingId
-              );
+              const trainingsData =
+                await trainingRepository.findModelInferenceInfoByDataById(
+                  data.trainingId
+                );
               if (!trainingsData.length) {
                 const trainingData = trainingsData[0];
                 if (trainingData.trainedModelPath) {
@@ -366,12 +367,7 @@ export const startTrainingWorker = async () => {
                     generatePresignedUrl(trainingData.trainedModelPath)
                   );
 
-                  const [workflowData] = await workflowRepository.findById(
-                    data.userId,
-                    trainingData.workflowId
-                  );
-
-                  if (workflowData.type === "classification") {
+                  if (trainingData.workflow.type === "classification") {
                     const modelType = trainingData.machineLearningModel
                       ? "ml"
                       : "dl_cls";
@@ -383,7 +379,9 @@ export const startTrainingWorker = async () => {
                         model: modelFilePath,
                       }
                     );
-                  } else if (workflowData.type === "object_detection") {
+                  } else if (
+                    trainingData.workflow.type === "object_detection"
+                  ) {
                     if (trainingData.preTrainedModel) {
                       inferenceResponse = await axios.post(
                         `${config.PYTHON_SERVER_URL}/use-model`,
@@ -404,7 +402,7 @@ export const startTrainingWorker = async () => {
                         }
                       );
                     }
-                  } else if (workflowData.type === "segmentation") {
+                  } else if (trainingData.workflow.type === "segmentation") {
                     if (trainingData.preTrainedModel) {
                       inferenceResponse = await axios.post(
                         `${config.PYTHON_SERVER_URL}/use-model`,
@@ -419,21 +417,56 @@ export const startTrainingWorker = async () => {
                       throw new Error("Invalid model type for segmentation.");
                     }
                   } else {
-                    throw new Error(`Invalid type for ${workflowData.type}.`);
+                    throw new Error(
+                      `Invalid type for ${trainingData.workflow.type}.`
+                    );
                   }
 
                   if (inferenceResponse.status !== 200) {
                     throw new Error(
-                      `Inference failed: ${inferenceResponse.statusText}`
+                      `Inference Failed: ${inferenceResponse.statusText}`
                     );
                   }
+
+                  if (!trainingData.dataset) {
+                    throw new Error(
+                      `Dataset From Training ID: ${data.trainingId} Don't Have Not Found`
+                    );
+                  }
+
+                  const labels = trainingData.dataset.labels;
+
+                  if (!isLabels(labels)) {
+                    throw new Error("Format of dataset labels not matching");
+                  }
+
+                  let annotationData: object;
+
+                  if (trainingData.workflow.type === "classification") {
+                    const index: number = inferenceResponse.data.prediction[0];
+                    annotationData = {
+                      label: labels[index].name,
+                    };
+                  } else {
+                    annotationData = {};
+                  }
+
+                  await modelInferenceRepository.updateById(
+                    data.userId,
+                    data.id,
+                    {
+                      annotation: annotationData,
+                      status: "completed",
+                      errorMessage: null,
+                    }
+                  );
                 } else {
                   throw new Error(
                     `Training ID: ${data.trainingId} Don't Have Model`
                   );
                 }
               } else {
-                throw new Error(`Invalid training ID: ${data.trainingId}`);
+                throw new Error(`Invalid Training ID: ${data.trainingId}`);
               }
             } else if (data.modelPath) {
               const modelFilePath = convertURL(
@@ -466,9 +499,15 @@ export const startTrainingWorker = async () => {
                     model: modelFilePath,
                   }
                 );
+
+                if (inferenceResponse.status !== 200) {
+                  throw new Error(
+                    `Inference Failed: ${inferenceResponse.statusText}`
+                  );
+                }
               } else {
                 throw new Error(
-                  "Invalid Request Don't have upload model config"
+                  "Invalid Request Don't Have Upload Model Config"
                 );
               }
             } else {
@@ -476,16 +515,6 @@ export const startTrainingWorker = async () => {
                 "Invalid Request, Don't Have Model To Inference."
               );
             }
-
-            // TODO: แก้ให้ดึงข้อมูล annotation ได้อย่างถูกต้อง
-            const annotationData = inferenceResponse.data;
-
-            // ✅ Update Inference Result
-            await modelInferenceRepository.updateById(data.userId, data.id, {
-              annotation: annotationData,
-              status: "completed",
-              errorMessage: null,
-            });
 
             queueLogger.info(`✅ Inference completed: ${data.queueId}`);
           } catch (error) {

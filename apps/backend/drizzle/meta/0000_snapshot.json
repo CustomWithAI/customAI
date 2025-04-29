@@ -1,5 +1,5 @@
 {
-  "id": "c90dbabf-14b4-4a01-98e5-aa256788ff1f",
+  "id": "bd6bfc6f-d0ad-4f92-8b17-fbd7402405a0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -956,7 +956,7 @@
         },
         "status": {
           "name": "status",
-          "type": "status",
+          "type": "inference_status",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -1047,7 +1047,7 @@
         },
         "status": {
           "name": "status",
-          "type": "status",
+          "type": "training_status",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -1335,8 +1335,18 @@
     }
   },
   "enums": {
-    "public.status": {
-      "name": "status",
+    "public.inference_status": {
+      "name": "inference_status",
+      "schema": "public",
+      "values": [
+        "pending",
+        "running",
+        "completed",
+        "failed"
+      ]
+    },
+    "public.training_status": {
+      "name": "training_status",
       "schema": "public",
       "values": [
         "created",

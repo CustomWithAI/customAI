@@ -194,8 +194,29 @@ export class TrainingRepository {
       .limit(1);
   }
 
-  public async findOnlyDataById(id: string) {
-    return db.select().from(trainings).where(eq(trainings.id, id)).limit(1);
+  public async findModelInferenceInfoByDataById(id: string) {
+    const {
+      workflowId,
+      datasetId,
+      imagePreprocessingId,
+      featureExtractionId,
+      featureSelectionId,
+      augmentationId,
+      customModelId,
+      ...rest
+    } = getTableColumns(trainings);
+
+    return db
+      .select({
+        ...rest,
+        dataset: datasets,
+        workflow: workflows,
+      })
+      .from(trainings)
+      .leftJoin(datasets, eq(trainings.datasetId, datasets.id))
+      .innerJoin(workflows, eq(trainings.workflowId, workflows.id))
+      .where(eq(trainings.id, id))
+      .limit(1);
   }
 
   public async updateById(
