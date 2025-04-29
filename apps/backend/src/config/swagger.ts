@@ -66,6 +66,10 @@ export const swaggerConfig = () => (app: Elysia) => {
               name: "Workflow",
               description: "CRUD for workflow",
             },
+            useModel: {
+              name: "Model Inference",
+              description: "CRUD for model inference",
+            },
           }),
           components: {
             securitySchemes: {

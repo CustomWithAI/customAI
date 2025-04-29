@@ -2,17 +2,54 @@ import {
   connectRabbitMQ,
   getRabbitMQChannel,
 } from "@/infrastructures/rabbitmq/connection";
-import { imageService, trainingRepository } from "@/config/dependencies";
+import {
+  imageService,
+  workflowRepository,
+  trainingRepository,
+  modelInferenceRepository,
+} from "@/config/dependencies";
 import { logger, queueLogger } from "@/config/logger";
 import { config } from "@/config/env";
 import type { TrainingResponseDto } from "@/domains/dtos/training";
+import type {
+  ModelInferenceResponseDto,
+  UploadModelConfigDto,
+} from "@/domains/dtos/modelInference";
 import { retryConnection } from "@/utils/retry";
 import { connectRedis } from "@/infrastructures/redis/connection";
 import { connectDatabase } from "@/infrastructures/database/connection";
 import { connectS3 } from "@/infrastructures/s3/connection";
 import axios, { AxiosError, type AxiosResponse } from "axios";
 import { defaultSplit, isLabels, stratifiedSplit } from "@/utils/split-data";
-import { uploadFile } from "@/infrastructures/s3/s3";
+import { generatePresignedUrl, uploadFile } from "@/infrastructures/s3/s3";
+
+type WorkerTrainingData = {
+  type: "training";
+  data: TrainingResponseDto;
+};
+
+type WorkerInferenceData = {
+  type: "inference";
+  data: ModelInferenceResponseDto;
+};
+
+type WorkerData = WorkerTrainingData | WorkerInferenceData;
+
+// TODO: Fix after clear about URL (Merge Python)
+const convertURL = (url: string) => {
+  if (url.includes(config.S3_DEVELOPMENT_ENDPOINT)) {
+    return url.replace(
+      config.S3_DEVELOPMENT_ENDPOINT,
+      "http://host.docker.internal:4566"
+    );
+  }
+  return url;
+};
+
+const isUploadModelConfig = (data: unknown): data is UploadModelConfigDto => {
+  const testData = data as UploadModelConfigDto;
+  return testData.workflow !== undefined && testData.training !== undefined;
+};
 
 export const startTrainingWorker = async () => {
   const channel = await getRabbitMQChannel();
@@ -30,275 +67,441 @@ export const startTrainingWorker = async () => {
 
   queueLogger.info("🐰 RabbitMQ worker started, waiting for messages...");
 
-  // TODO: Delete after debug OK?
-  config.PYTHON_SERVER_URL = "http://host.docker.internal:8000";
-
   channel.consume(
     config.RABBITMQ_TRAINING_QUEUE_NAME,
     async (msg) => {
       if (msg) {
-        const trainingData = JSON.parse(
-          msg.content.toString()
-        ) as TrainingResponseDto;
+        const workerData = JSON.parse(msg.content.toString()) as WorkerData;
 
-        queueLogger.info(`🚀 Processing training: ${trainingData.queueId}`);
+        if (workerData.type === "training") {
+          const { data } = workerData;
+          queueLogger.info(`🚀 Processing training: ${data.queueId}`);
 
-        try {
-          // ✅ Update Status Into "prepare_dataset"
-          await trainingRepository.updateById(
-            trainingData.workflow.id,
-            trainingData.id,
-            { status: "prepare_dataset" }
-          );
+          try {
+            // ✅ Update Status Into "prepare_dataset"
+            await trainingRepository.updateById(data.workflow.id, data.id, {
+              status: "prepare_dataset",
+            });
 
-          if (!trainingData.dataset) {
-            throw new Error("Training dataset not found");
-          }
+            if (!data.dataset) {
+              throw new Error("Training dataset not found");
+            }
 
-          const { data: images } = await imageService.getImagesByDatasetId(
-            trainingData.workflow.userId,
-            trainingData.dataset.id,
-            { limit: 1000 }
-          );
+            const { data: images } = await imageService.getImagesByDatasetId(
+              data.workflow.userId,
+              data.dataset.id,
+              { limit: 1000 }
+            );
 
-          const { train, test, valid, labels, annotationMethod, splitMethod } =
-            trainingData.dataset;
-
-          if (!train || !test || !valid) {
-            throw new Error("Train/Test/Valid ratio in dataset not found");
-          }
-
-          if (!labels) {
-            throw new Error("Dataset labels not found");
-          }
-
-          if (!isLabels(labels)) {
-            throw new Error("Format of dataset labels not matching");
-          }
-
-          if (!annotationMethod) {
-            throw new Error("Dataset annotation method not found");
-          }
-
-          if (!splitMethod) {
-            throw new Error("Dataset split method not found");
-          }
-
-          // TODO: แค่ชั่วคราว เอาไว้มาแก้ให้ไม่ Hard Code ทีหลัง OK?
-          const filterImages = images.map(({ url, annotation }) => {
-            const updatedUrl = url.includes("http://localhost:4566")
-              ? url.replace(
-                  "http://localhost:4566",
-                  "http://host.docker.internal:4566"
-                )
-              : url;
-
-            return { url: updatedUrl, annotation };
-          });
-
-          const { trainData, testData, validData } =
-            splitMethod === "default"
-              ? defaultSplit(
-                  filterImages,
-                  train / 100,
-                  test / 100,
-                  valid / 100,
-                  labels
-                )
-              : stratifiedSplit(
-                  filterImages,
-                  train / 100,
-                  test / 100,
-                  valid / 100,
-                  labels
-                );
-
-          const responseCreateDataset = await axios.post(
-            `${config.PYTHON_SERVER_URL}/dataset`,
-            {
-              type: annotationMethod,
+            const {
+              train,
+              test,
+              valid,
               labels,
-              train_data: trainData,
-              test_data: testData,
-              valid_data: validData,
-            }
-          );
+              annotationMethod,
+              splitMethod,
+            } = data.dataset;
 
-          if (responseCreateDataset.status !== 200) {
-            throw new Error(
-              `Failed to create dataset on Python Server: ${responseCreateDataset.statusText}`
+            if (!train || !test || !valid) {
+              throw new Error("Train/Test/Valid ratio in dataset not found");
+            }
+
+            if (!labels) {
+              throw new Error("Dataset labels not found");
+            }
+
+            if (!isLabels(labels)) {
+              throw new Error("Format of dataset labels not matching");
+            }
+
+            if (!annotationMethod) {
+              throw new Error("Dataset annotation method not found");
+            }
+
+            if (!splitMethod) {
+              throw new Error("Dataset split method not found");
+            }
+
+            const filterImages = images.map(({ url, annotation }) => {
+              return { url: convertURL(url), annotation };
+            });
+
+            const { trainData, testData, validData } =
+              splitMethod === "default"
+                ? defaultSplit(
+                    filterImages,
+                    train / 100,
+                    test / 100,
+                    valid / 100,
+                    labels
+                  )
+                : stratifiedSplit(
+                    filterImages,
+                    train / 100,
+                    test / 100,
+                    valid / 100,
+                    labels
+                  );
+
+            const responseCreateDataset = await axios.post(
+              `${config.PYTHON_SERVER_URL}/dataset`,
+              {
+                type: annotationMethod,
+                labels,
+                train_data: trainData,
+                test_data: testData,
+                valid_data: validData,
+              }
             );
-          }
 
-          const responseImagePreprocessingAndAugmentation = await axios.post(
-            `${config.PYTHON_SERVER_URL}/dataset-config`,
-            {
-              type: annotationMethod,
-              preprocess: trainingData.imagePreprocessing?.data,
-              augmentation: trainingData.augmentation?.data,
+            if (responseCreateDataset.status !== 200) {
+              throw new Error(
+                `Failed to create dataset on Python Server: ${responseCreateDataset.statusText}`
+              );
             }
-          );
 
-          if (responseImagePreprocessingAndAugmentation.status !== 200) {
-            throw new Error(
-              `Failed to preprocess and augment images on Python Server: ${responseImagePreprocessingAndAugmentation.statusText}`
+            const responseImagePreprocessingAndAugmentation = await axios.post(
+              `${config.PYTHON_SERVER_URL}/dataset-config`,
+              {
+                type: annotationMethod,
+                preprocess: data.imagePreprocessing?.data,
+                augmentation: data.augmentation?.data,
+              }
             );
-          }
 
-          // ✅ Update Status Into "training"
-          await trainingRepository.updateById(
-            trainingData.workflow.id,
-            trainingData.id,
-            { status: "training" }
-          );
-
-          let responseTraining: AxiosResponse<any, any>;
-          let fileType: string;
-
-          if (trainingData.dataset.annotationMethod === "classification") {
-            if (trainingData.machineLearningModel) {
-              responseTraining = await axios.post(
-                `${config.PYTHON_SERVER_URL}/training-ml`,
-                {
-                  model: trainingData.machineLearningModel,
-                  featex: trainingData.featureExtraction?.data,
-                },
-                {
-                  responseType: "arraybuffer",
-                }
-              );
-              fileType = "pkl";
-            } else if (trainingData.preTrainedModel) {
-              responseTraining = await axios.post(
-                `${config.PYTHON_SERVER_URL}/training-dl-cls-pt`,
-                {
-                  model: trainingData.preTrainedModel,
-                  training: trainingData.hyperparameter,
-                },
-                {
-                  responseType: "arraybuffer",
-                }
-              );
-              fileType = "h5";
-            } else if (trainingData.customModel) {
-              responseTraining = await axios.post(
-                `${config.PYTHON_SERVER_URL}/training-dl-cls-construct`,
-                {
-                  model: trainingData.customModel.data,
-                  training: trainingData.hyperparameter,
-                  featex: trainingData.featureExtraction?.data,
-                },
-                {
-                  responseType: "arraybuffer",
-                }
-              );
-              fileType = "h5";
-            } else {
+            if (responseImagePreprocessingAndAugmentation.status !== 200) {
               throw new Error(
-                `Model for ${trainingData.dataset.annotationMethod} not found.`
+                `Failed to preprocess and augment images on Python Server: ${responseImagePreprocessingAndAugmentation.statusText}`
               );
             }
-          } else if (
-            trainingData.dataset.annotationMethod === "object_detection"
-          ) {
-            if (trainingData.preTrainedModel) {
-              responseTraining = await axios.post(
-                `${config.PYTHON_SERVER_URL}/training-yolo-pt`,
-                {
-                  type: "object_detection",
-                  model: trainingData.preTrainedModel,
-                  training: trainingData.hyperparameter,
-                },
-                {
-                  responseType: "arraybuffer",
-                }
-              );
-              fileType = "pt";
-            } else if (trainingData.customModel) {
-              responseTraining = await axios.post(
-                `${config.PYTHON_SERVER_URL}/training-dl-od-construct`,
-                {
-                  model: trainingData.customModel.data,
-                  training: trainingData.hyperparameter,
-                  featex: trainingData.featureExtraction
-                    ? trainingData.featureExtraction.data
-                    : undefined,
-                },
-                {
-                  responseType: "arraybuffer",
-                }
-              );
-              fileType = "h5";
-            } else {
-              throw new Error(
-                `Model for ${trainingData.dataset.annotationMethod} not found.`
-              );
-            }
-          } else if (trainingData.dataset.annotationMethod === "segmentation") {
-            if (trainingData.preTrainedModel) {
-              responseTraining = await axios.post(
-                `${config.PYTHON_SERVER_URL}/training-yolo-pt`,
-                {
-                  type: "segmentation",
-                  model: trainingData.preTrainedModel,
-                  training: trainingData.hyperparameter,
-                },
-                {
-                  responseType: "arraybuffer",
-                }
-              );
-              fileType = "pt";
-            } else {
-              throw new Error(
-                `Model for ${trainingData.dataset.annotationMethod} not found.`
-              );
-            }
-          } else {
-            throw new Error("Annotation method in dataset not matching.");
-          }
 
-          if (responseTraining.status !== 200) {
-            throw new Error(
-              `Failed to train model on Python Server: ${responseTraining.statusText}`
+            // ✅ Update Status Into "training"
+            await trainingRepository.updateById(data.workflow.id, data.id, {
+              status: "training",
+            });
+
+            let trainingResponse: AxiosResponse<any, any>;
+            let evaluationResponse: AxiosResponse<any, any>;
+            let fileType: string;
+
+            if (data.dataset.annotationMethod === "classification") {
+              if (data.machineLearningModel) {
+                trainingResponse = await axios.post(
+                  `${config.PYTHON_SERVER_URL}/training-ml`,
+                  {
+                    model: data.machineLearningModel,
+                    featex: data.featureExtraction?.data,
+                  },
+                  {
+                    responseType: "arraybuffer",
+                  }
+                );
+                fileType = "pkl";
+              } else if (data.preTrainedModel) {
+                trainingResponse = await axios.post(
+                  `${config.PYTHON_SERVER_URL}/training-dl-cls-pt`,
+                  {
+                    model: data.preTrainedModel,
+                    training: data.hyperparameter,
+                  },
+                  {
+                    responseType: "arraybuffer",
+                  }
+                );
+                fileType = "h5";
+              } else if (data.customModel) {
+                trainingResponse = await axios.post(
+                  `${config.PYTHON_SERVER_URL}/training-dl-cls-construct`,
+                  {
+                    model: data.customModel.data,
+                    training: data.hyperparameter,
+                    featex: data.featureExtraction?.data,
+                  },
+                  {
+                    responseType: "arraybuffer",
+                  }
+                );
+                fileType = "h5";
+              } else {
+                throw new Error(
+                  `Model for ${data.dataset.annotationMethod} not found.`
+                );
+              }
+              evaluationResponse = await axios.get(
+                `${config.PYTHON_SERVER_URL}/evaluation?workflow=cls`
+              );
+            } else if (data.dataset.annotationMethod === "object_detection") {
+              if (data.preTrainedModel) {
+                trainingResponse = await axios.post(
+                  `${config.PYTHON_SERVER_URL}/training-yolo-pt`,
+                  {
+                    type: "object_detection",
+                    model: data.preTrainedModel,
+                    training: data.hyperparameter,
+                  },
+                  {
+                    responseType: "arraybuffer",
+                  }
+                );
+                evaluationResponse = await axios.get(
+                  `${config.PYTHON_SERVER_URL}/evaluation?workflow=od&yolo=${data.preTrainedModel}`
+                );
+                fileType = "pt";
+              } else if (data.customModel) {
+                trainingResponse = await axios.post(
+                  `${config.PYTHON_SERVER_URL}/training-dl-od-construct`,
+                  {
+                    model: data.customModel.data,
+                    training: data.hyperparameter,
+                    featex: data.featureExtraction
+                      ? data.featureExtraction.data
+                      : undefined,
+                  },
+                  {
+                    responseType: "arraybuffer",
+                  }
+                );
+                evaluationResponse = await axios.get(
+                  `${config.PYTHON_SERVER_URL}/evaluation?workflow=seg&yolo=${data.preTrainedModel}`
+                );
+                fileType = "h5";
+              } else {
+                throw new Error(
+                  `Model for ${data.dataset.annotationMethod} not found.`
+                );
+              }
+            } else if (data.dataset.annotationMethod === "segmentation") {
+              if (data.preTrainedModel) {
+                trainingResponse = await axios.post(
+                  `${config.PYTHON_SERVER_URL}/training-yolo-pt`,
+                  {
+                    type: "segmentation",
+                    model: data.preTrainedModel,
+                    training: data.hyperparameter,
+                  },
+                  {
+                    responseType: "arraybuffer",
+                  }
+                );
+                evaluationResponse = await axios.get(
+                  `${config.PYTHON_SERVER_URL}/evaluation?workflow=od&yolo=${data.preTrainedModel}`
+                );
+                fileType = "pt";
+              } else {
+                throw new Error(
+                  `Model for ${data.dataset.annotationMethod} not found.`
+                );
+              }
+            } else {
+              throw new Error("Annotation method in dataset not matching.");
+            }
+
+            if (trainingResponse.status !== 200) {
+              throw new Error(
+                `Failed to train model on Python Server: ${trainingResponse.statusText}`
+              );
+            }
+
+            if (evaluationResponse.status !== 200) {
+              throw new Error(
+                `Failed to get evaluation on Python Server: ${evaluationResponse.statusText}`
+              );
+            }
+
+            const filePath = `trainings/${data.id}/model.${fileType}`;
+
+            await uploadFile(
+              filePath,
+              Buffer.from(trainingResponse.data),
+              "application/octet-stream"
             );
-          }
 
-          const filePath = `trainings/${trainingData.id}/model.${fileType}`;
-
-          await uploadFile(
-            filePath,
-            Buffer.from(responseTraining.data),
-            "application/octet-stream"
-          );
-
-          // ✅ Update Status Into "completed"
-          await trainingRepository.updateById(
-            trainingData.workflow.id,
-            trainingData.id,
-            {
+            // ✅ Update Status Into "completed"
+            await trainingRepository.updateById(data.workflow.id, data.id, {
               status: "completed",
               trainedModelPath: filePath,
+              evaluation: evaluationResponse.data,
               errorMessage: null,
-            }
-          );
-          queueLogger.info(`✅ Training completed: ${trainingData.queueId}`);
-        } catch (error) {
-          if (error instanceof Error) {
-            queueLogger.error(
-              `❌ Training failed: ${trainingData.queueId} with error: ${error.message}`
-            );
+            });
+            queueLogger.info(`✅ Training completed: ${data.queueId}`);
+          } catch (error) {
+            if (error instanceof Error) {
+              queueLogger.error(
+                `❌ Training failed: ${data.queueId} with error: ${error.message}`
+              );
 
-            // TODO: แก้ created ให้กลายเป็น completed หลังทำเสร็จทั้งหมด
-            // ✅ Update Status Into "failed"
-            await trainingRepository.updateById(
-              trainingData.workflow.id,
-              trainingData.id,
-              { status: "failed", errorMessage: error.message }
-            );
+              // ✅ Update Status Into "failed"
+              await trainingRepository.updateById(data.workflow.id, data.id, {
+                status: "failed",
+                errorMessage: error.message,
+              });
+            }
+          } finally {
+            // ✅ Delete Request From Queue
+            channel.ack(msg);
           }
-        } finally {
-          // ✅ Delete Request From Queue
-          channel.ack(msg);
+        } else if (workerData.type === "inference") {
+          const { data } = workerData;
+          queueLogger.info(`🚀 Processing inference: ${data.queueId}`);
+
+          try {
+            // ✅ Update Status Into "running"
+            await modelInferenceRepository.updateById(data.userId, data.id, {
+              status: "running",
+            });
+
+            const imagePath = convertURL(generatePresignedUrl(data.imagePath));
+
+            let inferenceResponse: AxiosResponse<any, any>;
+
+            // ✅ In Case Use Model From Training
+            if (data.trainingId) {
+              const trainingsData = await trainingRepository.findOnlyDataById(
+                data.trainingId
+              );
+              if (!trainingsData.length) {
+                const trainingData = trainingsData[0];
+                if (trainingData.trainedModelPath) {
+                  const modelFilePath = convertURL(
+                    generatePresignedUrl(trainingData.trainedModelPath)
+                  );
+
+                  const [workflowData] = await workflowRepository.findById(
+                    data.userId,
+                    trainingData.workflowId
+                  );
+
+                  if (workflowData.type === "classification") {
+                    const modelType = trainingData.machineLearningModel
+                      ? "ml"
+                      : "dl_cls";
+                    inferenceResponse = await axios.post(
+                      `${config.PYTHON_SERVER_URL}/use-model`,
+                      {
+                        type: modelType,
+                        img: imagePath,
+                        model: modelFilePath,
+                      }
+                    );
+                  } else if (workflowData.type === "object_detection") {
+                    if (trainingData.preTrainedModel) {
+                      inferenceResponse = await axios.post(
+                        `${config.PYTHON_SERVER_URL}/use-model`,
+                        {
+                          type: "dl_od_pt",
+                          version: trainingData.preTrainedModel,
+                          img: imagePath,
+                          model: modelFilePath,
+                        }
+                      );
+                    } else {
+                      inferenceResponse = await axios.post(
+                        `${config.PYTHON_SERVER_URL}/use-model`,
+                        {
+                          type: "dl_od_con",
+                          img: imagePath,
+                          model: modelFilePath,
+                        }
+                      );
+                    }
+                  } else if (workflowData.type === "segmentation") {
+                    if (trainingData.preTrainedModel) {
+                      inferenceResponse = await axios.post(
+                        `${config.PYTHON_SERVER_URL}/use-model`,
+                        {
+                          type: "dl_seg",
+                          version: trainingData.preTrainedModel,
+                          img: imagePath,
+                          model: modelFilePath,
+                        }
+                      );
+                    } else {
+                      throw new Error("Invalid model type for segmentation.");
+                    }
+                  } else {
+                    throw new Error(`Invalid type for ${workflowData.type}.`);
+                  }
+
+                  if (inferenceResponse.status !== 200) {
+                    throw new Error(
+                      `Inference failed: ${inferenceResponse.statusText}`
+                    );
+                  }
+                } else {
+                  throw new Error(
+                    `Training ID: ${data.trainingId} Don't Have Model`
+                  );
+                }
+              } else {
+                throw new Error(`Invalid training ID: ${data.trainingId}`);
+              }
+            } else if (data.modelPath) {
+              const modelFilePath = convertURL(
+                generatePresignedUrl(data.modelPath)
+              );
+              if (isUploadModelConfig(data.modelConfig)) {
+                let modelType = "";
+
+                if (data.modelConfig.workflow === "classification") {
+                  if (data.modelConfig.training === "machine_learning") {
+                    modelType = "ml";
+                  } else {
+                    modelType = "dl_cls";
+                  }
+                } else if (data.modelConfig.workflow === "object_detection") {
+                  if (data.modelConfig.training === "pre_trained") {
+                    modelType = "dl_od_pt";
+                  } else {
+                    modelType = "dl_od_con";
+                  }
+                } else {
+                  modelType = "dl_seg";
+                }
+                inferenceResponse = await axios.post(
+                  `${config.PYTHON_SERVER_URL}/use-model`,
+                  {
+                    type: modelType,
+                    version: data.modelConfig.yolo,
+                    img: imagePath,
+                    model: modelFilePath,
+                  }
+                );
+              } else {
+                throw new Error(
+                  "Invalid Request Don't have upload model config"
+                );
+              }
+            } else {
+              throw new Error(
+                "Invalid Request, Don't Have Model To Inference."
+              );
+            }
+
+            // TODO: แก้ให้ดึงข้อมูล annotation ได้อย่างถูกต้อง
+            const annotationData = inferenceResponse.data;
+
+            // ✅ Update Inference Result
+            await modelInferenceRepository.updateById(data.userId, data.id, {
+              annotation: annotationData,
+              status: "completed",
+              errorMessage: null,
+            });
+
+            queueLogger.info(`✅ Inference completed: ${data.queueId}`);
+          } catch (error) {
+            if (error instanceof Error) {
+              queueLogger.error(
+                `❌ Inference failed: ${data.queueId} with error: ${error.message}`
+              );
+
+              await modelInferenceRepository.updateById(data.userId, data.id, {
+                status: "failed",
+                errorMessage: error.message,
+              });
+            }
+          } finally {
+            channel.ack(msg);
+          }
         }
       }
     },

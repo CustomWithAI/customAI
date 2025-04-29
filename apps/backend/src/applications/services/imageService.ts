@@ -7,8 +7,8 @@ import {
   uploadFile,
 } from "@/infrastructures/s3/s3";
 import type { PaginationParams } from "@/utils/db-type";
+import { convertToJpg } from "@/utils/file";
 import { InternalServerError, NotFoundError } from "elysia";
-import sharp from "sharp";
 import { v7 } from "uuid";
 
 export class ImageService {
@@ -24,11 +24,6 @@ export class ImageService {
     }
   }
 
-  private async convertToJpg(file: File): Promise<Buffer> {
-    const buffer = await file.arrayBuffer();
-    return sharp(Buffer.from(buffer)).jpeg().toBuffer();
-  }
-
   public async uploadImages(userId: string, datasetId: string, files: File[]) {
     await this.ensureDatasetExists(userId, datasetId);
 
@@ -36,7 +31,7 @@ export class ImageService {
 
     for (const file of files) {
       const filePath = `datasets/${datasetId}/${v7()}.jpg`;
-      const buffer = await this.convertToJpg(file);
+      const buffer = await convertToJpg(file);
 
       await uploadFile(filePath, buffer, "image/jpg");
 
@@ -136,7 +131,7 @@ export class ImageService {
     if (file) {
       await deleteFile(filePath);
       updatedFilePath = `datasets/${datasetId}/${v7()}.jpg`;
-      const buffer = await this.convertToJpg(file);
+      const buffer = await convertToJpg(file);
       await uploadFile(updatedFilePath, buffer, "image/jpg");
       data.path = updatedFilePath;
     }

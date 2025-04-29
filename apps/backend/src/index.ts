@@ -6,6 +6,7 @@ import { featureExtraction } from "@/applications/controllers/featureExtractionC
 import { featureSelection } from "@/applications/controllers/featureSelectionController";
 import { customModel } from "@/applications/controllers/customModelController";
 import { workflow } from "@/applications/controllers/workflowController";
+import { modelInference } from "@/applications/controllers/modelInferenceController";
 import { config } from "@/config/env";
 import { logger } from "@/config/logger";
 import { swaggerConfig } from "@/config/swagger";
@@ -19,7 +20,6 @@ import { shutdown } from "@/utils/shutdown";
 import { cors } from "@elysiajs/cors";
 import { staticPlugin } from "@elysiajs/static";
 import { Elysia } from "elysia";
-import { mockTrainingController } from "@/applications/controllers/mockTrainingController";
 
 try {
   logger.info("🏃‍♀️ Starting connection..");
@@ -42,7 +42,7 @@ try {
     .use(featureSelection)
     .use(customModel)
     .use(workflow)
-    .use(mockTrainingController)
+    .use(modelInference)
     .onParse(({ request, route }) => {
       if (route.startsWith("/api/auth")) {
         return request.body;

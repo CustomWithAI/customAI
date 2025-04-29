@@ -123,6 +123,22 @@ CREATE TABLE "images" (
 	"dataset_id" varchar(255) NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "model_inferences" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"training_id" varchar(255),
+	"model_path" varchar(255),
+	"model_config" jsonb,
+	"image_path" varchar(255) NOT NULL,
+	"annotation" jsonb,
+	"status" "status" DEFAULT 'pending' NOT NULL,
+	"queue_id" varchar(255),
+	"retry_count" integer DEFAULT 0 NOT NULL,
+	"error_message" text,
+	"user_id" varchar(255) NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "trainings" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"is_default" boolean DEFAULT false NOT NULL,

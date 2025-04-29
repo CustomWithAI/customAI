@@ -194,6 +194,10 @@ export class TrainingRepository {
       .limit(1);
   }
 
+  public async findOnlyDataById(id: string) {
+    return db.select().from(trainings).where(eq(trainings.id, id)).limit(1);
+  }
+
   public async updateById(
     workflowId: string,
     id: string,
