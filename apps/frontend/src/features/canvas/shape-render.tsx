@@ -114,12 +114,14 @@ export function ShapeRenderer({
 									? `${label?.color || polygon.color}40`
 									: "none"
 							}
-							data-shape-id={`polygon-${polygon.id}`}
+							data-shape-id={`polygon::${polygon.id}`}
 							stroke={selected ? "#2563eb" : label?.color || polygon.color}
 							strokeWidth={selected ? "3" : "2"}
-							onMouseEnter={() => setHover(label?.id)}
+							onMouseEnter={() => setHover(polygon?.id)}
 							onMouseLeave={() => setHover(undefined)}
-							strokeDasharray={hover === label?.id || selected ? undefined : 3}
+							strokeDasharray={
+								hover === polygon?.id || selected ? undefined : 3
+							}
 						/>
 						{(activePolygon || selected) &&
 							previewPoint &&
@@ -214,11 +216,11 @@ export function ShapeRenderer({
 							d={createPathFromPoints(path.points)}
 							fill={path ? `${label?.color || path.color}40` : "none"}
 							stroke={selected ? "#2563eb" : label?.color || path.color}
-							data-shape-id={`path-${path.id}`}
+							data-shape-id={`path::${path.id}`}
 							strokeWidth={selected ? "3" : "2"}
-							onMouseEnter={() => setHover(label?.id)}
+							onMouseEnter={() => setHover(path?.id)}
 							onMouseLeave={() => setHover(undefined)}
-							strokeDasharray={hover === label?.id ? undefined : 3}
+							strokeDasharray={hover === path?.id ? undefined : 3}
 						/>
 						{label && (
 							<foreignObject

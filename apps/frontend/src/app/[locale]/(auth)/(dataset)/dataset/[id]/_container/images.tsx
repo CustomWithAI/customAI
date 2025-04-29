@@ -264,7 +264,7 @@ export default function ImagesPage({ id }: { id: string }) {
 										<div className="w-1/2 flex-col flex justify-start">
 											<Content className="min-w-0 text-left flex-1 truncate">
 												{image.annotation?.label ||
-													image.annotation.annotation
+													image.annotation?.annotation
 														?.map((annotate) => annotate.label)
 														?.join(", ") ||
 													"Unlabeled class"}

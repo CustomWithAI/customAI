@@ -183,6 +183,7 @@ export default function SquareEditor({
 		startDrag: startPathDrag,
 		updateDrag: updatePathDrag,
 		endDrag: endPathDrag,
+		setSelectedPath,
 		updatePath,
 		deletePath,
 	} = useFreehand({
@@ -297,13 +298,11 @@ export default function SquareEditor({
 					x: event.clientX / zoom,
 					y: event.clientY / zoom,
 				});
-			} else if (selectedShape) {
-				setSelectedShape(null);
 			} else {
 				setSelectedShape((prev) => (prev?.id === id ? null : { type, id }));
 			}
 		},
-		[selectedShape, zoom],
+		[zoom],
 	);
 
 	const handleMouseDown = useCallback(
@@ -369,7 +368,7 @@ export default function SquareEditor({
 					} else {
 						const pathData = deleteElement.getAttribute("data-shape-id");
 						if (!pathData) return;
-						const [type, id] = pathData.split("-");
+						const [type, id] = pathData.split("::");
 						if (type === "polygon") {
 							deletePolygon(id);
 						} else if (type === "path") {
@@ -386,10 +385,11 @@ export default function SquareEditor({
 						if (!shapeElement?.hasAttribute("data-shape-id")) return;
 						const shapeId = shapeElement.getAttribute("data-shape-id");
 						if (!shapeId) return;
-						const [type, id] = shapeId.split("-");
+						const [type, id] = shapeId.split("::");
 						const polygon = polygons.find((p) => p.id === id);
 						if (polygon) {
 							setSelectedShape({ type: type as "polygon" | "path", id });
+							setSelectedPolygon(id);
 							if (!polygon.isLocked) {
 								startPolygonDrag(id, { x, y });
 							}
@@ -413,10 +413,11 @@ export default function SquareEditor({
 						if (!shapeElement?.hasAttribute("data-shape-id")) return;
 						const shapeId = shapeElement.getAttribute("data-shape-id");
 						if (!shapeId) return;
-						const [type, id] = shapeId.split("-");
+						const [type, id] = shapeId.split("::");
 						const path = freehandPaths.find((p) => p.id === id);
 						if (path) {
 							setSelectedShape({ type: type as "polygon" | "path", id });
+							setSelectedPath(id);
 							if (!path.isLocked) {
 								startPathDrag(id, { x, y });
 							}
@@ -441,6 +442,8 @@ export default function SquareEditor({
 			deleteSquare,
 			freehandPaths,
 			startPolygonDrag,
+			setSelectedPath,
+			setSelectedPolygon,
 			polygons,
 			squares,
 			activePolygon,
@@ -515,8 +518,8 @@ export default function SquareEditor({
 		(event: React.MouseEvent) => {
 			event.preventDefault();
 			const targetElement = document.elementFromPoint(
-				event.clientX,
-				event.clientY,
+				event.clientX / zoom,
+				event.clientY / zoom,
 			);
 			const squareElement = targetElement?.closest("[data-square-id]");
 			if (squareElement) {
@@ -533,14 +536,14 @@ export default function SquareEditor({
 				const shapeId = shapeElement.getAttribute("data-shape-id");
 				if (shapeId) {
 					event.stopPropagation();
-					const [type, id] = shapeId.split("-");
+					const [type, id] = shapeId.split("::");
 					setSelectedShape({ type: type as "polygon" | "path", id: id });
 					setShapeContextMenu({ x: event.clientX, y: event.clientY });
 				}
 				return;
 			}
 		},
-		[setSelectedSquare],
+		[setSelectedSquare, zoom],
 	);
 
 	const handleExport = useCallback(() => {
@@ -735,13 +738,16 @@ export default function SquareEditor({
 
 	const handleLabelClick = useCallback(
 		(labelId: string) => {
-			if (isUsedLabel(labelId)) {
+			if (labels.length > 0) {
 				const shape = findShapeById(labelId);
 				switch (mode) {
 					case "select": {
 						setSelectedShape(null);
 						setContextMenu(null);
 						setShapeContextMenu(null);
+						onChange?.({
+							classifiedLabel: labelId,
+						});
 						break;
 					}
 					case "square": {
@@ -751,41 +757,51 @@ export default function SquareEditor({
 							setContextMenu(null);
 							setShapeContextMenu(null);
 						}
+						updateLabel(selectedSquare, labelId, updateSquare);
 						break;
 					}
-					case "polygon":
-					case "freehand": {
+					case "polygon": {
 						if (shape?.id) {
 							setSelectedShape({
-								type: mode === "freehand" ? "path" : "polygon",
+								type: "polygon",
 								id: shape?.id,
 							});
+							setSelectedPolygon(shape?.id);
 							setSelectedSquare(null);
 							setContextMenu(null);
 							setShapeContextMenu(null);
 						}
+						console.log(selectedPolygon);
+						updateLabel(selectedPolygon, labelId, updatePolygon);
+						break;
+					}
+					case "freehand": {
+						if (shape?.id) {
+							setSelectedShape({
+								type: "path",
+								id: shape?.id,
+							});
+							setSelectedPath(shape.id);
+							setSelectedSquare(null);
+							setContextMenu(null);
+							setShapeContextMenu(null);
+						}
+						updateLabel(selectedPath, labelId, updatePath);
+
 						break;
 					}
 				}
-				return;
 			}
-			if (mode === "select") {
-				onChange?.({
-					classifiedLabel: labelId,
-				});
-				return;
-			}
-			updateLabel(selectedSquare, labelId, updateSquare);
-			updateLabel(selectedPolygon, labelId, updatePolygon);
-			updateLabel(selectedPath, labelId, updatePath);
 		},
 		[
 			selectedSquare,
 			findShapeById,
 			onChange,
+			setSelectedPath,
+			setSelectedPolygon,
 			mode,
+			labels.length,
 			setSelectedSquare,
-			isUsedLabel,
 			updateSquare,
 			updatePolygon,
 			selectedPath,

@@ -31,9 +31,10 @@ export function useFreehand({
 				color: "#000000",
 				labelId,
 			};
-			setActivePath(newPath);
 			setPaths((prev) => [...prev, newPath]);
 			onChange?.(newPath);
+			setActivePath(newPath);
+			return newPath;
 		},
 		[onChange],
 	);
@@ -139,12 +140,8 @@ export function useFreehand({
 		(id: string, updates: Partial<FreehandPath>) => {
 			setPaths((prev) => {
 				const state = prev.map((path) => {
-					if (path.id === id) {
-						const updated = { ...path, ...updates };
-						onChange?.(updated);
-						return updated;
-					}
-					return path;
+					const updated = path.id === id ? { ...path, ...updates } : path;
+					return updated;
 				});
 				onChange?.(state);
 				return state;
