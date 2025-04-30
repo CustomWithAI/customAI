@@ -17,19 +17,31 @@ import type { CanvasElement } from "@/features/canvas/useModel/canvasGrid";
 import { ImageComponents } from "@/features/canvas/useModel/component/image";
 import type { ReactNode } from "react";
 
-export const elementContent: Record<
+export type ComponentContent = (
+	element: CanvasElement,
+	onChangeCallback: (value: Partial<CanvasElement>) => void,
+) => ReactNode;
+
+export type ElementContent = Record<
 	string,
 	{
 		width: number;
 		height: number;
-		component: (element: CanvasElement) => ReactNode;
+		component: ComponentContent;
 	}
-> = {
+>;
+
+export const elementContent: ElementContent = {
 	image: {
 		width: 1000,
 		height: 500,
-		component: (element: CanvasElement) => (
-			<ImageComponents element={element} />
+		component: (element: CanvasElement, onChange) => (
+			<ImageComponents
+				initialWidth={1000}
+				initialHeight={500}
+				element={element}
+				onChangeCallback={onChange}
+			/>
 		),
 	},
 };

@@ -101,6 +101,17 @@ export default function CanvasWithOverlay() {
 		firstScreen.current = true;
 	});
 
+	const handleChangeElement = useCallback(
+		(id: string, value: Partial<CanvasElement>) => {
+			setElements((prev) =>
+				prev.map((element) =>
+					element.id === id ? { ...element, ...value } : element,
+				),
+			);
+		},
+		[],
+	);
+
 	const drawGrid = useCallback(() => {
 		const canvas = canvasRef.current;
 		if (!canvas) return;
@@ -596,7 +607,9 @@ export default function CanvasWithOverlay() {
 						</div>
 
 						<div className="pt-6 h-full overflow-auto">
-							{elementContent[element.type]?.component(element)}
+							{elementContent[element.type]?.component(element, (v) =>
+								handleChangeElement(element.id, v),
+							)}
 						</div>
 					</div>
 				);

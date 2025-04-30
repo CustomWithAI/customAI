@@ -16,13 +16,24 @@ import { useGetWorkflows } from "@/hooks/queries/workflow-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useInferenceStore } from "@/stores/inferenceStore";
 import { buildQueryParams } from "@/utils/build-param";
+import { getImageSizeFromImageLike } from "@/utils/image-size";
 import { toCapital } from "@/utils/toCapital";
 import { useEffect, useId, useState } from "react";
 import type { CanvasElement } from "../canvasGrid";
 
 type SelectType = "manual" | "workflow" | "training";
 
-export const ImageComponents = ({ element }: { element: CanvasElement }) => {
+export const ImageComponents = ({
+	element,
+	onChangeCallback,
+	initialWidth,
+	initialHeight,
+}: {
+	element: CanvasElement;
+	onChangeCallback: (value: Partial<CanvasElement>) => void;
+	initialWidth: number;
+	initialHeight: number;
+}) => {
 	const id = useId();
 	const { getQueryParam } = useQueryParam();
 	const [workflowId, trainingId] = getQueryParam(["workflowId", "trainingId"]);
@@ -60,11 +71,37 @@ export const ImageComponents = ({ element }: { element: CanvasElement }) => {
 	if (isPending) return null;
 
 	return (
-		<div className="grid grid-cols-8 bg-white gap-x-6">
-			<div className="col-span-5 w-full aspect-[4/3] rounded bg-gray-50 shadow-2xs">
-				<UploadZone onChange={(file) => {}} />
+		<div className="flex bg-white gap-x-6">
+			<div className="min-w-5/8 w-full max-w-[calc(100%-26rem)] aspect-[4/3] rounded bg-gray-50 shadow-2xs">
+				<UploadZone
+					onChange={async (file) => {
+						if (!file?.[0]?.file) {
+							onChangeCallback({
+								width: initialWidth,
+								height: initialHeight,
+							});
+							return;
+						}
+						onSet("image", file[0].file);
+						const { width, height } = await getImageSizeFromImageLike(
+							file[0].file,
+						);
+						console.log(
+							(width + 36) * 1.625,
+							width * 0.625 + 436,
+							Math.min((width + 36) * 1.625, width * 0.625 + 436),
+						);
+						onChangeCallback({
+							width: Math.max(
+								initialWidth,
+								Math.min((width + 36) * 1.625, width * 0.625 + 436),
+							),
+							height: Math.max(initialHeight, height + 84),
+						});
+					}}
+				/>
 			</div>
-			<div className="col-span-3 pt-6 space-y-4 pr-6">
+			<div className="flex-1 w-3/8 pt-6 max-w-96 space-y-4 pr-6">
 				<>
 					<Label className="mb-1 pb-1 text-xs" htmlFor={`${id}-model`}>
 						method
@@ -90,7 +127,7 @@ export const ImageComponents = ({ element }: { element: CanvasElement }) => {
 					<>
 						<Label className="mb-1 pb-1 text-xs">model path</Label>
 						<UploadFile onChange={(file) => {}} />
-						<div className="grid grid-cols-2 gap-y-3">
+						<div className="grid grid-cols-2 gap-3">
 							<div>
 								<Label htmlFor={`${id}-class`} className="mb-1 pb-1 text-xs">
 									model class type
@@ -99,7 +136,7 @@ export const ImageComponents = ({ element }: { element: CanvasElement }) => {
 									value={data.workflow}
 									onValueChange={(value) => onSet("workflow", value)}
 								>
-									<SelectTrigger id={`${id}-class`} className="w-40">
+									<SelectTrigger id={`${id}-class`} className="w-full">
 										<SelectValue placeholder="Select type" />
 									</SelectTrigger>
 									<SelectContent className="z-[500]">
@@ -119,7 +156,7 @@ export const ImageComponents = ({ element }: { element: CanvasElement }) => {
 									value={data.training}
 									onValueChange={(value) => onSet("training", value)}
 								>
-									<SelectTrigger className="w-40">
+									<SelectTrigger className="w-full">
 										<SelectValue placeholder="Select type" />
 									</SelectTrigger>
 									<SelectContent className="z-[500]">
@@ -139,7 +176,7 @@ export const ImageComponents = ({ element }: { element: CanvasElement }) => {
 									value={data.version}
 									onValueChange={(value) => onSet("version", value)}
 								>
-									<SelectTrigger className="w-40">
+									<SelectTrigger className="w-full">
 										<SelectValue placeholder="Select type" />
 									</SelectTrigger>
 									<SelectContent className="z-[500]">

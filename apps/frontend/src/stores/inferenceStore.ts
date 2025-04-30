@@ -1,9 +1,12 @@
+import type { FileMetadata } from "@/hooks/use-file-upload";
 import { create } from "zustand";
 
 export type InferenceColumn = {
 	workflow: string | undefined;
 	training: string | undefined;
 	version: string | undefined;
+	image: File | FileMetadata | undefined;
+	model: File | FileMetadata | undefined;
 	workflowId: string | undefined;
 	trainingId: string | undefined;
 };
@@ -30,6 +33,8 @@ export const initialInferenceState: InferenceColumn = {
 	workflow: undefined,
 	training: undefined,
 	version: undefined,
+	image: undefined,
+	model: undefined,
 	workflowId: undefined,
 	trainingId: undefined,
 };
