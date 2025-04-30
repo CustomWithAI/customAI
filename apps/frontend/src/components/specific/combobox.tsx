@@ -30,6 +30,7 @@ interface ComboboxProps<T extends object> {
 	id?: string;
 	keyExtractor: (item: T) => string;
 	itemContent: (item: T) => React.ReactNode;
+	itemDisplay?: (item: T) => React.ReactNode;
 	filter: (search: string) => void;
 	placeholder?: string;
 	emptyMessage?: string;
@@ -47,6 +48,7 @@ export function Combobox<T extends object>({
 	keyExtractor,
 	itemContent,
 	id,
+	itemDisplay,
 	filter,
 	placeholder = "Search...",
 	emptyMessage = "No results found.",
@@ -110,7 +112,11 @@ export function Combobox<T extends object>({
 					)}
 				>
 					{selectedItem ? (
-						<span className="truncate">{itemContent(selectedItem)}</span>
+						<span className="truncate min-h-4">
+							{itemDisplay
+								? itemDisplay(selectedItem)
+								: itemContent(selectedItem)}
+						</span>
 					) : (
 						<span className="text-muted-foreground">{placeholder}</span>
 					)}

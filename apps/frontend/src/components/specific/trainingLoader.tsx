@@ -81,11 +81,30 @@ export interface MultiStepLoaderRefHandle {
 
 const EnhancedLoaderCore = ({
 	loadingStates,
+	handleAutoClose,
 	value = 0,
 }: {
 	loadingStates: LoadingState[];
+	handleAutoClose: (config?: {
+		redirect?: true;
+		error?: true;
+		message?: string;
+	}) => void;
 	value?: number;
 }) => {
+	if (loadingStates.at(value)?.status === "failed") {
+		setTimeout(
+			() =>
+				handleAutoClose({
+					error: true,
+					message: loadingStates.at(value)?.text,
+				}),
+			3000,
+		);
+	}
+	if (loadingStates.at(value)?.text === "Training job queued successfully") {
+		setTimeout(() => handleAutoClose({ redirect: true }), 3000);
+	}
 	return (
 		<div className="flex relative justify-start max-w-xl mx-auto flex-col mt-40">
 			{loadingStates.map((loadingState, index) => {
@@ -155,12 +174,18 @@ const EnhancedLoaderCore = ({
 const EnhancedMultiStepLoader = ({
 	loadingStates,
 	loading,
+	handleAutoClose,
 	duration = 1000,
 	loop = false,
 	onClose,
 }: {
 	loadingStates: LoadingState[];
 	loading?: boolean;
+	handleAutoClose: (config?: {
+		redirect?: true;
+		error?: true;
+		message?: string;
+	}) => void;
 	duration?: number;
 	loop?: boolean;
 	onClose?: () => void;
@@ -173,13 +198,13 @@ const EnhancedMultiStepLoader = ({
 			return;
 		}
 		const timeout = setTimeout(() => {
-			setCurrentState((prevState) =>
-				loop
+			setCurrentState((prevState) => {
+				return loop
 					? prevState === loadingStates.length - 1
 						? 0
 						: prevState + 1
-					: Math.min(prevState + 1, loadingStates.length - 1),
-			);
+					: Math.min(prevState + 1, loadingStates.length - 1);
+			});
 		}, duration);
 
 		return () => clearTimeout(timeout);
@@ -203,6 +228,7 @@ const EnhancedMultiStepLoader = ({
 					<div className="h-96 relative">
 						<EnhancedLoaderCore
 							value={currentState}
+							handleAutoClose={handleAutoClose}
 							loadingStates={loadingStates}
 						/>
 					</div>
@@ -241,12 +267,19 @@ export const MultiStepLoaderController = forwardRef<
 		const [loadingStates, setLoadingStates] = useState<LoadingState[]>([]);
 		const abortControllerRef = useRef<AbortController | null>(null);
 
-		const handleAutoClose = () => {
-			const timer = setTimeout(() => {
-				setLoading(false);
-				streamMutation.reset();
-			}, autoCloseDelay);
-			return () => clearTimeout(timer);
+		const handleAutoClose = (config?: {
+			redirect?: true;
+			error?: true;
+			message?: string;
+		}) => {
+			setLoading(false);
+			streamMutation.reset();
+			if (config?.redirect) {
+				routeCallback && router.push(routeCallback);
+			}
+			if (config?.error) {
+				errorCallback?.(config?.message);
+			}
 		};
 
 		const cancelCurrentRequest = () => {
@@ -291,21 +324,6 @@ export const MultiStepLoaderController = forwardRef<
 											});
 
 										setLoadingStates(lines);
-										if (lines.some((state) => state.status === "failed")) {
-											handleAutoClose();
-											if (errorCallback) {
-												errorCallback(
-													lines.find((state) => state.status === "failed")
-														?.text,
-												);
-											}
-										}
-										if (
-											lines?.at(-1)?.text === "Training job queued successfully"
-										) {
-											routeCallback && router.push(routeCallback);
-											handleAutoClose();
-										}
 									} catch (error) {
 										if (!axios.isCancel(error)) {
 											console.error("Error parsing stream data:", error);
@@ -371,6 +389,7 @@ export const MultiStepLoaderController = forwardRef<
 		return (
 			<EnhancedMultiStepLoader
 				loadingStates={displayLoadingStates}
+				handleAutoClose={handleAutoClose}
 				loading={loading}
 				duration={2000}
 				loop={false}

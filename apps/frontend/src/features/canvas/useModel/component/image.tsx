@@ -104,7 +104,7 @@ export const ImageComponents = ({
 	const handleOnSuccessStart = (data: InferenceResponse | undefined) => {
 		if (data?.id) {
 			onChangeCallback({ inferenceId: data.id });
-			toast({ title: "image is on process at ai, please wait :)" });
+			toast({ title: "image is on process at server, please wait :)" });
 		}
 	};
 
@@ -134,23 +134,23 @@ export const ImageComponents = ({
 				break;
 			}
 			case "workflow": {
-				if (!data.image || !workflowId) return;
+				if (!data.image || !data.workflowId) return;
 				const workflowFormData = new FormData();
 				workflowFormData.append("image", data.image as File);
 				await createWorkflowInference(
-					{ workflowId, data: workflowFormData },
+					{ workflowId: data.workflowId, data: workflowFormData },
 					{ onSuccess: (data) => handleOnSuccessStart(data?.data) },
 				);
 				break;
 			}
 			case "training": {
-				if (!data.image || !workflowId || !trainingId) return;
+				if (!data.image || !data.workflowId || !data.trainingId) return;
 				const trainingFormData = new FormData();
 				trainingFormData.append("image", data.image as File);
 				await createTrainingInference(
 					{
-						workflowId,
-						trainingId,
+						workflowId: data.workflowId,
+						trainingId: data.trainingId,
 						data: trainingFormData,
 					},
 					{ onSuccess: (data) => handleOnSuccessStart(data?.data) },
@@ -357,6 +357,7 @@ export const ImageComponents = ({
 							hook={workflowQuery}
 							id={`${id}-workflow`}
 							keyExtractor={(workflow) => String(workflow.id)}
+							itemDisplay={(workflow) => workflow.name}
 							itemContent={(workflow) => (
 								<div className="flex flex-col">
 									<span>{workflow.name}</span>
@@ -382,6 +383,7 @@ export const ImageComponents = ({
 						<Combobox
 							hook={workflowQuery}
 							keyExtractor={(workflow) => String(workflow.id)}
+							itemDisplay={(workflow) => workflow.name}
 							itemContent={(workflow) => (
 								<div className="flex flex-col">
 									<span>{workflow.name}</span>
@@ -405,6 +407,7 @@ export const ImageComponents = ({
 							hook={trainingQuery}
 							disabled={!(workflowId || data.workflowId)}
 							keyExtractor={(training) => String(training.id)}
+							itemDisplay={(training) => training.version}
 							itemContent={(training) => (
 								<div className="flex flex-col">
 									<span>{training.version}</span>
