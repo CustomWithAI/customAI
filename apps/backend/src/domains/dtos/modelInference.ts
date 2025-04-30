@@ -20,7 +20,7 @@ const modelInferenceStatus = t.Union([
   t.Literal("failed"),
 ]);
 
-const modelInferenceYolo = t.Union([
+const modelInferenceVersion = t.Union([
   t.Literal("yolov5"),
   t.Literal("yolov8"),
   t.Literal("yolov11"),
@@ -37,7 +37,7 @@ export const createUploadModelInferenceDto = t.Object({
   config: t.ObjectString({
     workflow: modelInferenceWorkflow,
     training: modelInferenceTraining,
-    yolo: t.Optional(modelInferenceYolo),
+    version: t.Optional(modelInferenceVersion),
   }),
   model: t.File(),
 });

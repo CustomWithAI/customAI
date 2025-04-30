@@ -353,6 +353,7 @@ export const startTrainingWorker = async () => {
             const imagePath = convertURL(generatePresignedUrl(data.imagePath));
 
             let inferenceResponse: AxiosResponse<any, any>;
+            let annotationData: object;
 
             // ✅ In Case Use Model From Training
             if (data.trainingId) {
@@ -440,26 +441,29 @@ export const startTrainingWorker = async () => {
                     throw new Error("Format of dataset labels not matching");
                   }
 
-                  let annotationData: object;
-
                   if (trainingData.workflow.type === "classification") {
-                    const index: number = inferenceResponse.data.prediction[0];
+                    const index: number = trainingData.machineLearningModel
+                      ? inferenceResponse.data.prediction[0]
+                      : inferenceResponse.data.prediction;
                     annotationData = {
                       label: labels[index].name,
                     };
+                  } else if (
+                    trainingData.workflow.type === "object_detection"
+                  ) {
+                    annotationData = inferenceResponse.data.prediction.map(
+                      (d: any) => {
+                        return {
+                          ...d,
+                          label: labels[d.label].name,
+                        };
+                      }
+                    );
+                  } else if (trainingData.workflow.type === "segmentation") {
+                    annotationData = {};
                   } else {
                     annotationData = {};
                   }
-
-                  await modelInferenceRepository.updateById(
-                    data.userId,
-                    data.id,
-                    {
-                      annotation: annotationData,
-                      status: "completed",
-                      errorMessage: null,
-                    }
-                  );
                 } else {
                   throw new Error(
                     `Training ID: ${data.trainingId} Don't Have Model`
@@ -494,11 +498,28 @@ export const startTrainingWorker = async () => {
                   `${config.PYTHON_SERVER_URL}/use-model`,
                   {
                     type: modelType,
-                    version: data.modelConfig.yolo,
+                    version: data.modelConfig.version,
                     img: imagePath,
                     model: modelFilePath,
                   }
                 );
+
+                annotationData = inferenceResponse.data;
+                if (data.modelConfig.workflow === "classification") {
+                  const index: number =
+                    data.modelConfig.training === "machine_learning"
+                      ? inferenceResponse.data.prediction[0]
+                      : inferenceResponse.data.prediction;
+                  annotationData = {
+                    label: index,
+                  };
+                } else if (data.modelConfig.workflow === "object_detection") {
+                  annotationData = inferenceResponse.data.prediction;
+                } else if (data.modelConfig.workflow === "segmentation") {
+                  annotationData = {};
+                } else {
+                  annotationData = {};
+                }
 
                 if (inferenceResponse.status !== 200) {
                   throw new Error(
@@ -515,6 +536,12 @@ export const startTrainingWorker = async () => {
                 "Invalid Request, Don't Have Model To Inference."
               );
             }
+
+            await modelInferenceRepository.updateById(data.userId, data.id, {
+              annotation: annotationData,
+              status: "completed",
+              errorMessage: null,
+            });
 
             queueLogger.info(`✅ Inference completed: ${data.queueId}`);
           } catch (error) {
