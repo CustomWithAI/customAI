@@ -50,9 +50,12 @@ export default function UploadFile({
 								className="size-4 shrink-0 opacity-60"
 								aria-hidden="true"
 							/>
-							<div className="min-w-0">
+							<div className="flex flex-col min-w-0">
 								<p className="truncate text-[13px] font-medium">
 									{file.file.name}
+								</p>
+								<p className="text-xs text-muted-foreground">
+									{formatBytes(file.file.size)}
 								</p>
 							</div>
 						</div>

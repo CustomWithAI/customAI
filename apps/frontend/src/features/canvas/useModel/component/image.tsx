@@ -17,7 +17,7 @@ import { useQueryParam } from "@/hooks/use-query-params";
 import { useInferenceStore } from "@/stores/inferenceStore";
 import { buildQueryParams } from "@/utils/build-param";
 import { toCapital } from "@/utils/toCapital";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import type { CanvasElement } from "../canvasGrid";
 
 type SelectType = "manual" | "workflow" | "training";
@@ -26,6 +26,7 @@ export const ImageComponents = ({ element }: { element: CanvasElement }) => {
 	const id = useId();
 	const { getQueryParam } = useQueryParam();
 	const [workflowId, trainingId] = getQueryParam(["workflowId", "trainingId"]);
+
 	const { data, filter, onSet, onClear, onSetFilter, onRemoveFilter } =
 		useInferenceStore();
 
@@ -47,7 +48,17 @@ export const ImageComponents = ({ element }: { element: CanvasElement }) => {
 		trainingId ? "training" : workflowId ? "workflow" : "manual",
 	);
 
+	useEffect(() => {
+		if (workflowId) {
+			onSet("workflowId", workflowId);
+		}
+		if (trainingId) {
+			onSet("trainingId", trainingId);
+		}
+	}, [workflowId, trainingId, onSet]);
+
 	if (isPending) return null;
+
 	return (
 		<div className="grid grid-cols-8 bg-white gap-x-6">
 			<div className="col-span-5 w-full aspect-[4/3] rounded bg-gray-50 shadow-2xs">
