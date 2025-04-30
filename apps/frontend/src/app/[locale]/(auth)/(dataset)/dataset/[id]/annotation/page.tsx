@@ -40,8 +40,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 	const { mutateAsync: updateDataset } = useUpdateDataset();
 
 	const memoizedDefaultValue = useMemo(() => {
-		if (!image?.current?.annotation || !dataset?.labels) return undefined;
-		return formatToEditor(image.current.annotation, dataset.labels);
+		return formatToEditor(image?.current.annotation, dataset?.labels);
 	}, [image?.current?.annotation, dataset?.labels]);
 
 	return (

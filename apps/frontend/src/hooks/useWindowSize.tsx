@@ -29,18 +29,10 @@ export function useWindowSize(
 		initializeWithValue = false;
 	}
 
-	const [windowSize, setWindowSize] = useState<WindowSize>(() => {
-		if (initializeWithValue) {
-			return {
-				width: window.innerWidth,
-				height: window.innerHeight,
-			};
-		}
-		return {
-			width: undefined,
-			height: undefined,
-		};
-	});
+	const [windowSize, setWindowSize] = useState<WindowSize>(() => ({
+		width: undefined,
+		height: undefined,
+	}));
 
 	const debouncedSetWindowSize = useDebounceCallback(
 		setWindowSize,
@@ -61,7 +53,9 @@ export function useWindowSize(
 	useEventListener("resize", handleSize);
 
 	useIsomorphicLayoutEffect(() => {
-		handleSize();
+		if (initializeWithValue) {
+			handleSize();
+		}
 	}, []);
 
 	return windowSize;

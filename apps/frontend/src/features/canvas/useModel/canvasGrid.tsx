@@ -20,6 +20,8 @@ import {
 import { elementContent } from "@/configs/elements/tools";
 import { useClickAnyWhere } from "@/hooks/useClickAnyWhere";
 import { useIsMounted } from "@/hooks/useIsMounted";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useWindowSize } from "@/hooks/useWindowSize";
 import { useRouter } from "@/libs/i18nNavigation";
 import { toCapital } from "@/utils/toCapital";
 import {
@@ -50,6 +52,7 @@ export interface CanvasElement {
 	type: string;
 	title?: string;
 	color: string;
+	inferenceId?: string;
 	zIndex: number;
 	children?: CanvasElement[];
 	content?: ReactNode;
@@ -61,21 +64,8 @@ export default function CanvasWithOverlay() {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const elementsContainerRef = useRef<HTMLDivElement>(null);
 	const router = useRouter();
-	const [size, setSize] = useState({ width: 600, height: 800 });
-	const { width: canvasWidth, height: canvasHeight } = size;
-
-	useEffect(() => {
-		const updateSize = () => {
-			setSize({
-				width: window.innerWidth,
-				height: window.innerHeight,
-			});
-		};
-
-		updateSize();
-		window.addEventListener("resize", updateSize);
-		return () => window.removeEventListener("resize", updateSize);
-	}, []);
+	const { width: canvasWidth = 600, height: canvasHeight = 800 } =
+		useWindowSize();
 
 	const gridSize = 40;
 
@@ -88,7 +78,10 @@ export default function CanvasWithOverlay() {
 
 	const [maxZIndex, setMaxZIndex] = useState(100);
 
-	const [elements, setElements] = useState<CanvasElement[]>([]);
+	const [elements, setElements] = useLocalStorage<CanvasElement[]>(
+		"canvas",
+		[],
+	);
 
 	const [draggedElement, setDraggedElement] = useState<{
 		id: string;
@@ -109,7 +102,7 @@ export default function CanvasWithOverlay() {
 				),
 			);
 		},
-		[],
+		[setElements],
 	);
 
 	const drawGrid = useCallback(() => {
@@ -516,7 +509,7 @@ export default function CanvasWithOverlay() {
 			window.removeEventListener("mousemove", handleMouseMove);
 			window.removeEventListener("mouseup", handleMouseUp);
 		};
-	}, [draggedElement]);
+	}, [draggedElement, setElements]);
 
 	useEffect(() => {
 		if (offsetX == null || offsetY == null) return;

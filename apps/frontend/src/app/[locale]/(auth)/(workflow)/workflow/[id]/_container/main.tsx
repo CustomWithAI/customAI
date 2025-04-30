@@ -12,7 +12,7 @@ import { encodeBase64 } from "@/libs/base64";
 import type { TrainingModel } from "@/types/response/training";
 import type { WorkflowModel } from "@/types/response/workflow";
 import { toCapital } from "@/utils/toCapital";
-import { Layers2, PackagePlus, ScanSearch, Tractor } from "lucide-react";
+import { Group, Layers2, PackagePlus, ScanSearch, Tractor } from "lucide-react";
 import { useFormatter } from "next-intl";
 
 const STATUS_COLOR: Record<string, VariantProps> = {
@@ -79,9 +79,10 @@ export const MainWorkflowPage = ({
 							href={`create/?step=cHJlc2V0&id=${encodeBase64(data?.id || "")}`}
 						/>
 						<OverviewBox
-							title="Create a model"
-							description="To create your own pipeline."
-							icon={<PackagePlus />}
+							title="use a model"
+							description="To use your trained pipeline."
+							icon={<Group />}
+							href={`/use/?workflowId=${encodeBase64(data?.id || "")}`}
 						/>
 						<OverviewBox
 							title="Create a model"
