@@ -62,13 +62,18 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 						const { id, ...rest } = label;
 						return rest;
 					});
-
-					await updateImage({
-						id,
-						imagesPath: decodeBase64(getQueryParam()) || "",
-						data: { annotation: formatToAnnotate(data) },
-					});
-					if (!isSameUnorderedArray(dataset?.labels || [], labels)) {
+					const annotation = formatToAnnotate(data);
+					if (annotation?.label || (annotation?.annotation?.length || 0) > 0) {
+						await updateImage({
+							id,
+							imagesPath: decodeBase64(getQueryParam()) || "",
+							data: { annotation: formatToAnnotate(data) },
+						});
+					}
+					if (
+						!isSameUnorderedArray(dataset?.labels || [], labels) &&
+						(labels?.length || 0) > 0
+					) {
 						await updateDataset({
 							id,
 							data: {

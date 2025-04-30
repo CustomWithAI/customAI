@@ -4,22 +4,12 @@ import type React from "react";
 
 import { Button } from "@/components/ui/button";
 import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
 	Select,
 	SelectContent,
@@ -27,11 +17,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { elementContent } from "@/configs/elements/tools";
+import { useClickAnyWhere } from "@/hooks/useClickAnyWhere";
 import { useIsMounted } from "@/hooks/useIsMounted";
-import { useWindowSize } from "@/hooks/useWindowSize";
+import { useRouter } from "@/libs/i18nNavigation";
+import { toCapital } from "@/utils/toCapital";
 import {
+	ArrowLeft,
 	Copy,
 	Home,
 	Layers,
@@ -49,15 +41,13 @@ import {
 	useState,
 } from "react";
 
-type ElementType = "card" | "form" | "tabs" | "custom" | "group";
-
-interface CanvasElement {
+export interface CanvasElement {
 	id: string;
 	x: number;
 	y: number;
 	width: number;
 	height: number;
-	type: ElementType;
+	type: string;
 	title?: string;
 	color: string;
 	zIndex: number;
@@ -70,6 +60,7 @@ export default function CanvasWithOverlay() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const elementsContainerRef = useRef<HTMLDivElement>(null);
+	const router = useRouter();
 	const [size, setSize] = useState({ width: 600, height: 800 });
 	const { width: canvasWidth, height: canvasHeight } = size;
 
@@ -86,7 +77,7 @@ export default function CanvasWithOverlay() {
 		return () => window.removeEventListener("resize", updateSize);
 	}, []);
 
-	const gridSize = 20;
+	const gridSize = 40;
 
 	const [offsetX, setOffsetX] = useState(0);
 	const [offsetY, setOffsetY] = useState(0);
@@ -104,7 +95,11 @@ export default function CanvasWithOverlay() {
 		parentId?: string;
 	} | null>(null);
 
-	const [newElementType, setNewElementType] = useState<ElementType>("card");
+	const [newElementType, setNewElementType] = useState<string>("image");
+
+	useClickAnyWhere(() => {
+		firstScreen.current = true;
+	});
 
 	const drawGrid = useCallback(() => {
 		const canvas = canvasRef.current;
@@ -123,7 +118,7 @@ export default function CanvasWithOverlay() {
 			Math.floor(offsetY / gridSize) * gridSize - (offsetY % gridSize);
 
 		ctx.beginPath();
-		ctx.strokeStyle = "#ddd";
+		ctx.strokeStyle = "#eee";
 		ctx.lineWidth = 1;
 
 		for (let x = startX; x <= canvasWidth + startX; x += gridSize) {
@@ -227,19 +222,8 @@ export default function CanvasWithOverlay() {
 	};
 
 	const addNewElement = () => {
-		let width = 300;
-		let height = 200;
-
-		if (newElementType === "form") {
-			width = 250;
-			height = 180;
-		} else if (newElementType === "tabs") {
-			width = 320;
-			height = 200;
-		} else if (newElementType === "group") {
-			width = 400;
-			height = 250;
-		}
+		const width = elementContent[newElementType]?.width ?? 300;
+		const height = elementContent[newElementType]?.height ?? 200;
 
 		const newZIndex = maxZIndex + 10;
 		setMaxZIndex(newZIndex);
@@ -251,7 +235,7 @@ export default function CanvasWithOverlay() {
 			width,
 			height,
 			type: newElementType,
-			title: `${newElementType.charAt(0).toUpperCase() + newElementType.slice(1)} Component`,
+			title: `${toCapital(newElementType)}`,
 			color:
 				newElementType === "group" ? "rgba(243, 244, 246, 0.8)" : "#f9fafb",
 			zIndex: newZIndex,
@@ -474,248 +458,6 @@ export default function CanvasWithOverlay() {
 		}
 	};
 
-	const addChildElement = (parentId: string) => {
-		const parent = elements.find((el) => el.id === parentId);
-		if (!parent || parent.type !== "group" || !parent.children) return;
-
-		const maxChildZIndex =
-			parent.children.length > 0
-				? Math.max(...parent.children.map((child) => child.zIndex))
-				: 0;
-
-		const childId = `${parentId}-${parent.children.length + 1}`;
-		const newChild: CanvasElement = {
-			id: childId,
-			x: 20 + (parent.children.length % 2) * 180,
-			y: 40 + Math.floor(parent.children.length / 2) * 100,
-			width: 160,
-			height: 80,
-			type: "custom",
-			title: `Child Element ${parent.children.length + 1}`,
-			color: parent.children.length % 2 === 0 ? "#e6f7ff" : "#fff7e6",
-			zIndex: maxChildZIndex + 1,
-			content: (
-				<div className="flex flex-col items-center justify-center h-full">
-					<div
-						className={
-							parent.children.length % 2 === 0
-								? "text-blue-500"
-								: "text-orange-500"
-						}
-					>
-						Custom Content {parent.children.length + 1}
-					</div>
-					<Button size="sm" variant="outline" className="mt-2">
-						Click Me
-					</Button>
-				</div>
-			),
-		};
-
-		setElements((prev) =>
-			prev.map((el) => {
-				if (el.id === parentId) {
-					return {
-						...el,
-						children: [...(el.children || []), newChild],
-					};
-				}
-				return el;
-			}),
-		);
-	};
-
-	const renderElementContent = (element: CanvasElement) => {
-		switch (element.type) {
-			case "card":
-				return (
-					<Card className="w-full h-full border-none shadow-none">
-						<CardHeader className="pb-2">
-							<CardTitle className="text-lg">{element.title}</CardTitle>
-							<CardDescription>This is a shadcn Card component</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<p className="text-sm">
-								You can place any content inside this card. It's fully
-								interactive!
-							</p>
-						</CardContent>
-						<CardFooter>
-							<Button size="sm">Action</Button>
-						</CardFooter>
-					</Card>
-				);
-
-			case "form":
-				return (
-					<Card className="w-full h-full border-none shadow-none">
-						<CardHeader className="pb-2">
-							<CardTitle className="text-lg">{element.title}</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-4">
-							<div className="space-y-2">
-								<Label htmlFor={`name-${element.id}`}>Name</Label>
-								<Input
-									id={`name-${element.id}`}
-									placeholder="Enter your name"
-								/>
-							</div>
-							<div className="flex items-center space-x-2">
-								<Switch id={`terms-${element.id}`} />
-								<Label htmlFor={`terms-${element.id}`}>Accept terms</Label>
-							</div>
-						</CardContent>
-					</Card>
-				);
-
-			case "tabs":
-				return (
-					<Card className="w-full h-full border-none shadow-none">
-						<CardHeader className="pb-2">
-							<CardTitle className="text-lg">{element.title}</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<Tabs defaultValue="account" className="w-full">
-								<TabsList className="grid w-full grid-cols-2">
-									<TabsTrigger value="account">Account</TabsTrigger>
-									<TabsTrigger value="settings">Settings</TabsTrigger>
-								</TabsList>
-								<TabsContent value="account" className="p-2">
-									<p className="text-sm">Account tab content goes here.</p>
-								</TabsContent>
-								<TabsContent value="settings" className="p-2">
-									<p className="text-sm">Settings tab content goes here.</p>
-								</TabsContent>
-							</Tabs>
-						</CardContent>
-					</Card>
-				);
-
-			case "group":
-				return (
-					<div className="w-full h-full p-2 relative">
-						{element.children
-							?.sort((a, b) => a.zIndex - b.zIndex)
-							.map((child) => {
-								if (
-									!isElementVisible({
-										...child,
-										x: element.x + child.x,
-										y: element.y + child.y,
-									})
-								) {
-									return null;
-								}
-
-								return (
-									<div
-										key={child.id}
-										className="absolute rounded shadow-sm"
-										style={{
-											left: `${child.x}px`,
-											top: `${child.y}px`,
-											width: `${child.width}px`,
-											height: `${child.height}px`,
-											backgroundColor: child.color,
-											zIndex: child.zIndex,
-										}}
-									>
-										<div
-											className="absolute top-0 left-0 right-0 h-6 bg-gray-100 border-b flex items-center px-2 cursor-grab z-10"
-											onMouseDown={(e) =>
-												handleElementMouseDown(e, child.id, element.id)
-											}
-										>
-											<div className="text-xs font-medium flex-1 truncate">
-												{child.title}
-											</div>
-
-											<DropdownMenu>
-												<DropdownMenuTrigger asChild>
-													<Button
-														variant="ghost"
-														size="icon"
-														className="h-5 w-5"
-													>
-														<MoreVertical size={12} />
-													</Button>
-												</DropdownMenuTrigger>
-												<DropdownMenuContent align="end">
-													<DropdownMenuItem
-														onClick={() => bringToFront(child.id, element.id)}
-													>
-														<Layers className="mr-2 h-4 w-4" />
-														<span>Bring to Front</span>
-													</DropdownMenuItem>
-													<DropdownMenuItem
-														onClick={() => sendToBack(child.id, element.id)}
-													>
-														<Layers className="mr-2 h-4 w-4" />
-														<span>Send to Back</span>
-													</DropdownMenuItem>
-													<DropdownMenuItem
-														onClick={() => moveForward(child.id, element.id)}
-													>
-														<MoveUp className="mr-2 h-4 w-4" />
-														<span>Move Forward</span>
-													</DropdownMenuItem>
-													<DropdownMenuItem
-														onClick={() => moveBackward(child.id, element.id)}
-													>
-														<MoveDown className="mr-2 h-4 w-4" />
-														<span>Move Backward</span>
-													</DropdownMenuItem>
-													<DropdownMenuSeparator />
-													<DropdownMenuItem
-														onClick={() =>
-															duplicateElement(child.id, element.id)
-														}
-													>
-														<Copy className="mr-2 h-4 w-4" />
-														<span>Duplicate</span>
-													</DropdownMenuItem>
-													<DropdownMenuSeparator />
-													<DropdownMenuItem
-														onClick={() => deleteElement(child.id, element.id)}
-														className="text-red-600"
-													>
-														<Trash2 className="mr-2 h-4 w-4" />
-														<span>Delete</span>
-													</DropdownMenuItem>
-												</DropdownMenuContent>
-											</DropdownMenu>
-										</div>
-
-										<div className="pt-6 h-full overflow-auto">
-											{child.type === "custom" && child.content ? (
-												child.content
-											) : (
-												<div>Empty</div>
-											)}
-										</div>
-									</div>
-								);
-							})}
-
-						<Button
-							size="sm"
-							variant="outline"
-							className="absolute bottom-2 right-2"
-							onClick={() => addChildElement(element.id)}
-						>
-							<Plus size={14} className="mr-1" /> Add Child
-						</Button>
-					</div>
-				);
-
-			case "custom":
-				return element.content || <div className="p-4">{element.title}</div>;
-
-			default:
-				return <div className="p-4">{element.title}</div>;
-		}
-	};
-
 	useEffect(() => {
 		const handleMouseMove = (e: MouseEvent) => {
 			if (!draggedElement || !dragStart.current) return;
@@ -854,7 +596,7 @@ export default function CanvasWithOverlay() {
 						</div>
 
 						<div className="pt-6 h-full overflow-auto">
-							{renderElementContent(element)}
+							{elementContent[element.type]?.component(element)}
 						</div>
 					</div>
 				);
@@ -886,41 +628,51 @@ export default function CanvasWithOverlay() {
 			>
 				{renderElements()}
 			</div>
-			<div className="absolute flex h-12 flex-col items-center justify-center p-4 bg-gray-100">
-				<h1 className="text-2xl font-bold mb-4">Canvas with Overlay</h1>
-				<div className="flex flex-row items-center gap-2 mb-4">
+			<div className="absolute flex h-14 flex-col items-center z-[9999] shadow-sm justify-center top-4 left-4 px-2 rounded-lg bg-gray-100">
+				<div className="flex flex-row items-center gap-2">
+					<Button
+						onClick={() => router.back()}
+						effect="shineHover"
+						className="flex items-center gap-2 h-10"
+						variant="outline"
+					>
+						<ArrowLeft size={16} />
+					</Button>
 					<Button
 						onClick={goToOrigin}
-						className="flex items-center gap-2"
+						effect="shineHover"
+						className="flex items-center gap-2 h-10"
 						variant="outline"
 					>
 						<Home size={16} />
-						Return to Origin
 					</Button>
-
 					<Select
 						value={newElementType}
-						onValueChange={(value) => setNewElementType(value as ElementType)}
+						onValueChange={(value) => setNewElementType(value)}
 					>
 						<SelectTrigger className="w-[180px]">
 							<SelectValue placeholder="Select element type" />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="card">Card</SelectItem>
-							<SelectItem value="form">Form</SelectItem>
-							<SelectItem value="tabs">Tabs</SelectItem>
-							<SelectItem value="group">Group Container</SelectItem>
+							{Object.entries(elementContent).map(([key, _], index) => (
+								<SelectItem key={`${key}${index}`} value={key}>
+									{toCapital(key)}
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
 
-					<Button onClick={addNewElement} className="flex items-center gap-2">
+					<Button
+						onClick={addNewElement}
+						className="flex items-center gap-2 h-10"
+					>
 						<Plus size={16} />
-						Add Element
+						Add
 					</Button>
 				</div>
 			</div>
 			{!firstScreen.current && (
-				<div className="bottom-8 left-1/2 -translate-x-1/2 absolute mt-4 text-gray-600 text-center">
+				<div className="bottom-8 left-1/2 -translate-x-1/2 absolute mt-4 text-gray-300 text-center">
 					<p>
 						Drag the canvas to scroll | Drag the title bar to move components
 					</p>

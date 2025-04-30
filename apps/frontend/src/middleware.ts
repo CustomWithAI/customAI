@@ -16,9 +16,8 @@ export default async function middleware(request: NextRequest) {
 	const { nextUrl: url } = request;
 	console.log("in middleware", url.pathname);
 	const [, locale, ...segments] = url.pathname.split("/");
-	const pathname = `/${segments[0] || ""}`;
 
-	if (guestRoutes.includes(url.pathname)) {
+	if (guestRoutes.includes(segments[0])) {
 		return authAndLocaleMiddleware(request);
 	}
 

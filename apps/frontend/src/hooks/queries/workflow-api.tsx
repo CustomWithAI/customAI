@@ -20,11 +20,13 @@ export const useGetWorkflowById = (
 };
 
 export const useGetWorkflows = (
+	params: string | null = "",
 	options?: AppQueryOptions<typeof workflowService.getWorkflows>,
 ) => {
 	return useQuery({
-		queryFn: async () => await workflowService.getWorkflows(),
-		queryKey: ["workflows"],
+		queryFn: async () =>
+			await workflowService.getWorkflows({ pageParam: params }),
+		queryKey: ["workflows", params],
 		...options,
 	});
 };

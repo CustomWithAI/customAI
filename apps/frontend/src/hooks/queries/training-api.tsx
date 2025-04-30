@@ -27,12 +27,15 @@ export const useGetTrainingById = (
 
 export const useGetTrainingByWorkflowId = (
 	workflowId: string,
-	params = "",
+	params: string | null = "",
 	options?: AppQueryOptions<typeof trainingService.getTrainingByWorkflowId>,
 ) =>
 	useQuery({
 		queryFn: async () =>
-			trainingService.getTrainingByWorkflowId({ workflowId, params }),
+			trainingService.getTrainingByWorkflowId({
+				workflowId,
+				params: params || "",
+			}),
 		queryKey: ["training", workflowId],
 		...options,
 	});
