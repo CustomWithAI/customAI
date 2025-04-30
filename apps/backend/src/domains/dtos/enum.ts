@@ -18,6 +18,9 @@ export const enumResponseDto = t.Object({
       segmentation: t.Array(t.String()),
     }),
   }),
+  inferenceWorkflow: t.Array(t.String()),
+  inferenceTraining: t.Array(t.String()),
+  inferenceVersion: t.Array(t.String()),
 });
 
 export type EnumResponseDto = typeof enumResponseDto.static;

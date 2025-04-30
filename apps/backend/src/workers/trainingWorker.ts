@@ -442,9 +442,7 @@ export const startTrainingWorker = async () => {
                   }
 
                   if (trainingData.workflow.type === "classification") {
-                    const index: number = trainingData.machineLearningModel
-                      ? inferenceResponse.data.prediction[0]
-                      : inferenceResponse.data.prediction;
+                    const index: number = inferenceResponse.data.prediction;
                     annotationData = {
                       label: labels[index].name,
                     };
@@ -506,17 +504,14 @@ export const startTrainingWorker = async () => {
 
                 annotationData = inferenceResponse.data;
                 if (data.modelConfig.workflow === "classification") {
-                  const index: number =
-                    data.modelConfig.training === "machine_learning"
-                      ? inferenceResponse.data.prediction[0]
-                      : inferenceResponse.data.prediction;
+                  const index: number = inferenceResponse.data.prediction;
                   annotationData = {
                     label: index,
                   };
                 } else if (data.modelConfig.workflow === "object_detection") {
                   annotationData = inferenceResponse.data.prediction;
                 } else if (data.modelConfig.workflow === "segmentation") {
-                  annotationData = {};
+                  annotationData = inferenceResponse.data.prediction;
                 } else {
                   annotationData = {};
                 }

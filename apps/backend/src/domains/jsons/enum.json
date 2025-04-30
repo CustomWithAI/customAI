@@ -48,5 +48,8 @@
       "object_detection": ["yolov5", "yolov8", "yolov11"],
       "segmentation": ["yolov8", "yolov11"]
     }
-  }
+  },
+  "inferenceWorkflow": ["classification", "object_detection", "segmentation"],
+  "inferenceTraining": ["machine_learning", "pre_trained", "custom"],
+  "inferenceVersion": ["yolov5", "yolov8", "yolov11"]
 }
