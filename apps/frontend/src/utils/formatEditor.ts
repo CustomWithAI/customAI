@@ -60,27 +60,22 @@ export const formatToEditor: (
 
 export const formatToAnnotate = (data: Editor) => {
 	if (!data.labels) return {};
+	const labelMap = new Map(data.labels.map((l) => [l.id, l.name]));
 	if (data.classifiedLabel) {
-		if (data.labels.find((label) => label.id === data.classifiedLabel)?.name)
-			return {
-				label: data.labels.find((label) => label.id === data.classifiedLabel)
-					?.name,
-			};
-		return { label: "" };
+		return { label: labelMap.get(data.classifiedLabel) || "" };
 	}
 	if (data.squares && data.squares.length > 0) {
 		return {
 			annotation: data.squares
 				.map(({ x, y, width, height, labelId }) => {
-					if (data.labels.find((label) => label.id === labelId)?.name)
-						return {
-							x,
-							y,
-							width,
-							height,
-							label:
-								data.labels.find((label) => label.id === labelId)?.name || "",
-						};
+					const label = labelMap.get(labelId || "");
+					return {
+						x,
+						y,
+						width,
+						height,
+						label: label || "",
+					};
 				})
 				.filter((f) => f !== undefined),
 		};
@@ -90,22 +85,17 @@ export const formatToAnnotate = (data: Editor) => {
 			annotation: [
 				...(data.polygons
 					.map(({ points, labelId }) => {
-						if (data.labels.find((label) => label.id === labelId)?.name)
-							return {
-								points: points as { x: number; y: number }[],
-								label:
-									data.labels.find((label) => label.id === labelId)?.name || "",
-							};
+						const label = labelMap.get(labelId || "");
+						return { points, label: label || "" };
 					})
 					?.filter((f) => f !== undefined) || []),
 				...(data.freehandPaths
 					.map(({ points, labelId }) => {
-						if (data.labels.find((label) => label.id === labelId)?.name)
-							return {
-								points: points as { x: number; y: number }[],
-								label:
-									data.labels.find((label) => label.id === labelId)?.name || "",
-							};
+						const label = labelMap.get(labelId || "");
+						return {
+							points: points as { x: number; y: number }[],
+							label: label || "",
+						};
 					})
 					?.filter((f) => f !== undefined) || []),
 			],

@@ -4,18 +4,7 @@ export type InferenceResponse = {
 	modelPath: string;
 	modelConfig: Record<string, any>;
 	imagePath: string;
-	annotation:
-		| {
-				label: string;
-		  }
-		| {
-				x: number;
-				y: number;
-				label: string;
-				width: number;
-				height: number;
-				confidence?: number;
-		  }[];
+	annotation: (Square | SquareWithConfident | Polygon | ClassifiedLabel)[];
 	status: string;
 	queueId: string;
 	retryCount: number;
@@ -23,4 +12,28 @@ export type InferenceResponse = {
 	userId: string;
 	createdAt: string;
 	updatedAt: string;
+};
+
+export type ClassifiedLabel = {
+	label: string;
+};
+
+export type Square = {
+	x: number;
+	y: number;
+	label: string;
+	width: number;
+	height: number;
+};
+
+export type SquareWithConfident = Square & {
+	confidence: number;
+};
+
+export type Polygon = {
+	points: {
+		x: number;
+		y: number;
+	}[];
+	label: string;
 };

@@ -97,7 +97,7 @@ export default function AnnotationSection({
 	return (
 		<div>
 			<div className="fixed top-0 left-0 z-99 w-full bg-white px-6 pt-4 flex justify-between items-center">
-				<div className="mb-4">
+				<div className="mb-4 mr-4">
 					<Header className=" text-blue-600">Annotation</Header>
 					<Content className="text-gray-400 line-clamp-2 break-all">
 						{name}

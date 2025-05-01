@@ -24,17 +24,62 @@ import { useGetTrainingByWorkflowId } from "@/hooks/queries/training-api";
 import { useGetWorkflows } from "@/hooks/queries/workflow-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/libs/utils";
 import { useInferenceStore } from "@/stores/inferenceStore";
-import type { InferenceResponse } from "@/types/response/inference";
+import type {
+	ClassifiedLabel,
+	InferenceResponse,
+	Polygon,
+	Square,
+	SquareWithConfident,
+} from "@/types/response/inference";
 import { buildQueryParams } from "@/utils/build-param";
+import { darkenColor } from "@/utils/color-utils";
 import { getImageSizeFromImageLike } from "@/utils/image-size";
+import { generateRandomLabel } from "@/utils/random";
 import { toCapital } from "@/utils/toCapital";
 import { Loader2, RotateCcw } from "lucide-react";
 import { useFormatter } from "next-intl";
-import { useEffect, useId, useState } from "react";
+import {
+	useCallback,
+	useEffect,
+	useId,
+	useLayoutEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 import type { CanvasElement } from "../canvasGrid";
 
 type SelectType = "manual" | "workflow" | "training";
+
+function isSquare(a: InferenceResponse["annotation"][number]): a is Square {
+	return (
+		"x" in a &&
+		"y" in a &&
+		"width" in a &&
+		"height" in a &&
+		!("confidence" in a)
+	);
+}
+
+function isSquareWithConfidence(
+	a: InferenceResponse["annotation"][number],
+): a is SquareWithConfident {
+	return (
+		"x" in a && "y" in a && "width" in a && "height" in a && "confidence" in a
+	);
+}
+
+function isPolygon(a: InferenceResponse["annotation"][number]): a is Polygon {
+	return "points" in a;
+}
+
+function isClassifiedLabel(
+	a: InferenceResponse["annotation"][number],
+): a is ClassifiedLabel {
+	return "label" in a && !("x" in a || "points" in a);
+}
 
 const COLOR_STATUS: Record<string, "red" | "amber" | "green" | "blue"> = {
 	pending: "blue",
@@ -62,14 +107,6 @@ export const ImageComponents = ({
 	const { data, filter, onSet, onClear, onSetFilter, onRemoveFilter } =
 		useInferenceStore();
 
-	const { data: enumType, isPending } = useGetEnum();
-
-	const workflowQuery = useGetWorkflows(
-		buildQueryParams({
-			search: filter.workflow ? `name:${filter.workflow}` : undefined,
-		}),
-	);
-
 	const {
 		data: inference,
 		status,
@@ -81,6 +118,57 @@ export const ImageComponents = ({
 			enabled: !!element.inferenceId,
 		},
 	});
+
+	const [showAnnotation, setShowAnnotation] = useState(true);
+
+	const overlayRef = useRef<HTMLDivElement>(null);
+	const imageRef = useRef<HTMLImageElement>(null);
+	const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+	const [isLoaded, setIsLoaded] = useState(false);
+
+	useEffect(() => {
+		if (!inference?.imagePath) return;
+		const updateOverlay = () => {
+			const img = imageRef.current;
+			const overlay = overlayRef.current;
+
+			if (!img || !overlay) return;
+
+			overlay.style.width = `${img.offsetWidth}px`;
+			overlay.style.height = `${img.offsetHeight}px`;
+			overlay.style.top = `${img.offsetTop}px`;
+			overlay.style.left = `${img.offsetLeft}px`;
+		};
+
+		const img = imageRef.current;
+		if (!img) return;
+
+		if (img.complete) {
+			updateOverlay();
+		}
+
+		const handleLoad = () => updateOverlay();
+		const handleResize = () => updateOverlay();
+
+		img.addEventListener("load", handleLoad);
+		window.addEventListener("resize", handleResize);
+
+		const timeoutId = setTimeout(updateOverlay, 100);
+
+		return () => {
+			img.removeEventListener("load", handleLoad);
+			window.removeEventListener("resize", handleResize);
+			clearTimeout(timeoutId);
+		};
+	}, [inference?.imagePath]);
+
+	const { data: enumType, isPending } = useGetEnum();
+
+	const workflowQuery = useGetWorkflows(
+		buildQueryParams({
+			search: filter.workflow ? `name:${filter.workflow}` : undefined,
+		}),
+	);
 
 	const { mutateAsync: createCustomInference, isPending: customPending } =
 		useCreateCustomInference();
@@ -101,14 +189,17 @@ export const ImageComponents = ({
 		trainingId ? "training" : workflowId ? "workflow" : "manual",
 	);
 
-	const handleOnSuccessStart = (data: InferenceResponse | undefined) => {
-		if (data?.id) {
-			onChangeCallback({ inferenceId: data.id });
-			toast({ title: "image is on process at server, please wait :)" });
-		}
-	};
+	const handleOnSuccessStart = useCallback(
+		(data: InferenceResponse | undefined) => {
+			if (data?.id) {
+				onChangeCallback({ inferenceId: data.id });
+				toast({ title: "image is on process at server, please wait :)" });
+			}
+		},
+		[onChangeCallback],
+	);
 
-	const handleStart = async () => {
+	const handleStart = useCallback(async () => {
 		if (inference?.id) return;
 
 		switch (selected) {
@@ -158,7 +249,15 @@ export const ImageComponents = ({
 				break;
 			}
 		}
-	};
+	}, [
+		createCustomInference,
+		createTrainingInference,
+		createWorkflowInference,
+		data,
+		handleOnSuccessStart,
+		inference,
+		selected,
+	]);
 
 	useEffect(() => {
 		if (workflowId) {
@@ -168,6 +267,111 @@ export const ImageComponents = ({
 			onSet("trainingId", trainingId);
 		}
 	}, [workflowId, trainingId, onSet]);
+
+	const renderedAnnotation = useMemo(() => {
+		if (!Array.isArray(inference?.annotation)) return null;
+		return inference.annotation.map((ann, index) => {
+			const { color } = generateRandomLabel();
+			if (isSquare(ann) || isSquareWithConfidence(ann)) {
+				let correctedWidth = ann.width;
+				let correctedHeight = ann.height;
+				let correctedLeft = ann.x;
+				let correctedTop = ann.y;
+
+				if (correctedWidth < 0) {
+					correctedWidth = Math.abs(correctedWidth);
+					correctedLeft = ann.x + correctedWidth;
+				}
+
+				if (correctedHeight < 0) {
+					correctedHeight = Math.abs(correctedHeight);
+					correctedTop = ann.y + correctedHeight;
+				}
+
+				if (correctedLeft < 0) {
+					correctedLeft = Math.abs(correctedLeft);
+				}
+
+				if (correctedTop < 0) {
+					correctedTop = Math.abs(correctedTop);
+				}
+				return (
+					<div
+						key={`square-${index}`}
+						className={cn(
+							"absolute border-2 border-dashed hover:border-solid rounded-md bg-opacity-65 duration-150",
+						)}
+						style={{
+							left: correctedLeft,
+							top: correctedTop,
+							width: correctedWidth,
+							height: correctedHeight,
+							zIndex: (ann as any).zIndex || 1,
+							backgroundColor: `${color}30`,
+							borderColor: darkenColor(color, 20),
+						}}
+					>
+						<Badge
+							variant="secondary"
+							className="absolute -translate-y-full -top-1 left-0 text-white text-xs font-medium"
+							style={{
+								backgroundColor: `${color}90`,
+							}}
+						>
+							{ann.label}
+							{isSquareWithConfidence(ann) &&
+								` (${(ann.confidence * 100).toFixed(1)}%)`}
+						</Badge>
+					</div>
+				);
+			}
+
+			if (isPolygon(ann)) {
+				const polygonStyle = {
+					clipPath: `polygon(${ann.points.map((p) => `${p.x}px ${p.y}px`).join(", ")})`,
+				};
+				const bounding = ann.points.reduce(
+					(bounds, point) => ({
+						minX: Math.min(bounds.minX, point.x),
+						minY: Math.min(bounds.minY, point.y),
+					}),
+					{
+						minX: Number.POSITIVE_INFINITY,
+						minY: Number.POSITIVE_INFINITY,
+					},
+				);
+
+				return (
+					<div
+						key={`polygon-${index}`}
+						className="absolute bg-blue-500/30 border border-blue-400"
+						style={{ ...polygonStyle }}
+					>
+						<Badge
+							variant="secondary"
+							className="absolute -translate-y-full -top-1 left-0 text-white text-xs font-medium"
+							style={{ left: bounding.minX, top: bounding.minY }}
+						>
+							{ann.label}
+						</Badge>
+					</div>
+				);
+			}
+
+			if (isClassifiedLabel(ann)) {
+				return (
+					<Badge
+						key={`classified-${index}`}
+						variant="outline"
+						className="text-xs font-medium"
+					>
+						{ann.label}
+					</Badge>
+				);
+			}
+			return null;
+		});
+	}, [inference?.annotation]);
 
 	if (isPending) return null;
 	if (fetchStatus === "fetching")
@@ -184,9 +388,13 @@ export const ImageComponents = ({
 						<div className="absolute inset-0 flex items-center justify-center p-4">
 							<img
 								src={inference.imagePath}
+								ref={imageRef}
 								alt="Uploaded"
 								className="mx-auto max-h-full rounded object-contain"
 							/>
+							<div className="absolute pointer-events-none" ref={overlayRef}>
+								{showAnnotation && renderedAnnotation}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -207,7 +415,10 @@ export const ImageComponents = ({
 						<Label className="mb-1 pb-1 text-xs" htmlFor={`${id}-show`}>
 							show annotation
 						</Label>
-						<Switch />
+						<Switch
+							checked={showAnnotation}
+							onCheckedChange={setShowAnnotation}
+						/>
 					</div>
 					<div className="flex gap-x-4">
 						<Content className="text-xs text-muted-foreground">

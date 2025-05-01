@@ -17,7 +17,7 @@ import {
 export default function UploadFile({
 	onChange,
 }: { onChange: (files: FileWithPreview[]) => void }) {
-	const maxSize = 10 * 1024 * 1024;
+	const maxSize = 200 * 1024 * 1024;
 
 	const [
 		{ files, isDragging, errors },

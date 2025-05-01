@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Save } from "lucide-react";
-import { memo } from "react";
 
 interface EditorNavigationProps {
 	totalEditors: number;
@@ -27,22 +26,24 @@ export const EditorNavigation = ({
 			>
 				Apply & Close
 			</Button>
-			<Button
-				variant="outline"
-				size="icon"
-				onClick={onPrevious}
-				disabled={disabled?.[0]}
-			>
-				<ChevronLeft className="h-4 w-4" />
-			</Button>
-			<Button
-				variant="outline"
-				size="icon"
-				onClick={onNext}
-				disabled={disabled?.[1]}
-			>
-				<ChevronRight className="h-4 w-4" />
-			</Button>
+			<div className="flex gap-x-4">
+				<Button
+					variant="outline"
+					size="icon"
+					onClick={onPrevious}
+					disabled={disabled?.[0]}
+				>
+					<ChevronLeft className="h-4 w-4" />
+				</Button>
+				<Button
+					variant="outline"
+					size="icon"
+					onClick={onNext}
+					disabled={disabled?.[1]}
+				>
+					<ChevronRight className="h-4 w-4" />
+				</Button>
+			</div>
 		</div>
 	);
 };

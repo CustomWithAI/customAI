@@ -31,3 +31,9 @@ export function brightenColor(hex: string, amount: number): string {
 
 	return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
 }
+
+export const getContrastColor = (r: number, g: number, b: number) => {
+	const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+	return luminance > 0.5 ? "rgb(0, 0, 0)" : "rgb(255, 255, 255)";
+};

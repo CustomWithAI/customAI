@@ -40,8 +40,9 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 	const { mutateAsync: updateDataset } = useUpdateDataset();
 
 	const memoizedDefaultValue = useMemo(() => {
+		if (!image?.current) return;
 		return formatToEditor(image?.current.annotation, dataset?.labels);
-	}, [image?.current?.annotation, dataset?.labels]);
+	}, [image?.current, dataset?.labels]);
 
 	return (
 		<BaseSkeleton
@@ -82,7 +83,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 								}),
 							},
 						});
-						fetchDataset();
+						await fetchDataset();
 					}
 					if (isClose) {
 						router.push(`/dataset/${id}`);
@@ -91,22 +92,22 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 				}}
 				isLoading={imagePending || datasetPending}
 				disabled={[!image?.prev?.path, !image?.next?.path]}
-				onPrevious={() => {
+				onPrevious={async () => {
 					if (image) {
 						setQueryParam({
 							params: { image: encodeBase64(image?.prev?.path) },
 						});
-						fetchNewImage();
+						await fetchNewImage();
 						return formatToEditor(image?.current.annotation, dataset?.labels);
 					}
 					return undefined;
 				}}
-				onNext={() => {
+				onNext={async () => {
 					if (image) {
 						setQueryParam({
 							params: { image: encodeBase64(image?.next?.path) },
 						});
-						fetchNewImage();
+						await fetchNewImage();
 						return formatToEditor(image?.current.annotation, dataset?.labels);
 					}
 					return undefined;
