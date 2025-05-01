@@ -194,7 +194,7 @@ export class TrainingRepository {
       .limit(1);
   }
 
-  public async findModelInferenceInfoByDataById(id: string) {
+  public async findModelInferenceInfoById(id: string) {
     const {
       workflowId,
       datasetId,

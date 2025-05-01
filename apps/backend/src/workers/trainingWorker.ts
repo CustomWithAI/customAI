@@ -147,7 +147,7 @@ export const startTrainingWorker = async () => {
               `${config.PYTHON_SERVER_URL}/dataset`,
               {
                 type: annotationMethod,
-                labels,
+                labels: labels.map((label) => label.name),
                 train_data: trainData,
                 test_data: testData,
                 valid_data: validData,
@@ -262,7 +262,7 @@ export const startTrainingWorker = async () => {
                   }
                 );
                 evaluationResponse = await axios.get(
-                  `${config.PYTHON_SERVER_URL}/evaluation?workflow=seg&yolo=${data.preTrainedModel}`
+                  `${config.PYTHON_SERVER_URL}/evaluation?workflow=od`
                 );
                 fileType = "h5";
               } else {
@@ -284,7 +284,7 @@ export const startTrainingWorker = async () => {
                   }
                 );
                 evaluationResponse = await axios.get(
-                  `${config.PYTHON_SERVER_URL}/evaluation?workflow=od&yolo=${data.preTrainedModel}`
+                  `${config.PYTHON_SERVER_URL}/evaluation?workflow=seg&yolo=${data.preTrainedModel}`
                 );
                 fileType = "pt";
               } else {
@@ -358,10 +358,10 @@ export const startTrainingWorker = async () => {
             // ✅ In Case Use Model From Training
             if (data.trainingId) {
               const trainingsData =
-                await trainingRepository.findModelInferenceInfoByDataById(
+                await trainingRepository.findModelInferenceInfoById(
                   data.trainingId
                 );
-              if (!trainingsData.length) {
+              if (trainingsData.length !== 0) {
                 const trainingData = trainingsData[0];
                 if (trainingData.trainedModelPath) {
                   const modelFilePath = convertURL(
@@ -458,7 +458,14 @@ export const startTrainingWorker = async () => {
                       }
                     );
                   } else if (trainingData.workflow.type === "segmentation") {
-                    annotationData = {};
+                    annotationData = inferenceResponse.data.prediction.map(
+                      (d: any) => {
+                        return {
+                          ...d,
+                          label: labels[d.label].name,
+                        };
+                      }
+                    );
                   } else {
                     annotationData = {};
                   }
