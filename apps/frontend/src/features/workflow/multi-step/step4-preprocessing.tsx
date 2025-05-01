@@ -1,3 +1,5 @@
+import { DialogBuilder } from "@/components/builder/dialog";
+import { InfiniteCombobox } from "@/components/layout/inifinityCombobox";
 import { Content } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
 import { node } from "@/configs/image-preprocessing";
@@ -10,6 +12,7 @@ import {
 	useUpdatePreprocessing,
 } from "@/hooks/mutations/preprocess-api";
 import { useUpdateTraining } from "@/hooks/mutations/training-api";
+import { useGetInfPreprocessing } from "@/hooks/queries/preprocessing-api";
 import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
@@ -21,7 +24,7 @@ import { getStep } from "@/utils/step-utils";
 import { formatDate } from "@/utils/to-datetime";
 import { keyframes, motion } from "framer-motion";
 import { StepBack } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ZodRawShape } from "zod";
 import { useShallow } from "zustand/react/shallow";
 import {
@@ -38,6 +41,8 @@ export const ImagePreprocessingPage = () => {
 	const viewParam = getQueryParam();
 	const { toast } = useToast();
 
+	const [filter, setFilter] = useState<string | undefined>(undefined);
+	const [selected, setSelected] = useState<string | undefined>(undefined);
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
 
 	const { data: training, isSuccess } = useGetTrainingById(
@@ -45,6 +50,12 @@ export const ImagePreprocessingPage = () => {
 		decodeBase64(trainingId),
 		{ enabled: workflowId !== "" && trainingId !== "" },
 	);
+
+	const preprocessingQuery = useGetInfPreprocessing({
+		params: {
+			search: filter ? `name:${filter}` : undefined,
+		},
+	});
 
 	const onSet = useDragStore((state) => state.onSet);
 	const fields = useDragStore(useShallow((state) => state.fields));
@@ -216,43 +227,80 @@ export const ImagePreprocessingPage = () => {
 
 	return (
 		<>
-			<div id="tab" className="flex p-1 bg-zinc-100 w-fit space-x-1 rounded-lg">
-				<button
-					type="button"
-					onClick={() => {
-						setQueryParam({ params: { view: "blueprint" }, subfix: "#tab" });
+			<div className="flex gap-x-6">
+				<div
+					id="tab"
+					className="flex p-1 bg-zinc-100 w-fit space-x-1 rounded-lg"
+				>
+					<button
+						type="button"
+						onClick={() => {
+							setQueryParam({ params: { view: "blueprint" }, subfix: "#tab" });
+						}}
+						className={cn("px-4 py-1.5 rounded-md relative", {
+							"text-zinc-900": viewParam === "blueprint",
+							"text-zinc-500": viewParam !== "blueprint",
+						})}
+					>
+						<Content className="text-sm relative z-10">Blueprint</Content>
+						{viewParam === "blueprint" && (
+							<motion.div
+								layoutId="activeTab"
+								className="absolute inset-0 bg-white rounded-md"
+								transition={{ type: "spring", stiffness: 300, damping: 20 }}
+							/>
+						)}
+					</button>
+					<button
+						type="button"
+						onClick={() => setQueryParam({ params: { view: "table" } })}
+						className={cn("px-4 py-1.5 rounded-md relative", {
+							"text-zinc-900": viewParam === "table" || viewParam === null,
+							"text-zinc-500": viewParam !== "table" || viewParam !== null,
+						})}
+					>
+						<Content className="text-sm relative z-10">Table</Content>
+						{(viewParam === "table" || viewParam === null) && (
+							<motion.div
+								layoutId="activeTab"
+								className="absolute inset-0 bg-white rounded-md"
+								transition={{ type: "spring", stiffness: 300, damping: 20 }}
+							/>
+						)}
+					</button>
+				</div>
+				<DialogBuilder
+					config={{
+						trigger: (
+							<Button variant="secondary" effect="gradientSlideShow">
+								Load Preprocessing
+							</Button>
+						),
+						title: "load data from existed pre processing",
+						body: (
+							<InfiniteCombobox
+								hook={preprocessingQuery}
+								keyExtractor={(preprocess) => String(preprocess.id)}
+								itemDisplay={(preprocess) => preprocess.name}
+								itemContent={(preprocess) => (
+									<div className="flex flex-col">
+										<span>{preprocess.name}</span>
+										<span className="text-xs text-muted-foreground">
+											{preprocess.data?.priority?.length || 0} process
+											{(preprocess.data?.priority?.length || 0) > 0 ? "es" : ""}
+										</span>
+									</div>
+								)}
+								filter={(f) => setFilter(f)}
+								value={filter}
+								popoverClassName="z-[999]"
+								onChange={(v) => setSelected(v)}
+								placeholder="Search preprocessing..."
+								emptyMessage="No preprocessing found"
+							/>
+						),
 					}}
-					className={cn("px-4 py-1.5 rounded-md relative", {
-						"text-zinc-900": viewParam === "blueprint",
-						"text-zinc-500": viewParam !== "blueprint",
-					})}
-				>
-					<Content className="text-sm relative z-10">Blueprint</Content>
-					{viewParam === "blueprint" && (
-						<motion.div
-							layoutId="activeTab"
-							className="absolute inset-0 bg-white rounded-md"
-							transition={{ type: "spring", stiffness: 300, damping: 20 }}
-						/>
-					)}
-				</button>
-				<button
-					type="button"
-					onClick={() => setQueryParam({ params: { view: "table" } })}
-					className={cn("px-4 py-1.5 rounded-md relative", {
-						"text-zinc-900": viewParam === "table" || viewParam === null,
-						"text-zinc-500": viewParam !== "table" || viewParam !== null,
-					})}
-				>
-					<Content className="text-sm relative z-10">Table</Content>
-					{(viewParam === "table" || viewParam === null) && (
-						<motion.div
-							layoutId="activeTab"
-							className="absolute inset-0 bg-white rounded-md"
-							transition={{ type: "spring", stiffness: 300, damping: 20 }}
-						/>
-					)}
-				</button>
+				/>
 			</div>
 			{compareQueryParam({ value: "table", allowNull: true }) ? (
 				<TablePreprocessingSection />

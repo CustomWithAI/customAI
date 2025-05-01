@@ -4,7 +4,7 @@ export type InferenceResponse = {
 	modelPath: string;
 	modelConfig: Record<string, any>;
 	imagePath: string;
-	annotation: (Square | SquareWithConfident | Polygon)[] | ClassifiedLabel;
+	annotation: ArrayAnnotation | ClassifiedLabel;
 	status: string;
 	queueId: string;
 	retryCount: number;
@@ -13,6 +13,8 @@ export type InferenceResponse = {
 	createdAt: string;
 	updatedAt: string;
 };
+
+export type ArrayAnnotation = (Square | SquareWithConfident | Polygon)[];
 
 export type ClassifiedLabel = {
 	label: string;

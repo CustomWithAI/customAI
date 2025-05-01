@@ -50,9 +50,9 @@ export const datasetService = {
 		return response.data;
 	},
 
-	deleteDataset: () => {
+	deleteDataset: async ({ id }: { id: string }) => {
 		try {
-			return axiosClient.delete("/dataset");
+			return axiosClient.delete(`/dataset/${id}`);
 		} catch (error) {}
 	},
 

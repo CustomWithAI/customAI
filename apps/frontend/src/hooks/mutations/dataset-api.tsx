@@ -46,3 +46,14 @@ export const useUpdateDataset = () => {
 		},
 	});
 };
+
+export const useDeleteDataset = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: datasetService.deleteDataset,
+		onSuccess: (ctx, variables) => {
+			queryClient.invalidateQueries({ queryKey: ["datasets"] });
+			queryClient.invalidateQueries({ queryKey: ["dataset", variables?.id] });
+		},
+	});
+};

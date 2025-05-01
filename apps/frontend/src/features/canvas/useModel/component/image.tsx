@@ -27,12 +27,14 @@ import { toast } from "@/hooks/use-toast";
 import { cn } from "@/libs/utils";
 import { useInferenceStore } from "@/stores/inferenceStore";
 import type {
+	ArrayAnnotation,
 	ClassifiedLabel,
 	InferenceResponse,
 	Polygon,
 	Square,
 	SquareWithConfident,
 } from "@/types/response/inference";
+import type { Point } from "@/types/square";
 import { buildQueryParams } from "@/utils/build-param";
 import { darkenColor } from "@/utils/color-utils";
 import { getImageSizeFromImageLike } from "@/utils/image-size";
@@ -53,32 +55,56 @@ import type { CanvasElement } from "../canvasGrid";
 
 type SelectType = "manual" | "workflow" | "training";
 
-function isSquare(a: InferenceResponse["annotation"]): a is Square {
+function isSquare(a: ArrayAnnotation[number]): a is Square {
 	return (
+		typeof a === "object" &&
+		a !== null &&
 		"x" in a &&
 		"y" in a &&
 		"width" in a &&
 		"height" in a &&
-		!("confidence" in a)
+		"label" in a &&
+		!("confidence" in a) &&
+		!("points" in a)
 	);
 }
 
 function isSquareWithConfidence(
-	a: InferenceResponse["annotation"],
+	a: ArrayAnnotation[number],
 ): a is SquareWithConfident {
 	return (
-		"x" in a && "y" in a && "width" in a && "height" in a && "confidence" in a
+		typeof a === "object" &&
+		a !== null &&
+		"x" in a &&
+		"y" in a &&
+		"width" in a &&
+		"height" in a &&
+		"label" in a &&
+		"confidence" in a &&
+		!("points" in a)
 	);
 }
 
-function isPolygon(a: InferenceResponse["annotation"]): a is Polygon {
-	return "points" in a;
+function isPolygon(a: ArrayAnnotation[number]): a is Polygon {
+	return (
+		typeof a === "object" &&
+		a !== null &&
+		"points" in a &&
+		Array.isArray(a.points)
+	);
 }
 
 function isClassifiedLabel(
 	a: InferenceResponse["annotation"],
 ): a is ClassifiedLabel {
-	return "label" in a && !("x" in a || "points" in a);
+	return (
+		a &&
+		typeof a === "object" &&
+		a !== null &&
+		"label" in a &&
+		!("x" in a) &&
+		!("points" in a)
+	);
 }
 
 const COLOR_STATUS: Record<string, "red" | "amber" | "green" | "blue"> = {
@@ -122,22 +148,36 @@ export const ImageComponents = ({
 	const [showAnnotation, setShowAnnotation] = useState(true);
 
 	const overlayRef = useRef<HTMLDivElement>(null);
+	const [imageRender, setImageRender] = useState<{
+		x: number;
+		y: number;
+		width: number;
+		height: number;
+	}>({ x: 1, y: 1, width: 0, height: 0 });
 	const imageRef = useRef<HTMLImageElement>(null);
-	const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-	const [isLoaded, setIsLoaded] = useState(false);
 
 	useEffect(() => {
 		if (!inference?.imagePath) return;
 		const updateOverlay = () => {
 			const img = imageRef.current;
 			const overlay = overlayRef.current;
-
 			if (!img || !overlay) return;
+			const renderedWidth = img.offsetWidth;
+			const renderedHeight = img.offsetHeight;
+			const naturalWidth = img.naturalWidth;
+			const naturalHeight = img.naturalHeight;
 
 			overlay.style.width = `${img.offsetWidth}px`;
 			overlay.style.height = `${img.offsetHeight}px`;
 			overlay.style.top = `${img.offsetTop}px`;
 			overlay.style.left = `${img.offsetLeft}px`;
+
+			setImageRender({
+				x: renderedWidth / naturalWidth,
+				y: renderedHeight / naturalHeight,
+				width: renderedWidth,
+				height: renderedHeight,
+			});
 		};
 
 		const img = imageRef.current;
@@ -302,10 +342,10 @@ export const ImageComponents = ({
 							"absolute border-2 border-dashed hover:border-solid rounded-md bg-opacity-65 duration-150",
 						)}
 						style={{
-							left: correctedLeft,
-							top: correctedTop,
-							width: correctedWidth,
-							height: correctedHeight,
+							left: correctedLeft * imageRender?.x,
+							top: correctedTop * imageRender?.y,
+							width: correctedWidth * imageRender?.x,
+							height: correctedHeight * imageRender?.y,
 							zIndex: (ann as any).zIndex || 1,
 							backgroundColor: `${color}30`,
 							borderColor: darkenColor(color, 20),
@@ -328,60 +368,71 @@ export const ImageComponents = ({
 
 			if (isPolygon(ann)) {
 				const { color } = generateRandomLabel();
-
-				const bounds = ann.points.reduce(
-					(acc, p) => ({
-						minX: Math.min(acc.minX, p.x),
-						minY: Math.min(acc.minY, p.y),
-						maxX: Math.max(acc.maxX, p.x),
-						maxY: Math.max(acc.maxY, p.y),
-					}),
-					{
-						minX: Number.POSITIVE_INFINITY,
-						minY: Number.POSITIVE_INFINITY,
-						maxX: Number.NEGATIVE_INFINITY,
-						maxY: Number.NEGATIVE_INFINITY,
-					},
-				);
-
-				const width = bounds.maxX - bounds.minX;
-				const height = bounds.maxY - bounds.minY;
-
-				const polygonStyle = {
-					clipPath: `polygon(${ann.points
-						.map((p) => `${p.x - bounds.minX}px ${p.y - bounds.minY}px`)
-						.join(", ")})`,
+				const createPathFromPoints = (points: Point[]) => {
+					if (points.length === 0) return "";
+					return `M ${points[0].x * imageRender.x} ${points[0].y * imageRender.y} ${points
+						.slice(1)
+						.map((p) => `L ${p.x * imageRender.x} ${p.y * imageRender.y}`)
+						.join(" ")}`;
 				};
 
 				return (
-					<div
-						key={`polygon-${index}`}
-						className="absolute border"
+					<svg
+						className="absolute inset-0"
+						width="100%"
+						height="100%"
 						style={{
-							left: bounds.minX,
-							top: bounds.minY,
-							width,
-							height,
-							backgroundColor: `${color}30`,
-							borderColor: darkenColor(color, 20),
-							...polygonStyle,
+							position: "absolute",
+							top: 0,
+							left: 0,
+							width: "100%",
+							height: "100%",
 						}}
 					>
-						<Badge
-							variant="secondary"
-							className="absolute -translate-y-full -top-1 left-0 text-white text-xs font-medium"
-							style={{
-								backgroundColor: `${color}90`,
-							}}
-						>
-							{ann.label}
-						</Badge>
-					</div>
+						<g key={`${ann.label}-path`}>
+							<path
+								d={`${createPathFromPoints(ann.points)} Z`}
+								fill={`${color}40`}
+								stroke={color}
+								strokeWidth={2}
+								strokeDasharray={3}
+							/>
+							<foreignObject
+								x={Math.max(
+									0,
+									Math.min(
+										imageRender?.width || 0,
+										ann.points[0].x * imageRender.x + 8,
+									),
+								)}
+								y={Math.max(
+									0,
+									Math.min(
+										imageRender?.height || 0,
+										ann.points[0].y * imageRender.y - 24,
+									),
+								)}
+								width={(ann?.label?.length || 0) * 7.4 + 24}
+								height="30"
+							>
+								<Badge
+									variant="secondary"
+									className="text-xs font-medium"
+									style={{
+										backgroundColor: `${color}30`,
+									}}
+								>
+									{ann?.label}
+								</Badge>
+							</foreignObject>
+						</g>
+					</svg>
 				);
 			}
+
 			return null;
 		});
-	}, [inference?.annotation]);
+	}, [inference?.annotation, imageRender]);
 
 	if (isPending) return null;
 	if (fetchStatus === "fetching")
@@ -470,17 +521,6 @@ export const ImageComponents = ({
 							return;
 						}
 						onSet("image", file[0].file);
-						const { width, height } = await getImageSizeFromImageLike(
-							file[0].file,
-						);
-
-						onChangeCallback({
-							width: Math.max(
-								initialWidth,
-								Math.min((width + 36) * 1.625, width * 0.625 + 436),
-							),
-							height: Math.max(initialHeight, height + 84),
-						});
 					}}
 				/>
 			</div>

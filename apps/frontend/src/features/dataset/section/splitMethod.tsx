@@ -34,6 +34,7 @@ export const SplitMethod = forwardRef<SplitMethodRef, SplitMethodProps>(
 				<Selection
 					name="method"
 					asSelect
+					placeholder="select method"
 					value={value}
 					onChange={(v) => setValue?.(String(v))}
 					group={false}

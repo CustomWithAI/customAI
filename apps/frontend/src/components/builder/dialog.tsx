@@ -7,6 +7,7 @@ import {
 	useImperativeHandle,
 	useState,
 } from "react";
+import { Button } from "../ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -23,6 +24,7 @@ type DialogBuilderProps = {
 		className?: string;
 		title: ReactNode;
 		description?: ReactNode;
+		onConfirm?: () => void;
 		body?: ReactNode | ((id: string) => ReactNode);
 		footer?: ReactNode;
 	};
@@ -36,7 +38,17 @@ export type DialogBuilderRef = {
 
 export const DialogBuilder = forwardRef<DialogBuilderRef, DialogBuilderProps>(
 	(
-		{ config: { trigger, title, description, footer, className, body } },
+		{
+			config: {
+				trigger,
+				title,
+				description,
+				footer,
+				className,
+				body,
+				onConfirm,
+			},
+		},
 		ref,
 	) => {
 		const [isOpen, setIsOpen] = useState(false);
@@ -72,7 +84,18 @@ export const DialogBuilder = forwardRef<DialogBuilderRef, DialogBuilderProps>(
 					>
 						{typeof body === "function" ? (id ? body(id) : undefined) : body}
 					</div>
-					{footer && <DialogFooter>{footer}</DialogFooter>}
+					{footer ? (
+						<DialogFooter>{footer}</DialogFooter>
+					) : (
+						<DialogFooter>
+							<Button variant="ghost" onClick={() => setIsOpen(false)}>
+								Cancel
+							</Button>
+							<Button onClick={() => onConfirm?.()} type="submit">
+								Confirm
+							</Button>
+						</DialogFooter>
+					)}
 				</DialogContent>
 			</Dialog>
 		);
