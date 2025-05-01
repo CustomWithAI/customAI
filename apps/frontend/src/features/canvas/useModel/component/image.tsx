@@ -53,7 +53,7 @@ import type { CanvasElement } from "../canvasGrid";
 
 type SelectType = "manual" | "workflow" | "training";
 
-function isSquare(a: InferenceResponse["annotation"][number]): a is Square {
+function isSquare(a: InferenceResponse["annotation"]): a is Square {
 	return (
 		"x" in a &&
 		"y" in a &&
@@ -64,19 +64,19 @@ function isSquare(a: InferenceResponse["annotation"][number]): a is Square {
 }
 
 function isSquareWithConfidence(
-	a: InferenceResponse["annotation"][number],
+	a: InferenceResponse["annotation"],
 ): a is SquareWithConfident {
 	return (
 		"x" in a && "y" in a && "width" in a && "height" in a && "confidence" in a
 	);
 }
 
-function isPolygon(a: InferenceResponse["annotation"][number]): a is Polygon {
+function isPolygon(a: InferenceResponse["annotation"]): a is Polygon {
 	return "points" in a;
 }
 
 function isClassifiedLabel(
-	a: InferenceResponse["annotation"][number],
+	a: InferenceResponse["annotation"],
 ): a is ClassifiedLabel {
 	return "label" in a && !("x" in a || "points" in a);
 }
@@ -327,46 +327,56 @@ export const ImageComponents = ({
 			}
 
 			if (isPolygon(ann)) {
-				const polygonStyle = {
-					clipPath: `polygon(${ann.points.map((p) => `${p.x}px ${p.y}px`).join(", ")})`,
-				};
-				const bounding = ann.points.reduce(
-					(bounds, point) => ({
-						minX: Math.min(bounds.minX, point.x),
-						minY: Math.min(bounds.minY, point.y),
+				const { color } = generateRandomLabel();
+
+				const bounds = ann.points.reduce(
+					(acc, p) => ({
+						minX: Math.min(acc.minX, p.x),
+						minY: Math.min(acc.minY, p.y),
+						maxX: Math.max(acc.maxX, p.x),
+						maxY: Math.max(acc.maxY, p.y),
 					}),
 					{
 						minX: Number.POSITIVE_INFINITY,
 						minY: Number.POSITIVE_INFINITY,
+						maxX: Number.NEGATIVE_INFINITY,
+						maxY: Number.NEGATIVE_INFINITY,
 					},
 				);
+
+				const width = bounds.maxX - bounds.minX;
+				const height = bounds.maxY - bounds.minY;
+
+				const polygonStyle = {
+					clipPath: `polygon(${ann.points
+						.map((p) => `${p.x - bounds.minX}px ${p.y - bounds.minY}px`)
+						.join(", ")})`,
+				};
 
 				return (
 					<div
 						key={`polygon-${index}`}
-						className="absolute bg-blue-500/30 border border-blue-400"
-						style={{ ...polygonStyle }}
+						className="absolute border"
+						style={{
+							left: bounds.minX,
+							top: bounds.minY,
+							width,
+							height,
+							backgroundColor: `${color}30`,
+							borderColor: darkenColor(color, 20),
+							...polygonStyle,
+						}}
 					>
 						<Badge
 							variant="secondary"
 							className="absolute -translate-y-full -top-1 left-0 text-white text-xs font-medium"
-							style={{ left: bounding.minX, top: bounding.minY }}
+							style={{
+								backgroundColor: `${color}90`,
+							}}
 						>
 							{ann.label}
 						</Badge>
 					</div>
-				);
-			}
-
-			if (isClassifiedLabel(ann)) {
-				return (
-					<Badge
-						key={`classified-${index}`}
-						variant="outline"
-						className="text-xs font-medium"
-					>
-						{ann.label}
-					</Badge>
 				);
 			}
 			return null;
@@ -390,7 +400,7 @@ export const ImageComponents = ({
 								src={inference.imagePath}
 								ref={imageRef}
 								alt="Uploaded"
-								className="mx-auto max-h-full rounded object-contain"
+								className="mx-auto select-none max-h-full rounded object-contain"
 							/>
 							<div className="absolute pointer-events-none" ref={overlayRef}>
 								{showAnnotation && renderedAnnotation}
@@ -408,17 +418,29 @@ export const ImageComponents = ({
 							effect="softBorder"
 							size="lg"
 							color={COLOR_STATUS[inference.status] ?? "new"}
-							className="mb-4"
 						>
 							{inference.status}
 						</Badge>
-						<Label className="mb-1 pb-1 text-xs" htmlFor={`${id}-show`}>
-							show annotation
-						</Label>
-						<Switch
-							checked={showAnnotation}
-							onCheckedChange={setShowAnnotation}
-						/>
+						{isClassifiedLabel(inference.annotation) ? (
+							<>
+								<Label className="mt-5 pb-1 text-xs" htmlFor={`${id}-label`}>
+									classification label
+								</Label>
+								<Badge variant="outline" className="text-xs font-medium">
+									{inference.annotation.label}
+								</Badge>
+							</>
+						) : (
+							<>
+								<Label className="mt-5 pb-1 text-xs" htmlFor={`${id}-show`}>
+									show annotation
+								</Label>
+								<Switch
+									checked={showAnnotation}
+									onCheckedChange={setShowAnnotation}
+								/>
+							</>
+						)}
 					</div>
 					<div className="flex gap-x-4">
 						<Content className="text-xs text-muted-foreground">

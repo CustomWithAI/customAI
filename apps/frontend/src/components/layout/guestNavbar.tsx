@@ -103,29 +103,11 @@ export function GuestNavbar() {
 					</NavigationMenuContent>
 				</NavigationMenuItem>
 				<NavigationMenuItem>
-					<NavigationMenuTrigger className="font-light">
-						Components
-					</NavigationMenuTrigger>
-					<NavigationMenuContent>
-						<ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-							{components.map((component) => (
-								<ListItem
-									key={component.title}
-									title={component.title}
-									href={component.href}
-								>
-									{component.description}
-								</ListItem>
-							))}
-						</ul>
-					</NavigationMenuContent>
-				</NavigationMenuItem>
-				<NavigationMenuItem>
-					<button type="button" onClick={() => router.push("/")}>
+					<button type="button" onClick={() => router.push("/learning")}>
 						<NavigationMenuLink
 							className={cn(navigationMenuTriggerStyle(), "font-light")}
 						>
-							Documentation
+							Learning
 						</NavigationMenuLink>
 					</button>
 				</NavigationMenuItem>

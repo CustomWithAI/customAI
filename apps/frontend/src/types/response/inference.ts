@@ -4,7 +4,7 @@ export type InferenceResponse = {
 	modelPath: string;
 	modelConfig: Record<string, any>;
 	imagePath: string;
-	annotation: (Square | SquareWithConfident | Polygon | ClassifiedLabel)[];
+	annotation: (Square | SquareWithConfident | Polygon)[] | ClassifiedLabel;
 	status: string;
 	queueId: string;
 	retryCount: number;
