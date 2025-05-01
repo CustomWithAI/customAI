@@ -11,32 +11,56 @@ import {
 import { Input } from "@/components/ui/input";
 import { ButtonLoading } from "@/components/ui/loading-button";
 import UploadFile from "@/components/ui/uploadfile";
+import { toast } from "@/hooks/use-toast";
+import { authClient, useSession } from "@/libs/auth-client";
 import { type AccountSchema, accountSchema } from "@/models/account";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eraser, Pencil, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function AccountPage() {
 	const [state, setState] = useState<boolean>(false);
-	const [imageSrc, setImageSrc] = useState<string | null>(null);
+	const [imageSrc, setImageSrc] = useState<File | null>(null);
 
-	const handleEdit = () => {
-		alert("Edit picture logic here");
-	};
+	const { data: session } = useSession();
+
+	useEffect(() => {
+		if (session?.user?.image)
+			setImageSrc(base64ToFile(session?.user?.image, "user"));
+		if (session?.user?.name) form.setValue("username", session?.user?.name);
+	}, [session]);
 
 	const handleDelete = () => {
 		setImageSrc(null);
+		authClient.updateUser({
+			image: undefined,
+		});
 	};
 
 	const form = useForm<AccountSchema>({
 		resolver: zodResolver(accountSchema),
 		mode: "onTouched",
+		defaultValues: {
+			username: session?.user?.name,
+		},
 	});
+
 	const t = useTranslations();
-	const onSubmit = async (data: AccountSchema) => {};
+	const onSubmit = async (data: AccountSchema) => {
+		await authClient.updateUser(
+			{
+				name: data.username,
+			},
+			{
+				onSuccess: () => {
+					toast({ title: "update user successfully " });
+				},
+			},
+		);
+	};
 	return (
 		<>
 			<Header className="w-full border-b border-gray-200 mb-1">
@@ -85,7 +109,7 @@ export default function AccountPage() {
 						<div className="w-full h-full rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
 							{imageSrc ? (
 								<Image
-									src={imageSrc}
+									src={URL.createObjectURL(imageSrc)}
 									alt="Profile Picture"
 									width={128}
 									height={128}
@@ -104,9 +128,13 @@ export default function AccountPage() {
 									title: "Upload Images",
 									description: "",
 								}}
-								datasetId=""
-								id=""
-								onFileChange={() => {}}
+								noApi
+								onFileChange={async (file) => {
+									setImageSrc(file as File);
+									await authClient.updateUser({
+										image: await convertImageToBase64(file as File),
+									});
+								}}
 							/>
 
 							<button
@@ -121,4 +149,30 @@ export default function AccountPage() {
 			</div>
 		</>
 	);
+}
+
+async function convertImageToBase64(file: File): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onloadend = () => resolve(reader.result as string);
+		reader.onerror = reject;
+		reader.readAsDataURL(file);
+	});
+}
+
+export function base64ToFile(base64: string, filename: string): File {
+	const [header, data] = base64.split(",");
+	const mimeMatch = header.match(/data:(.*);base64/);
+
+	if (!mimeMatch) throw new Error("Invalid base64 format");
+
+	const mime = mimeMatch[1];
+	const binary = atob(data);
+	const array = new Uint8Array(binary.length);
+
+	for (let i = 0; i < binary.length; i++) {
+		array[i] = binary.charCodeAt(i);
+	}
+
+	return new File([array], filename, { type: mime });
 }

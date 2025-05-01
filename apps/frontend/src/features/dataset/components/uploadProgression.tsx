@@ -78,7 +78,7 @@ const UploadProgress = () => {
 				animate={{ height: collapse ? 0 : "auto", opacity: collapse ? 0 : 1 }}
 				exit={{ height: 0, opacity: 0 }}
 				transition={{ duration: 0.35, ease: "easeInOut" }}
-				className="mt-4 space-y-2"
+				className="mt-4 space-y-2 max-h-[40vh] overflow-auto"
 			>
 				{uploads.map(
 					({

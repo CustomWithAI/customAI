@@ -25,11 +25,22 @@ import {
 type UploadedFile = { id: string; url?: string }[];
 
 type UploadFileType = {
-	id: string;
-	datasetId: string;
 	onFileChange: (files: UploadedFile) => void;
 	onDelete?: (fileId: string) => void;
-};
+} & (
+	| {
+			noApi: true;
+			id?: never;
+			datasetId?: never;
+			onFileChange: (files: File) => void;
+	  }
+	| {
+			noApi?: never;
+			id: string;
+			datasetId: string;
+			onFileChange: (files: UploadedFile) => void;
+	  }
+);
 
 type UploadFileDialog = {
 	button: ReactNode;
@@ -44,6 +55,7 @@ const icons = [ImageIcon, FileText, FileVideo2];
 const UploadFileBox = ({
 	onFileChange,
 	id,
+	noApi,
 	datasetId,
 	onDelete,
 }: UploadFileType) => {
@@ -56,6 +68,10 @@ const UploadFileBox = ({
 	const onDrop = useCallback(
 		async (acceptedFiles: File[]) => {
 			const uploadedFiles: UploadedFile = [];
+			if (noApi) {
+				acceptedFiles.map((file) => onFileChange(file));
+				return;
+			}
 			for (const file of acceptedFiles) {
 				try {
 					const response = await uploadFile({
@@ -71,7 +87,7 @@ const UploadFileBox = ({
 			}
 			onFileChange(uploadedFiles);
 		},
-		[uploadFile, onFileChange, datasetId],
+		[uploadFile, onFileChange, datasetId, noApi],
 	);
 
 	const { getRootProps, getInputProps, isDragActive, isDragReject } =

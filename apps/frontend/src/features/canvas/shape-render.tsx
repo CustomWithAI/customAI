@@ -132,7 +132,9 @@ export function ShapeRenderer({
 									cx={point.x}
 									cy={point.y}
 									r="4"
+									data-corner-id={`polygon::${polygon.id}::${index}`}
 									fill="#ffffff"
+									className="resize-handle z-10"
 									stroke={selected ? "#2563eb" : label?.color || polygon.color}
 									strokeWidth="2"
 								/>

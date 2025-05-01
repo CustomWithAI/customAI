@@ -8,6 +8,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { formatBytes } from "@/hooks/use-file-upload";
 import { getFileMeta } from "@/lib/getFileUrl";
 import { encodeBase64 } from "@/libs/base64";
 import { useRouter } from "@/libs/i18nNavigation";
@@ -28,16 +29,11 @@ import { forwardRef, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { DiffDisplay } from "./diffDisplay";
 
-const formatSize = (bytes: number | string): string => {
-	const numberBytes = Number(bytes);
-	if (numberBytes >= 1024 ** 4)
-		return `${(numberBytes / 1024 ** 4).toFixed(2)} TB`;
-	if (numberBytes >= 1024 ** 3)
-		return `${(numberBytes / 1024 ** 3).toFixed(2)} GB`;
-	if (numberBytes >= 1024 ** 2)
-		return `${(numberBytes / 1024 ** 2).toFixed(2)} MB`;
-	if (numberBytes >= 1024) return `${(numberBytes / 1024).toFixed(2)} kB`;
-	return `${bytes} B`;
+const COLOR_STATUS: Record<string, "red" | "amber" | "green" | "blue"> = {
+	pending: "blue",
+	running: "amber",
+	completed: "green",
+	failed: "red",
 };
 
 export type VersionSectionProps = {
@@ -91,6 +87,7 @@ export const VersionSection = ({
 	}, [current?.trainedModelPath]);
 
 	const Icon = meta?.icon;
+
 	return (
 		<div ref={ref} id={current.version} className="flex w-full pb-4">
 			<GitCommitVertical />
@@ -101,7 +98,14 @@ export const VersionSection = ({
 				</div>
 				<div className="rounded-lg flex-1 w-full shadow-md border border-gray-200 relative px-6 py-5">
 					<div className="flex max-md:flex-col grow md:items-end gap-x-4 mb-4">
-						<ContentHeader>{current.id}</ContentHeader>
+						<Badge
+							size="lg"
+							effect="floating"
+							variant="secondary"
+							color={COLOR_STATUS[current.status] || "amber"}
+						>
+							{current.status}
+						</Badge>
 						<Subtle className="mb-0.5">
 							{formatDistanceToNow(new Date(current.createdAt), {
 								addSuffix: true,
@@ -170,7 +174,7 @@ export const VersionSection = ({
 									</Content>
 								</div>
 								<Content>
-									{meta.size ? formatSize(meta.size) : "unknown"}
+									{meta.size ? formatBytes(meta.size) : "unknown"}
 								</Content>
 							</div>
 						</div>

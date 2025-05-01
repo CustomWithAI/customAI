@@ -35,6 +35,7 @@ import { ContextMenu } from "./context-menu";
 import { LabelSidebar } from "./label-sidebar";
 import { removeLabelFromShapes, updateLabel } from "./label-utils";
 import { ModeSelector } from "./mode-selector";
+import { ResizeHandler } from "./resize-handler";
 import { ShapeContextMenu } from "./shape-context-menu";
 import { ShapeRenderer } from "./shape-render";
 
@@ -280,13 +281,29 @@ export default function SquareEditor({
 		(type: "polygon" | "path", id: string, event: React.MouseEvent) => {
 			event.stopPropagation();
 			const { x, y } = getMousePosition(event);
+			const targetElement = document.elementFromPoint(
+				event.clientX,
+				event.clientY,
+			);
+			if (targetElement?.classList.contains("resize-handle")) {
+				const cornerId = targetElement.getAttribute("data-corner-id");
+				const [type, id, indexStr] = cornerId?.split("::") || [];
+				const index = Number.parseInt(indexStr ?? "", 10);
+				if (type === "polygon" && id && !Number.isNaN(index)) {
+					const polygon = polygons.find((p) => p.id === id);
+					if (polygon && !polygon.isLocked) {
+						startPolygonDrag(id, { x, y }, "point", index);
+						return;
+					}
+				}
+			}
 			if (type === "polygon") {
 				startPolygonDrag(id, { x, y });
 			} else {
 				startPathDrag(id, { x, y });
 			}
 		},
-		[getMousePosition, startPolygonDrag, startPathDrag],
+		[getMousePosition, startPolygonDrag, startPathDrag, polygons],
 	);
 
 	const handleShapeClick = useCallback(
@@ -358,30 +375,16 @@ export default function SquareEditor({
 					handleStartDrag(x, y);
 					break;
 				}
-				case "delete": {
-					const deleteTarget = event.target as Element;
-					const deleteElement = deleteTarget.closest("[data-square-id], path");
-					if (!deleteElement) return;
-					if (deleteElement.hasAttribute("data-square-id")) {
-						const squareId = deleteElement.getAttribute("data-square-id");
-						if (squareId) deleteSquare(squareId);
-					} else {
-						const pathData = deleteElement.getAttribute("data-shape-id");
-						if (!pathData) return;
-						const [type, id] = pathData.split("::");
-						if (type === "polygon") {
-							deletePolygon(id);
-						} else if (type === "path") {
-							deletePath(id);
-						}
-					}
-					break;
-				}
 				case "polygon": {
-					if ((event.target as Element).closest("[data-shape-id]")) {
-						const shapeElement = (event.target as Element).closest(
-							"[data-shape-id]",
-						);
+					const shapeElement = (event.target as Element).closest(
+						"[data-shape-id]",
+					);
+					if (shapeElement) {
+						if (activePolygon) {
+							addPoint({ x, y });
+							setSelectedShape(null);
+							return;
+						}
 						if (!shapeElement?.hasAttribute("data-shape-id")) return;
 						const shapeId = shapeElement.getAttribute("data-shape-id");
 						if (!shapeId) return;
@@ -405,7 +408,7 @@ export default function SquareEditor({
 					setSelectedShape(null);
 					break;
 				}
-				case "freehand": {
+				case "freehand":
 					if ((event.target as Element).closest("[data-shape-id]")) {
 						const shapeElement = (event.target as Element).closest(
 							"[data-shape-id]",
@@ -430,10 +433,27 @@ export default function SquareEditor({
 					}
 					setSelectedShape(null);
 					break;
+				case "delete": {
+					const deleteTarget = event.target as Element;
+					const deleteElement = deleteTarget.closest("[data-square-id], path");
+					if (!deleteElement) return;
+					if (deleteElement.hasAttribute("data-square-id")) {
+						const squareId = deleteElement.getAttribute("data-square-id");
+						if (squareId) deleteSquare(squareId);
+					} else {
+						const pathData = deleteElement.getAttribute("data-shape-id");
+						if (!pathData) return;
+						const [type, id] = pathData.split("::");
+						if (type === "polygon") {
+							deletePolygon(id);
+						} else if (type === "path") {
+							deletePath(id);
+						}
+					}
+					break;
 				}
-				default: {
+				default:
 					console.log("not implemented");
-				}
 			}
 		},
 		[
@@ -518,8 +538,8 @@ export default function SquareEditor({
 		(event: React.MouseEvent) => {
 			event.preventDefault();
 			const targetElement = document.elementFromPoint(
-				event.clientX / zoom,
-				event.clientY / zoom,
+				event.clientX,
+				event.clientY,
 			);
 			const squareElement = targetElement?.closest("[data-square-id]");
 			if (squareElement) {
@@ -538,7 +558,10 @@ export default function SquareEditor({
 					event.stopPropagation();
 					const [type, id] = shapeId.split("::");
 					setSelectedShape({ type: type as "polygon" | "path", id: id });
-					setShapeContextMenu({ x: event.clientX, y: event.clientY });
+					setShapeContextMenu({
+						x: event.clientX / zoom,
+						y: event.clientY / zoom,
+					});
 				}
 				return;
 			}
@@ -971,24 +994,7 @@ export default function SquareEditor({
 										</div>
 									)}
 									{square.id === selectedSquare && !square.isLocked && (
-										<>
-											<div
-												className="resize-handle absolute w-3 h-3 -left-1.5 -top-1.5 bg-white border-2 border-blue-500 rounded-full cursor-nw-resize z-10"
-												data-corner="top-left"
-											/>
-											<div
-												className="resize-handle absolute w-3 h-3 -right-1.5 -top-1.5 bg-white border-2 border-blue-500 rounded-full cursor-ne-resize z-10"
-												data-corner="top-right"
-											/>
-											<div
-												className="resize-handle absolute w-3 h-3 -left-1.5 -bottom-1.5 bg-white border-2 border-blue-500 rounded-full cursor-sw-resize z-10"
-												data-corner="bottom-left"
-											/>
-											<div
-												className="resize-handle absolute w-3 h-3 -right-1.5 -bottom-1.5 bg-white border-2 border-blue-500 rounded-full cursor-se-resize z-10"
-												data-corner="bottom-right"
-											/>
-										</>
+										<ResizeHandler />
 									)}
 								</div>
 							);
@@ -1009,6 +1015,7 @@ export default function SquareEditor({
 						<ContextMenu
 							x={contextMenu.x}
 							y={contextMenu.y}
+							zoom={zoom}
 							labels={labels}
 							square={squares.find((s) => s.id === selectedSquare)}
 							onDelete={() => {
@@ -1029,6 +1036,7 @@ export default function SquareEditor({
 						<ShapeContextMenu
 							x={shapeContextMenu.x}
 							y={shapeContextMenu.y}
+							zoom={zoom}
 							shape={
 								selectedShape.type === "polygon"
 									? polygons.find((p) => p.id === selectedShape.id)

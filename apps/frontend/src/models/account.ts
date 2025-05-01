@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const accountSchema = z.object({
-	username: z.string().email().min(1, {
+	username: z.string().min(1, {
 		message: "username is required",
 	}),
 });

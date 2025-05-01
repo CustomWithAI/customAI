@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 interface ShapeContextMenuProps {
 	x: number;
 	y: number;
+	zoom: number;
 	shape: Polygon | FreehandPath | undefined;
 	labels: Label[];
 	onClose: () => void;
@@ -20,6 +21,7 @@ const Y_OFFSET = 120;
 export function ShapeContextMenu({
 	x,
 	y,
+	zoom,
 	shape,
 	labels,
 	onClose,
@@ -53,7 +55,7 @@ export function ShapeContextMenu({
 			type="button"
 			ref={menuRef}
 			className="absolute bg-white border border-gray-200 rounded-lg shadow-lg py-2 min-w-[200px] z-50"
-			style={{ left: x - X_OFFSET, top: y - Y_OFFSET }}
+			style={{ left: (x - X_OFFSET) / zoom, top: (y - Y_OFFSET) / zoom }}
 			onClick={handleClick}
 		>
 			<div className="px-1">

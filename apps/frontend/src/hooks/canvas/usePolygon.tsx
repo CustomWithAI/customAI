@@ -18,10 +18,11 @@ export function usePolygon({
 	const [activePolygon, setActivePolygon] = useState<Polygon | null>(null);
 	const [previewPoint, setPreviewPoint] = useState<Point | null>(null);
 	const [dragState, setDragState] = useState<{
-		type: "move" | "resize";
+		type: "move" | "resize" | "point";
 		startPos: Point;
 		originalPoints: Point[];
 		polygonId: string;
+		pointIndex?: number;
 	} | null>(null);
 
 	const startPolygon = useCallback(
@@ -75,7 +76,12 @@ export function usePolygon({
 	);
 
 	const startDrag = useCallback(
-		(polygonId: string, point: Point, type: "move" | "resize" = "move") => {
+		(
+			polygonId: string,
+			point: Point,
+			type: "move" | "resize" | "point" = "move",
+			pointIndex?: number,
+		) => {
 			const polygon = polygons.find((p) => p.id === polygonId);
 			if (!polygon || polygon.isLocked) return;
 
@@ -84,6 +90,7 @@ export function usePolygon({
 				startPos: point,
 				originalPoints: polygon.points.map((p) => ({ ...p })),
 				polygonId,
+				pointIndex,
 			});
 		},
 		[polygons],
@@ -99,6 +106,22 @@ export function usePolygon({
 
 					const dx = point.x - dragState.startPos.x;
 					const dy = point.y - dragState.startPos.y;
+
+					if (dragState.type === "point") {
+						if (
+							typeof dragState.pointIndex === "number" &&
+							dragState.pointIndex >= 0 &&
+							dragState.pointIndex < polygon.points.length
+						) {
+							const newPoints = [...dragState.originalPoints];
+							newPoints[dragState.pointIndex] = {
+								x: dragState.originalPoints[dragState.pointIndex].x + dx,
+								y: dragState.originalPoints[dragState.pointIndex].y + dy,
+							};
+							return { ...polygon, points: newPoints };
+						}
+						return polygon;
+					}
 
 					if (dragState.type === "move") {
 						return {

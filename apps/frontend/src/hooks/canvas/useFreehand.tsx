@@ -42,6 +42,14 @@ export function useFreehand({
 	const addPoint = useCallback(
 		(point: Point) => {
 			if (!activePath) return;
+			if (
+				activePath.points.length > 0 &&
+				Math.hypot(
+					point.x - (activePath.points.at(-1)?.x || 0),
+					point.y - (activePath.points.at(-1)?.y || 0),
+				) < 1
+			)
+				return;
 
 			const updatedPath = {
 				...activePath,
@@ -63,9 +71,10 @@ export function useFreehand({
 				setActivePath(null);
 				return;
 			}
+			const SimplifiedPath = simplifyPath(activePath.points, 3);
 			const updatedPath = {
 				...activePath,
-				points: [...activePath.points, activePath.points[0]],
+				points: [...SimplifiedPath, SimplifiedPath[0]],
 			};
 			setPaths((prev) =>
 				prev.map((p) => (p.id === activePath.id ? updatedPath : p)),
@@ -233,4 +242,64 @@ export function useFreehand({
 		updatePath,
 		deletePath,
 	};
+}
+
+function simplifyPath(points: Point[], tolerance = 2): Point[] {
+	if (points.length < 3) return points;
+
+	const sqTolerance = tolerance * tolerance;
+
+	const simplifyDP = (
+		pts: Point[],
+		first: number,
+		last: number,
+		simplified: Point[],
+	) => {
+		let maxDist = sqTolerance;
+		let index = -1;
+
+		for (let i = first + 1; i < last; i++) {
+			const dist = getSqSegDist(pts[i], pts[first], pts[last]);
+			if (dist > maxDist) {
+				index = i;
+				maxDist = dist;
+			}
+		}
+
+		if (index > -1) {
+			simplifyDP(pts, first, index, simplified);
+			simplifyDP(pts, index, last, simplified);
+		} else {
+			simplified.push(pts[first]);
+		}
+	};
+
+	const getSqSegDist = (p: Point, p1: Point, p2: Point) => {
+		let x = p1.x;
+		let y = p1.y;
+		let dx = p2.x - x;
+		let dy = p2.y - y;
+
+		if (dx !== 0 || dy !== 0) {
+			const t = ((p.x - x) * dx + (p.y - y) * dy) / (dx * dx + dy * dy);
+			if (t > 1) {
+				x = p2.x;
+				y = p2.y;
+			} else if (t > 0) {
+				x += dx * t;
+				y += dy * t;
+			}
+		}
+
+		dx = p.x - x;
+		dy = p.y - y;
+
+		return dx * dx + dy * dy;
+	};
+
+	const simplified: Point[] = [];
+	simplifyDP(points, 0, points.length - 1, simplified);
+	simplified.push(points[points.length - 1]);
+
+	return simplified;
 }

@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 interface ContextMenuProps {
 	x: number;
 	y: number;
+	zoom: number;
 	square?: Square;
 	labels: Label[];
 	onClose: () => void;
@@ -21,6 +22,7 @@ export function ContextMenu({
 	x,
 	y,
 	square,
+	zoom,
 	onClose,
 	labels,
 	onDelete,
@@ -42,7 +44,7 @@ export function ContextMenu({
 			type="button"
 			ref={menuRef}
 			className="absolute bg-white border border-gray-200 rounded-lg shadow-lg py-2 min-w-[200px] z-50"
-			style={{ left: x - X_OFFSET, top: y - Y_OFFSET }}
+			style={{ left: (x - X_OFFSET) / zoom, top: (y - Y_OFFSET) / zoom }}
 			onClick={handleClick}
 		>
 			<div className="px-1">
