@@ -433,7 +433,6 @@ export const ImageComponents = ({
 			return null;
 		});
 	}, [inference?.annotation, imageRender]);
-
 	if (isPending) return null;
 	if (fetchStatus === "fetching")
 		return (
@@ -451,7 +450,7 @@ export const ImageComponents = ({
 								src={inference.imagePath}
 								ref={imageRef}
 								alt="Uploaded"
-								className="mx-auto select-none max-h-full rounded object-contain"
+								className="mx-auto pointer-events-none select-none max-h-full rounded object-contain"
 							/>
 							<div className="absolute pointer-events-none" ref={overlayRef}>
 								{showAnnotation && renderedAnnotation}
@@ -533,7 +532,14 @@ export const ImageComponents = ({
 						value={selected}
 						onValueChange={(value) => setSelected(value as SelectType)}
 					>
-						<SelectTrigger id={`${id}-model`} className="w-48">
+						<SelectTrigger
+							onClick={(e) => {
+								e.preventDefault();
+								e.stopPropagation();
+							}}
+							id={`${id}-model`}
+							className="w-48"
+						>
 							<SelectValue placeholder="Select type" />
 						</SelectTrigger>
 						<SelectContent className="z-[500]">
@@ -564,7 +570,14 @@ export const ImageComponents = ({
 									value={data.workflow}
 									onValueChange={(value) => onSet("workflow", value)}
 								>
-									<SelectTrigger id={`${id}-class`} className="w-full">
+									<SelectTrigger
+										onClick={(e) => {
+											e.preventDefault();
+											e.stopPropagation();
+										}}
+										id={`${id}-class`}
+										className="w-full"
+									>
 										<SelectValue placeholder="Select type" />
 									</SelectTrigger>
 									<SelectContent className="z-[500]">
@@ -584,7 +597,13 @@ export const ImageComponents = ({
 									value={data.training}
 									onValueChange={(value) => onSet("training", value)}
 								>
-									<SelectTrigger className="w-full">
+									<SelectTrigger
+										onClick={(e) => {
+											e.preventDefault();
+											e.stopPropagation();
+										}}
+										className="w-full"
+									>
 										<SelectValue placeholder="Select type" />
 									</SelectTrigger>
 									<SelectContent className="z-[500]">
@@ -604,7 +623,13 @@ export const ImageComponents = ({
 									value={data.version}
 									onValueChange={(value) => onSet("version", value)}
 								>
-									<SelectTrigger className="w-full">
+									<SelectTrigger
+										onClick={(e) => {
+											e.preventDefault();
+											e.stopPropagation();
+										}}
+										className="w-full"
+									>
 										<SelectValue placeholder="Select type" />
 									</SelectTrigger>
 									<SelectContent className="z-[500]">

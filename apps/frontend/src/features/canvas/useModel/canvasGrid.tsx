@@ -42,6 +42,7 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { ModeSelector } from "./mode-selector";
 
 export interface CanvasElement {
 	id: string;
@@ -168,6 +169,36 @@ export default function CanvasWithOverlay() {
 		[offsetX, offsetY, canvasWidth, canvasHeight],
 	);
 
+	const [isSpacePressed, setIsSpacePressed] = useState(false);
+
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.code === "Space" && !isSpacePressed) {
+				setIsSpacePressed(true);
+				if (containerRef.current) {
+					containerRef.current.style.cursor = "grab";
+				}
+			}
+		};
+
+		const handleKeyUp = (e: KeyboardEvent) => {
+			if (e.code === "Space") {
+				setIsSpacePressed(false);
+				if (containerRef.current) {
+					containerRef.current.style.cursor = "";
+				}
+			}
+		};
+
+		window.addEventListener("keydown", handleKeyDown);
+		window.addEventListener("keyup", handleKeyUp);
+
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown);
+			window.removeEventListener("keyup", handleKeyUp);
+		};
+	}, [isSpacePressed]);
+
 	const handleContainerMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
 		if (e.button !== 0) return;
 
@@ -177,9 +208,22 @@ export default function CanvasWithOverlay() {
 		const x = e.clientX - rect.left;
 		const y = e.clientY - rect.top;
 
-		if (!isPointOverElement(x, y)) {
+		if (!isPointOverElement(x, y) || isSpacePressed) {
 			setIsDragging(true);
 			dragStart.current = { x: e.clientX, y: e.clientY };
+
+			if (isSpacePressed) {
+				e.preventDefault();
+				e.stopPropagation();
+			}
+		}
+	};
+
+	const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+		if (e.button === 1) {
+			e.preventDefault();
+			// setIsDragging(true);
+			// dragStart.current = { x: e.clientX, y: e.clientY };
 		}
 	};
 
@@ -551,7 +595,10 @@ export default function CanvasWithOverlay() {
 					>
 						<div
 							className="absolute top-0 left-0 right-0 h-6 bg-gray-100 border-b flex items-center px-2 cursor-grab z-10"
-							onMouseDown={(e) => handleElementMouseDown(e, element.id)}
+							onMouseDown={(e) => {
+								handleElementMouseDown(e, element.id);
+								handleMouseDown(e);
+							}}
 						>
 							<div className="text-xs font-medium flex-1 truncate">
 								{element.title} ({element.x}, {element.y})
@@ -627,7 +674,18 @@ export default function CanvasWithOverlay() {
 				height={canvasHeight}
 				className="block absolute top-0 left-0 pointer-events-none"
 			/>
-
+			<ModeSelector
+				mode={isSpacePressed ? "hand" : "action"}
+				onChange={(v) => {
+					if (!containerRef.current) return;
+					if (v === "hand") {
+						containerRef.current.style.cursor = "grab";
+					} else {
+						containerRef.current.style.cursor = "";
+					}
+					setIsSpacePressed(v === "hand");
+				}}
+			/>
 			<div
 				ref={elementsContainerRef}
 				className="absolute top-0 left-0 w-full h-full overflow-hidden"
