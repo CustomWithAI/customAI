@@ -76,21 +76,14 @@ services:
       localstack:
         condition: service_healthy
     volumes:
-      - ./testbucket:/aws
+      - ./images:/aws
+      - ./upload-images.sh:/aws/upload-images.sh
     environment:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
       - AWS_DEFAULT_REGION=us-east-1
-    entrypoint: /bin/sh -c
-    command: >
-      "
-        aws --endpoint-url=http://localstack:4566 s3api create-bucket --bucket my-bucket --region us-east-1
-        aws --endpoint-url=http://localstack:4566 s3 cp /aws/1.jpg s3://my-bucket/datasets/test/1.jpg;
-        aws --endpoint-url=http://localstack:4566 s3 cp /aws/2.jpg s3://my-bucket/datasets/test/2.jpg;
-        aws --endpoint-url=http://localstack:4566 s3 cp /aws/3.jpg s3://my-bucket/datasets/test/3.jpg;
-        aws --endpoint-url=http://localstack:4566 s3api put-bucket-cors --bucket my-bucket --cors-configuration file:///aws/cors.json;
-        aws --endpoint-url=http://localstack:4566 s3 ls s3://my-bucket --recursive --human-readable --summarize
-      "
+    entrypoint: /bin/sh
+    command: -c "sh /aws/upload-images.sh"
 
   backend_app:
     container_name: backend_app

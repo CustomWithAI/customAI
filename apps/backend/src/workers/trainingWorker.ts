@@ -334,6 +334,7 @@ export const startTrainingWorker = async () => {
               await trainingRepository.updateById(data.workflow.id, data.id, {
                 status: "failed",
                 errorMessage: error.message,
+                retryCount: data.retryCount + 1,
               });
             }
           } finally {
@@ -555,6 +556,7 @@ export const startTrainingWorker = async () => {
               await modelInferenceRepository.updateById(data.userId, data.id, {
                 status: "failed",
                 errorMessage: error.message,
+                retryCount: data.retryCount + 1,
               });
             }
           } finally {
