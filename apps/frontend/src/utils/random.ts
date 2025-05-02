@@ -1,3 +1,5 @@
+import { generateUniqueColor } from "./color-utils";
+
 const adjectives = [
 	"Happy",
 	"Sunny",
@@ -28,23 +30,11 @@ const nouns = [
 	"Breeze",
 ];
 
-const colors = [
-	"#ef4444",
-	"#f97316",
-	"#f59e0b",
-	"#84cc16",
-	"#22c55e",
-	"#14b8a6",
-	"#3b82f6",
-	"#6366f1",
-	"#a855f7",
-	"#ec4899",
-];
-
 export function generateRandomLabel(): { name: string; color: string } {
 	const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
 	const noun = nouns[Math.floor(Math.random() * nouns.length)];
-	const color = colors[Math.floor(Math.random() * colors.length)];
+	const seed = adjective.charCodeAt(0) * 100 + noun.charCodeAt(0);
+	const color = generateUniqueColor(seed);
 
 	return {
 		name: `${adjective}${noun}`,

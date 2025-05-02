@@ -2,6 +2,8 @@ import type { MDXComponents } from "mdx/types";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
+import { Callout } from "./components/ui/callout";
+import { Separator } from "./components/ui/separator";
 
 export function useMDXComponents(components?: MDXComponents): MDXComponents {
 	return useMemo(() => {
@@ -40,6 +42,7 @@ export function useMDXComponents(components?: MDXComponents): MDXComponents {
 					{children}
 				</Link>
 			),
+			hr: () => <hr className="border-gray-200" />,
 			ul: ({ children }) => <ul className="my-6 ml-6 list-disc">{children}</ul>,
 			ol: ({ children }) => (
 				<ol className="my-6 ml-6 list-decimal">{children}</ol>
@@ -68,6 +71,8 @@ export function useMDXComponents(components?: MDXComponents): MDXComponents {
 					{children}
 				</pre>
 			),
+			Callout,
+			Separator,
 			...components,
 		};
 	}, [components]);

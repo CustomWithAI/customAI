@@ -131,7 +131,7 @@ const ListItem = forwardRef<ElementRef<"a">, ComponentPropsWithoutRef<"a">>(
 						{...props}
 					>
 						<div className="text-sm font-medium leading-none">{title}</div>
-						<p className="line-clamp-2 text-sm leading-snug font-extralight text-zinc-400 text-muted-foreground">
+						<p className="line-clamp-2 text-sm leading-snug font-extralight text-muted-foreground">
 							{children}
 						</p>
 					</Link>

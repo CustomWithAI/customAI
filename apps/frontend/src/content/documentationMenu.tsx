@@ -11,7 +11,7 @@ export const documentationNav: DocGroup[] = [
 		title: "Getting Started",
 		icon: BookOpen,
 		pages: [
-			{ title: "Introduction", href: "/learning/getting-started" },
+			{ title: "Basic AI", href: "/learning/basic_ai" },
 			{ title: "Installation", href: "/learning/installation" },
 			{ title: "Configuration", href: "/learning/configuration" },
 		],

@@ -610,7 +610,10 @@ export default function CanvasWithOverlay() {
 										<MoreVertical size={12} />
 									</Button>
 								</DropdownMenuTrigger>
-								<DropdownMenuContent className="z-[400]" align="end">
+								<DropdownMenuContent
+									style={{ zIndex: element.zIndex + 20 }}
+									align="end"
+								>
 									<DropdownMenuItem onClick={() => bringToFront(element.id)}>
 										<Layers className="mr-2 h-4 w-4" />
 										<span>Bring to Front</span>

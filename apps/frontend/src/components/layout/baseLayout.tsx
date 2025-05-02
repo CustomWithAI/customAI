@@ -1,12 +1,11 @@
 import { Toaster } from "@/components/ui/toaster";
-import { node } from "@/configs/image-preprocessing";
 import UploadProgress from "@/features/dataset/components/uploadProgression";
 import { FlowNavigationProvider } from "@/hooks/use-flow-navigation";
 import { ReactQueryProvider } from "@/libs/react-query-providers";
 import { cn } from "@/libs/utils";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { IBM_Plex_Sans_Thai, Inter, Lexend, Prompt } from "next/font/google";
+import { IBM_Plex_Sans_Thai, Inter } from "next/font/google";
 import type { ReactNode } from "react";
 
 const ibm = IBM_Plex_Sans_Thai({

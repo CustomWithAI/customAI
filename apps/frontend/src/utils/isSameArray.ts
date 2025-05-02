@@ -1,5 +1,5 @@
 export const isSameUnorderedArray = <
-	T extends string | Record<string, unknown>,
+	T extends string | Record<string, unknown> | number,
 >(
 	a: T[],
 	b: T[],

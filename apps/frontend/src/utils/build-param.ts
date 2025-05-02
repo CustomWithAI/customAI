@@ -1,11 +1,5 @@
 import type { QueryParams } from "@/hooks/use-query-params";
 
-type QueryValue =
-	| string
-	| number
-	| boolean
-	| Record<string, string | number | boolean | null>;
-
 export function buildQueryParams(params: QueryParams): string | null {
 	if (!params) return null;
 	const searchParams = new URLSearchParams();

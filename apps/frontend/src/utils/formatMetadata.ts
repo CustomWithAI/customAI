@@ -65,22 +65,7 @@ export function metadataToArray(metadata: Metadata): unknown[] | unknown {
 				result.push(Number(value.value));
 				break;
 			case "Object":
-				if (isSimpleObject(value.value)) {
-					const flatObject = Object.entries(value.value)
-						.map(([_, subValue]) => {
-							if (subValue && subValue.type === "Number") {
-								return subValue.value;
-							}
-							return undefined;
-						})
-						.filter((val) => val !== undefined);
-
-					result.push(
-						flatObject.length > 0 ? flatObject : metadataToArray(value.value),
-					);
-				} else {
-					result.push(metadataToArray(value.value));
-				}
+				result.push(metadataToArray(value.value as Metadata) as []);
 				break;
 
 			case "Position":
@@ -120,42 +105,33 @@ export function arrayToMetadata(
 							: Boolean(values),
 					};
 					break;
+
 				case "String":
 					newMetadata[key] = {
 						...value,
 						value: isArray
-							? String((array as unknown[])[index++])
+							? String((array as unknown[])[index++] || metadata[key].value)
 							: String(values),
 					};
 					break;
+
 				case "Number":
 					newMetadata[key] = {
 						...value,
 						value: isArray
-							? Number((array as unknown[])[index++])
+							? Number((array as unknown[])[index++] || metadata[key]?.value)
 							: Number(values),
 					};
 					break;
-				case "Object":
-					if (isSimpleObject(value.value)) {
-						const newValue: Record<string, any> = {};
-						const currentValues =
-							isArray && Array.isArray((array as unknown[])[index])
-								? (array as unknown[])[index++]
-								: {};
 
-						for (const subKey in value.value) {
-							newValue[subKey] = reconstruct(
-								value.value[subKey] as any,
-								(currentValues as any)[subKey],
-							);
-						}
-
-						newMetadata[key] = { ...value, value: newValue };
-					} else {
-						newMetadata[key] = { ...value, value: values as any };
-					}
+				case "Object": {
+					newMetadata[key] = {
+						...value,
+						value: reconstruct(value.value as Metadata),
+					};
 					break;
+				}
+
 				default:
 					newMetadata[key] = value;
 			}
