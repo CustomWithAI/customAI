@@ -144,7 +144,7 @@ export async function seedAuth(): Promise<void> {
       },
       {
         id: objectDetectionWorkflowId,
-        name: "Car and Motorcycle Workflow For Object Detection Training",
+        name: "Object Detection Sample Workflow",
         description:
           "Car and Motorcycle Workflow For Object Detection Training",
         type: "object_detection",
