@@ -154,21 +154,22 @@ export class TrainingService {
     }
 
     const training = trainings[0];
-    const isCreatedOrFailed = ["created", "failed"].includes(training.status);
 
-    const canStart = isCreatedOrFailed && training.status !== "failed";
+    const canStart =
+      training.status === "created" ||
+      (training.status === "failed" && training.retryCount <= 3);
     yield emit("Checking training status", canStart);
 
     // TODO: Should Fix Or Not ?
-    // if (!canStart) {
-    //   throw error(400, {
-    //     type: "training",
-    //     message:
-    //       training.status === "failed"
-    //         ? "Training is in process after some errors occurred"
-    //         : "Training has already started",
-    //   });
-    // }
+    if (!canStart) {
+      throw error(400, {
+        type: "training",
+        message:
+          training.status === "failed"
+            ? "Training is in process after some errors occurred"
+            : "Training has already started",
+      });
+    }
 
     yield emit("Validating dataset..", true);
 

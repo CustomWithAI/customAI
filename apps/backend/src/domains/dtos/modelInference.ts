@@ -39,7 +39,7 @@ export const createUploadModelInferenceDto = t.Object({
     training: modelInferenceTraining,
     version: t.Optional(modelInferenceVersion),
   }),
-  model: t.File(),
+  model: t.File({ maxSize: "200m" }),
 });
 
 export const modelInferenceResponseDto = t.Object({

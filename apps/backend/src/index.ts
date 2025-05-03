@@ -29,7 +29,11 @@ try {
   await retryConnection(connectS3, "S3", 10);
   logger.info("🏃‍♀️ Starting server..");
 
-  const app = new Elysia()
+  const app = new Elysia({
+    serve: {
+      maxRequestBodySize: Number.MAX_SAFE_INTEGER,
+    },
+  })
     .use(logger.into())
     .use(cors())
     .use(staticPlugin())
