@@ -445,7 +445,9 @@ export const startTrainingWorker = async () => {
                   if (trainingData.workflow.type === "classification") {
                     const index: number = inferenceResponse.data.prediction;
                     annotationData = {
-                      label: labels[index].name,
+                      label: labels.sort((a, b) =>
+                        a.name.localeCompare(b.name)
+                      )[index].name,
                     };
                   } else if (
                     trainingData.workflow.type === "object_detection"
