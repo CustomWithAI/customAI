@@ -130,3 +130,5 @@ dist
 .pnp.*
 
 localstack
+
+.DS_Store

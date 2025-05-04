@@ -16,6 +16,7 @@ from tensorflow.keras.datasets import cifar10
 from tensorflow.keras.optimizers import Adam, SGD
 from tensorflow.keras.losses import categorical_crossentropy
 from tensorflow.keras.callbacks import LearningRateScheduler
+from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau, Callback
 from tensorflow.keras.losses import get as get_loss
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
@@ -469,7 +470,7 @@ class DLTrainingPretrained():
 
         if "yolov5" in config.model:
             # Training model
-            command = f"yolo5_venv/bin/python ./app/services/model/yolov5/train.py --img {img_size} --batch {batch_size} --epochs {epochs} --data ./data.yaml --weights {weight_size} --cache"
+            command = f"yolov5_venv/bin/python ./app/services/model/yolov5/train.py --img {img_size} --batch {batch_size} --epochs {epochs} --data ./data.yaml --weights {weight_size} --cache"
             subprocess.run(command, shell=True, check=True)
 
             # shutil.rmtree("./app/services/model/yolov5/runs/train", ignore_errors = True)
@@ -526,13 +527,20 @@ class DLTrainingPretrained():
         model.compile(optimizer=optimizer, loss=loss_function,
                       metrics=['accuracy'])
 
-        # Learning rate scheduler (optional)
         callbacks = []
-        if config_training.learning_rate_scheduler:
-            def scheduler(epoch, lr):
-                return config_training.learning_rate_scheduler(epoch, lr)
-            callbacks.append(LearningRateScheduler(scheduler))
-
+        if config_training.callbacks:
+            if config_training.callbacks.reduce_lr_on_plateau:
+                callbacks.append(
+                    ReduceLROnPlateau(verbose=1, **config_training.callbacks.reduce_lr_on_plateau.model_dump())
+                )
+            if config_training.callbacks.early_stopping:
+                callbacks.append(
+                    EarlyStopping(
+                        verbose=1,
+                        restore_best_weights=True,
+                        **config_training.callbacks.early_stopping.model_dump(),
+                    )
+                )
         # Train the model
         history = model.fit(X_train, y_train, validation_data=(
             X_val, y_val), epochs=config_training.epochs, batch_size=config_training.batch_size, callbacks=callbacks)
@@ -771,10 +779,19 @@ class ConstructTraining():
 
         # Callbacks
         callbacks = []
-        if config_training.learning_rate_scheduler:
-            def scheduler(epoch, lr):
-                return config_training.learning_rate_scheduler(epoch, lr)
-            callbacks.append(LearningRateScheduler(scheduler))
+        if config_training.callbacks:
+            if config_training.callbacks.reduce_lr_on_plateau:
+                callbacks.append(
+                    ReduceLROnPlateau(verbose=1, **config_training.callbacks.reduce_lr_on_plateau.model_dump())
+                )
+            if config_training.callbacks.early_stopping:
+                callbacks.append(
+                    EarlyStopping(
+                        verbose=1,
+                        restore_best_weights=True,
+                        **config_training.callbacks.early_stopping.model_dump(),
+                    )
+                )
 
         # Train the model
         history = model.fit(X_train, y_train, validation_data=(
@@ -950,10 +967,19 @@ class ConstructTraining():
 
         # Callbacks
         callbacks = []
-        if config_training.learning_rate_scheduler:
-            def scheduler(epoch, lr):
-                return config_training.learning_rate_scheduler(epoch, lr)
-            callbacks.append(LearningRateScheduler(scheduler))
+        if config_training.callbacks:
+            if config_training.callbacks.reduce_lr_on_plateau:
+                callbacks.append(
+                    ReduceLROnPlateau(verbose=1, **config_training.callbacks.reduce_lr_on_plateau.model_dump())
+                )
+            if config_training.callbacks.early_stopping:
+                callbacks.append(
+                    EarlyStopping(
+                        verbose=1,
+                        restore_best_weights=True,
+                        **config_training.callbacks.early_stopping.model_dump(),
+                    )
+                )
 
         # Train the model
         history = model.fit(X_train, y_train, validation_data=(

@@ -134,7 +134,7 @@ class UseModel:
 
         elif version == "yolov5":
             command = (
-                f"yolo5_venv/bin/python ./app/services/model/yolov5/detect.py "
+                f"yolov5_venv/bin/python ./app/services/model/yolov5/detect.py "
                 f"--weights {model_path} --conf 0.09 --source {temp_img_path} --save-txt"
             )
             folder_path = "./app/services/model/yolov5/runs/detect/exp/labels/"

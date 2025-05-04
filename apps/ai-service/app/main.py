@@ -76,7 +76,7 @@ async def create_venv():
     # Create venv for yolov5
     subprocess.run(["python", "-m", "venv", "yolo5_venv"], check=True)
     subprocess.run(
-        "yolo5_venv/bin/python -m pip install -r app/services/model/yolov5/requirements.txt", shell=True, check=True)
+        "yolov5_venv/bin/python -m pip install -r app/services/model/yolov5/requirements.txt", shell=True, check=True)
 
     # Create venv for yolov8
     subprocess.run(["python", "-m", "venv", "yolov8_venv"], check=True)

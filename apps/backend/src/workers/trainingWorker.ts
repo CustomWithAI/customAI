@@ -4,7 +4,6 @@ import {
 } from "@/infrastructures/rabbitmq/connection";
 import {
   imageService,
-  workflowRepository,
   trainingRepository,
   modelInferenceRepository,
 } from "@/config/dependencies";
@@ -21,7 +20,11 @@ import { connectDatabase } from "@/infrastructures/database/connection";
 import { connectS3 } from "@/infrastructures/s3/connection";
 import axios, { AxiosError, type AxiosResponse } from "axios";
 import { defaultSplit, isLabels, stratifiedSplit } from "@/utils/split-data";
-import { generatePresignedUrl, uploadFile } from "@/infrastructures/s3/s3";
+import {
+  deleteFile,
+  generatePresignedUrl,
+  uploadFile,
+} from "@/infrastructures/s3/s3";
 
 type WorkerTrainingData = {
   type: "training";
@@ -34,17 +37,6 @@ type WorkerInferenceData = {
 };
 
 type WorkerData = WorkerTrainingData | WorkerInferenceData;
-
-// TODO: Fix after clear about URL (Merge Python)
-const convertURL = (url: string) => {
-  if (url.includes(config.S3_DEVELOPMENT_ENDPOINT)) {
-    return url.replace(
-      config.S3_DEVELOPMENT_ENDPOINT,
-      "http://host.docker.internal:4566"
-    );
-  }
-  return url;
-};
 
 const isUploadModelConfig = (data: unknown): data is UploadModelConfigDto => {
   const testData = data as UploadModelConfigDto;
@@ -90,7 +82,8 @@ export const startTrainingWorker = async () => {
             const { data: images } = await imageService.getImagesByDatasetId(
               data.workflow.userId,
               data.dataset.id,
-              { limit: 1000 }
+              { limit: 1000 },
+              "server"
             );
 
             const {
@@ -123,7 +116,7 @@ export const startTrainingWorker = async () => {
             }
 
             const filterImages = images.map(({ url, annotation }) => {
-              return { url: convertURL(url), annotation };
+              return { url, annotation };
             });
 
             const { trainData, testData, validData } =
@@ -351,7 +344,7 @@ export const startTrainingWorker = async () => {
               status: "running",
             });
 
-            const imagePath = convertURL(generatePresignedUrl(data.imagePath));
+            const imagePath = generatePresignedUrl(data.imagePath, "server");
 
             let inferenceResponse: AxiosResponse<any, any>;
             let annotationData: object;
@@ -365,10 +358,10 @@ export const startTrainingWorker = async () => {
               if (trainingsData.length !== 0) {
                 const trainingData = trainingsData[0];
                 if (trainingData.trainedModelPath) {
-                  const modelFilePath = convertURL(
-                    generatePresignedUrl(trainingData.trainedModelPath)
+                  const modelFilePath = generatePresignedUrl(
+                    trainingData.trainedModelPath,
+                    "server"
                   );
-
                   if (trainingData.workflow.type === "classification") {
                     const modelType = trainingData.machineLearningModel
                       ? "ml"
@@ -481,8 +474,9 @@ export const startTrainingWorker = async () => {
                 throw new Error(`Invalid Training ID: ${data.trainingId}`);
               }
             } else if (data.modelPath) {
-              const modelFilePath = convertURL(
-                generatePresignedUrl(data.modelPath)
+              const modelFilePath = generatePresignedUrl(
+                data.modelPath,
+                "server"
               );
               if (isUploadModelConfig(data.modelConfig)) {
                 let modelType = "";
@@ -536,6 +530,9 @@ export const startTrainingWorker = async () => {
                   "Invalid Request Don't Have Upload Model Config"
                 );
               }
+
+              // ✅ Delete Model From Cloud (Save Memory)
+              await deleteFile(data.modelPath);
             } else {
               throw new Error(
                 "Invalid Request, Don't Have Model To Inference."
@@ -544,6 +541,7 @@ export const startTrainingWorker = async () => {
 
             await modelInferenceRepository.updateById(data.userId, data.id, {
               annotation: annotationData,
+              modelPath: null,
               status: "completed",
               errorMessage: null,
             });
@@ -556,10 +554,16 @@ export const startTrainingWorker = async () => {
               );
 
               await modelInferenceRepository.updateById(data.userId, data.id, {
+                modelPath: null,
                 status: "failed",
                 errorMessage: error.message,
                 retryCount: data.retryCount + 1,
               });
+
+              // ✅ Delete Model From Cloud (Save Memory)
+              if (data.modelPath) {
+                await deleteFile(data.modelPath);
+              }
             }
           } finally {
             channel.ack(msg);

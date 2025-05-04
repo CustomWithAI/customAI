@@ -77,7 +77,6 @@ services:
         condition: service_healthy
     volumes:
       - ./images:/aws
-      - ./upload-images.sh:/aws/upload-images.sh
     environment:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test

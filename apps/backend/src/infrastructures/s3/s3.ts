@@ -34,6 +34,7 @@ export const deleteFile = async (filePath: string): Promise<void> => {
 
 export const generatePresignedUrl = (
   filePath: string,
+  useBy: "client" | "server" = "client",
   expiresIn = 3600
 ): string => {
   let presignedUrl = client.presign(filePath, {
@@ -41,7 +42,7 @@ export const generatePresignedUrl = (
     expiresIn,
   });
 
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "development" && useBy === "client") {
     presignedUrl = presignedUrl.replace(
       config.S3_ENDPOINT,
       config.S3_DEVELOPMENT_ENDPOINT

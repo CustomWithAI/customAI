@@ -49,7 +49,8 @@ export class ImageService {
   public async getImagesByDatasetId(
     userId: string,
     datasetId: string,
-    pagination: PaginationParams
+    pagination: PaginationParams,
+    useBy: "client" | "server" = "client"
   ) {
     await this.ensureDatasetExists(userId, datasetId);
 
@@ -60,7 +61,7 @@ export class ImageService {
       data: result.data.map((image) => ({
         ...image,
         path: encodeURIComponent(image.path),
-        url: generatePresignedUrl(image.path),
+        url: generatePresignedUrl(image.path, useBy),
       })),
     };
   }

@@ -9,7 +9,7 @@
     "ignore": [
       "node_modules/**/*",
       ".next",
-      "apps/ai-service/yolo5_venv/**",
+      "apps/ai-service/yolov5_venv/**",
       "apps/ai-service/yolov8_venv/**",
       "apps/ai-service/yolov11_venv/**"
     ]
