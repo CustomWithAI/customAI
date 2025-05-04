@@ -43,7 +43,7 @@ class DlModel:
             layers.Dropout(0.1),  # Dropout layer
             layers.Dense(32, activation='relu'),  # Third dense layer
             layers.Dropout(0.3),  # Dropout layer
-            layers.Dense(num_classes, activation='sigmoid')  # Output layer
+            layers.Dense(num_classes, activation='softmax')  # Output layer
         ])
 
         return model

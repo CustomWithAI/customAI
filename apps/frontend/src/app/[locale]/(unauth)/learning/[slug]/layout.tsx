@@ -1,6 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
-import "katex/dist/katex.min.css";
 
 export default async function LearningLayout({
 	children,

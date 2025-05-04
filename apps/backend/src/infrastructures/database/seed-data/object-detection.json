@@ -1,0 +1,520 @@
+[
+  {
+    "path": "datasets/object-detection/01968cee-184c-70aa-91b9-66d8c8eac937.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 2,
+          "y": 187.5,
+          "label": "Car",
+          "width": 196,
+          "height": 116
+        },
+        {
+          "x": 434,
+          "y": 181.5,
+          "label": "Car",
+          "width": 213,
+          "height": 134
+        },
+        {
+          "x": 213,
+          "y": 170.5,
+          "label": "Motorcycle",
+          "width": 217,
+          "height": 183
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1897-7749-a41c-324225bc3b89.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 65.5,
+          "y": 20,
+          "label": "Motorcycle",
+          "width": 393,
+          "height": 219
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-18ea-7013-adb0-bc700384524c.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 87,
+          "y": 11,
+          "label": "Motorcycle",
+          "width": 418,
+          "height": 344
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-19df-70fc-9d21-a7984858f1da.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 81.5,
+          "y": 89,
+          "label": "Car",
+          "width": 427,
+          "height": 192
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1a12-77a0-9004-5f35d32d8ec7.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 24,
+          "y": 166,
+          "label": "Car",
+          "width": 562,
+          "height": 280
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1a92-7579-b12d-5a0114c9472f.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 105,
+          "y": 3.5,
+          "label": "Motorcycle",
+          "width": 264,
+          "height": 250
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1ac2-77a8-b6cf-558fd08a8727.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 274,
+          "y": 700,
+          "label": "Motorcycle",
+          "width": 708,
+          "height": 724
+        },
+        {
+          "x": 964,
+          "y": 846,
+          "label": "Car",
+          "width": 835,
+          "height": 407
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1b29-75f6-8751-ba256e4e3cd6.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 100,
+          "y": 84,
+          "label": "Car",
+          "width": 453,
+          "height": 213
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1b49-7514-bbcf-7ceed20b5df9.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 9,
+          "y": 10.5,
+          "label": "Motorcycle",
+          "width": 594,
+          "height": 530
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1b77-7552-8edb-6667fb09d863.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 114,
+          "y": 122,
+          "label": "Car",
+          "width": 510,
+          "height": 348
+        },
+        {
+          "x": 697,
+          "y": 113,
+          "label": "Motorcycle",
+          "width": 193,
+          "height": 317
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1bb6-7769-9c38-d2fa0f04ab8d.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 32,
+          "y": 145.5,
+          "label": "Car",
+          "width": 581,
+          "height": 246
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1bd9-76b9-8b54-a0a886da7988.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 109,
+          "y": 56,
+          "label": "Motorcycle",
+          "width": 512,
+          "height": 319
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1c07-775b-8a0a-4a37be9dfb5d.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 423,
+          "y": 262,
+          "label": "Car",
+          "width": 674,
+          "height": 227
+        },
+        {
+          "x": 148,
+          "y": 144,
+          "label": "Motorcycle",
+          "width": 291,
+          "height": 388
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1ca6-779f-be34-546700785ba4.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 49,
+          "y": 244,
+          "label": "Car",
+          "width": 284,
+          "height": 120
+        },
+        {
+          "x": 384,
+          "y": 247,
+          "label": "Motorcycle",
+          "width": 237,
+          "height": 137
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1cde-7022-af3b-22a9eb975a59.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 32,
+          "y": 98.5,
+          "label": "Car",
+          "width": 569,
+          "height": 235
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1d25-77b3-bf0f-2f9635a2cccc.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 52,
+          "y": 133,
+          "label": "Motorcycle",
+          "width": 470,
+          "height": 411
+        },
+        {
+          "x": 534,
+          "y": 262,
+          "label": "Car",
+          "width": 414,
+          "height": 179
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1d68-7516-a81e-cafa15764ea5.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 135,
+          "y": 209,
+          "label": "Car",
+          "width": 1338,
+          "height": 653
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1dde-7413-a295-e60ef5b8d245.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 233,
+          "y": 137,
+          "label": "Car",
+          "width": 304,
+          "height": 172
+        },
+        {
+          "x": 89,
+          "y": 97,
+          "label": "Motorcycle",
+          "width": 127,
+          "height": 209
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1e22-772e-a66a-1826bd6d60c4.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 652,
+          "y": 271,
+          "label": "Car",
+          "width": 408,
+          "height": 259
+        },
+        {
+          "x": 261,
+          "y": 245,
+          "label": "Motorcycle",
+          "width": 210,
+          "height": 314
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1ec9-7741-8f41-396e74043d59.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 153,
+          "y": 210.5,
+          "label": "Car",
+          "width": 1073,
+          "height": 496
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1f57-76e8-a27a-cfe0495e12b1.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 138,
+          "y": 166,
+          "label": "Car",
+          "width": 714,
+          "height": 285
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1f9b-71e2-a573-d604c4ddfff7.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 5,
+          "y": 72.5,
+          "label": "Motorcycle",
+          "width": 570,
+          "height": 359
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-1fd0-756a-b193-fb155d4a6538.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 276,
+          "y": 59,
+          "label": "Car",
+          "width": 157,
+          "height": 100
+        },
+        {
+          "x": 45,
+          "y": 74,
+          "label": "Motorcycle",
+          "width": 221,
+          "height": 128
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-2013-748e-b90f-e8566310f788.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 92,
+          "y": 228,
+          "label": "Car",
+          "width": 827,
+          "height": 255
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-20c6-714f-ab4c-7a54ca119c07.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 978.5112429887821,
+          "y": 488.51600060096155,
+          "label": "Motorcycle",
+          "width": 1594.8717948717947,
+          "height": 1279.4871794871794
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-234b-7057-ba18-a923144486c5.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 966,
+          "y": 420.5,
+          "label": "Motorcycle",
+          "width": 3812,
+          "height": 2664
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-2530-77af-9212-37feda29f272.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 790,
+          "y": 436,
+          "label": "Motorcycle",
+          "width": 1410,
+          "height": 1276
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-25e6-740b-a5be-c757940a2037.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 42.5,
+          "y": 151,
+          "label": "Car",
+          "width": 413,
+          "height": 231
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-2674-758a-9ecc-789912e95bec.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 24,
+          "y": 80,
+          "label": "Car",
+          "width": 546,
+          "height": 233
+        }
+      ]
+    }
+  },
+  {
+    "path": "datasets/object-detection/01968cee-270c-77ee-b252-3d751277d217.jpg",
+    "annotation": {
+      "annotation": [
+        {
+          "x": 85,
+          "y": 192,
+          "label": "Car",
+          "width": 359,
+          "height": 196
+        },
+        {
+          "x": 396,
+          "y": 126,
+          "label": "Car",
+          "width": 109,
+          "height": 53
+        },
+        {
+          "x": 496,
+          "y": 128,
+          "label": "Car",
+          "width": 230,
+          "height": 118
+        },
+        {
+          "x": 514,
+          "y": 292,
+          "label": "Motorcycle",
+          "width": 243,
+          "height": 215
+        },
+        {
+          "x": 767,
+          "y": 294,
+          "label": "Motorcycle",
+          "width": 225,
+          "height": 227
+        }
+      ]
+    }
+  }
+]

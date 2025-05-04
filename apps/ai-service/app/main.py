@@ -20,6 +20,7 @@ from app.models.use_model import UseModelRequest
 from app.services.model.use_model import UseModel
 from app.helpers.models import delete_all_models, get_model
 from app.helpers.evaluation import get_evaluation, clear_evaluate_folder
+from app.helpers.dataset import clear_dataset
 
 ml_training = MLTraining()
 dl_training_pretrained = DLTrainingPretrained()
@@ -193,4 +194,5 @@ async def get_evaluation_result(workflow: str, yolo: str | None = None):
     evaluation = get_evaluation(workflow, yolo)
     delete_all_models()
     clear_evaluate_folder()
+    clear_dataset()
     return PlainTextResponse(evaluation, 200)

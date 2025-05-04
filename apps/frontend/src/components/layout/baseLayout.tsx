@@ -7,7 +7,6 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { IBM_Plex_Sans_Thai, Inter } from "next/font/google";
 import type { ReactNode } from "react";
-import "katex/dist/katex.min.css";
 
 const ibm = IBM_Plex_Sans_Thai({
 	subsets: ["latin", "thai"],

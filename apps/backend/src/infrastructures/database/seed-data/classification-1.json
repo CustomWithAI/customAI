@@ -1,0 +1,482 @@
+[
+  {
+    "path": "datasets/classification-1/01968dc0-a8fe-763a-948b-9449a49bd5d1.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-a97c-7517-9eb4-013223a8776f.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-a9a1-715c-9ab3-10ae731007ca.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-a9c7-70a4-a7b8-8c5a42a706f3.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-a9e4-77ce-a6c9-19a222972235.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-aa26-7308-a706-cac8377648c9.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-aa40-769e-a891-39f1f0d6b138.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-ab00-71e0-9fff-5b0a63503933.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-ab1f-70dd-8aec-a999ef1ca9a6.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-ab5f-750e-932b-eb38894d141c.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-ab8d-740a-958b-73becb14f891.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-abc5-75bf-97f3-98ed9e2d2b04.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-abec-762c-8bd8-47f5fc687090.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-ac38-753f-9c5f-e2ea612b9a77.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-ac8a-7424-bb92-7c5640b1b43f.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-acd5-7063-b860-9b29014fd792.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-ad35-77a7-b7c7-ef8f283dd00c.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-ad6d-751b-82b0-9d8d15127b5e.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-adaf-7475-9f83-99a256ec6c18.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-adf3-76b6-b9b1-bbd112c2c787.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-ae7b-7529-985c-48c1eac2a4c6.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-aeb6-70fc-9bf4-b3ac7e6294a5.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-af05-74bb-81f1-bb9150fc5f94.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-af4c-7618-8967-8ee97232a50f.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-afa4-775a-b51c-43d845457fc2.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-afea-706b-8e19-fffccf0ec087.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b03f-70cc-8d9b-3a80a8f3b957.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b08a-70f3-a2cb-91eefae58546.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b0fe-752c-b6d3-6ed775160f07.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b129-70c5-ba7d-7033960a615b.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b1b9-7094-9441-d0a48bb4b086.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b1fa-76eb-ac56-b5c9b0b31f36.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b24c-76f2-b74a-9415f4a45ce2.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b2ab-7155-819a-7b758509c7ff.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b319-71cf-a082-6ee22e3240c6.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b385-7146-92a8-d7a28d54899d.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b3ee-74e9-ac9a-c968e2aa6865.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b46d-72aa-85a0-f6c041856932.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b4c2-768b-a879-f51ade765c52.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b510-72ce-9d27-2ac7e3f62d82.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b559-758c-b0c5-49e4914f0d78.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b621-7788-9b9a-b9c6ef075ba3.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b709-73b7-8279-e2bfff9708da.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b73d-777c-bc1d-e75b33583983.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b799-77e8-a54d-f8164f1a99c9.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b826-728b-83c5-cf53a6fa5a14.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b889-721d-9571-8660e8c55743.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b919-7442-98e7-8a7ce900c951.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-b988-75d2-9455-32d772362359.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-ba12-76fb-9551-65d5528ff984.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-baa1-703e-a0d3-23b0545f1d34.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-bb2e-7418-8003-98523778fd25.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-bb8f-713c-b040-c3679a37e94f.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-bbf6-70cc-bc26-c5f61194908d.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-bc84-7088-94b6-4a9c8b4d491f.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-bcd8-74af-8e1c-03ab0bcada75.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-bd40-70fe-a2aa-bce11ff558f0.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-bdcb-729c-b791-b9f3f53ec9c1.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-be73-746b-83c8-29af0b91bf60.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-bee4-7744-b943-7e35db3cccd4.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-bf77-73af-8231-f99ce7062040.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-bfda-724b-a857-798701344e2e.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c09c-7156-97ef-1b4e1f98d9c9.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c130-75bc-8ebb-87d57b0b2cd5.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c1f3-7233-9e72-902d5ac4c3f3.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c242-71b3-ba93-47688c6d0808.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c2ce-727d-88c4-bf1b49a21925.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c341-7488-acc8-6a859ede65dd.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c3f2-726c-b90b-35360aee28f6.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c436-718e-bd1e-a04ea35c5ab8.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c48b-7568-a3f4-3d1074452a7d.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c4fb-7212-8233-9768bd48bb10.jpg",
+    "annotation": {
+      "label": "Japanese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c55b-7171-b14a-5b849233ec19.jpg",
+    "annotation": {
+      "label": "Thai"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c57a-7779-8672-6035f45e2ae8.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c58f-73da-b7ce-28530d56b65a.jpg",
+    "annotation": {
+      "label": "Chinese"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c5b6-776f-b857-b27baef0a7b7.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c5cb-75f5-a2b3-8aa0c630771b.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c5e4-747e-8711-3d00a6724090.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c614-77ba-86c7-2fdd39395719.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  },
+  {
+    "path": "datasets/classification-1/01968dc0-c63a-754a-933f-097a9f82799d.jpg",
+    "annotation": {
+      "label": "American"
+    }
+  }
+]

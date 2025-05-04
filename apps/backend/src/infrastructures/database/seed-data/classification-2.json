@@ -1,0 +1,4184 @@
+[
+  {
+    "path": "datasets/classification-2/01969c67-b849-7006-9604-8582eea92e66.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b86d-7624-83c6-85ab29f118da.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b883-77d9-9138-d9068df591f9.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b89d-7707-8b31-01fc2f68106a.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b8b5-701b-8331-c7b81c0aec98.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b8c7-77f8-b468-a8fd9e9d61f2.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b8e8-7310-bfde-b2d462c36468.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b8fb-755d-a4e8-37728946e58d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b909-71aa-b8b0-7021ef3f8b42.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b915-7438-bd4e-dcfd320f42c7.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b923-730b-96c0-f107350a35da.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b936-73c5-973f-77dca02c942e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b950-73db-b53d-b70c3746b878.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b968-773e-802e-2ebb1149703e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b97b-7351-be63-a8bd5ae0ffbd.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b990-7259-9951-559d36efeb7f.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b9a6-74be-8260-57c8f53ac029.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b9bd-74af-85e3-8466e56db123.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b9d3-7393-861d-5cd3fd2f8496.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-b9eb-7462-b51a-67ff9d7492b3.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-ba08-706a-950b-cef938818b9c.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-ba35-73d7-a4a0-765bc40a72dd.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-ba4d-73d8-b4d1-3d49fb5d9927.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-ba6b-77d3-8f48-2a39b09e92d4.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-ba8d-70d9-82bc-57e91c1a6544.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-baae-7179-9e51-e2e8ad85d3dc.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bacd-76c8-a378-43506130a060.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-baef-72df-a17c-46d4a6f8bdef.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bb15-7508-be4b-64e511daf258.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bb34-7665-b23f-fb206d6ce9fb.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bb59-73fd-9fcf-f1472bd637d2.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bb7e-767b-997b-16c9b14dae64.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bbb4-727d-8761-4c7c3adfe3ed.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bc03-746f-a434-f0e9ad60416d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bc39-720c-9f6a-dce8eb2d4ab6.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bc67-72bf-9843-559eb427d77d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bc8e-72bc-b6e5-7ac58b281544.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bcba-7494-b326-c99e25e50bf1.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bce5-766a-9ccb-b05ac2dee1ff.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bd10-77c8-9004-20d6b791d7b6.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bd3f-72dd-98a2-fee97add3ef1.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bd6c-7729-8f39-2250b977d9ab.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bdd8-733e-a6ff-517acedec42b.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bdf9-709c-883a-e4237ce0e6ed.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-be25-763b-8a71-172cbad3dba5.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-be52-7548-bac2-ea1300f85340.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bef7-729a-9d0d-3ebd1844fa2d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bf1e-7679-a941-43dd9be3254f.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bf50-77c8-88df-5f8af1b507b9.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bf85-721c-aa7d-db76422ddcbd.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bfb9-744f-a6d3-a37235e2d6f0.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-bff3-752c-af5b-100f7769e2e5.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c027-760c-8535-a02b9f647f1f.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c05f-76ca-89bb-93f51be804b4.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c09f-74ed-97cf-3e3ea241f93b.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c0de-7538-8d77-07324469a033.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c120-70f9-ba6d-dd5a5709daf8.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c160-71cd-902b-462d005c503f.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c1a0-750e-af41-1532cf93e4fd.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c1f5-713b-b582-52d20d3ea361.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c23f-72af-af5c-91f8b5f3cc00.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c28c-7033-bbe8-c9134e6efed3.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c2d4-72bd-b5db-8f49df676c99.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c31d-7328-9ee8-d3fdba23967f.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c35e-70ff-8738-9101cfcff4f0.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c3a4-707e-8013-0c98fd3d7598.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c3f4-77ca-8715-b6e997d9fbda.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c447-7122-b425-3a29b49b53e5.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c48d-73bf-bd16-230e8de1b813.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c67-c4dd-727e-8170-2c27dc5b37d4.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4be9-759c-8b60-93c4c7855c79.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4c11-769f-a1c9-431a135c38e3.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4c23-7157-9656-042479c2a23a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4c34-7451-9227-f18069c8d68a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4c55-751d-bf77-60855a4b3e59.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4c69-75c9-99b9-f627f94ad8fa.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4c7b-738e-9f25-5a0a35afabb3.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4c90-72ad-901d-a1910a5ff508.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4ca7-7258-b8c4-e662cd9e9496.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4ccc-759b-91a5-780642699b62.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4ce0-70fe-91b6-8f2bc72bf0c3.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4cf8-714d-ae3e-a63f68b820e2.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4d1c-74ac-93a3-eb9df91f2da7.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4d3a-739b-8b08-ba29e55824de.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4d6f-7489-98d4-39c1bae9ff77.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4d90-7067-a14d-e5a0eb929916.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4db1-710a-a56f-881605e83be6.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4ddb-74f8-97a1-f1c02fa802cf.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4e23-725b-81c3-88cfe4d03bdd.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4e3d-73df-8ff3-6ef1bba616b6.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4e5f-74ff-aeef-331ed06fcae2.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4e82-7469-b581-764371e542ff.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4ea6-72bc-8772-ba59f95b2e8d.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4ecc-73df-947e-fac7418f0dce.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4eee-761c-ba65-62e49c7fd275.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4f36-75c4-9def-79c04fbebb98.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4f61-70fc-a238-0f7cfb50ff58.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4f88-76f7-a967-5154b46f46b9.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4fb5-746e-b49b-b319b14a7dbf.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-4fda-7460-a1d9-e8d1496fe730.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-500a-7054-b674-c17f994338c8.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-503e-708f-8890-886234a395ab.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-506a-7698-99ef-c07820fab97a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-5093-745a-b360-e0b424df17c7.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-50c0-71ba-8348-41e1be88b63d.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-50f2-772a-abd0-336001bce4eb.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-5121-725b-81f4-373fcd3e21da.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-5151-752d-88c4-911b735026f9.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-5181-75c9-8cdb-37cd48558d0d.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-51c1-73d5-be29-b114f80f5149.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-51f1-71b5-acf6-bdb9b99f86be.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-5223-7606-a624-f966a2b2053c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-5257-7379-96be-dcd41a779fc9.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-528b-70e8-9ad9-4d0f4240257b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-52c6-75e9-a6aa-91baea78faf6.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-52fc-7014-8b77-a5ef31e5c488.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-5333-719a-a6be-a8415d9b5f50.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-536b-7233-8c9f-09ff0d658e6e.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-53a5-7719-974c-2824498b3657.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-53e3-7705-88d6-c34a32cb90e7.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-542f-720c-96a3-7301eedf0877.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-546c-72ba-826d-7f854a83d21c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-54aa-718c-aa3e-559d4bb71657.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-54f4-754f-9849-f5648c7d3ebf.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-5536-721b-89f5-89d08dfb565d.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-557b-75cd-ac03-9eef72681b0a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-55bf-7559-a73e-e52daa4f73b7.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-5609-75f6-b6a9-e288b4a6a0ba.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-564e-7029-ac4c-b976d18cc38d.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-56a3-7641-a24d-5e530a7ebb10.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-56e9-7039-a02c-7d326538a977.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-5735-7567-8e24-02c76bd88318.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-5790-7079-8fe5-5b5834951c00.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-57e4-7341-a515-67c347a47b43.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-5838-73ae-ad23-47cc791ecb86.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-5887-706f-9463-c2260f2d880c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-58dc-748d-a21a-df649519db2f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-592c-707c-8690-279813a29bf4.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-597f-7567-81fe-d9287e628c07.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c68-59a2-75af-ae5a-e6e9833cb74c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-731d-74ae-b953-298875d4b586.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7358-705e-8e23-4afda5ae6877.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7372-7139-99cb-2584e6258c2d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-738d-73de-8e3f-62e6a7360979.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-73b5-7452-a6dc-523fae93523b.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-73c9-71f4-aee5-e4e8ee618d64.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-73e4-714d-bd70-f0f83a135bfc.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-73f9-7132-a6cd-8cd2ad7fca52.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7412-76fc-b558-526e395471d3.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7438-7148-b08d-1da5e8c52bfd.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-744e-73ba-9c40-266d98b45b77.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-746b-777a-a886-2d599af99cb9.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7481-737b-95a1-e268debc5bc2.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-749e-72cc-a19d-8107bb33d80a.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-74ba-760d-a79b-0fef9edeac66.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-74d3-7704-a8ac-6672892cf537.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-74ef-748e-97f1-2ee84533f642.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-750c-72d7-856b-36f6a1ef02a5.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-752b-72f5-8c5a-871a299b4774.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-755b-769d-b3a9-01b0308d8a9b.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-757c-7701-b7c2-19553369640a.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-759e-7635-b116-16493320195b.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-75be-737e-90fe-75fa35c58438.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-75e4-777a-8946-b93e6ff1322f.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7607-720c-9a1a-9704d588647d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-762d-7069-b9bd-f0d48caf91b2.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7652-710f-95d4-01254746b9b2.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-767b-7240-9d26-d414ee085ffa.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-76a1-75de-af5e-e4df3707c958.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-76c9-730e-948c-a2250dbda445.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7701-7723-afc9-6e15dd48b490.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-772a-701c-8a6f-3e954df2dfc5.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7760-7401-a9cc-0d6d46572bbc.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-778e-723e-80e2-c7c9941eac11.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-77bb-7532-9599-4d7820fbb101.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-77ea-73df-96cd-e743f1a2a710.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7833-71fa-aee5-ebd2f85ae8bb.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7872-73dc-a478-6af4a32b2f01.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-78a9-77bf-a00b-807ff274cac9.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-78dc-710d-a051-1e053c38c031.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7914-76da-bfe8-09a0fa97a55d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-792c-7699-9900-29861502098c.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7937-720b-b348-b5d2b1fd44fa.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7943-7675-aa33-007d84a1fd89.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7958-7690-9d41-d01064d8879d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7962-759c-83e7-d159bcbbf4bc.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-796d-77ff-87e0-73e065392819.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7977-733a-b4ca-c905425455e6.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7981-7529-9569-90fa2f2484c6.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-798e-76ab-98eb-4f16f0e3a69c.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-799a-75af-995f-29b58c05bd69.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-79a2-778e-8d83-c7dfbef8609f.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-79af-71e9-85eb-4593e9a0d182.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-79be-778d-980d-db3b2477ab11.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-79c9-7781-a8d7-15aca8c0ee69.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-79d5-707e-9683-b43e7572f624.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-79e2-7074-9a7f-a9cb9c5d56f1.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-79f0-75e1-9a95-88a7129e26f2.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-79fa-7283-8732-ede597842af9.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7a06-74f9-8bc6-eee29c9abd32.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7a10-719c-8e4a-c98890a4f5b2.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7a1d-77b2-8c7b-f17081e24ad2.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7a2c-71ed-b1f5-90bde090699a.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7a3f-77f5-a308-8f76d6366dcf.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7a4a-730e-856a-a29d80e0ab7e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7a57-713e-b884-c091ff4ab86e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7a63-76bf-9727-d63e0d75dfce.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7a6c-773f-84c5-9a3797685061.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7a7b-70d9-a62b-511375d45446.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7a83-71f9-9f98-efc6fa89e80a.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7a8f-7236-b1bd-dcb6aa65910e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7a9e-750c-83c7-7ff64122fa34.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7aa8-76ac-a337-cbc8376e100e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ab4-73c3-8044-867adb869cf7.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ac2-739e-a685-d69c9128ca4d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ad1-758e-929d-d4f41025bb78.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ade-76df-85ac-c52e7b5777f5.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7aeb-7036-9b7d-b6da832869e3.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7afa-772e-bc9d-b6df37022f94.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b08-771a-b8c7-ae2bfea46538.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b15-700a-b11f-caf16a51885e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b1d-761e-bfe1-5fa782d43390.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b28-703a-ac33-b849f2358fe8.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b35-76b3-a288-bbc14566264d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b3d-734c-8b26-93a385ae54eb.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b48-71e3-858b-0b14af197f93.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b56-7794-a307-125453fc5aea.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b5f-734a-89d6-59314b221f27.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b6b-71c9-828b-6357fc1b54e4.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b78-7429-a187-a3b2cf7fa353.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b82-711c-95c7-3fb603fc5f96.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b91-75b4-9902-218091436d40.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7b9c-727c-96e3-f532ea2e11d3.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ba5-71a9-a348-a86af61f840d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7bb1-7064-a70e-bd3df8458ed2.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7bc7-73d9-9c50-1bb2a446ceda.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7bd4-72c9-a07f-5de6510aea25.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7be0-743b-a289-7bda83dc694e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7bee-72e2-b61f-a39bce794a42.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7bf7-740b-9ed4-c898a1b7c262.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7c06-7267-8aa5-d0aecc24d8ec.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7c12-74fb-9024-06dd20dc4ffd.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7c22-774b-ac72-f295692189fc.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7c34-7638-93b0-ff87526bca86.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7c3d-7698-be3e-2305f9ec395b.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7c49-70fc-9004-7343c1056e17.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7c56-7169-8485-12272fe3a673.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7c65-72a9-a95a-0553aae86ee4.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7c6d-731a-b225-0668693dc8c2.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7c77-7038-98f1-d1437fe735d8.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7c84-73c9-bf5e-84776e58680c.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7c8d-7418-acb1-a04730a6fcf0.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7c98-7569-9b88-4a74088a2675.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ca2-76ce-b4fa-f082bd33e135.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7cb4-72cb-9f41-de72fc636b50.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7cc0-73ae-be37-1b6c780d6b39.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ccd-72bd-b943-1c7fc67fa5f4.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ce3-7298-a8fe-a00368f7fc65.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7cfa-731e-b211-e986305ddbd3.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7d05-7086-a6b1-c86c2b269f42.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7d12-76d1-bd67-675d269a24c8.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7d1b-72cf-8a80-4ac768c926e2.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7d26-7579-a029-092b5ceb9399.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7d33-7638-923c-b9ca22157485.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7d41-7709-8c10-150a94eb016c.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7d49-72cd-8b9c-c48779e172c6.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7d56-704c-bedf-a40b98e0044a.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7d64-7489-a5a7-0f5588b482f1.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7d6e-755d-b0eb-80beb948d87c.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7d7b-70e0-b395-fa89eff8d56d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7d88-73f3-8898-c4a533a574b6.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7d94-7538-9bc5-7bbfd88180ce.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7da2-77cb-9fff-904cd6011cbd.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7dad-74ea-ad12-5fdb816881b5.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7dbb-76c1-ad49-314eec80e71f.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7dc6-76a8-9bed-9f82463d9a76.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7dd1-7278-8a57-ccefec6c45c9.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ddc-74cf-bb16-04124142d6c0.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7de8-7367-9a85-ff195a3ff66f.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7df6-75af-a6ed-18c307eebb4b.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7e01-77d3-9942-41e9c3667f93.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7e0b-763a-a928-1b259a161915.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7e1a-737e-a12e-27ba55c77826.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7e27-71ec-8cc2-72f011e521f6.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7e32-7630-8b72-c0f33d9452e6.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7e3c-77c3-826f-5a0eb792231a.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7e47-778f-89ff-3c018288829e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7e55-71ee-a7cc-461defdae77e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7e5d-758b-b428-10b7ffe4a6c8.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7e6a-7169-85e4-c5ef7f1e928e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7e78-73ce-b15d-8b83bd3b4899.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7e8b-7619-a01e-14fe02e0798f.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ea0-7081-8c47-817aa05e0306.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ead-72a9-b643-45a15b149883.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7eb8-7718-b2c9-8e335cf02182.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ec5-758c-a6d3-b2477a2b6be1.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ecf-722a-b8a9-a879c9c4a162.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7edb-74f6-9eb8-d33909824c20.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ee6-7060-afbc-ad5c7ad351ea.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ef4-71c1-866c-1dd87122883d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7efe-741f-ac9c-b143632414a0.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7f0c-74b1-b1e2-3e94b85670b8.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7f17-77c9-9729-970bfec239cd.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7f27-7587-8c07-ec8472e3f60d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7f44-706f-9317-0b8eb41107a1.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7f51-72dd-a590-2b98b4682c5d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7f5f-745a-bd02-a9b5e69835f1.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7f69-731c-b72f-992ff346de53.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7f75-7289-9d1e-8af0de546789.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7f80-7428-9ffb-63b0053fee26.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7f8e-70fc-8527-fda6538a25f3.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7fa6-71a9-9ffa-fc7dcc9404b2.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7fb5-719c-8d3d-bfe523d274fa.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7fc1-71f8-b230-bc584f8482d8.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7fd0-744d-811d-e6773e1a7114.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7fda-701c-a343-6695b5afc419.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7fe6-7559-ad6a-9dd25aa8d197.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-7ff1-72f6-90fb-2524be6050ae.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8002-754b-8ceb-50f39a404c40.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-800c-77bf-9018-ca33236b493a.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8018-72b9-a287-346360f6e95c.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8024-71ed-8c03-b16e3ab7d8d1.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-803a-71ab-8fcc-070fc8f5e42a.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8051-7547-b4df-b4d9d6868232.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8061-7198-b83d-df9820ce96cc.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-806e-7492-a7ec-cd1706e90d87.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-807c-757c-be93-0a364ebce703.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8084-77cf-83ac-40a92ee9f493.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8090-76b2-9c45-947c325551b5.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-809c-75cb-8c9a-9cb3b8504088.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-80ab-77ca-b5ec-ca1818ae27c5.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-80bb-75fc-9403-a757386e2cd4.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-80c3-778e-863b-8706935156fd.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-80d0-7108-88a9-80030085c2f6.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-80dd-778c-90a9-953e9708b640.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-80ed-7345-a42d-a7e2d1552ec8.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-80fa-7488-8fd3-2068e2d5e9b9.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-810b-726c-b9aa-0fb9c2a1e545.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8114-708e-ba2c-79084a840dd6.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8120-7298-bc8f-ac5ba602ba1a.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-812b-74e0-978c-e26fd9f0d11a.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8139-76af-bd3c-caa48c672ed9.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8142-74e4-85e1-111fce373e9e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-814d-74ae-bc32-b53503df2fb4.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-815a-7090-a6c1-52a0a1051ad0.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8167-707b-8b39-d0c46039eb82.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-851f-756b-9697-f09c4c01ece6.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-852e-7138-ba1d-1874505c5a7d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-853e-708b-9e16-97c6b079cec9.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-854d-7439-941e-7ab7a4ece329.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-855d-75ed-a345-c021e055ac3b.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8566-7342-9e3a-14ec0e41753c.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8572-73dd-a220-25214b1068c2.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8580-72dc-b10a-15e4c26e8414.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-858d-753c-a4c6-bf344918930c.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-859c-724e-8b9e-572fc399381b.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-85ab-71de-8b23-b1ca1efc442a.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-85b8-71dc-8d14-c7294d2f52a8.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-85d0-7470-b568-17d863fe2355.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-85de-748b-8fbe-f790f9b97111.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-85ec-72ff-8116-4778c169904b.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-85fb-701d-b6c3-35f3e83677ac.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8608-7289-ba07-0d81b582aa44.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-861e-728d-a106-9f1c66f97cc3.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8634-72c1-9ac8-f4f325b96bc0.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8643-70da-87c1-7d7c261bea16.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8652-735a-b8e9-40fc1666e7e9.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-865d-751f-84bb-6b7f6e1998c7.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8669-720e-868b-56c13dc96e77.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8677-701e-ba19-bd0644309cd1.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8685-751b-9508-6e0881238e3a.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8696-7372-9ac1-af71d213b81e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-869f-77b9-b90b-0393cf6b8019.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-86aa-73aa-aeb0-abbfa6cd4479.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-86b6-72e8-ad26-43b181ccf078.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-86c4-70c9-b2e2-8b934c4e9ba9.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-86d5-724b-b982-e8a3173ac38e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-86e3-7640-992b-a5ab69e86406.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-86f5-722b-a534-58e9e2327da5.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8709-737a-9a22-1b1a4d8e7dbe.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-871d-772a-aa28-34be5d7a301f.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-872f-749f-9e93-8fca860d0c16.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8744-72a0-8c9d-e2e806b875b9.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-875a-763e-b064-7113ceaff425.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8778-706e-aa98-bf0430850a13.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8798-71ac-bdc0-c87ebb14f6ff.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-87b0-72b5-9e32-e9450a6b6cd4.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-87d1-76d9-91dd-82b649e38182.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-87fb-7235-998e-fa0829c06497.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-881b-74cb-9f24-eb751172dded.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8845-74e9-87ae-9888acf3ab3e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8878-746d-b363-b08a9b04c7e1.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8899-732c-afb7-685ceb3960b1.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-88b6-747f-a28e-d52320f95ad8.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-88de-719c-81ca-2277fba581b0.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8900-773a-865e-2f2ce571cd96.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8925-729f-9fc1-1f36868a6275.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-894a-755c-a258-6a4bcf005bdb.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8974-7739-b80f-6a865f72f855.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8998-76e0-8a48-4fe9aa1b44d6.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-89c2-7669-8d29-4eb6dee90509.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-89ef-72aa-861c-68a7f16b67cc.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8a22-741a-9f1d-7c4707ef3b30.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8a4e-7215-87dd-5ed8552c3cd1.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8a7b-713e-a2b3-c63ce8fffd2e.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8abc-7130-9c03-c19ce1b48c98.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8af3-755d-a3d6-236a9418608f.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8b22-77cf-afd4-c5293d7c7c12.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8b50-72bb-81f1-506bc3f50477.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8b82-74a4-bf42-812ddb028e50.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8bb7-77ab-b9c7-6479f52c9fa4.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8be6-726a-a37b-682639414767.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8c1e-768b-9f5b-37412f1cdeb5.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8c51-7498-9a35-a3c984806ca1.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8c85-74e8-8168-efafab9718b3.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8cbc-720f-aa71-812e446039a8.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8cf4-750f-8f4a-25f303e54e8d.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8d2f-72d9-a25d-66ad2102d74b.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c69-8d6c-75c2-b02c-c5e2b7e5f58b.jpg",
+    "annotation": {
+      "label": "Cat"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4544-73ba-831d-13a627bdb247.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4579-77d1-96f9-75dc0211ea13.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-458e-730c-8f1b-7719f1f7ff6c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-45a1-7299-84a1-9bc7af4a0d93.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-45b7-70bb-b96d-fafb68a42e1a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-45ca-742c-9a9c-857bb7db1850.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-45de-7170-b822-fb9eb7fff321.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-45f3-730a-92e2-4881d47f046e.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-460d-74e8-a901-58363668b4d1.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-462c-766c-809d-70f32d6da290.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4647-725f-9c6c-049945b9cde7.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4667-76db-8aac-577137c45481.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4680-722e-8123-865863f45ef4.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-469b-712d-8e3c-5f49370f1bda.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-46bd-70ff-af9e-1b4e84d385c4.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-46e1-739b-8640-58858a148655.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-46ff-745d-9db1-6ceb5f8c5657.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4724-7292-8fd9-c621d63dcd5c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4742-7159-a01d-b0e87e72513b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4760-74a0-8c26-0becb6699b10.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-478a-71ef-a88e-bfc372e4ea53.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-47ab-7599-8cd7-22086478d49e.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-47ce-7337-98b0-b616d42e90c2.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-47f2-7633-90af-2ce10ee22838.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4818-75d4-a6ef-998ac97c4682.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-483c-759d-b6c0-92caa31470f4.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4881-718b-8226-7874fc27a800.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-48ac-733f-80d1-054c591061b5.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-48cf-76e8-b148-6dd1087d68a6.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-48f6-71dc-b5f8-73f6afe82616.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4922-76ce-8b9b-a0b6d0c5b534.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4949-76fd-b9ad-71f332be57ae.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4974-755e-82bc-af57c03d880c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-49a0-7022-a831-4c14bc5e984a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-49cc-77e8-99ec-d54876ec3efa.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-49f7-71c8-87c6-774d509f1089.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4a27-75f2-b434-1f543cd6f867.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4a5f-712e-a33d-21f53ad91291.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4a8d-752f-9105-2f7fe12e3541.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4abe-72d9-85cf-04c03935f916.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4af0-721c-842f-92d3af276e38.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4b36-740f-a897-abe118504b3f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4b69-76ab-ab9b-4f7c4ec399bf.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4b9d-752e-86ed-a6dedb44c82c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4bd4-730b-82e9-ef6b685512d1.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4c0b-73ae-a682-5c7a336e6c7f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4c42-721d-9ed3-8d3787171ffa.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4c7d-7409-b8e4-d5677257d91a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4cb6-7678-bd5d-9f009dba732e.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4cf4-7461-879b-47f9b2e2fd66.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4d35-774c-911c-64af0c00f6ec.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4d74-7789-96d8-50360283dfca.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4d90-7015-81ed-e2dae5def6dc.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4d9c-7408-9fd1-719e4e19a79b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4daa-73c5-8852-d457455d7839.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4db9-70bd-88fe-0af497d395b6.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4dc9-743c-aa7d-f8a3afe43daf.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4dd6-706b-8eb7-386f0bf8fc75.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4de8-7619-8f39-7c7a49fb41df.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4df9-7588-ad43-2ec79982bdbe.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4e0b-72af-96e5-94d91fcb88ea.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4e22-76e9-b901-89287b4cf9ce.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4e37-721f-80da-85478042094d.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4e4d-71b8-9dfd-d7991980bc03.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4e67-73bb-b3c4-b8e86b43c645.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4e7d-766a-96ee-16f0ab537fb7.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4e99-709f-b2a2-8de585fbea33.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4eb8-74ab-9eaf-637b18ed9005.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4ed1-763a-a1d4-6e1f8f2ef504.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4eef-7045-a9c2-49be5cab59f3.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4f2d-70d9-9823-93ec7350eb38.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4f47-70ce-8a5d-a5fc1c4dd742.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4f68-7236-a468-6bed7b350584.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4f8b-775d-aba4-992341b0d430.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4fad-73b3-b911-54973cc5f1a9.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4fda-76ef-8d9f-cb973fd87a47.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-4ffb-734f-8588-4c597d6383da.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5038-7631-8126-0210c131ce58.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5059-7009-87fb-b8be9e6c2617.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-507e-70ce-ae99-00d4945dd3e0.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-50ac-704d-a644-60d0a2a1398a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-50d6-7050-bc8d-ca0f5808aa24.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-510b-707c-9feb-f843a93b901d.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5144-724b-b8eb-1744513bf5b8.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5177-72a8-8d4b-ea5551653450.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-51a7-736b-8b00-22a6558408b8.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-51df-71ea-ab00-d1803eca95b3.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-523a-744a-b000-4524e458c84b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5270-75dc-a0b0-fbba1a6cdd2f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-529e-73c2-848e-a80c19f25f3c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-52cd-7497-8f69-696761a8809f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-52fb-7600-a995-76777c38220a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5349-73bd-95a2-cb4511d07afc.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5370-770e-995d-1ab3f07fefbb.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-53a5-704d-94e5-8bda8f9cf42f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-53dc-76af-9a5f-9eb622730741.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5415-7429-be22-4af220893c33.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-544b-71ee-872f-cbb8b761f3b0.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5481-728b-bb13-aa7dad8d4da8.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-54b8-77da-98c9-f573fd748bc1.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-54f4-73cb-a689-c1d7cd72f506.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5536-752e-8dcb-43dda3b1591d.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5591-7325-b4b6-b97e57501a2d.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-55bd-74df-afbc-023545ada346.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-55fb-7219-bc44-786c38faea99.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-563b-7219-86b6-bd17dae41661.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-567d-7698-9bda-0c0ba7061de9.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-56c3-732c-b20b-6b18d23dc70e.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5707-704a-bf41-4f2270c8d8c7.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5771-715c-802f-fb768fe79019.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-57b8-7542-a796-1f3e07572427.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-57fe-73ff-85bb-7619b0daf23a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-585e-74c0-aba6-623adabcc750.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-58ac-75eb-9c5e-6f48b523de39.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-58f4-76af-baaf-8c0373b7c8c5.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-593e-75c6-ac82-44e3bdb42412.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-598f-762d-a9b1-ef5f82c42fda.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-59e2-75cb-bf46-4915bf516e86.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5a33-76b5-992a-5efa00ee76fe.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5a83-71af-8667-0cd48c0fed49.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5ad5-7634-b1a6-beead3fb031a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5b29-756c-8cc5-23d37317f6b7.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5b87-778c-b7e8-087be1e8c9db.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5bd9-7688-a8cf-f72a590bb38c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5c33-744f-861c-5a140586efc0.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5cac-7259-8318-d4ee56a197eb.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5d06-7657-b3b9-2a88457d6c17.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5d5e-7131-87eb-8ca7e2ad4a0f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5dc0-748e-bbc5-627da61a651b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5e1e-77f9-a2a4-a95af097a1ec.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5e87-775c-83a9-be4e7b837a50.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5ee7-7311-8d0c-d012607a8a76.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5f55-72fb-9f82-fff82ea5316d.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-5fba-7728-9a5d-e360860828f6.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-601e-702a-a867-2defb44af24d.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6080-7094-b5ad-eb3046240247.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-60f1-7758-b66f-73fba8738fd2.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-615c-70c9-8ab2-1b568920da93.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6193-72ea-b23a-27f188e94f3e.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-61c9-7539-91be-9a0939ee2a51.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-61d6-749d-a87c-6ba40582ba05.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-61de-70da-9d3b-7b0a1e1d020e.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-61e9-762c-96bb-075fe602794a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-61f2-72da-8e22-3f2956d1c189.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-61ff-74f7-8dc1-b0221c3114d5.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-620b-75a0-9353-7b87183f78f1.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6213-71e0-9209-47de59e8087e.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-621f-721c-8f4b-b5870ac80297.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-622e-766b-83a7-05c380b86e93.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6239-770f-89d0-e4ce037612c1.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6248-7486-9af1-924b16ff6f43.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6260-7399-922b-b93cef431e3b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-627f-7040-9735-0590970f79b7.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-629c-77dc-a2f0-62e97c322e63.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-62a8-7211-b4ae-b010d9911e8c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-62b6-712e-8b6d-5ae15502d329.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-62c1-74c8-aab7-9c8b3ece134f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-62cd-77a7-9e02-84c308138ae6.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-62d9-76dc-9bc1-552ad818d649.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-62e4-771d-974e-63397444a1c3.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-62f5-720b-a76e-45101059abcd.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6302-7755-9613-746964c0bd35.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6312-70a4-abaf-692e1839903f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-631d-71c8-9582-bbde7d9d8263.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6325-7458-858a-252820c4752a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6333-771a-9404-08e12aadd2f1.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6341-7798-8691-980f74bbc66b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-635f-743d-85af-59e5af9dbc64.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6373-75aa-8d78-5dd502dfb914.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-637c-72fe-94f8-48252c534c4b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6389-7718-92b7-8d280c7f7eb6.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6394-7187-b851-91a8f24099d2.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-639f-702e-9a60-ddfa651e1ead.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-63ac-76d6-aad2-1236a6b9b6db.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-63cc-76ed-ad8e-7e083c91e5f6.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-63da-71c3-bc56-04c386f0aaf2.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-63e5-719d-83a0-004c3a6b88ff.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-63f1-76b7-bd71-a01a3abff320.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6404-7013-8ffb-1b93bccd2ae1.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-640d-70ec-b990-6cda1006704a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-641a-76eb-9821-ea0a4eb85cbf.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6426-774f-9fc8-df6a53f5dbdf.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-642e-7738-ac8d-6e1ffaf32189.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-643b-769a-91a8-03f51192e7fd.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6446-71fb-9e69-db903215c692.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-644f-711d-9f5b-e9a7874a382f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-645b-71fd-a5ac-a6723e713521.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6468-7474-8384-929fcf90d6b0.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6477-7540-aa0c-5c396f4db8e0.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-647f-7164-85b4-8d700833d49e.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-648c-737a-9401-eb339d446519.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6499-7398-9635-0b5a586bd841.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-64a3-7781-ba38-fbb851ce2665.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-64ae-77c7-8452-54bdf261fdd6.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-64bd-71d7-bfc9-9d11278412d9.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-64cc-7008-aaba-09bb6674622e.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-64d5-7218-b450-a1db6db7e30b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-64e2-7790-a64b-2d3a9d56f1a3.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-64ee-777d-bd57-eb5767e945db.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-64fb-72af-a11f-d1d9804020d1.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6506-74fe-9543-7a93483622fc.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6512-77a7-ad9a-0ce661cd5529.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6520-762a-86cb-2593812854b5.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-652b-76bd-a4b3-0aff507c7a64.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6539-7465-8246-6f7be1a86e9e.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6546-75ce-81c8-69238736c07d.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6552-7497-8fdc-25aac60a535b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-655c-71b8-8acc-6a09939f372f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6569-719d-8f1d-f8300392ac0b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6578-758e-895e-db700bde9bb3.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6581-706d-99df-373884564aa9.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-658d-70b4-ba45-fcb409773e8b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-659a-7109-8367-316d477210ec.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-65ac-75a9-bb51-b5dd616ab936.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-65bd-7603-b60f-8c6384362744.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-65c8-706d-af00-36a562bc8baa.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-65d3-7231-8888-5fc0277f93e7.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-65e0-726b-9255-d48f9ea16cdc.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-65ea-7440-839a-192d3af439dd.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-65f4-75d8-b1e1-e38e6a668f20.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6602-731e-af7f-c0c1a1d77606.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6610-76e1-a17e-9025251eb3e2.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6619-750b-8bd0-fa2532cba69a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6624-702f-b278-6f724e641c46.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6630-7030-a6c3-47ec42d42a40.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-663e-712a-8cf3-82b7f6cf2ffa.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-664f-747e-9d57-33ab785d1364.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6657-70d9-a2a1-1c906733dfe6.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6665-72f3-b2e5-f9ad6c981be2.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6673-773c-84d9-136abc0d980f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6683-7227-9705-678ba20d150c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6690-7558-84d6-e90b175b6629.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-669a-744c-bdd4-30a84273f567.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-66a5-718e-af2f-0dd494a301a0.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-66b1-711a-bd25-7e27ccf361a5.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-66be-73cd-9885-299a76be229c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-66c8-75b8-bf3a-47db161f54a0.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-66d3-7649-9ea7-93235a616219.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-66e1-740b-95cc-effc80e595cb.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-66ef-758b-97d6-7c1f189a96f2.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-66fa-735c-a711-6f8ee3e091b8.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6704-7618-8263-6af3ab386d8a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-670f-7431-9661-dcd4403634d1.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-671d-7759-9c8c-b1ffdaf4104f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-672d-72f4-b3d2-a7c502b9f489.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6736-75c9-81d1-89659659100e.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6741-72d6-aa00-4e9fa5712103.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-674f-711b-aa00-92b8315c0572.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-675e-7077-bf35-d2df3351b179.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6766-73ef-94fe-be5a3eaf70ca.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6773-707c-baaa-92e091d3a113.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6781-763a-9525-6e7c6180c8bb.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-678e-7343-ad57-d2623d0c07aa.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-679d-72de-ace9-23c6471d2290.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-67a8-76de-96a7-a7320ad2a84a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-67b3-766f-93a1-1a148e576909.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-67bf-7593-9b48-8b7f4d3270a5.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-67cd-75fe-b156-8ada3038c888.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-67d8-77e9-a582-ed1633cbd4cc.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-67e3-707a-b0b8-3a558639bfdb.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-67f0-751a-9991-065d40589bdc.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-67fe-76a5-a995-f79ca060c899.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-680b-75c5-bde5-27fb236ab2f1.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6815-7388-968d-4f6784410a7b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6820-70c7-9d00-cede3088a6e0.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-682c-77db-9bd8-e7f43b4af13c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-683b-758a-a0e8-aba9b25860f7.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6848-74a9-8d85-32fc7f3b9879.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6853-7569-bd96-75a5028d97da.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6861-76eb-82c4-40ce1022235f.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-686f-7372-95d6-1569edaf5268.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-688c-7069-b16a-a750d3b0d93a.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-6895-7756-8c29-e644c484a09b.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-68a2-7300-87a1-ec9c2307627c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-68b2-7280-8e6d-4e0827328947.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-68be-76be-8fe9-59c18b780bf5.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-68ce-7606-a8aa-9e79ea323615.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  },
+  {
+    "path": "datasets/classification-2/01969c6a-68d8-7368-a346-b06c9c2cd10c.jpg",
+    "annotation": {
+      "label": "Dog"
+    }
+  }
+]
