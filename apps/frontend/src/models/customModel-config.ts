@@ -13,7 +13,7 @@ export const classificationSchema = z.object({
 	plateau_factor: float.optional(),
 	plateau_patience: z.number().optional(),
 	plateau_min_lr: float.optional(),
-	early_stopping: z.boolean(),
+	early_stopping: z.boolean().optional(),
 	early_stopping_monitor: z.string().optional(),
 	early_stopping_patience: float.optional(),
 });

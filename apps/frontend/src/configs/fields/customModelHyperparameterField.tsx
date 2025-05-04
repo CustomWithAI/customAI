@@ -105,7 +105,7 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 		config: {},
 	},
 	{
-		template: "text",
+		template: "select",
 		element: {
 			label: "Plateau Monitor",
 			description:
@@ -117,6 +117,24 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 		},
 		config: {
 			conditionalField: "reduce_lr_on_plateau",
+			options: {
+				group: false,
+				list: [
+					{ label: "Validation Loss", value: "val_loss" },
+					{ label: "Training Loss", value: "loss" },
+					{ label: "Validation Accuracy", value: "val_accuracy" },
+					{ label: "Training Accuracy", value: "accuracy" },
+					{
+						label: "Validation Mean Squared Error",
+						value: "val_mean_squared_error",
+					},
+					{ label: "Mean Absolute Error", value: "mean_absolute_error" },
+					{
+						label: "Validation Mean Absolute Error",
+						value: "val_mean_absolute_error",
+					},
+				],
+			},
 		},
 	},
 	{
@@ -177,7 +195,7 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 		config: {},
 	},
 	{
-		template: "text",
+		template: "select",
 		element: {
 			label: "Early Stopping Monitor",
 			description: "Metric to monitor for early stopping (e.g., 'val_loss').",
@@ -189,6 +207,24 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 		config: {
 			conditionalField: "early_stopping",
 			conditionalValue: true,
+			options: {
+				group: false,
+				list: [
+					{ label: "Validation Loss", value: "val_loss" },
+					{ label: "Training Loss", value: "loss" },
+					{ label: "Validation Accuracy", value: "val_accuracy" },
+					{ label: "Training Accuracy", value: "accuracy" },
+					{
+						label: "Validation Mean Squared Error",
+						value: "val_mean_squared_error",
+					},
+					{ label: "Mean Absolute Error", value: "mean_absolute_error" },
+					{
+						label: "Validation Mean Absolute Error",
+						value: "val_mean_absolute_error",
+					},
+				],
+			},
 		},
 	},
 	{
