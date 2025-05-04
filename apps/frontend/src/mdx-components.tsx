@@ -1,5 +1,4 @@
 import type { MDXComponents } from "mdx/types";
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
 import { Callout } from "./components/ui/callout";
@@ -12,7 +11,12 @@ export function useMDXComponents(components?: MDXComponents): MDXComponents {
 			h1: ({ children }) => (
 				<h1
 					className="mt-8 mb-4 text-4xl text-zinc-800 font-bold tracking-tight"
-					id={children?.toString().toLowerCase().replace(/\s+/g, "-")}
+					id={children
+						?.toString()
+						.toLowerCase()
+						.replace(/\s+/g, "-")
+						.replace(/\:/, "")
+						.replace(/\./, "")}
 				>
 					{children}
 				</h1>
@@ -20,7 +24,12 @@ export function useMDXComponents(components?: MDXComponents): MDXComponents {
 			h2: ({ children }) => (
 				<h2
 					className="mt-8 mb-3 text-3xl text-zinc-800 font-semibold tracking-tight"
-					id={children?.toString().toLowerCase().replace(/\s+/g, "-")}
+					id={children
+						?.toString()
+						.toLowerCase()
+						.replace(/\s+/g, "-")
+						.replace(/\:/, "")
+						.replace(/\./, "")}
 				>
 					{children}
 				</h2>
@@ -28,7 +37,12 @@ export function useMDXComponents(components?: MDXComponents): MDXComponents {
 			h3: ({ children }) => (
 				<h3
 					className="mt-6 mb-2 text-2xl text-zinc-800 font-semibold tracking-tight"
-					id={children?.toString().toLowerCase().replace(/\s+/g, "-")}
+					id={children
+						?.toString()
+						.toLowerCase()
+						.replace(/\s+/g, "-")
+						.replace(/\:/, "")
+						.replace(/\./, "")}
 				>
 					{children}
 				</h3>

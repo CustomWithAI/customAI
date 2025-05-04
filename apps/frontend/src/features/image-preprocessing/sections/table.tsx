@@ -121,6 +121,7 @@ export const TablePreprocessingSection = () => {
 									Add Image Preprocessing
 								</Button>
 							),
+							footer: <div className="sr-only" />,
 						}}
 					/>
 				</div>
@@ -137,6 +138,7 @@ export const TablePreprocessingSection = () => {
 							node={node}
 						/>
 					),
+					footer: <div className="sr-only" />,
 				}}
 			/>
 			<div className="md:-mt-28 max-lg:col-span-2 max-md:flex">

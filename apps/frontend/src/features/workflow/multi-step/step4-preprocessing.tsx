@@ -299,6 +299,7 @@ export const ImagePreprocessingPage = () => {
 								emptyMessage="No preprocessing found"
 							/>
 						),
+						footer: <div className="sr-only" />,
 					}}
 				/>
 			</div>

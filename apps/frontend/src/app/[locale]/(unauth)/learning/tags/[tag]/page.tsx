@@ -70,12 +70,12 @@ export default function TagPage({
 	);
 
 	return (
-		<div className="flex min-h-screen">
+		<div className="flex w-full min-h-screen">
 			{/* Navigation Sidebar */}
 			<LearningSidebar />
 
 			{/* Main content */}
-			<div className="flex-1 overflow-auto">
+			<div className="flex-1 w-full overflow-auto">
 				<div className="container mx-auto px-4 py-12">
 					<div className="max-w-4xl mx-auto">
 						<div className="mb-12">
@@ -94,7 +94,7 @@ export default function TagPage({
 									<CardHeader>
 										<CardTitle>
 											<Link
-												href={`/docs/${doc.slug}`}
+												href={`/learning/${doc.slug}`}
 												className="hover:underline"
 											>
 												{doc.frontmatter.title}
@@ -136,7 +136,7 @@ export default function TagPage({
 									</CardContent>
 									<CardFooter>
 										<Button asChild>
-											<Link href={`/docs/${doc.slug}`}>Read More</Link>
+											<Link href={`/learning/${doc.slug}`}>Read More</Link>
 										</Button>
 									</CardFooter>
 								</Card>

@@ -13,7 +13,7 @@ export const useGetInfFeatureEx = ({
 	config?: { enabled?: any };
 } = {}): AppInfiniteQuery<typeof featureExService.getFeatureEx> =>
 	useInfiniteQuery({
-		queryKey: ["featureEx", params],
+		queryKey: ["inf-featureEx", params],
 		initialPageParam: buildQueryParams(params),
 		queryFn: async ({ pageParam = null }) =>
 			await featureExService.getFeatureEx({ pageParam }),

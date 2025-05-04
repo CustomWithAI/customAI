@@ -446,33 +446,77 @@ const RenderInput = memo(
 										type="tel"
 										inputMode="decimal"
 										onChange={(e) => {
-											let inputValue = e.target.value.trim();
-											if (inputValue.endsWith(".")) {
-												inputValue += "0";
+											const inputValue = e.target.value;
+
+											if (inputValue === "") {
+												setOnChange
+													? setOnChange(undefined)
+													: onChange(undefined);
+												return;
 											}
-											const parsedValue =
-												inputValue !== "" || !Number.isNaN(inputValue)
-													? inputValue.endsWith(".0")
-														? inputValue
-														: Number.parseFloat(inputValue)
-													: undefined;
-											setOnChange
-												? setOnChange(parsedValue)
-												: onChange(parsedValue);
+
+											if (/^[0-9]*\.?[0-9]*$/.test(inputValue)) {
+												if (
+													inputValue === "0" ||
+													inputValue === "." ||
+													inputValue === "0." ||
+													inputValue.startsWith("0.") ||
+													inputValue.includes(".")
+												) {
+													setOnChange
+														? setOnChange(inputValue)
+														: onChange(inputValue);
+												} else {
+													const parsedValue = Number.parseFloat(inputValue);
+													setOnChange
+														? setOnChange(parsedValue)
+														: onChange(parsedValue);
+												}
+											}
 										}}
-										onBlur={onBlur}
+										onBlur={(e) => {
+											let currentValue = e.target.value;
+
+											if (currentValue === "" || currentValue === ".") {
+												setOnChange
+													? setOnChange(undefined)
+													: onChange(undefined);
+											} else if (currentValue.endsWith(".")) {
+												currentValue = `${currentValue}0`;
+												const parsedValue = Number.parseFloat(currentValue);
+												setOnChange
+													? setOnChange(parsedValue)
+													: onChange(parsedValue);
+											} else if (
+												typeof currentValue === "string" &&
+												currentValue.includes(".")
+											) {
+												const parsedValue = Number.parseFloat(currentValue);
+												setOnChange
+													? setOnChange(parsedValue)
+													: onChange(parsedValue);
+											}
+
+											if (onBlur) onBlur();
+										}}
 										value={
-											setValue
-												? !Number.isNaN(setValue)
-													? String(setValue).endsWith(".0")
-														? String(setValue).replace(".0", ".")
-														: (setValue as number)
-													: undefined
-												: !Number.isNaN(value)
-													? String(value).endsWith(".0")
-														? String(value).replace(".0", ".")
-														: value
-													: undefined
+											setValue !== undefined
+												? typeof setValue === "string"
+													? setValue
+													: !Number.isNaN(setValue)
+														? String(setValue).endsWith(".0")
+															? String(setValue).replace(".0", ".")
+															: (setValue as number)
+														: ""
+												: value !== undefined
+													? typeof value === "string"
+														? value
+														: !Number.isNaN(value)
+															? String(value).endsWith(".0")
+																? String(value).replace(".0", ".")
+																: value
+															: ""
+													: ""
 										}
 										placeholder={placeholder}
 									/>

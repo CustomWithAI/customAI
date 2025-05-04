@@ -159,14 +159,6 @@ export const ObjectDetectionParams: FormFieldInput<ObjectDetectionSchema> = [
 						{ label: "yolo11m.pt", value: "yolo11m.pt" },
 						{ label: "yolo11l.pt", value: "yolo11l.pt" },
 					],
-					segmentation: [
-						{ label: "yolov8s-seg.pt", value: "yolov8s-seg.pt" },
-						{ label: "yolov8m-seg.pt", value: "yolov8m-seg.pt" },
-						{ label: "yolov8l-seg.pt", value: "yolov8l-seg.pt" },
-						{ label: "yolo11s-seg.pt", value: "yolo11s-seg.pt" },
-						{ label: "yolo11m-seg.pt", value: "yolo11m-seg.pt" },
-						{ label: "yolo11l-seg.pt", value: "yolo11l-seg.pt" },
-					],
 				},
 			},
 		},
@@ -201,15 +193,29 @@ export const SegmentationParams: FormFieldInput<SegmentationSchema> = [
 		config: {},
 	},
 	{
-		template: "text",
+		template: "select",
 		element: {
 			label: "Weight File",
 			description: "the pre-trained model weight file name (e.g., 'yolov5s').",
 			key: "weight_size",
 			testDataId: "weight_size",
 			name: "weight_size",
-			placeholder: "E.g., yolov5s",
+			placeholder: "E.g., yolov8s-seg.pt",
 		},
-		config: {},
+		config: {
+			options: {
+				group: true,
+				list: {
+					segmentation: [
+						{ label: "yolov8s-seg.pt", value: "yolov8s-seg.pt" },
+						{ label: "yolov8m-seg.pt", value: "yolov8m-seg.pt" },
+						{ label: "yolov8l-seg.pt", value: "yolov8l-seg.pt" },
+						{ label: "yolo11s-seg.pt", value: "yolo11s-seg.pt" },
+						{ label: "yolo11m-seg.pt", value: "yolo11m-seg.pt" },
+						{ label: "yolo11l-seg.pt", value: "yolo11l-seg.pt" },
+					],
+				},
+			},
+		},
 	},
 ];

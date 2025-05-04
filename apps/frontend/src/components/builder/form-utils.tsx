@@ -32,22 +32,63 @@ export const TextFormItem = ({
 				id={id}
 				onChange={(e) => {
 					if (number) {
-						let inputValue = e.target.value.trim();
-						if (inputValue.endsWith(".")) {
-							inputValue += "0";
+						const inputValue = e.target.value;
+
+						if (inputValue === "") {
+							onChange(undefined);
+							return;
 						}
-						const parsedValue = inputValue !== "" ? inputValue : undefined;
-						if (!Number.isNaN(parsedValue)) {
-							onChange(parsedValue || "");
+
+						if (/^[0-9]*\.?[0-9]*$/.test(inputValue)) {
+							if (
+								inputValue === "0" ||
+								inputValue === "." ||
+								inputValue === "0." ||
+								inputValue.startsWith("0.") ||
+								inputValue.includes(".")
+							) {
+								onChange(inputValue);
+							} else {
+								const parsedValue = Number.parseFloat(inputValue);
+								onChange(parsedValue);
+							}
 						}
-						return;
 					}
 					onChange(e.target.value);
 				}}
+				onBlur={(e) => {
+					if (number) {
+						let currentValue = e.target.value;
+
+						if (currentValue === "" || currentValue === ".") {
+							onChange(undefined);
+						} else if (currentValue.endsWith(".")) {
+							currentValue = `${currentValue}0`;
+							const parsedValue = Number.parseFloat(currentValue);
+							onChange(parsedValue);
+						} else if (
+							typeof currentValue === "string" &&
+							currentValue.includes(".")
+						) {
+							const parsedValue = Number.parseFloat(currentValue);
+							onChange(parsedValue);
+						}
+					}
+				}}
 				value={
-					String(value).endsWith(".0")
-						? String(value).replace(".0", ".")
-						: value
+					number
+						? value !== undefined
+							? typeof value === "string"
+								? value
+								: !Number.isNaN(value)
+									? String(value).endsWith(".0")
+										? String(value).replace(".0", ".")
+										: value
+									: ""
+							: ""
+						: String(value).endsWith(".0")
+							? String(value).replace(".0", ".")
+							: value
 				}
 				placeholder={placeholder}
 			/>
@@ -71,21 +112,55 @@ export const NumberInput = ({
 			type="text"
 			id={id}
 			onChange={(e) => {
-				if (number) {
-					let inputValue = e.target.value.trim();
-					if (inputValue.endsWith(".")) {
-						inputValue += "0";
-					}
-					const parsedValue = inputValue !== "" ? inputValue : undefined;
-					if (!Number.isNaN(parsedValue)) {
-						onChange(parsedValue || "");
-					}
+				const inputValue = e.target.value;
+
+				if (inputValue === "") {
+					onChange(undefined);
 					return;
 				}
-				onChange(e.target.value);
+
+				if (/^[0-9]*\.?[0-9]*$/.test(inputValue)) {
+					if (
+						inputValue === "0" ||
+						inputValue === "." ||
+						inputValue === "0." ||
+						inputValue.startsWith("0.") ||
+						inputValue.includes(".")
+					) {
+						onChange(inputValue);
+					} else {
+						const parsedValue = Number.parseFloat(inputValue);
+						onChange(parsedValue);
+					}
+				}
+			}}
+			onBlur={(e) => {
+				let currentValue = e.target.value;
+
+				if (currentValue === "" || currentValue === ".") {
+					onChange(undefined);
+				} else if (currentValue.endsWith(".")) {
+					currentValue = `${currentValue}0`;
+					const parsedValue = Number.parseFloat(currentValue);
+					onChange(parsedValue);
+				} else if (
+					typeof currentValue === "string" &&
+					currentValue.includes(".")
+				) {
+					const parsedValue = Number.parseFloat(currentValue);
+					onChange(parsedValue);
+				}
 			}}
 			value={
-				String(value).endsWith(".0") ? String(value).replace(".0", ".") : value
+				value !== undefined
+					? typeof value === "string"
+						? value
+						: !Number.isNaN(value)
+							? String(value).endsWith(".0")
+								? String(value).replace(".0", ".")
+								: value
+							: ""
+					: ""
 			}
 			placeholder={placeholder}
 		/>

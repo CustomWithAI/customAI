@@ -12,7 +12,7 @@ export const useGetInfPreprocessing = ({
 	config?: { enabled?: any };
 } = {}): AppInfiniteQuery<typeof preprocessingService.getPreprocessings> =>
 	useInfiniteQuery({
-		queryKey: ["preprocessings", params],
+		queryKey: ["inf-preprocessings", params],
 		initialPageParam: buildQueryParams(params),
 		queryFn: async ({ pageParam = null }) =>
 			await preprocessingService.getPreprocessings({ pageParam }),

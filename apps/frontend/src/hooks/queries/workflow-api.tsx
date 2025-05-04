@@ -39,7 +39,7 @@ export const useGetInfWorkflows = ({
 	config?: { enabled?: any };
 } = {}): AppInfiniteQuery<typeof workflowService.getWorkflows> =>
 	useInfiniteQuery({
-		queryKey: ["workflows", params],
+		queryKey: ["inf-workflows", params],
 		initialPageParam: buildQueryParams(params),
 		queryFn: async ({ pageParam = null }) =>
 			await workflowService.getWorkflows({ pageParam }),

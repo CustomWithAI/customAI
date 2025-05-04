@@ -1,0 +1,227 @@
+---
+title: Image Preprocessing
+description: Enhancing image data before training AI models
+date: 2025-05-02
+author: Documentation Team
+tags: [AI]
+---
+
+# Image Preprocessing in AI
+
+Image preprocessing is a crucial step in preparing image data before training an AI model. This step enhances the quality of image data to enable models to learn and perform effectively. In this article, we will explain the basic functions used in image preprocessing without delving into complex mathematical equations, making it easy for non-technical readers to understand and apply the knowledge to build AI models in our system.
+
+There are various methods and functions in image preprocessing, which can be categorized into 7 main groups:
+
+## 1. Basic Image Operations
+
+### 1.1 Grayscale Conversion
+**How it works:** Grayscale conversion is the process of transforming a color image into a grayscale image by averaging or using specific formulas to combine the Red, Green, and Blue (RGB) values. This results in an image ranging from black to white.
+
+![preprocessing14](/images/preprocessing14.png)
+
+**Benefits:**
+- **Reduces data complexity:** By converting from a 3-channel color image (RGB) to a single-channel grayscale image, the amount of data to process is reduced, enabling faster model training.
+- **Highlights important features:** In tasks such as edge detection or shape recognition, color may not be important, and a grayscale image helps the model focus on key features.
+
+### 1.2 Resizing
+**How it works:** Resizing involves changing the width and height of an image to a desired size. Techniques such as sampling or interpolation are used to maintain image quality.
+
+![preprocessing11](/images/preprocessing11.png)
+
+**Benefits:**
+- **Standardizes data:** AI models often require images of a fixed size. Resizing ensures smooth processing by adhering to these requirements.
+- **Reduces processing load:** Smaller image sizes reduce the number of pixels, speeding up processing and resource consumption.
+
+### 1.3 Cropping
+**How it works:** Cropping is the process of selecting the area of interest in an image and removing the irrelevant parts, focusing on the critical region.
+
+![preprocessing17](/images/preprocessing17.png)
+
+**Benefits:**
+- **Improves accuracy:** Focusing on relevant parts of an image reduces noise, helping the model learn from more relevant data.
+- **Enhances image composition:** Cropping can improve the overall composition of an image, which may enhance model performance.
+
+### 1.4 Rotation
+**How it works:** Rotation involves rotating the image by a specified angle (e.g., 90°, 180°) to change the image's viewpoint.
+
+![preprocessing7](/images/preprocessing7.png)
+
+**Benefits:**
+- **Data augmentation:** Rotation increases the variety of data, enabling the model to learn from different perspectives.
+- **Model robustness:** Models become more robust and can recognize objects regardless of orientation.
+
+### 1.5 Flipping
+**How it works:** Flipping involves horizontally or vertically mirroring the image to create a reflected version.
+
+![preprocessing18](/images/preprocessing18.png)
+
+**Benefits:**
+- **Data augmentation:** Like rotation, flipping adds variety by providing more examples of objects in different directions.
+- **Improves classification:** The model can identify objects regardless of their orientation in the image.
+
+### 1.6 Perspective Transformation
+**How it works:** Perspective transformation alters the view or dimension of an image to correct distortion or achieve a desired angle.
+
+![preprocessing2](/images/preprocessing2.png)
+
+**Benefits:**
+- **Fixes distortions:** Helps adjust for distortion caused by the camera angle or lens.
+- **Data augmentation:** Creates more samples by transforming the viewpoint, enhancing model learning from diverse angles.
+
+<Callout type="info">
+This section covers the basic operations that form the foundation of many image preprocessing pipelines. These techniques help simplify images, focus on relevant features, and make the model more efficient and robust.
+</Callout>
+
+## 2. Thresholding
+
+### 2.1 Thresholding by Percentage
+**How it works:** Thresholding by percentage sets a predefined pixel intensity level to divide pixels into two groups: those above and below the threshold value.
+
+![preprocessing12](/images/preprocessing12.png)
+
+**Benefits:**
+- **Object segmentation:** It helps separate objects from the background, especially when there is a clear difference in pixel intensity.
+- **Prepares data for further processing:** Makes edge detection and shape analysis easier.
+
+## 3. Image Enhancement
+
+### 3.1 Normalization
+**How it works:** Normalization adjusts pixel intensity values to a fixed range (e.g., 0 to 1 or 0 to 255), ensuring uniformity in brightness and contrast across images.
+
+![preprocessing9](/images/preprocessing9.png)
+
+**Benefits:**
+- **Consistency:** Normalization reduces brightness differences between images, enabling the model to learn effectively.
+- **Model stability:** Helps prevent the model from focusing on brightness variations rather than object features.
+
+### 3.2 Histogram Equalization
+**How it works:** Histogram equalization redistributes pixel intensities to create a more evenly distributed histogram, enhancing contrast and detail visibility.
+
+![preprocessing4](/images/preprocessing4.png)
+
+**Benefits:**
+- **Improves sharpness:** Enhances the visibility of details in both dark and light areas.
+- **Facilitates feature detection:** Allows the model to better detect important features in the image.
+
+### 3.3 Sharpening
+**How it works:** Sharpening enhances edges and details in an image by increasing the contrast between adjacent pixels.
+
+![preprocessing16](/images/preprocessing16.png)
+
+**Benefits:**
+- **Highlights details:** Makes edges and important features stand out.
+- **Edge detection improvement:** Helps the model identify boundaries and shapes more effectively.
+
+### 3.4 Unsharp Masking
+**How it works:** Unsharp masking improves sharpness by subtracting a blurred version of the image from the original and combining the result to increase contrast.
+
+![preprocessing5](/images/preprocessing5.png)
+
+**Benefits:**
+- **Increases clarity:** Improves image details without introducing excessive noise.
+- **Quality enhancement:** Results in a sharper image, making it more suitable for further analysis.
+
+<Callout type="info">
+These image enhancement techniques are essential for improving the quality and visibility of the features in the image, which directly impacts the performance of AI models.
+</Callout>
+
+## 4. Edge Detection
+
+### 4.1 Laplacian Filter
+**How it works:** The Laplacian filter detects edges by calculating the rate of intensity change between adjacent pixels.
+
+![preprocessing13](/images/preprocessing13.png)
+
+**Benefits:**
+- **Edge identification:** Essential for recognizing object boundaries.
+- **Enhances sharpness:** Makes the edges of objects more prominent.
+
+## 5. Blurring / Denoising
+
+### 5.1 Gaussian Blur Filter
+**How it works:** Gaussian blur uses a Gaussian distribution to blur the image, making it smoother and reducing noise.
+
+![preprocessing19](/images/preprocessing19.png)
+
+**Benefits:**
+- **Noise reduction:** Effective in removing image noise.
+- **Prepares for further analysis:** Helps with edge detection and other processes by smoothing the image.
+
+### 5.2 Median Blur Filter
+**How it works:** Median blur replaces each pixel's value with the median value of surrounding pixels, particularly effective for removing salt-and-pepper noise.
+
+![preprocessing6](/images/preprocessing6.png)
+
+**Benefits:**
+- **Noise removal:** Reduces noise without blurring edges.
+- **Preserves object edges:** Maintains sharp boundaries while eliminating noise.
+
+### 5.3 Mean Blur
+**How it works:** Mean blur smooths the image by averaging pixel values in a local neighborhood, reducing sharpness and noise.
+
+![preprocessing10](/images/preprocessing10.png)
+
+**Benefits:**
+- **Noise reduction:** Helps eliminate noise caused by imaging or processing.
+- **Prepares for analysis:** Smooths out details to aid further detection and analysis tasks.
+
+<Callout type="info">
+Blurring and denoising filters play an important role in cleaning images and preparing them for more detailed analysis.
+</Callout>
+
+## 6. Color and Intensity Adjustments
+
+### 6.1 Log Transformation
+**How it works:** Log transformation adjusts pixel intensities using a logarithmic function, enhancing contrast in dark areas and reducing intensity in bright areas.
+
+![preprocessing3](/images/preprocessing3.png)
+
+**Benefits:**
+- **Enhanced details in dark areas:** Makes details in dark regions more visible.
+- **Improves feature detection:** Helps the model better detect important features.
+
+## 7. Morphological Operations
+
+### 7.1 Dilation
+**How it works:** Dilation increases the size of objects in the image by adding pixels to the object's edges, filling small gaps and connecting broken parts.
+
+![preprocessing15](/images/preprocessing15.png)
+
+
+**Benefits:**
+- **Fills gaps:** Helps connect fragmented objects.
+- **Enhances features:** Expands objects, making them more prominent in the image.
+
+### 7.2 Erosion
+**How it works:** Erosion reduces the size of objects by removing pixels from the edges, helping eliminate small noise and separate objects that are close together.
+
+![preprocessing8](/images/preprocessing8.png)
+
+**Benefits:**
+- **Noise removal:** Eliminates small noise that might interfere with analysis.
+- **Object separation:** Helps distinguish adjacent objects.
+
+### 7.3 Opening
+**How it works:** Opening is a combination of erosion followed by dilation, used to remove small objects and noise.
+
+![preprocessing1](/images/preprocessing1.png)
+
+**Benefits:**
+- **Noise reduction:** Removes small, irrelevant objects from the image.
+- **Improved object separation:** Enhances the clarity of the image by removing noise.
+
+### 7.4 Closing
+**How it works:** Closing is a combination of dilation followed by erosion, which helps fill small gaps and remove noise.
+
+![preprocessing1](/images/preprocessing10.png)
+
+**Benefits:**
+- **Fills small gaps:** Closes small holes within objects.
+- **Noise removal:** Helps remove noise and refine the image's clarity.
+
+<Callout type="info">
+Morphological operations help refine the structure of objects within an image, improving both object separation and clarity.
+</Callout>
+
+## Sources
+- [Beeying](https://beeying.medium.com/geometric-transformation-%E0%B8%AB%E0%B8%A5%E0%B8%B1%E0%B8%81%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%9E%E0%B8%B7%E0%B8%99%E0%B8%90%E0%B8%B2%E0%B8%99%E0%B8%82%E0%B8%AD%E0%B8%87-image-processing-%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%99%E0%B8%B3%E0%B9%84%E0%B8%9B%E0%B8%9E%E0%B8%B4%E0%B8%9A%E0%B8%9A%E0%B8%A3%E0%B8%B5-3c7ea5275a3)

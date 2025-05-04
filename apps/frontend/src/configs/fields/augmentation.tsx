@@ -313,7 +313,7 @@ export const node = (
 			}),
 		},
 		{
-			type: "rotation",
+			type: "rotate",
 			title: "Rotation",
 			description: "Rotate image by a random angle within a range",
 			icon: <Droplet />,

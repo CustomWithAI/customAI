@@ -276,7 +276,7 @@ export const node = (
 		},
 		{
 			type: "rotate",
-			title: "Rotation Node",
+			title: "Rotation",
 			description: "Displays the final output",
 			icon: <RotateCcw />,
 			id: "rotation-1",
@@ -320,7 +320,7 @@ export const node = (
 		},
 		{
 			type: "flip",
-			title: "Flipping Node",
+			title: "Flipping",
 			description: "Displays the final output",
 			icon: <FlipHorizontal2 />,
 			id: "flipping-1",

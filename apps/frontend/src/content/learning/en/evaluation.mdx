@@ -1,0 +1,106 @@
+---
+title: Model Evaluation Metrics
+description: Understanding Accuracy, Precision, Recall, F1 Score, and Confusion Matrix for Classification in ML and DL
+date: 2025-05-02
+author: Documentation Team
+tags: [AI, model]
+---
+
+# Model Evaluation Metrics in Machine Learning and Deep Learning
+
+Model evaluation is a crucial step in assessing the performance and accuracy of a developed model to ensure it works as expected when confronted with new data.
+
+## Why Evaluate Models?
+
+Evaluating a model helps us understand its ability to predict or classify data, identify shortcomings or areas of improvement, and ensure that the model is accurate and efficient for real-world use.
+
+## Classification
+
+### Accuracy: The proportion of correct predictions to the total number of predictions
+Accuracy is a key performance indicator used to assess the effectiveness of a machine learning model, especially in classification tasks. It represents the proportion of correct predictions made compared to the total number of predictions.
+
+**Formula:**
+Accuracy = Correct Predictions / Total Predictions
+
+**Example:**
+If your model made 100 predictions, and 90 of them were correct, the accuracy would be:
+Accuracy = 90 / 100 = 0.9 or 90%
+
+**Interpretation of Accuracy:**
+- **High Accuracy:** Indicates that the model is making correct predictions at a high rate, which is desirable.
+- **Low Accuracy:** Suggests that the model is making many incorrect predictions, which may require improvements.
+
+**Caution:**
+In cases where there is class imbalance, accuracy may not truly reflect the model's effectiveness. For example, if there are 1,000 samples with 950 of class A and 50 of class B, a model predicting all samples as class A would have an accuracy of 95%, but it wouldn't detect any class B samples. In such cases, it is advisable to consider additional metrics such as Precision, Recall, or F1 Score for a more comprehensive evaluation.
+
+### Precision: The proportion of correct positive predictions to total positive predictions
+Precision is a metric used to evaluate a model’s performance, specifically in classification tasks. It indicates how many of the predicted positive results were actually correct.
+
+**Formula:**
+Precision = True Positive / (True Positive + False Positive)
+
+**Example:**
+Assume a model predicted 100 emails as spam, 80 of which were correct (True Positive), and 20 were incorrect (False Positive). The precision would be:
+Precision = 80 / (80 + 20) = 0.8 or 80%
+
+**Interpretation of Precision:**
+- **High Precision:** Indicates that when the model predicts positive results (e.g., spam), it is mostly correct. This is important in contexts where false positives are costly, such as detecting serious diseases.
+- **Low Precision:** Suggests that the model is frequently incorrect when predicting positives.
+
+**Importance of Precision:**
+Precision is critical in situations where false positives are more damaging than false negatives. For example, in medical diagnoses, a false positive (e.g., predicting a patient has a disease when they don't) could lead to unnecessary treatment.
+
+### Recall: The proportion of correctly predicted positive cases to all actual positive cases
+Recall is a metric used to evaluate a model's ability to identify all relevant positive cases.
+
+**Formula:**
+Recall = True Positive / (True Positive + False Negative)
+
+**Example:**
+Assume there are 100 spam emails, and the model correctly identifies 80 (True Positive), but misses 20 (False Negative). The recall would be:
+Recall = 80 / (80 + 20) = 0.8 or 80%
+
+**Interpretation of Recall:**
+- **High Recall:** Indicates that the model is identifying most of the positive cases, which is desirable when it is critical to capture all relevant positive cases.
+- **Low Recall:** Suggests that the model is missing many relevant positive cases, which could be problematic in applications where missing positives is costly, such as in medical diagnostics.
+
+**Importance of Recall:**
+Recall is particularly important in contexts where failing to identify positive cases (False Negative) has significant consequences, such as in the detection of serious diseases.
+
+### F1 Score: The harmonic mean of Precision and Recall
+The F1 Score provides a single metric that balances both Precision and Recall, making it useful when you need to assess the balance between these two metrics.
+
+**Formula:**
+F1 Score = 2 * (Precision * Recall) / (Precision + Recall)
+
+**Example:**
+If Precision = 0.75 and Recall = 0.60, the F1 Score would be:
+F1 Score = 2 * (0.75 * 0.60) / (0.75 + 0.60) = 0.67 or 67%
+
+**Interpretation of F1 Score:**
+- **High F1 Score:** Indicates a good balance between Precision and Recall, meaning the model is performing well in both aspects.
+- **Low F1 Score:** Indicates a poor balance, suggesting the model is struggling either with precision or recall.
+
+**Importance of F1 Score:**
+The F1 Score is particularly useful in situations with class imbalance, where a model might perform well in one metric but poorly in another. It gives a more comprehensive evaluation of the model’s ability to balance both Precision and Recall.
+
+### Confusion Matrix: A table showing the number of correct and incorrect predictions for each class
+A Confusion Matrix is a tool used to evaluate the performance of a classification model. It compares the predicted class against the actual class to show how many predictions were correct or incorrect.
+
+**Structure of the Confusion Matrix:**
+The confusion matrix for binary classification consists of the following:
+
+- **True Positive (TP):** Correctly predicted positive cases.
+- **False Positive (FP):** Incorrectly predicted positive cases.
+- **False Negative (FN):** Incorrectly predicted negative cases.
+- **True Negative (TN):** Correctly predicted negative cases.
+
+**Interpretation of the Confusion Matrix:**
+- **True Positive (TP) and True Negative (TN):** Higher values are desirable, indicating correct predictions.
+- **False Positive (FP) and False Negative (FN):** Lower values are desirable to minimize misclassifications.
+
+### Object Detection
+
+#### Mean Average Precision (mAP): The average of Average Precision (AP) for each class
+Mean Average Precision (mAP) is a metric used in object detection to evaluate the performance of a model in detecting objects. It is the average of the Average Precision (AP) scores for each detected class, where AP is the area under the Precision-Recall curve.
+

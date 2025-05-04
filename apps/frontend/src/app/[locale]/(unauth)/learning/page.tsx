@@ -83,7 +83,7 @@ export default function DocsLandingPage({
 			<div className="flex-1 w-full overflow-auto">
 				<div className="container mx-auto px-4 py-12">
 					<div className="max-w-4xl mx-auto">
-						<div className="text-center mb-12">
+						<div className="mb-12">
 							<h1 className="text-4xl font-bold tracking-tight mb-4">
 								Documentation
 							</h1>
@@ -96,7 +96,7 @@ export default function DocsLandingPage({
 
 						{/* Featured docs section */}
 						{featuredDocs.length > 0 && (
-							<div className="mb-12 bg-accent/50 rounded-lg p-6">
+							<div className="mb-12 bg-accent/40 rounded-lg p-6">
 								<div className="flex items-start gap-4">
 									<div className="bg-primary text-primary-foreground p-3 rounded-lg">
 										<Rocket className="h-6 w-6" />

@@ -109,6 +109,7 @@ export const TableFeatureExSection = () => {
 									Add Feature Extraction
 								</Button>
 							),
+							footer: <div className="sr-only" />,
 						}}
 					/>
 				</div>
@@ -125,6 +126,7 @@ export const TableFeatureExSection = () => {
 							node={node}
 						/>
 					),
+					footer: <div className="sr-only" />,
 				}}
 			/>
 			<div className="md:-mt-28 max-lg:col-span-2 max-md:flex">

@@ -38,6 +38,14 @@ export const getContrastColor = (r: number, g: number, b: number) => {
 	return luminance > 0.5 ? "rgb(0, 0, 0)" : "rgb(255, 255, 255)";
 };
 
+function seededRandom(initialSeed: number): () => number {
+	let currentSeed = initialSeed;
+	return () => {
+		currentSeed = Math.sin(currentSeed) * 10000;
+		return currentSeed - Math.floor(currentSeed);
+	};
+}
+
 export function generateUniqueColor(seed: number): string {
 	const hue = (seed * 37.5) % 360;
 	const saturation = 70 + Math.floor(Math.random() * 30);
@@ -45,7 +53,7 @@ export function generateUniqueColor(seed: number): string {
 	return hslToHex(hue, saturation, lightness);
 }
 
-function hslToHex(h: number, s: number, l: number): string {
+export function hslToHex(h: number, s: number, l: number): string {
 	const normalizedS = s / 100;
 	const normalizedL = l / 100;
 
@@ -53,10 +61,12 @@ function hslToHex(h: number, s: number, l: number): string {
 	const a = normalizedS * Math.min(normalizedL, 1 - normalizedL);
 	const f = (n: number) =>
 		Math.round(
-			255 * (l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)))),
+			255 *
+				(normalizedL -
+					a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)))),
 		);
 
-	return `#${[f(0), f(8), f(4)]
-		.map((x) => x.toString(16).padStart(2, "0"))
-		.join("")}`;
+	const toHex = (x: number) => x.toString(16).padStart(2, "0");
+
+	return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
 }

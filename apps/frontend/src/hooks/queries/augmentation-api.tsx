@@ -12,7 +12,7 @@ export const useGetInfAugmentation = ({
 	config?: { enabled?: any };
 } = {}): AppInfiniteQuery<typeof augmentationService.getAugmentation> =>
 	useInfiniteQuery({
-		queryKey: ["augmentation", params],
+		queryKey: ["inf-augmentation", params],
 		initialPageParam: buildQueryParams(params),
 		queryFn: async ({ pageParam = null }) =>
 			await augmentationService.getAugmentation({ pageParam }),

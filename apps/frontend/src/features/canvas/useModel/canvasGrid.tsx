@@ -170,6 +170,7 @@ export default function CanvasWithOverlay() {
 	);
 
 	const [isSpacePressed, setIsSpacePressed] = useState(false);
+	const [isDeletePressed, setIsDeletePressed] = useState(false);
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -219,11 +220,12 @@ export default function CanvasWithOverlay() {
 		}
 	};
 
-	const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+	const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>, id: string) => {
 		if (e.button === 1) {
 			e.preventDefault();
-			// setIsDragging(true);
-			// dragStart.current = { x: e.clientX, y: e.clientY };
+			if (isDeletePressed) {
+				deleteElement(id);
+			}
 		}
 	};
 
@@ -257,6 +259,10 @@ export default function CanvasWithOverlay() {
 		if (e.button !== 0) return;
 		e.preventDefault();
 		e.stopPropagation();
+
+		if (isDeletePressed) {
+			deleteElement(elementId);
+		}
 
 		bringToFront(elementId, parentId);
 
@@ -597,7 +603,7 @@ export default function CanvasWithOverlay() {
 							className="absolute top-0 left-0 right-0 h-6 bg-gray-100 border-b flex items-center px-2 cursor-grab z-10"
 							onMouseDown={(e) => {
 								handleElementMouseDown(e, element.id);
-								handleMouseDown(e);
+								handleMouseDown(e, element.id);
 							}}
 						>
 							<div className="text-xs font-medium flex-1 truncate">
@@ -678,7 +684,7 @@ export default function CanvasWithOverlay() {
 				className="block absolute top-0 left-0 pointer-events-none"
 			/>
 			<ModeSelector
-				mode={isSpacePressed ? "hand" : "action"}
+				mode={isSpacePressed ? "hand" : isDeletePressed ? "delete" : "action"}
 				onChange={(v) => {
 					if (!containerRef.current) return;
 					if (v === "hand") {
@@ -687,6 +693,7 @@ export default function CanvasWithOverlay() {
 						containerRef.current.style.cursor = "";
 					}
 					setIsSpacePressed(v === "hand");
+					setIsDeletePressed(v === "delete");
 				}}
 			/>
 			<div

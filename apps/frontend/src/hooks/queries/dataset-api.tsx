@@ -34,7 +34,7 @@ export const useGetInfDatasets = ({
 	config?: { enabled?: any };
 } = {}): AppInfiniteQuery<typeof datasetService.getDatasets> =>
 	useInfiniteQuery({
-		queryKey: ["datasets", params],
+		queryKey: ["inf-datasets", params],
 		initialPageParam: buildQueryParams(params),
 		queryFn: async ({ pageParam = null }) =>
 			await datasetService.getDatasets({ pageParam }),
@@ -70,7 +70,7 @@ export const useGetInfImages = ({
 	Error
 > =>
 	useInfiniteQuery({
-		queryKey: ["datasets", "images", id, params],
+		queryKey: ["inf-datasets", "images", id, params],
 		initialPageParam: buildQueryParams(params),
 		queryFn: async ({ pageParam = null }) =>
 			await datasetService.getImages({ id, params: pageParam || "" }),

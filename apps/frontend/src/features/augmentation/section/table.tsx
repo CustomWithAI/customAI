@@ -122,6 +122,7 @@ export const TableAugmentationSection = () => {
 									Add Data Augmentation
 								</Button>
 							),
+							footer: <div className="sr-only" />,
 						}}
 					/>
 				</div>
@@ -138,6 +139,7 @@ export const TableAugmentationSection = () => {
 							node={node}
 						/>
 					),
+					footer: <div className="sr-only" />,
 				}}
 			/>
 			<div className="md:-mt-28 max-lg:col-span-2 max-md:flex">

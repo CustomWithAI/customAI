@@ -330,6 +330,7 @@ export const VisualSection = ({ node, customNode, image }: VisualProps) => {
 									}}
 								/>
 							),
+							footer: <div className="sr-only" />,
 						}}
 					/>
 				) : selectedNode ? (

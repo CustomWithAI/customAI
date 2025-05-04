@@ -83,6 +83,7 @@ export default function SecurityPage() {
 							title: "All session activities",
 							description: "list of session login into your account",
 							body: <ViewSessionSection />,
+							footer: <div className="sr-only" />,
 						}}
 					/>
 				</div>

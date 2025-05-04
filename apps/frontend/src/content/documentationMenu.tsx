@@ -8,29 +8,20 @@ export const documentationNav: DocGroup[] = [
 		pages: [{ title: "Learning Home", href: "/learning" }],
 	},
 	{
-		title: "Getting Started",
+		title: "AI",
 		icon: BookOpen,
 		pages: [
 			{ title: "Basic AI", href: "/learning/basic_ai" },
-			{ title: "Installation", href: "/learning/installation" },
-			{ title: "Configuration", href: "/learning/configuration" },
+			{ title: "Data Preparation", href: "/learning/data-preparation" },
+			{ title: "Preprocessing", href: "/learning/preprocessing" },
 		],
 	},
 	{
-		title: "Usage",
+		title: "Model",
 		icon: FileText,
 		pages: [
-			{ title: "Basic Usage", href: "/learning/usage" },
-			{ title: "Advanced Features", href: "/learning/advanced-features" },
-			{ title: "API Reference", href: "/learning/api-reference" },
-		],
-	},
-	{
-		title: "Examples",
-		pages: [
-			{ title: "Simple Example", href: "/learning/simple-example" },
-			{ title: "Complex Example", href: "/learning/complex-example" },
-			{ title: "Case Studies", href: "/learning/case-studies" },
+			{ title: "Training", href: "/learning/training" },
+			{ title: "Evaluation", href: "/learning/evaluation" },
 		],
 	},
 ];

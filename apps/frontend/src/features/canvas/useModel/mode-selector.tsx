@@ -8,12 +8,12 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/libs/utils";
 import { motion } from "framer-motion";
-import { Hand, SquareDashedMousePointer } from "lucide-react";
+import { Hand, SquareDashedMousePointer, Trash2 } from "lucide-react";
 import { useCallback, useEffect } from "react";
 
 interface ModeSelectorProps {
-	mode: "action" | "hand";
-	onChange: (mode: "action" | "hand") => void;
+	mode: "action" | "hand" | "delete";
+	onChange: (mode: "action" | "hand" | "delete") => void;
 }
 export function ModeSelector({ mode, onChange }: ModeSelectorProps) {
 	const handleKeyDown = useCallback(
@@ -25,6 +25,9 @@ export function ModeSelector({ mode, onChange }: ModeSelectorProps) {
 			}
 			if ("space" === event.key) {
 				onChange("hand");
+			}
+			if ("del" === event.key) {
+				onChange("delete");
 			}
 		},
 		[onChange],
@@ -126,6 +129,53 @@ export function ModeSelector({ mode, onChange }: ModeSelectorProps) {
 								)}
 							>
 								space
+							</Tiny>
+						</Button>
+					</TooltipTrigger>
+				</Tooltip>
+			</TooltipProvider>
+			<TooltipProvider>
+				<Tooltip delayDuration={100}>
+					<TooltipContent side="right" className="bg-white z-70">
+						delete
+					</TooltipContent>
+					<TooltipTrigger asChild>
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => onChange("delete")}
+							className={cn(
+								"relative flex items-center justify-center border-0 size-10",
+							)}
+						>
+							{mode === "delete" && (
+								<motion.div
+									layoutId="active-mode"
+									className="absolute inset-0 bg-indigo-200 z-50 dark:bg-blue-700 rounded-md"
+									transition={{
+										type: "spring",
+										stiffness: 300,
+										damping: 20,
+									}}
+								/>
+							)}
+							<span className={cn("relative z-60")}>
+								<Trash2
+									className={cn(
+										"size-4",
+										mode === "delete" ? "white" : "transparent",
+									)}
+								/>
+							</span>
+							<Tiny
+								className={cn(
+									"absolute right-1 bottom-0.5 z-60 text-gray-400",
+									{
+										"text-gray-900": mode === "delete",
+									},
+								)}
+							>
+								del
 							</Tiny>
 						</Button>
 					</TooltipTrigger>

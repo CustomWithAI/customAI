@@ -12,7 +12,7 @@ export const useGetInfCustomModel = ({
 	config?: { enabled?: any };
 } = {}): AppInfiniteQuery<typeof customModelService.getCustomModel> =>
 	useInfiniteQuery({
-		queryKey: ["custom-models", params],
+		queryKey: ["inf-custom-models", params],
 		initialPageParam: buildQueryParams(params),
 		queryFn: async ({ pageParam = null }) =>
 			await customModelService.getCustomModel({ pageParam }),

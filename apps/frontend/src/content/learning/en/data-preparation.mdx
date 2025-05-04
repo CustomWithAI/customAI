@@ -1,60 +1,84 @@
 ---
-title: AI Model Development
-description: Introduction to data preparation, model training, and model evaluation in AI development
+title: Data preparation
+description: Introduction to data preparation in AI development
 date: 2025-05-02
 author: Documentation Team
-tags: [AI, model]
+tags: [AI]
 ---
-
-> AI model development consists of three essential steps as follows:
 
 ## 1. Data Preparation
 
-This step is the foundation of building an effective AI model.  
-Proper data preparation ensures that the model can learn and perform correctly.
+Data preparation is one of the most critical steps in developing an AI model. It involves various processes that ensure the data is clean, accurate, and formatted in a way that allows the model to learn effectively. The quality of data directly influences the performance and success of the trained model. Below are the key steps involved in data preparation:
 
-<Callout variant="info">
-One of the most critical steps in AI model development is data preparation.  
-Since data serves as the source from which the model learns,  
-if the data preparation is inadequate, the model's performance will degrade.
-</Callout>
+### 1.1 Data Collection
 
-## 2. Model Training
+Before any preparation can begin, data must be collected. Depending on the type of AI model, this data could come from various sources, such as:
 
-In this step, the model is trained using the prepared data,  
-enabling it to learn patterns and relationships within the data.
+- Public datasets (e.g., ImageNet, COCO)
+- Internal company data (e.g., transactional data, logs, customer interactions)
+- Data scraping (e.g., collecting data from websites)
+- IoT devices or sensors (e.g., temperature, sound, movement data)
 
-## 3. Model Evaluation
+It is essential to gather a diverse and representative sample of data to ensure the model can generalize well to unseen data.
 
-After training, the model is tested and evaluated to measure its performance and accuracy in action.
+### 1.2 Data Cleaning
+
+Once the data is collected, it must be cleaned to remove any inconsistencies, inaccuracies, or irrelevant information. Data cleaning typically involves:
+
+- **Handling missing values**: Missing data can be handled in different ways, such as imputing missing values, removing rows or columns with missing data, or using algorithms that can handle missing values.
+- **Removing duplicates**: Duplicate records can skew the results of the model, so they should be identified and removed.
+- **Filtering outliers**: Outliers (data points that are significantly different from others) can distort the model’s performance. These should either be removed or properly handled.
+- **Standardizing or normalizing values**: Data values should be scaled consistently, especially when working with numerical data, to avoid biased learning. Common techniques include Min-Max scaling, Z-score normalization, or log transformation.
+
+### 1.3 Data Transformation
+
+Data transformation involves changing the format or structure of the data so that it is suitable for use in machine learning models. This includes:
+
+- **Encoding categorical variables**: Categorical data needs to be converted into numerical values. Techniques like one-hot encoding or label encoding are commonly used for this.
+- **Feature engineering**: Creating new features based on existing ones can help the model learn more effectively. For example, extracting the day of the week from a timestamp, or generating new variables from combinations of existing data.
+- **Data augmentation (for images)**: In the case of image data, augmentation techniques like rotation, flipping, scaling, and color adjustment can artificially increase the dataset size and help prevent overfitting.
+
+### 1.4 Data Labeling (Annotation)
+
+For supervised learning tasks, data labeling or annotation is a crucial part of the preparation process. This step involves assigning meaningful labels or tags to the data. In image-based tasks, this may involve:
+
+- **Image classification**: Labeling images with the correct category (e.g., dog, cat, car).
+- **Object detection**: Drawing bounding boxes around objects and labeling them.
+- **Image segmentation**: Labeling each pixel in the image to specify which object or class it belongs to.
+
+The accuracy and quality of the annotation are key to ensuring the model learns effectively. Poor annotation quality will lead to a poorly trained model.
+
+### 1.5 Data Splitting
+
+Once the data is prepared, it should be split into different subsets for training, validation, and testing. The typical split ratios are:
+
+- **Training set**: 70-80% of the data is used to train the model.
+- **Validation set**: 10-15% of the data is used to tune model parameters during training and evaluate performance during the training process.
+- **Test set**: 10-15% of the data is used to evaluate the model's performance after training. The test data should be kept separate and not used in any way during the training process.
+
+This splitting process helps ensure that the model can generalize well to new, unseen data.
+
+### 1.6 Balancing the Dataset
+
+In many real-world datasets, some classes may be underrepresented or overrepresented, leading to imbalanced datasets. An imbalanced dataset can lead to biased models that perform poorly on minority classes. To address this, techniques like:
+
+- **Resampling**: Either oversampling the minority class or undersampling the majority class can help balance the dataset.
+- **Synthetic data generation**: Techniques like SMOTE (Synthetic Minority Over-sampling Technique) can be used to create synthetic samples for the minority class.
+- **Class weighting**: Many machine learning algorithms allow you to assign weights to different classes to account for imbalances.
+
+### 1.7 Data Validation
+
+Before training the model, it’s important to validate the quality of the prepared data. This can be done by:
+
+- **Exploratory Data Analysis (EDA)**: Visualizing the data to understand its distribution, relationships, and patterns. This can help identify issues such as skewed distributions, potential outliers, and missing values.
+- **Cross-validation**: Ensuring that the data splitting is done correctly and consistently by using k-fold cross-validation. This helps ensure that the model's performance is evaluated on different subsets of the data.
 
 ---
 
-## Types of Models for Image Tasks
+### Summary
 
-When building AI models related to images, they can be categorized into two main types:
+Data preparation is an iterative and ongoing process that requires careful consideration of many factors. Proper data preparation can significantly improve the quality of the AI model by ensuring that the data is clean, well-labeled, and representative of the problem at hand. Investing time and effort in the data preparation phase will pay off in the long run by producing more accurate and reliable AI models.
 
-### 1. Image Classification
-
-This involves identifying the category or class of an image, for example, classifying images of animals as either dogs or cats.
-
-### 2. Object Detection & Segmentation
-
-This involves identifying and locating objects within an image, as well as segmenting those objects.
-
----
-
-## Annotating Data
-
-For these tasks, it is essential to annotate the data,  
-to specify the type and characteristics of the data accurately, ensuring that the model can learn effectively.
-
-Annotations should be as accurate and close to reality as possible, for example:
-
-- In image classification, the exact category of the image should be specified.
-- In object detection or segmentation tasks, objects should be accurately bounded, without missing or overextending any part.
-
-<Callout variant="info">
-High-quality data preparation and accurate annotation are crucial factors  
-that directly affect the success of an AI model.
+<Callout type="info">
+Remember that a well-prepared dataset is one of the strongest indicators of model success. It's important to spend sufficient time on data preparation before moving to model training.
 </Callout>

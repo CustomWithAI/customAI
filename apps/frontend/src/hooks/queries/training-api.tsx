@@ -44,7 +44,7 @@ export const useGetInfTrainingByWorkflowId = (
 	workflowId: string,
 ): AppInfiniteQuery<typeof trainingService.getTrainingByWorkflowId> =>
 	useInfiniteQuery({
-		queryKey: ["training", workflowId],
+		queryKey: ["inf-training", workflowId],
 		queryFn: async ({ pageParam = "" }) =>
 			await trainingService.getTrainingByWorkflowId({
 				workflowId,

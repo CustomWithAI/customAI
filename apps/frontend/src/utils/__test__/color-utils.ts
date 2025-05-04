@@ -1,8 +1,9 @@
 import { generateUniqueColor } from "../color-utils";
+import { generateRandomLabel } from "../random";
 
 describe("generateUniqueColor", () => {
 	it("should return a valid hex color string", () => {
-		const color = generateUniqueColor(100);
+		const { color } = generateRandomLabel();
 		expect(color).toMatch(/^#[0-9A-F]{6}$/i);
 	});
 

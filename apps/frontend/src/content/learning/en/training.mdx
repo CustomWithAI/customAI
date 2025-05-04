@@ -1,0 +1,138 @@
+---
+title: AI Model Training
+description: Explains the process and methods for training AI models to achieve the best results.
+date: 2025-05-02
+author: Documentation Team
+tags: [AI, model]
+---
+
+# Model Training for Image Classification and Object Detection
+
+Training models for Image Classification and Object Detection is a crucial process in Machine Learning and Deep Learning. The main steps can be summarized as follows:
+
+## Data Preparation
+This step is the foundation of building an effective AI model. Proper data preparation ensures that the model can learn and function correctly.
+
+## Model Training
+In this phase, the model is trained using the prepared data to learn patterns and relationships within the data.
+
+## Model Evaluation
+After training, the model is tested and evaluated to assess its performance and accuracy.
+
+### Model Selection and Hyperparameter Tuning
+
+#### Model Selection
+- **Convolutional Neural Network (CNN)**: Commonly used for Image Classification due to its ability to learn features of images efficiently.
+- **YOLO (You Only Look Once)**: Popular for Object Detection, capable of detecting multiple objects in a single image quickly.
+
+#### Hyperparameter Tuning
+Hyperparameters are predefined values used during model training, such as Learning Rate, Batch Size, and Epochs. Tuning these parameters appropriately will enhance model performance.
+
+## Model Training
+The training process uses training data to teach the model by adjusting its weights to make accurate predictions.
+
+### Models in Machine Learning: Image Classification
+
+#### Decision Trees
+**Pros**:
+- Easy to understand and present decisions in a human-readable form.
+- Requires minimal parameter tuning.
+
+**Cons**:
+- Prone to overfitting if the tree is too deep.
+- May not perform well compared to more complex models.
+
+#### Random Forest
+**Pros**:
+- Reduces overfitting by combining multiple decision trees.
+- High accuracy and robust to data variations.
+
+**Cons**:
+- Training and prediction take longer due to multiple trees.
+- The model complexity makes interpretation difficult.
+
+#### Support Vector Machines (SVM)
+**Pros**:
+- Efficient in high-dimensional spaces.
+- Works well with small datasets and non-linear problems using Kernel Trick.
+
+**Cons**:
+- Performance decreases with larger datasets.
+- Choosing the right Kernel is challenging.
+
+#### k-Nearest Neighbors (k-NN)
+**Pros**:
+- Simple to implement and use.
+- Does not require model training.
+
+**Cons**:
+- Performance degrades with large datasets and high-dimensional data.
+- Sensitive to the scaling of data.
+
+### Deep Learning: Image Classification
+
+#### ResNet50
+**Pros**:
+- Utilizes Residual Blocks to solve the vanishing gradient problem.
+- Suitable depth to learn complex features.
+
+**Cons**:
+- Requires significant computational resources due to model size.
+
+#### VGG16
+**Pros**:
+- Simple, hierarchical structure that's easy to understand.
+- Well-suited for tasks where model complexity is less of a concern.
+
+**Cons**:
+- Large model size, requiring more memory.
+
+#### MobileNetV2
+**Pros**:
+- Designed for use on resource-constrained devices.
+- Smaller model size and faster processing.
+
+**Cons**:
+- Lower accuracy compared to larger models for certain tasks.
+
+## Building Custom Models
+**Pros**:
+- Allows for customization to suit specific tasks.
+
+**Cons**:
+- Requires experience and knowledge to design and train effectively.
+
+---
+
+## Object Detection Model Selection in Deep Learning
+
+### YOLOv5
+**Pros**:
+- Fast and accurate for object detection tasks.
+
+**Cons**:
+- Performance decreases with small objects.
+
+### YOLOv8
+**Pros**:
+- Improved accuracy and handles multiple object sizes well.
+
+**Cons**:
+- Higher computational resource requirements.
+
+### YOLOv11
+**Pros**:
+- Enhanced performance in terms of both speed and accuracy.
+
+**Cons**:
+- Requires high computational power.
+
+---
+
+## Hyperparameter Selection and Tuning
+
+**Machine Learning**:
+- **Decision Trees**: `max_depth`, `min_samples_split`, `min_samples_leaf`, `max_features`, `criterion`
+- **Random Forest**: `n_estimators`, `max_depth`, `min_samples_split`, `min_samples_leaf`, `max_features`
+
+---
