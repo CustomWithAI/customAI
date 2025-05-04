@@ -10,14 +10,26 @@ export const classificationSchema = z.object({
 	batch_size: z.number().positive().default(32),
 	epochs: z.number().positive().default(1),
 	loss_function: z.string().optional().nullable(),
-	reduce_lr_on_plateau: z.boolean(),
-	plateau_monitor: z.string().optional(),
-	plateau_factor: float.optional(),
-	plateau_patience: z.number().optional(),
-	plateau_min_lr: float.optional(),
+	reduce_lr_on_plateau: z.boolean().optional(),
 	early_stopping: z.boolean().optional(),
-	early_stopping_monitor: z.string().optional(),
-	early_stopping_patience: float.optional(),
+	callbacks: z
+		.object({
+			reduce_lr_on_plateau: z
+				.object({
+					monitor: z.string().optional(),
+					factor: float.optional(),
+					patience: z.number().optional(),
+					min_lr: float.optional(),
+				})
+				.optional(),
+			early_stopping: z
+				.object({
+					monitor: z.string().optional(),
+					patience: float.optional(),
+				})
+				.optional(),
+		})
+		.optional(),
 });
 
 export type ObjectDetectionSchema = z.infer<typeof objectDetectionSchema>;

@@ -125,7 +125,7 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 				"Metric to monitor for learning rate reduction (e.g., 'val_loss').",
 			key: "plateau_monitor",
 			testDataId: "plateau_monitor",
-			name: "plateau_monitor",
+			name: "callbacks.reduce_lr_on_plateau.monitor",
 			placeholder: "Eg., val_loss",
 		},
 		config: {
@@ -158,7 +158,7 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 				"Factor by which the learning rate will be reduced (e.g., 0.1).",
 			key: "plateau_factor",
 			testDataId: "plateau_factor",
-			name: "plateau_factor",
+			name: "callbacks.reduce_lr_on_plateau.factor",
 			placeholder: "Eg., 0.1",
 		},
 		config: {
@@ -173,7 +173,7 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 				"Number of epochs with no improvement after which learning rate will be reduced.",
 			key: "plateau_patience",
 			testDataId: "plateau_patience",
-			name: "plateau_patience",
+			name: "callbacks.reduce_lr_on_plateau.patience",
 			placeholder: "Eg., 10",
 		},
 		config: {
@@ -187,7 +187,7 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 			description: "Lower bound on the learning rate after reduction.",
 			key: "plateau_min_lr",
 			testDataId: "plateau_min_lr",
-			name: "plateau_min_lr",
+			name: "callbacks.reduce_lr_on_plateau.min_lr",
 			placeholder: "Eg., 1e-6",
 		},
 		config: {
@@ -214,7 +214,7 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 			description: "Metric to monitor for early stopping (e.g., 'val_loss').",
 			key: "early_stopping_monitor",
 			testDataId: "early_stopping_monitor",
-			name: "early_stopping_monitor",
+			name: "callbacks.early_stopping.monitor",
 			placeholder: "Eg., val_loss",
 		},
 		config: {
@@ -248,7 +248,7 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 				"Number of epochs with no improvement before training is stopped.",
 			key: "early_stopping_patience",
 			testDataId: "early_stopping_patience",
-			name: "early_stopping_patience",
+			name: "callbacks.early_stopping.patience",
 			placeholder: "Eg., 5",
 		},
 		config: {
