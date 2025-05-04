@@ -380,7 +380,6 @@ export const node = (
 						setValue: findById(fields, "rotation-1")?.metadata?.rotation
 							?.value as boolean,
 						setOnChange: (value: unknown) => {
-							console.log(value);
 							onUpdateMetadata({
 								id: "rotation-1",
 								metadata: {
@@ -438,7 +437,6 @@ export const node = (
 						setValue: findById(fields, "flip-1")?.metadata?.probability
 							?.value as boolean,
 						setOnChange: (value: unknown) => {
-							console.log(value);
 							onUpdateMetadata({
 								id: "flip-1",
 								metadata: {
@@ -486,7 +484,6 @@ export const node = (
 						setValue: findById(fields, "flip-1")?.metadata?.flip
 							?.value as boolean,
 						setOnChange: (value: unknown) => {
-							console.log(value);
 							onUpdateMetadata({
 								id: "flip-1",
 								metadata: {

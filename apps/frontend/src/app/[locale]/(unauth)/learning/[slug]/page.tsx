@@ -82,7 +82,6 @@ export default async function DocPage({
 }: { params: { slug: string; locale: string } }) {
 	const { slug, locale } = params;
 	setRequestLocale(locale);
-	console.log("params:", params);
 	let filePath = path.join(
 		process.cwd(),
 		`src/content/learning/${getPrefixLang(locale)}`,

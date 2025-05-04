@@ -35,7 +35,6 @@ export function getMDXData(filePath: string, locale: string): MDXPage {
 
 	const { text: readingTime } = calculateReadingTime(content);
 	const toc = extractTocFromContent(content);
-	console.log(data);
 
 	return {
 		slug,

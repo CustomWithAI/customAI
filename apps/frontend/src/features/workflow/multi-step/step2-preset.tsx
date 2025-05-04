@@ -85,8 +85,6 @@ export const Step3Page = () => {
 	const onCheckAll = useDragStore((state) => state.onCheckAll);
 	const onUnCheckAll = useDragStore((state) => state.onUnCheckAll);
 
-	console.log(fields);
-
 	const handleChecked = useCallback(
 		(id: string, check: boolean) => {
 			onUpdateMetadata({

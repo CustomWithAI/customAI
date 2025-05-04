@@ -42,6 +42,7 @@ import {
 import { BaseSkeleton } from "../specific/skeleton";
 import { Content } from "../typography/text";
 import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
 import {
 	FormControl,
 	FormDescription,
@@ -82,6 +83,7 @@ type TemplateType =
 	| "int"
 	| "number"
 	| "percent"
+	| "checkbox"
 	| "slider"
 	| "sliderInput"
 	| "image"
@@ -108,10 +110,10 @@ type TemplateConfig = {
 };
 
 type TemplateConditional<T extends object> =
-	| { conditionalField?: Path<T>; conditionalValue?: string | "none" }
+	| { conditionalField?: Path<T>; conditionalValue?: string | boolean | "none" }
 	| {
 			conditionalField?: Path<T>[];
-			conditionalValue?: (string | "none")[];
+			conditionalValue?: (string | boolean | "none")[];
 	  };
 
 type TemplatePriceOptions = {
@@ -312,7 +314,7 @@ const Builder = <T extends ZodRawShape | ZodDiscriminatedUnion<any, any>>({
 						if (expectedValue === "none") return true;
 						return expectedValue ? watchValue === expectedValue : !!watchValue;
 					});
-					if (!conditionsMet || !enabled) {
+					if (!conditionsMet || enabled === false) {
 						return null;
 					}
 				}
@@ -734,6 +736,37 @@ const RenderInput = memo(
 										}}
 									/>
 								</div>
+							</FormItem>
+						)}
+					/>
+				);
+			}
+			case "checkbox": {
+				return (
+					<FormField
+						key={key}
+						control={control}
+						name={name}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<FormItem
+								className={cn(
+									"md:flex md:justify-between md:items-center",
+									className,
+								)}
+							>
+								<div>
+									<FormLabel className="md:mb-2">{label}</FormLabel>
+									<FormDescription className="mb-3">
+										{description}
+									</FormDescription>
+								</div>
+								<Checkbox
+									className="border-gray-300"
+									checked={value}
+									onCheckedChange={(checked) => {
+										onChange(checked);
+									}}
+								/>
 							</FormItem>
 						)}
 					/>

@@ -384,8 +384,6 @@ export const MultiStepLoaderController = forwardRef<
 			streamMutation.reset();
 		};
 
-		console.log(loadingStates);
-
 		return (
 			<EnhancedMultiStepLoader
 				loadingStates={displayLoadingStates}

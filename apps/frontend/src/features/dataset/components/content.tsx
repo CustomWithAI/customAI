@@ -20,7 +20,6 @@ export const ContentDataset = ({
 			search: filters.name ? `name:${filters.name}` : null,
 		},
 	});
-	console.log(filters);
 	return (
 		<div>
 			<Subtle className="text-xs mb-3 font-medium">

@@ -64,7 +64,6 @@ export function ShapeRenderer({
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLOrSVGElement>) => {
 		if (event.key === "Enter" || event.key === " ") {
 			event.preventDefault();
-			console.log("key clicked");
 		}
 	};
 

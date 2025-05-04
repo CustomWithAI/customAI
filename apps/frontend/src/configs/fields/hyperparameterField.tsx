@@ -105,6 +105,121 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 			},
 		},
 	},
+	{
+		template: "checkbox",
+		element: {
+			label: "Reduce LR on Plateau",
+			description:
+				"Enable learning rate reduction when monitored metric has stopped improving.",
+			key: "reduce_lr_on_plateau",
+			testDataId: "reduce_lr_on_plateau",
+			name: "reduce_lr_on_plateau",
+		},
+		config: {},
+	},
+	{
+		template: "text",
+		element: {
+			label: "Plateau Monitor",
+			description:
+				"Metric to monitor for learning rate reduction (e.g., 'val_loss').",
+			key: "plateau_monitor",
+			testDataId: "plateau_monitor",
+			name: "plateau_monitor",
+			placeholder: "Eg., val_loss",
+		},
+		config: {
+			conditionalField: "reduce_lr_on_plateau",
+		},
+	},
+	{
+		template: "number",
+		element: {
+			label: "Plateau Factor",
+			description:
+				"Factor by which the learning rate will be reduced (e.g., 0.1).",
+			key: "plateau_factor",
+			testDataId: "plateau_factor",
+			name: "plateau_factor",
+			placeholder: "Eg., 0.1",
+		},
+		config: {
+			conditionalField: "reduce_lr_on_plateau",
+		},
+	},
+	{
+		template: "int",
+		element: {
+			label: "Plateau Patience",
+			description:
+				"Number of epochs with no improvement after which learning rate will be reduced.",
+			key: "plateau_patience",
+			testDataId: "plateau_patience",
+			name: "plateau_patience",
+			placeholder: "Eg., 10",
+		},
+		config: {
+			conditionalField: "reduce_lr_on_plateau",
+		},
+	},
+	{
+		template: "number",
+		element: {
+			label: "Plateau Minimum LR",
+			description: "Lower bound on the learning rate after reduction.",
+			key: "plateau_min_lr",
+			testDataId: "plateau_min_lr",
+			name: "plateau_min_lr",
+			placeholder: "Eg., 1e-6",
+		},
+		config: {
+			conditionalField: "reduce_lr_on_plateau",
+			conditionalValue: true,
+		},
+	},
+	{
+		template: "checkbox",
+		element: {
+			label: "Early Stopping",
+			description:
+				"Enable stopping training when monitored metric stops improving.",
+			key: "early_stopping",
+			testDataId: "early_stopping",
+			name: "early_stopping",
+		},
+		config: {},
+	},
+	{
+		template: "text",
+		element: {
+			label: "Early Stopping Monitor",
+			description: "Metric to monitor for early stopping (e.g., 'val_loss').",
+			key: "early_stopping_monitor",
+			testDataId: "early_stopping_monitor",
+			name: "early_stopping_monitor",
+			placeholder: "Eg., val_loss",
+		},
+		config: {
+			conditionalField: "early_stopping",
+			conditionalValue: true,
+		},
+	},
+	{
+		template: "number",
+		element: {
+			label: "Early Stopping Patience",
+			description:
+				"Number of epochs with no improvement before training is stopped.",
+			key: "early_stopping_patience",
+			testDataId: "early_stopping_patience",
+			name: "early_stopping_patience",
+			placeholder: "Eg., 5",
+		},
+		config: {
+			conditionalField: "early_stopping",
+			conditionalValue: true,
+		},
+	},
 ];
 
 export const ObjectDetectionParams: FormFieldInput<ObjectDetectionSchema> = [

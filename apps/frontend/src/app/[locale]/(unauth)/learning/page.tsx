@@ -67,7 +67,6 @@ export default function DocsLandingPage({
 			}
 		}
 	}
-	console.log(allDocs);
 	const featuredDocs = allDocs.filter(
 		(doc) =>
 			doc.frontmatter.tags?.includes("basics") ||

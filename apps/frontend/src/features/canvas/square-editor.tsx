@@ -794,7 +794,6 @@ export default function SquareEditor({
 							setContextMenu(null);
 							setShapeContextMenu(null);
 						}
-						console.log(selectedPolygon);
 						updateLabel(selectedPolygon, labelId, updatePolygon);
 						break;
 					}

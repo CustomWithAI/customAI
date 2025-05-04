@@ -284,7 +284,6 @@ const NewUserPage = () => {
 					<InterestedSelector
 						selected={formData.interests || []}
 						setSelected={(data) => {
-							console.log(data);
 							updateFormData("interests", data);
 						}}
 					/>

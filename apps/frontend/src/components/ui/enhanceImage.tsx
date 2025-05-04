@@ -1124,8 +1124,6 @@ const EnhanceImage: React.FC<EnhanceImageProps> = memo(
 
 								cv.calcHist(matVector, [0], mask, histResult, histSize, ranges);
 
-								console.log(histResult);
-
 								gradX.delete();
 								gradY.delete();
 								magnitude.delete();

@@ -8,6 +8,14 @@ export const classificationSchema = z.object({
 	batch_size: z.number().positive().default(32),
 	epochs: z.number().positive().default(1),
 	loss_function: z.string().optional().nullable(),
+	reduce_lr_on_plateau: z.boolean(),
+	plateau_monitor: z.string().optional(),
+	plateau_factor: float.optional(),
+	plateau_patience: z.number().optional(),
+	plateau_min_lr: float.optional(),
+	early_stopping: z.boolean(),
+	early_stopping_monitor: z.string().optional(),
+	early_stopping_patience: float.optional(),
 });
 
 export type ObjectDetectionSchema = z.infer<typeof objectDetectionSchema>;

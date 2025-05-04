@@ -126,9 +126,23 @@ export const ModelPage = () => {
 
 	const handleSubmit = useCallback(async () => {
 		if (!modelId && !machineLearning) return;
-		const modelJSON = enumModelByType?.includes(modelId)
-			? { preTrainedModel: modelId }
-			: { customModelId: modelId };
+		const modelJSON = machineLearning
+			? {
+					machineLearningModel: machineLearning,
+					preTrainedModel: null,
+					customModelId: null,
+				}
+			: enumModelByType?.includes(modelId)
+				? {
+						preTrainedModel: modelId,
+						machineLearningModel: null,
+						customModelId: null,
+					}
+				: {
+						customModelId: modelId,
+						machineLearningModel: null,
+						preTrainedModel: null,
+					};
 		if (!training?.data.pipeline) {
 			toast({
 				title: "trainings is not existed",
@@ -141,7 +155,6 @@ export const ModelPage = () => {
 				workflowId: decodeBase64(workflowId),
 				trainingId: decodeBase64(trainingId),
 				...modelJSON,
-				...(machineLearning ? { machineLearningModel: machineLearning } : {}),
 				pipeline: {
 					current: getStep(
 						"next",

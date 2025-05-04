@@ -69,7 +69,8 @@ export const Selection = ({
 	const Slot = !asSelect ? FormControl : "div";
 	const getDisplayValue = useCallback(
 		(value: OptionValue | null): string | ReactNode => {
-			if (value === null || value === undefined) return placeholder;
+			if (value === null || value === undefined || value === "")
+				return placeholder;
 			const findOptionInArray = (optArray: Option[]) =>
 				optArray.find((opt) => opt.value === value);
 			let option: Option | undefined;

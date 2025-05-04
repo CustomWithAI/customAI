@@ -71,7 +71,6 @@ export const ModelConfigPage = () => {
 			},
 			{
 				onSuccess: (t) => {
-					console.log(t);
 					setQueryParam({
 						params: {
 							step: encodeBase64(t?.data?.pipeline?.current || ""),
