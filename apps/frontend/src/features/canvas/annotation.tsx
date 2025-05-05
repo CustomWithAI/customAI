@@ -94,6 +94,27 @@ export default function AnnotationSection({
 		setEditor((prev) => ({ ...prev, ...updatedEditor }));
 	};
 
+	useEffect(() => {
+		const handleKey = (e: KeyboardEvent) => {
+			switch (e.key) {
+				case "ArrowRight":
+					handleNext?.();
+					break;
+				case "ArrowLeft":
+					handlePrevious?.();
+					break;
+				case "Enter":
+					handleSubmit?.();
+					break;
+			}
+		};
+
+		window.addEventListener("keydown", handleKey);
+		return () => {
+			window.removeEventListener("keydown", handleKey);
+		};
+	}, [handleNext, handlePrevious, handleSubmit]);
+
 	return (
 		<div>
 			<div className="fixed top-0 left-0 z-99 w-full bg-white px-6 pt-4 flex justify-between items-center">

@@ -250,6 +250,30 @@ describe("arrayToMetadata", () => {
 		expect(arrayToMetadata({}, [])).toEqual({});
 	});
 
+	it("formats object with multi nested object", () => {
+		const metadata: Metadata = {
+			size: {
+				type: "Object",
+				value: {
+					x: { type: "Number", value: 50 },
+					y: { type: "Number", value: 50 },
+				},
+			},
+			crop_position: {
+				type: "Object",
+				value: {
+					x: { type: "Number", value: 100 },
+					y: { type: "Number", value: 100 },
+				},
+			},
+		};
+		const data = [
+			[50, 50],
+			[100, 100],
+		];
+		expect(arrayToMetadata(metadata, data)).toEqual(metadata);
+	});
+
 	it("handles array with fewer elements than metadata keys", () => {
 		const metadata: Metadata = {
 			a: { type: "String", value: "" },
@@ -270,6 +294,93 @@ describe("arrayToMetadata", () => {
 		expect(arrayToMetadata(metadata, ["x", 1, true])).toEqual({
 			a: { type: "String", value: "x" },
 		});
+	});
+
+	it("handles complex mixed nested structure with arrays and primitives", () => {
+		const metadata: Metadata = {
+			profile: {
+				type: "Object",
+				value: {
+					personal: {
+						type: "Object",
+						value: {
+							name: { type: "String", value: "" },
+							age: { type: "Number", value: 0 },
+							active: { type: "Boolean", value: false },
+						},
+					},
+					preferences: {
+						type: "Object",
+						value: {
+							theme: { type: "String", value: "default" },
+							notifications: { type: "Boolean", value: true },
+						},
+					},
+					stats: {
+						type: "Object",
+						value: {
+							points: { type: "Number", value: 0 },
+							rank: { type: "String", value: "beginner" },
+						},
+					},
+				},
+			},
+			settings: {
+				type: "Object",
+				value: {
+					enabled: { type: "Boolean", value: false },
+					level: { type: "Number", value: 1 },
+				},
+			},
+		};
+
+		const arr = [
+			[
+				["John Doe", 30, true],
+				["dark", false],
+				[1000, "expert"],
+			],
+			[true, 5],
+		];
+
+		const expected = {
+			profile: {
+				type: "Object",
+				value: {
+					personal: {
+						type: "Object",
+						value: {
+							name: { type: "String", value: "John Doe" },
+							age: { type: "Number", value: 30 },
+							active: { type: "Boolean", value: true },
+						},
+					},
+					preferences: {
+						type: "Object",
+						value: {
+							theme: { type: "String", value: "dark" },
+							notifications: { type: "Boolean", value: false },
+						},
+					},
+					stats: {
+						type: "Object",
+						value: {
+							points: { type: "Number", value: 1000 },
+							rank: { type: "String", value: "expert" },
+						},
+					},
+				},
+			},
+			settings: {
+				type: "Object",
+				value: {
+					enabled: { type: "Boolean", value: true },
+					level: { type: "Number", value: 5 },
+				},
+			},
+		};
+
+		expect(arrayToMetadata(metadata, arr)).toEqual(expected);
 	});
 
 	it("handles deeply nested object", () => {

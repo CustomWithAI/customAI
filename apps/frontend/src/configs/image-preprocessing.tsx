@@ -662,12 +662,12 @@ export const node = (
 											(corner, index) => (
 												<div
 													className="w-full flex gap-x-1"
-													key={`source-${index}`}
+													key={`destination-${index}`}
 												>
 													{corner.map((axis) => (
 														<TextFormItem
 															number
-															key={`source-${axis}`}
+															key={`destination-${axis}`}
 															label={CornerIcon?.[index]?.[axis]}
 															className="w-1/2"
 															onChange={(e) => {
@@ -695,8 +695,9 @@ export const node = (
 																(
 																	findById(fields, "perspective-1")
 																		?.metadata as any
-																)?.source?.value?.[Corner[index]]?.value?.[axis]
-																	?.value || undefined
+																)?.destination?.value?.[Corner[index]]?.value?.[
+																	axis
+																]?.value || undefined
 															}
 															placeholder={axis}
 														/>

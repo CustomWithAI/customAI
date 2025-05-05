@@ -73,82 +73,6 @@ export const node = (
 			}),
 		},
 		{
-			type: "resizing",
-			title: "Resizing Node",
-			description: "Resize image to a specific width and height",
-			icon: <Scaling />,
-			id: "resizing-1",
-			metadata: {
-				size: {
-					type: "Object",
-					value: {
-						x: { type: "Number", value: 1 },
-						y: { type: "Number", value: 1 },
-					},
-				},
-			},
-			previewImg: [
-				{
-					type: "resizing",
-					params: [
-						(findById(fields, "resizing-1")?.metadata as any)?.size?.value?.x
-							?.value,
-						(findById(fields, "resizing-1")?.metadata as any)?.size?.value?.y
-							?.value,
-					],
-				},
-			],
-			inputField: [
-				{
-					template: "custom",
-					element: {
-						testDataId: "resizing-form",
-						renderCustomInput() {
-							return (
-								<div className="flex gap-x-3">
-									{["x", "y"].map((axis) => (
-										<TextFormItem
-											number
-											key={`resizing-${axis}`}
-											className="w-1/2"
-											label={axis.toLocaleUpperCase()}
-											onChange={(e) => {
-												onUpdateMetadata({
-													id: "resizing-1",
-													metadata: {
-														size: {
-															type: "Object",
-															value: {
-																[axis]: {
-																	type: "Number",
-																	value: e as number,
-																},
-															},
-														},
-													},
-												});
-											}}
-											value={
-												(findById(fields, "resizing-1")?.metadata as any)?.size
-													?.value?.[axis]?.value
-											}
-										/>
-									))}
-								</div>
-							);
-						},
-					},
-					config: {},
-				},
-			],
-			inputSchema: z.object({
-				size: z.object({
-					x: z.string(),
-					y: z.string(),
-				}),
-			}),
-		},
-		{
 			type: "cropping",
 			title: "Cropping Node",
 			description: "Crop a region from the image (x, y, width, height)",
@@ -162,8 +86,8 @@ export const node = (
 				size: {
 					type: "Object",
 					value: {
-						x: { type: "Number", value: 0 },
-						y: { type: "Number", value: 0 },
+						x: { type: "Number", value: 100 },
+						y: { type: "Number", value: 100 },
 					},
 				},
 				crop_position: {
@@ -469,11 +393,11 @@ export const node = (
 							list: [
 								{
 									label: "horizontal",
-									value: 0,
+									value: 1,
 								},
 								{
 									label: "vertical",
-									value: 1,
+									value: 0,
 								},
 								{
 									label: "both",
@@ -777,7 +701,7 @@ export const node = (
 							});
 						},
 						options: {
-							min: -1,
+							min: 0,
 							max: 1,
 							step: 0.1,
 						},
@@ -802,11 +726,11 @@ export const node = (
 				},
 				min: {
 					type: "Number",
-					value: 0,
+					value: -1,
 				},
 				max: {
 					type: "Number",
-					value: 0,
+					value: 1,
 				},
 			},
 			previewImg: [
@@ -826,7 +750,7 @@ export const node = (
 			],
 			inputField: [
 				{
-					template: "number",
+					template: "sliderInput",
 					element: {
 						testDataId: "contrast_stretching-form",
 						label: "Probability",
@@ -848,20 +772,25 @@ export const node = (
 								},
 							});
 						},
+						options: {
+							max: 1,
+							min: 0,
+							step: 0.1,
+						},
 					},
 				},
 				{
 					template: "slider",
 					element: {
 						testDataId: "contrast_stretching-form",
-						label: "Probability",
-						key: "contrast_stretching-1",
+						label: "Contrast Stretching Lower",
+						key: "contrast_stretching-min-1",
 						name: "contrast_stretching",
 						required: true,
 					},
 					config: {
 						setValue: findById(fields, "contrast_stretching-1")?.metadata?.min
-							?.value as boolean,
+							?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "contrast_stretching-1",
@@ -874,24 +803,27 @@ export const node = (
 							});
 						},
 						options: {
-							min: -1,
+							min: 0,
+							upper:
+								findById(fields, "contrast_stretching-1")?.metadata?.max
+									?.value || 1,
 							max: 1,
 							step: 0.1,
 						},
 					},
 				},
 				{
-					template: "sliderInput",
+					template: "slider",
 					element: {
 						testDataId: "contrast_stretching-form",
-						label: "Contrast Stretching Scale",
-						key: "contrast_stretching-1",
+						label: "Contrast Stretching Upper",
+						key: "contrast_stretching-max-1",
 						name: "contrast_stretching",
 						required: true,
 					},
 					config: {
 						setValue: findById(fields, "contrast_stretching-1")?.metadata?.max
-							?.value as boolean,
+							?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "contrast_stretching-1",
@@ -904,7 +836,10 @@ export const node = (
 							});
 						},
 						options: {
-							min: -1,
+							min: 0,
+							lower:
+								findById(fields, "contrast_stretching-1")?.metadata?.min
+									?.value || 0,
 							max: 1,
 							step: 0.1,
 						},
@@ -1932,7 +1867,11 @@ export const node = (
 							type: "Number",
 							value: 0,
 						},
-						salt_pepper_ratio: {
+						salt_ratio: {
+							type: "Number",
+							value: 0,
+						},
+						pepper_ratio: {
 							type: "Number",
 							value: 0,
 						},
@@ -1948,8 +1887,8 @@ export const node = (
 								?.value?.amount?.value,
 						) || 0.05,
 						Number(
-							(findById(fields, "salt_pepper_noise-1") as any)?.metadata?.config
-								?.value?.salt_pepper_ratio?.value,
+							(findById(fields, "salt_ratio-1") as any)?.metadata?.config?.value
+								?.salt_pepper_ratio?.value,
 						) || 0.5,
 					],
 				},
@@ -2019,14 +1958,14 @@ export const node = (
 					template: "number",
 					element: {
 						testDataId: "salt_pepper_noise-form",
-						label: "Salt Vs Pepper Ratio",
-						key: "salt_pepper_noise-salt_pepper_noise_ratio-1",
+						label: "Salt Ratio",
+						key: "salt_pepper_noise-salt_noise_ratio-1",
 						name: "salt_pepper_noise",
 						required: true,
 					},
 					config: {
 						setValue: (findById(fields, "salt_pepper_noise-1") as any)?.metadata
-							?.config?.value?.salt_pepper_ratio?.value,
+							?.config?.value?.salt_ratio?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "salt_pepper_noise-1",
@@ -2034,7 +1973,37 @@ export const node = (
 									config: {
 										type: "Object",
 										value: {
-											salt_pepper_ratio: {
+											salt_ratio: {
+												type: "Number",
+												value: value as number,
+											},
+										},
+									},
+								},
+							});
+						},
+					},
+				},
+				{
+					template: "number",
+					element: {
+						testDataId: "salt_pepper_noise-form",
+						label: "Pepper Ratio",
+						key: "salt_pepper_noise-pepper_noise_ratio-1",
+						name: "salt_pepper_noise",
+						required: true,
+					},
+					config: {
+						setValue: (findById(fields, "salt_pepper_noise-1") as any)?.metadata
+							?.config?.value?.pepper_ratio?.value,
+						setOnChange: (value: unknown) => {
+							onUpdateMetadata({
+								id: "salt_pepper_noise-1",
+								metadata: {
+									config: {
+										type: "Object",
+										value: {
+											pepper_ratio: {
 												type: "Number",
 												value: value as number,
 											},
@@ -2146,13 +2115,13 @@ export const node = (
 					element: {
 						testDataId: "random_erasing-form",
 						label: "X",
-						key: "random_erasing-alpha-1",
+						key: "random_erasing-region-1",
 						name: "random_erasing",
 						required: true,
 					},
 					config: {
 						setValue: (findById(fields, "random_erasing-1") as any)?.metadata
-							?.region?.value?.y?.value,
+							?.region?.value?.x?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "random_erasing-1",
@@ -2176,7 +2145,7 @@ export const node = (
 					element: {
 						testDataId: "random_erasing-form",
 						label: "Y",
-						key: "random_erasing-alpha-1",
+						key: "random_erasing-region-2",
 						name: "random_erasing",
 						required: true,
 					},
@@ -2206,7 +2175,7 @@ export const node = (
 					element: {
 						testDataId: "random_erasing-form",
 						label: "Width",
-						key: "random_erasing-alpha-1",
+						key: "random_erasing-region-3",
 						name: "random_erasing",
 						required: true,
 					},
@@ -2236,7 +2205,7 @@ export const node = (
 					element: {
 						testDataId: "random_erasing-form",
 						label: "Height",
-						key: "random_erasing-alpha-1",
+						key: "random_erasing-region-4",
 						name: "random_erasing",
 						required: true,
 					},
@@ -2347,14 +2316,14 @@ export const node = (
 					template: "number",
 					element: {
 						testDataId: "elastic_distortion-form",
-						label: "Amount",
+						label: "Alpha",
 						key: "elastic_distortion-alpha-1",
 						name: "elastic_distortion",
 						required: true,
 					},
 					config: {
 						setValue: (findById(fields, "elastic_distortion-1") as any)
-							?.metadata?.config?.value?.amount?.value,
+							?.metadata?.config?.value?.alpha?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "elastic_distortion-1",
@@ -2377,14 +2346,14 @@ export const node = (
 					template: "number",
 					element: {
 						testDataId: "elastic_distortion-form",
-						label: "Salt Vs Pepper Ratio",
+						label: "Sigma",
 						key: "elastic_distortion-sigma-1",
 						name: "elastic_distortion",
 						required: true,
 					},
 					config: {
 						setValue: (findById(fields, "elastic_distortion-1") as any)
-							?.metadata?.config?.value?.salt_pepper_ratio?.value,
+							?.metadata?.config?.value?.sigma?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "elastic_distortion-1",
@@ -2436,8 +2405,8 @@ export const node = (
 						required: true,
 					},
 					config: {
-						setValue: (findById(fields, "number-1") as any)?.metadata?.config
-							?.value?.salt_pepper_ratio?.value,
+						setValue: (findById(fields, "number-1") as any)?.metadata?.number
+							?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "number-1",

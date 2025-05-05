@@ -89,56 +89,67 @@ export function arrayToMetadata(
 	metadata: Metadata,
 	array: unknown[] | unknown,
 ): Metadata {
+	let flattenedArray: unknown[] = [];
+
+	function flatten(arr: unknown[]): void {
+		for (const item of arr) {
+			if (Array.isArray(item)) {
+				flatten(item);
+			} else {
+				flattenedArray.push(item);
+			}
+		}
+	}
+
+	if (Array.isArray(array)) {
+		flatten(array);
+	} else {
+		flattenedArray = [array];
+	}
+
 	let index = 0;
-	const isArray = Array.isArray(array);
 
-	function reconstruct(struct: Metadata, values: unknown = array): Metadata {
-		const newMetadata: Metadata = {};
+	function processMetadata(obj: Metadata): Metadata {
+		const result: Metadata = {};
 
-		for (const [key, value] of Object.entries(struct)) {
-			switch (value.type) {
-				case "Boolean":
-					newMetadata[key] = {
-						...value,
-						value: isArray
-							? Boolean((array as unknown[])[index++])
-							: Boolean(values),
-					};
-					break;
+		for (const [key, value] of Object.entries(obj)) {
+			if (value.type === "Object") {
+				result[key] = {
+					...value,
+					value: processMetadata(value.value as Metadata),
+				};
+			} else if (index < flattenedArray.length) {
+				const newValue = flattenedArray[index++];
 
-				case "String":
-					newMetadata[key] = {
-						...value,
-						value: isArray
-							? String((array as unknown[])[index++] || metadata[key].value)
-							: String(values),
-					};
-					break;
-
-				case "Number":
-					newMetadata[key] = {
-						...value,
-						value: isArray
-							? Number((array as unknown[])[index++] || metadata[key]?.value)
-							: Number(values),
-					};
-					break;
-
-				case "Object": {
-					newMetadata[key] = {
-						...value,
-						value: reconstruct(value.value as Metadata),
-					};
-					break;
+				switch (value.type) {
+					case "Number":
+						result[key] = {
+							...value,
+							value: Number(newValue),
+						};
+						break;
+					case "String":
+						result[key] = {
+							...value,
+							value: String(newValue),
+						};
+						break;
+					case "Boolean":
+						result[key] = {
+							...value,
+							value: Boolean(newValue),
+						};
+						break;
+					default:
+						result[key] = value;
 				}
-
-				default:
-					newMetadata[key] = value;
+			} else {
+				result[key] = value;
 			}
 		}
 
-		return newMetadata;
+		return result;
 	}
 
-	return reconstruct(metadata);
+	return processMetadata(metadata);
 }

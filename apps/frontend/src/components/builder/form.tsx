@@ -134,6 +134,8 @@ type TemplateSliderOptions = {
 	options?: {
 		min: number;
 		max: number;
+		lower?: number;
+		upper?: number;
 		step: number;
 	};
 };
@@ -596,31 +598,77 @@ const RenderInput = memo(
 											type="number"
 											inputMode="decimal"
 											onChange={(e) => {
-												let inputValue = e.target.value.trim();
-												if (inputValue.endsWith(".")) {
-													inputValue += "0";
+												const inputValue = e.target.value;
+
+												if (inputValue === "") {
+													setOnChange
+														? setOnChange(undefined)
+														: onChange(undefined);
+													return;
 												}
-												const parsedValue =
-													inputValue !== "" ? inputValue : undefined;
-												if (!Number.isNaN(parsedValue)) {
+
+												if (/^[0-9]*\.?[0-9]*$/.test(inputValue)) {
+													if (
+														inputValue === "0" ||
+														inputValue === "." ||
+														inputValue === "0." ||
+														inputValue.startsWith("0.") ||
+														inputValue.includes(".")
+													) {
+														setOnChange
+															? setOnChange(inputValue)
+															: onChange(inputValue);
+													} else {
+														const parsedValue = Number.parseFloat(inputValue);
+														setOnChange
+															? setOnChange(parsedValue)
+															: onChange(parsedValue);
+													}
+												}
+											}}
+											onBlur={(e) => {
+												let currentValue = e.target.value;
+
+												if (currentValue === "" || currentValue === ".") {
+													setOnChange
+														? setOnChange(undefined)
+														: onChange(undefined);
+												} else if (currentValue.endsWith(".")) {
+													currentValue = `${currentValue}0`;
+													const parsedValue = Number.parseFloat(currentValue);
+													setOnChange
+														? setOnChange(parsedValue)
+														: onChange(parsedValue);
+												} else if (
+													typeof currentValue === "string" &&
+													currentValue.includes(".")
+												) {
+													const parsedValue = Number.parseFloat(currentValue);
 													setOnChange
 														? setOnChange(parsedValue)
 														: onChange(parsedValue);
 												}
+
+												if (onBlur) onBlur();
 											}}
-											onBlur={onBlur}
 											value={
-												setValue
-													? !Number.isNaN(setValue)
-														? String(setValue).endsWith(".0")
-															? String(setValue).replace(".0", ".")
-															: (setValue as number)
-														: undefined
-													: !Number.isNaN(value)
-														? String(value).endsWith(".0")
-															? String(value).replace(".0", ".")
-															: value
-														: undefined
+												setValue !== undefined
+													? typeof setValue === "string"
+														? setValue
+														: !Number.isNaN(setValue)
+															? String(setValue).endsWith(".0")
+																? String(setValue).replace(".0", ".")
+																: (setValue as number)
+															: ""
+													: value !== undefined
+														? typeof value === "string"
+															? value
+															: !Number.isNaN(value)
+																? String(value).endsWith(".0")
+																	? String(value).replace(".0", ".")
+																	: value
+																: ""
+														: ""
 											}
 											placeholder={placeholder}
 											min={0}
@@ -756,9 +804,9 @@ const RenderInput = memo(
 							>
 								<div>
 									<FormLabel className="md:mb-2">{label}</FormLabel>
-									<FormDescription className="mb-3">
-										{description}
-									</FormDescription>
+									{description && (
+										<FormDescription>{description}</FormDescription>
+									)}
 								</div>
 								<Checkbox
 									className="border-gray-300"
@@ -781,9 +829,9 @@ const RenderInput = memo(
 						render={({ field: { onChange, onBlur, value } }) => (
 							<FormItem className={cn(className)}>
 								<FormLabel>{label}</FormLabel>
-								<FormDescription className="mb-3">
-									{description}
-								</FormDescription>
+								{description && (
+									<FormDescription>{description}</FormDescription>
+								)}
 								<div className="mt-3 inline-flex w-full gap-x-4">
 									<Input
 										aria-invalid={Boolean((errors as any)?.[String(name)])}
@@ -830,9 +878,11 @@ const RenderInput = memo(
 							return (
 								<FormItem className={cn(className)}>
 									<FormLabel>{label}</FormLabel>
-									<FormDescription className="mb-3">
-										{description}
-									</FormDescription>
+									{description && (
+										<FormDescription className="mb-3">
+											{description}
+										</FormDescription>
+									)}
 									<Selection
 										className="mb-3 mt-0"
 										group={
@@ -866,9 +916,11 @@ const RenderInput = memo(
 								<div className="flex items-center justify-between">
 									<>
 										<FormLabel>{label}</FormLabel>
-										<FormDescription className="mb-3">
-											{description}
-										</FormDescription>
+										{description && (
+											<FormDescription className="mb-3">
+												{description}
+											</FormDescription>
+										)}
 									</>
 									<span className="text-sm text-muted-foreground w-12 text-right">
 										{setValue ? (setValue as number) : value || 0}
@@ -878,12 +930,27 @@ const RenderInput = memo(
 									max={options && "max" in options ? options?.max : 100}
 									min={options && "min" in options ? options?.min : 0}
 									step={options && "step" in options ? options?.step : 1}
-									value={setValue ? [setValue as number] : [value || 0]}
+									value={[
+										Math.min(
+											Math.max(
+												(setValue as number) ?? value ?? 0,
+												options && "lower" in options ? options?.lower : 0,
+											),
+											options && "upper" in options ? options?.upper : 100,
+										),
+									]}
 									data-cyName={testDataId}
 									disabled={disabled}
-									onValueChange={(v) =>
-										setOnChange ? setOnChange(v[0]) : onChange(v[0])
-									}
+									onValueChange={(v) => {
+										const clamped = Math.min(
+											Math.max(
+												v[0],
+												options && "lower" in options ? options?.lower : 0,
+											),
+											options && "upper" in options ? options?.upper : 100,
+										);
+										setOnChange ? setOnChange(clamped) : onChange(clamped);
+									}}
 									id="slider"
 									className="cursor-pointer"
 									aria-label="Percentage value"
@@ -903,9 +970,11 @@ const RenderInput = memo(
 							<FormItem className={cn(className)}>
 								<div className="flex items-center">
 									<FormLabel>{label}</FormLabel>
-									<FormDescription className="mb-3">
-										{description}
-									</FormDescription>
+									{description && (
+										<FormDescription className="mb-3">
+											{description}
+										</FormDescription>
+									)}
 								</div>
 								<div className="flex items-center gap-x-3 justify-between">
 									<Slider
@@ -935,31 +1004,77 @@ const RenderInput = memo(
 										type="tel"
 										inputMode="decimal"
 										onChange={(e) => {
-											let inputValue = e.target.value.trim();
-											if (inputValue.endsWith(".")) {
-												inputValue += "0";
+											const inputValue = e.target.value;
+
+											if (inputValue === "") {
+												setOnChange
+													? setOnChange(undefined)
+													: onChange(undefined);
+												return;
 											}
-											const parsedValue =
-												inputValue !== "" ? inputValue : undefined;
-											if (!Number.isNaN(parsedValue)) {
+
+											if (/^[0-9]*\.?[0-9]*$/.test(inputValue)) {
+												if (
+													inputValue === "0" ||
+													inputValue === "." ||
+													inputValue === "0." ||
+													inputValue.startsWith("0.") ||
+													inputValue.includes(".")
+												) {
+													setOnChange
+														? setOnChange(inputValue)
+														: onChange(inputValue);
+												} else {
+													const parsedValue = Number.parseFloat(inputValue);
+													setOnChange
+														? setOnChange(parsedValue)
+														: onChange(parsedValue);
+												}
+											}
+										}}
+										onBlur={(e) => {
+											let currentValue = e.target.value;
+
+											if (currentValue === "" || currentValue === ".") {
+												setOnChange
+													? setOnChange(undefined)
+													: onChange(undefined);
+											} else if (currentValue.endsWith(".")) {
+												currentValue = `${currentValue}0`;
+												const parsedValue = Number.parseFloat(currentValue);
+												setOnChange
+													? setOnChange(parsedValue)
+													: onChange(parsedValue);
+											} else if (
+												typeof currentValue === "string" &&
+												currentValue.includes(".")
+											) {
+												const parsedValue = Number.parseFloat(currentValue);
 												setOnChange
 													? setOnChange(parsedValue)
 													: onChange(parsedValue);
 											}
+
+											if (onBlur) onBlur();
 										}}
-										onBlur={onBlur}
 										value={
-											setValue
-												? !Number.isNaN(setValue)
-													? String(setValue).endsWith(".0")
-														? String(setValue).replace(".0", ".")
-														: (setValue as number)
-													: undefined
-												: !Number.isNaN(value)
-													? String(value).endsWith(".0")
-														? String(value).replace(".0", ".")
-														: value
-													: undefined
+											setValue !== undefined
+												? typeof setValue === "string"
+													? setValue
+													: !Number.isNaN(setValue)
+														? String(setValue).endsWith(".0")
+															? String(setValue).replace(".0", ".")
+															: (setValue as number)
+														: ""
+												: value !== undefined
+													? typeof value === "string"
+														? value
+														: !Number.isNaN(value)
+															? String(value).endsWith(".0")
+																? String(value).replace(".0", ".")
+																: value
+															: ""
+													: ""
 										}
 										placeholder={placeholder}
 									/>

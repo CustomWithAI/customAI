@@ -24,7 +24,7 @@ export function CanvasSidebar({
 	onZoomChange,
 }: Omit<LabelSidebarProps, "open" | "setOpen"> &
 	Omit<ZoomControlsProps, "open" | "setOpen">) {
-	const [open, setOpen] = useState<OpenTab>("none");
+	const [open, setOpen] = useState<OpenTab>("labels");
 	return (
 		<div
 			className={cn(
