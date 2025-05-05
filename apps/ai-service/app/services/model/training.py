@@ -53,6 +53,9 @@ feature_extractor = FeatureExtraction()
 
 
 class MLTraining():
+    def __init__(self):
+        self.result_dir = "./evaluation_results"
+
     def load_dataset(self, base_path: str):
         images = []
         labels = []
@@ -251,7 +254,7 @@ class MLTraining():
         joblib.dump(model, "ml_model.pkl")
 
         # Create output directory
-        os.makedirs("evaluation_results", exist_ok=True)
+        os.makedirs(self.result_dir, exist_ok=True)
 
         # Evaluate on validation data
         y_val_pred = model.predict(X_val)
@@ -269,7 +272,7 @@ class MLTraining():
         print(f"F1 Score: {val_f1:.4f}")
 
         # Save metrics to a text file
-        with open("evaluation_results/metrics.txt", "w") as f:
+        with open(f"{self.result_dir}/metrics.txt", "w") as f:
             f.write(f"Validation Accuracy: {val_accuracy:.4f}\n")
             f.write(f"Precision: {val_precision:.4f}\n")
             f.write(f"Recall: {val_recall:.4f}\n")
@@ -281,7 +284,7 @@ class MLTraining():
         plt.title('Confusion Matrix')
         plt.xlabel('Predicted')
         plt.ylabel('True')
-        plt.savefig("evaluation_results/confusion_matrix.png")
+        plt.savefig(f"{self.result_dir}/confusion_matrix.png")
         plt.close()
 
         # Save loss curve if available
@@ -292,7 +295,7 @@ class MLTraining():
             plt.xlabel("Epochs")
             plt.ylabel("Loss")
             plt.grid(True)
-            plt.savefig("evaluation_results/loss_curve.png")
+            plt.savefig(f"{self.result_dir}/loss_curve.png")
             plt.close()
 
         # Save validation scores curve if available
@@ -303,10 +306,12 @@ class MLTraining():
             plt.xlabel("Epochs")
             plt.ylabel("Accuracy")
             plt.grid(True)
-            plt.savefig("evaluation_results/accuracy_per_epoch.png")
+            plt.savefig(f"{self.result_dir}/accuracy_per_epoch.png")
             plt.close()
 
 class DLTrainingPretrained():
+    def __init__(self):
+        self.result_dir = "./evaluation_results"
 
     def load_dataset_dl(self, base_path, class_dict=None):
         images = []
@@ -566,16 +571,14 @@ class DLTrainingPretrained():
         print(f"Recall:    {recall:.4f}")
         print(f"F1 Score:  {f1:.4f}")
 
+        os.makedirs(self.result_dir, exist_ok=True)
+
         # Save metrics to a text file
-        with open("evaluation_results/metrics.txt", "w") as f:
+        with open(f"{self.result_dir}/metrics.txt", "w") as f:
             f.write(f"Validation Accuracy: {acc:.4f}\n")
             f.write(f"Precision: {precision:.4f}\n")
             f.write(f"Recall: {recall:.4f}\n")
             f.write(f"F1 Score: {f1:.4f}\n")
-            
-        # Create evaluation result folder if it doesn't exist
-        result_dir = "./evaluation_results"
-        os.makedirs(result_dir, exist_ok=True)
 
         # Plot and save training accuracy and loss
         def save_training_plots(history, result_dir):
@@ -603,7 +606,7 @@ class DLTrainingPretrained():
             plt.savefig(os.path.join(result_dir, "accuracy_loss_per_epoch.png"))
             plt.close()
 
-        save_training_plots(history, result_dir)
+        save_training_plots(history, self.result_dir)
 
         # Confusion matrix
         def save_confusion_matrix(y_true, y_pred, class_dict, result_dir):
@@ -619,7 +622,7 @@ class DLTrainingPretrained():
             plt.savefig(os.path.join(result_dir, "confusion_matrix.png"))
             plt.close()
 
-        save_confusion_matrix(y_true, y_pred, class_dict, result_dir)
+        save_confusion_matrix(y_true, y_pred, class_dict, self.result_dir)
 
         return history
 
@@ -695,7 +698,7 @@ class EvaluationCallback(tf.keras.callbacks.Callback):
 
 class ConstructTraining():
     def __init__(self):
-        pass
+        self.result_dir = "./evaluation_results"
 
     def load_dataset_cls(self, base_path, class_dict=None):
         images = []
@@ -818,16 +821,15 @@ class ConstructTraining():
         print(f"Recall:    {recall:.4f}")
         print(f"F1 Score:  {f1:.4f}")
 
+        # Create evaluation result folder if it doesn't exist
+        os.makedirs(self.result_dir, exist_ok=True)
+
         # Save metrics to a text file
-        with open("evaluation_results/metrics.txt", "w") as f:
+        with open(f"{self.result_dir}/metrics.txt", "w") as f:
             f.write(f"Validation Accuracy: {acc:.4f}\n")
             f.write(f"Precision: {precision:.4f}\n")
             f.write(f"Recall: {recall:.4f}\n")
             f.write(f"F1 Score: {f1:.4f}\n")
-            
-        # Create evaluation result folder if it doesn't exist
-        result_dir = "./evaluation_results"
-        os.makedirs(result_dir, exist_ok=True)
 
         # Plot and save training accuracy and loss
         def save_training_plots(history, result_dir):
@@ -855,7 +857,7 @@ class ConstructTraining():
             plt.savefig(os.path.join(result_dir, "accuracy_loss_per_epoch.png"))
             plt.close()
 
-        save_training_plots(history, result_dir)
+        save_training_plots(history, self.result_dir)
 
         # Confusion matrix
         def save_confusion_matrix(y_true, y_pred, class_dict, result_dir):
@@ -871,7 +873,7 @@ class ConstructTraining():
             plt.savefig(os.path.join(result_dir, "confusion_matrix.png"))
             plt.close()
 
-        save_confusion_matrix(y_true, y_pred, class_dict, result_dir)
+        save_confusion_matrix(y_true, y_pred, class_dict, self.result_dir)
 
         return history
 
@@ -1006,16 +1008,14 @@ class ConstructTraining():
         print(f"Recall:    {recall:.4f}")
         print(f"F1 Score:  {f1:.4f}")
 
+        os.makedirs(self.result_dir, exist_ok=True)
+
         # Save metrics to a text file
-        with open("evaluation_results/metrics.txt", "w") as f:
+        with open(f"{self.result_dir}/metrics.txt", "w") as f:
             f.write(f"Validation Accuracy: {acc:.4f}\n")
             f.write(f"Precision: {precision:.4f}\n")
             f.write(f"Recall: {recall:.4f}\n")
             f.write(f"F1 Score: {f1:.4f}\n")
-            
-        # Save graphs
-        result_dir = "./evaluation_results"
-        os.makedirs(result_dir, exist_ok=True)
 
         # Accuracy and loss graph
         def save_training_plots(history, result_dir):
@@ -1043,7 +1043,7 @@ class ConstructTraining():
             plt.savefig(os.path.join(result_dir, "accuracy_loss_per_epoch_featex.png"))
             plt.close()
 
-        save_training_plots(history, result_dir)
+        save_training_plots(history, self.result_dir)
 
         # Confusion matrix
         def save_confusion_matrix(y_true, y_pred, labels, result_dir):
@@ -1059,7 +1059,7 @@ class ConstructTraining():
             plt.close()
 
         label_names = encoder.classes_
-        save_confusion_matrix(y_val_classes, y_pred, label_names, result_dir)
+        save_confusion_matrix(y_val_classes, y_pred, label_names, self.result_dir)
 
         return history
 
@@ -1307,8 +1307,8 @@ class ConstructTraining():
         print(f"IoU: {mean_iou:.4f}")
         print(f"mAP@0.5: {map_50:.4f}")
 
-        os.makedirs('./evaluation_results', exist_ok=True)
-        with open('./evaluation_results/metrics.txt', 'w') as f:
+        os.makedirs(self.result_dir, exist_ok=True)
+        with open(f'{self.result_dir}/metrics.txt', 'w') as f:
             f.write(f"Precision: {precision:.4f}\n")
             f.write(f"Recall: {recall:.4f}\n")
             f.write(f"F1 Score: {f1:.4f}\n")
@@ -1325,7 +1325,7 @@ class ConstructTraining():
         plt.title('Evaluation Metrics')
         for i, v in enumerate(values):
             plt.text(i, v + 0.02, f"{v:.2f}", ha='center', fontweight='bold')
-        plt.savefig('./evaluation_results/metric_summary.png')
+        plt.savefig(f'{self.result_dir}/metric_summary.png')
         plt.close()
 
         epochs = list(range(1, config_training.epochs + 1))
@@ -1339,7 +1339,7 @@ class ConstructTraining():
         plt.title('Validation Metrics Over Epochs')
         plt.legend()
         plt.grid(True)
-        plt.savefig('./evaluation_results/metrics_per_epoch.png')
+        plt.savefig(f'{self.result_dir}/metrics_per_epoch.png')
         plt.close()
 
 
@@ -1568,8 +1568,8 @@ class ConstructTraining():
             print(f"F1 Score:  {f1:.4f}")
 
             # Save to text
-            os.makedirs('./evaluation_results', exist_ok=True)
-            with open('./evaluation_results/metrics.txt', 'w') as f:
+            os.makedirs(self.result_dir, exist_ok=True)
+            with open(f'{self.result_dir}/metrics.txt', 'w') as f:
                 f.write(f"Precision: {precision:.4f}\n")
                 f.write(f"Recall: {recall:.4f}\n")
                 f.write(f"F1 Score: {f1:.4f}\n")
@@ -1583,7 +1583,7 @@ class ConstructTraining():
             plt.title('Evaluation Metrics')
             for i, v in enumerate(values):
                 plt.text(i, v + 0.02, f"{v:.2f}", ha='center', fontweight='bold')
-            plt.savefig('./evaluation_results/metric_summary.png')
+            plt.savefig(f'{self.result_dir}/metric_summary.png')
             plt.close()
 
             # Per-epoch metrics plot
@@ -1596,5 +1596,5 @@ class ConstructTraining():
             plt.title('Validation Metrics Over Epochs')
             plt.legend()
             plt.grid(True)
-            plt.savefig('./evaluation_results/metrics_per_epoch.png')
+            plt.savefig(f'{self.result_dir}/metrics_per_epoch.png')
             plt.close()

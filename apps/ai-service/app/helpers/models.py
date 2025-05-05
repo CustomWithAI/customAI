@@ -15,6 +15,8 @@ def delete_path(path: str, silent: bool = True) -> None:
         raise FileNotFoundError(f"No such file or directory: '{path}'")
 
 def clear_folder(path: str) -> None:
+    if not os.path.exists(path):
+        return
     for filename in os.listdir(path):
         file_path = os.path.join(path, filename)
         if os.path.isfile(file_path) or os.path.islink(file_path):
