@@ -75,7 +75,7 @@ async def construct_model(config: DeepLearningObjectDetectionConstructRequest):
 @app.post("/create_yolo_venv")
 async def create_venv():
     # Create venv for yolov5
-    subprocess.run(["python", "-m", "venv", "yolo5_venv"], check=True)
+    subprocess.run(["python", "-m", "venv", "yolov5_venv"], check=True)
     subprocess.run(
         "yolov5_venv/bin/python -m pip install -r app/services/model/yolov5/requirements.txt", shell=True, check=True)
 

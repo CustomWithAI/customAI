@@ -143,6 +143,9 @@ services:
 
   ai-service:
     container_name: ai_service
+    profiles:
+      - ""
+      - python
     build:
       context: ./apps/ai-service
       dockerfile: dev.Dockerfile

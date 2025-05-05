@@ -13,7 +13,7 @@ COPY . .
 
 ENV NODE_ENV=development
 
-EXPOSE 3000
+EXPOSE 4000
 
 CMD ["bun", "run","--watch", "src/index.ts"]
 
