@@ -559,6 +559,9 @@ class DLTrainingPretrained():
         y_pred = y_pred_probs.argmax(axis=1)
         y_true = y_test.argmax(axis=1)
 
+        print("y_test shape:", y_test.shape)
+        print("y_pred shape:", y_pred.shape)
+
         # Metrics
         acc = accuracy_score(y_true, y_pred)
         precision = precision_score(y_true, y_pred, average='macro')
@@ -570,6 +573,9 @@ class DLTrainingPretrained():
         print(f"Precision: {precision:.4f}")
         print(f"Recall:    {recall:.4f}")
         print(f"F1 Score:  {f1:.4f}")
+
+        print(f"y_pred distribution: {np.unique(y_pred, return_counts=True)}")
+        print(f"y_true distribution: {np.unique(y_true, return_counts=True)}")
 
         os.makedirs(self.result_dir, exist_ok=True)
 

@@ -83,13 +83,14 @@ class Augmentation:
 
             if key == 'contrast_stretching' and config.contrast_stretching:
                 if random.random() < config.contrast_stretching[0]:
-                    lower, upper = config.contrast_stretching[1]
+                    lower = config.contrast_stretching[1]
+                    upper = config.contrast_stretching[2]
                     in_range = (lower * 255, upper * 255)
                     image = cv2.normalize(
                         image, None, alpha=in_range[0], beta=in_range[1], norm_type=cv2.NORM_MINMAX)
 
             if key == 'histogram_equalization' and config.histogram_equalization:
-                if random.random() < config.histogram_equalization[0]:
+                if random.random() < config.histogram_equalization:
                     if len(image.shape) == 2:  # Grayscale image
                         image = cv2.equalizeHist(image)
                     else:
@@ -421,13 +422,14 @@ class Augmentation:
 
             if key == 'contrast_stretching' and config.contrast_stretching:
                 if random.random() < config.contrast_stretching[0]:
-                    lower, upper = config.contrast_stretching[1]
+                    lower = config.contrast_stretching[1]
+                    upper = config.contrast_stretching[2]
                     in_range = (lower * 255, upper * 255)
                     image = cv2.normalize(
                         image, None, alpha=in_range[0], beta=in_range[1], norm_type=cv2.NORM_MINMAX)
 
             if key == 'histogram_equalization' and config.histogram_equalization:
-                if random.random() < config.histogram_equalization[0]:
+                if random.random() < config.histogram_equalization:
                     if len(image.shape) == 2:  # Grayscale image
                         image = cv2.equalizeHist(image)
                     else:
