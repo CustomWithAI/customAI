@@ -157,7 +157,8 @@ export class TrainingService {
 
     const canStart =
       training.status === "created" ||
-      (training.status === "failed" && training.retryCount <= 3);
+      training.status === "completed" ||
+      (training.status === "failed" && training.retryCount <= 100);
     yield emit("Checking training status", canStart);
 
     // TODO: Should Fix Or Not ?
