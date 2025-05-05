@@ -2,7 +2,7 @@ import { config } from "@/config/env";
 import { queueLogger } from "@/config/logger";
 import amqp from "amqplib";
 
-let connection: amqp.Connection | null = null;
+let connection: amqp.ChannelModel | null = null;
 let channel: amqp.Channel | null = null;
 
 export const connectRabbitMQ = async () => {
@@ -10,9 +10,14 @@ export const connectRabbitMQ = async () => {
     return { connection, channel };
   }
   try {
-    connection = await amqp.connect(
-      `amqp://${config.RABBITMQ_USER}:${config.RABBITMQ_PASSWORD}@${config.RABBITMQ_HOST}:${config.RABBITMQ_PORT}`
-    );
+    connection = await amqp.connect({
+      protocol: "amqp",
+      hostname: config.RABBITMQ_HOST,
+      port: Number(config.RABBITMQ_PORT),
+      username: config.RABBITMQ_USER,
+      password: config.RABBITMQ_PASSWORD,
+      frameMax: 131072,
+    });
     channel = await connection.createChannel();
     queueLogger.info("✅  Connected to RabbitMQ");
     queueLogger.info(
@@ -21,6 +26,7 @@ export const connectRabbitMQ = async () => {
 
     return { connection, channel };
   } catch (error) {
+    console.log(error);
     queueLogger.error("❌  Error connecting to RabbitMQ", error);
     throw error;
   }

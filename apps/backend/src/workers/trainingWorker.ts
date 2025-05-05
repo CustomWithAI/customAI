@@ -318,18 +318,23 @@ export const startTrainingWorker = async () => {
             });
             queueLogger.info(`✅ Training completed: ${data.queueId}`);
           } catch (error) {
-            if (error instanceof Error) {
-              queueLogger.error(
-                `❌ Training failed: ${data.queueId} with error: ${error.message}`
-              );
-
-              // ✅ Update Status Into "failed"
-              await trainingRepository.updateById(data.workflow.id, data.id, {
-                status: "failed",
-                errorMessage: error.message,
-                retryCount: data.retryCount + 1,
-              });
+            let errorMessage = "Unknown error occurred.";
+            if (error instanceof AxiosError) {
+              errorMessage = error.message;
+            } else if (error instanceof Error) {
+              errorMessage = error.message;
             }
+
+            queueLogger.error(
+              `❌ Training failed: ${data.queueId} with error: ${errorMessage}`
+            );
+
+            // ✅ Update Status Into "failed"
+            await trainingRepository.updateById(data.workflow.id, data.id, {
+              status: "failed",
+              errorMessage: errorMessage,
+              retryCount: data.retryCount + 1,
+            });
           } finally {
             // ✅ Delete Request From Queue
             channel.ack(msg);
@@ -548,22 +553,26 @@ export const startTrainingWorker = async () => {
 
             queueLogger.info(`✅ Inference completed: ${data.queueId}`);
           } catch (error) {
-            if (error instanceof Error) {
-              queueLogger.error(
-                `❌ Inference failed: ${data.queueId} with error: ${error.message}`
-              );
+            let errorMessage = "Unknown error occurred.";
+            if (error instanceof AxiosError) {
+              errorMessage = error.message;
+            } else if (error instanceof Error) {
+              errorMessage = error.message;
+            }
+            queueLogger.error(
+              `❌ Inference failed: ${data.queueId} with error: ${errorMessage}`
+            );
 
-              await modelInferenceRepository.updateById(data.userId, data.id, {
-                modelPath: null,
-                status: "failed",
-                errorMessage: error.message,
-                retryCount: data.retryCount + 1,
-              });
+            await modelInferenceRepository.updateById(data.userId, data.id, {
+              modelPath: null,
+              status: "failed",
+              errorMessage: errorMessage,
+              retryCount: data.retryCount + 1,
+            });
 
-              // ✅ Delete Model From Cloud (Save Memory)
-              if (data.modelPath) {
-                await deleteFile(data.modelPath);
-              }
+            // ✅ Delete Model From Cloud (Save Memory)
+            if (data.modelPath) {
+              await deleteFile(data.modelPath);
             }
           } finally {
             channel.ack(msg);
