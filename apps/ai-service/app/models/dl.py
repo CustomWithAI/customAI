@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 from typing import Optional, Union, Literal, List
 
 from app.models.feature_extraction import FeatureExtractionConfig
@@ -45,6 +45,16 @@ class ClassificationTrainingConfig(BaseModel):
     loss_function: Literal['categorical_crossentropy'] = 'categorical_crossentropy'
     unfreeze: int = 0
     callbacks: Optional[ClassificationCallbacks] = None
+    reduce_lr_on_plateau: bool = False
+    early_stopping: bool = False
+    
+    @model_validator(mode="after")
+    def validate_model(cls, values: "ClassificationTrainingConfig"):
+        if values.reduce_lr_on_plateau and not values.callbacks.reduce_lr_on_plateau:
+            raise ValueError("Reduce LR On Plateau in callback function not found.")
+        if values.early_stopping and not values.callbacks.early_stopping:
+            raise ValueError("Early Stopping in callback function not found.")
+        return values
 
 
 class ObjectDetectionTrainingConfig(BaseModel):

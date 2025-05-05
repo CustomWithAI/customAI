@@ -535,11 +535,11 @@ class DLTrainingPretrained():
 
         callbacks = []
         if config_training.callbacks:
-            if config_training.callbacks.reduce_lr_on_plateau:
+            if config_training.reduce_lr_on_plateau and config_training.callbacks.reduce_lr_on_plateau:
                 callbacks.append(
                     ReduceLROnPlateau(verbose=1, **config_training.callbacks.reduce_lr_on_plateau.model_dump())
                 )
-            if config_training.callbacks.early_stopping:
+            if config_training.early_stopping and config_training.callbacks.early_stopping:
                 callbacks.append(
                     EarlyStopping(
                         verbose=1,
@@ -791,11 +791,11 @@ class ConstructTraining():
         # Callbacks
         callbacks = []
         if config_training.callbacks:
-            if config_training.callbacks.reduce_lr_on_plateau:
+            if config_training.reduce_lr_on_plateau and config_training.callbacks.reduce_lr_on_plateau:
                 callbacks.append(
                     ReduceLROnPlateau(verbose=1, **config_training.callbacks.reduce_lr_on_plateau.model_dump())
                 )
-            if config_training.callbacks.early_stopping:
+            if config_training.early_stopping and config_training.callbacks.early_stopping:
                 callbacks.append(
                     EarlyStopping(
                         verbose=1,
@@ -978,11 +978,11 @@ class ConstructTraining():
         # Callbacks
         callbacks = []
         if config_training.callbacks:
-            if config_training.callbacks.reduce_lr_on_plateau:
+            if config_training.reduce_lr_on_plateau and config_training.callbacks.reduce_lr_on_plateau:
                 callbacks.append(
                     ReduceLROnPlateau(verbose=1, **config_training.callbacks.reduce_lr_on_plateau.model_dump())
                 )
-            if config_training.callbacks.early_stopping:
+            if config_training.early_stopping and config_training.callbacks.early_stopping:
                 callbacks.append(
                     EarlyStopping(
                         verbose=1,

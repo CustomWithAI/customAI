@@ -153,12 +153,27 @@ export const startTrainingWorker = async () => {
               );
             }
 
+            // ✅ Set Default Of Number In Augmentation Data If Not Exists
+            let augmentationData = undefined;
+
+            if (data.augmentation) {
+              augmentationData = data.augmentation.data;
+              if (typeof augmentationData === "object") {
+                if (augmentationData && !("number" in augmentationData)) {
+                  augmentationData = {
+                    ...augmentationData,
+                    number: trainData.length * 2,
+                  };
+                }
+              }
+            }
+
             const responseImagePreprocessingAndAugmentation = await axios.post(
               `${config.PYTHON_SERVER_URL}/dataset-config`,
               {
                 type: annotationMethod,
                 preprocess: data.imagePreprocessing?.data,
-                augmentation: data.augmentation?.data,
+                augmentation: augmentationData,
               }
             );
 
@@ -320,7 +335,13 @@ export const startTrainingWorker = async () => {
           } catch (error) {
             let errorMessage = "Unknown error occurred.";
             if (error instanceof AxiosError) {
-              errorMessage = error.message;
+              const message = error.response?.data;
+
+              if (typeof message === "string") {
+                errorMessage = message;
+              } else if (typeof message === "object") {
+                errorMessage = JSON.stringify(message);
+              }
             } else if (error instanceof Error) {
               errorMessage = error.message;
             }
@@ -555,7 +576,13 @@ export const startTrainingWorker = async () => {
           } catch (error) {
             let errorMessage = "Unknown error occurred.";
             if (error instanceof AxiosError) {
-              errorMessage = error.message;
+              const message = error.response?.data;
+
+              if (typeof message === "string") {
+                errorMessage = message;
+              } else if (typeof message === "object") {
+                errorMessage = JSON.stringify(message);
+              }
             } else if (error instanceof Error) {
               errorMessage = error.message;
             }

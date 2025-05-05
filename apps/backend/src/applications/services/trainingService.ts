@@ -1,6 +1,7 @@
 import type { ImageRepository } from "@/applications/repositories/imageRepository";
 import type { TrainingRepository } from "@/applications/repositories/trainingRepository";
 import type { WorkflowRepository } from "@/applications/repositories/workflowRepository";
+import { config } from "@/config/env";
 import type { CreateTrainingDto } from "@/domains/dtos/training";
 import type { trainings } from "@/domains/schema/trainings";
 import { sendToRabbitMQ } from "@/infrastructures/rabbitmq/queue";
@@ -158,10 +159,10 @@ export class TrainingService {
     const canStart =
       training.status === "created" ||
       training.status === "completed" ||
-      (training.status === "failed" && training.retryCount <= 100);
+      (training.status === "failed" &&
+        training.retryCount <= config.MAX_RETRY_COUNT);
     yield emit("Checking training status", canStart);
 
-    // TODO: Should Fix Or Not ?
     if (!canStart) {
       throw error(400, {
         type: "training",
