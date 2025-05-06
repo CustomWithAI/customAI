@@ -18,7 +18,6 @@ import { decodeBase64, encodeBase64 } from "@/libs/base64";
 import { cn } from "@/libs/utils";
 import type { DragColumn } from "@/stores/dragStore";
 import { jsonToMetadata, metadataToJSON } from "@/utils/formatMetadata";
-import { sortedMetadata } from "@/utils/sortMetadata";
 import { getStep } from "@/utils/step-utils";
 import { formatDate } from "@/utils/to-datetime";
 import { motion } from "framer-motion";

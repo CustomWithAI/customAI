@@ -63,7 +63,7 @@ export function ModelVisualizer() {
 
 		layers.forEach((layer, index) => {
 			const x = startX + index * layerSpacing;
-			const layerType = getLayerType(layer);
+			const layerType = layer?.name || getLayerType(layer);
 			const color =
 				layerColors[layerType as keyof typeof layerColors] ||
 				layerColors["Custom Layer"];
@@ -162,7 +162,7 @@ export function ModelVisualizer() {
 								>
 									<div>
 										<h4 className="font-medium">
-											Layer {index + 1}: {layerType}
+											Layer {index + 1}: {layer?.name || layerType}
 										</h4>
 										<div className="text-sm text-muted-foreground mt-1">
 											{Object.entries(layer).map(([key, value]) => (

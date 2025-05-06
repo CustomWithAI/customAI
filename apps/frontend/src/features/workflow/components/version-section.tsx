@@ -110,7 +110,6 @@ export const VersionSection = ({
 					<div className="flex max-md:flex-col grow md:items-end gap-x-4 mb-4">
 						<Badge
 							size="lg"
-							effect="floating"
 							variant="secondary"
 							color={COLOR_STATUS[current.status] || "amber"}
 						>

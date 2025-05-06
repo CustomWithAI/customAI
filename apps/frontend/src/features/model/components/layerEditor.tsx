@@ -21,7 +21,7 @@ import { formatLayerName, getLayerType } from "@/utils/layer-utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { ChevronDown, GripVertical, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface LayerEditorProps {
 	id: string;
@@ -35,13 +35,20 @@ interface LayerEditorProps {
 export function LayerEditor({
 	id,
 	index,
-	layer,
+	layer: rawLayer,
 	onUpdate,
 	onRemove,
 	canCustomize = false,
 }: LayerEditorProps) {
+	const { name, layer } = useMemo(() => {
+		const { name, ...rest } = rawLayer;
+		return {
+			name,
+			layer: rest,
+		};
+	}, [rawLayer]);
+
 	const [currentLayer, setCurrentLayer] = useState<LayerConfig>(layer);
-	const layerType = getLayerType(layer);
 
 	const [customParamName, setCustomParamName] = useState("");
 	const [customParamType, setCustomParamType] = useState<
@@ -223,7 +230,7 @@ export function LayerEditor({
 						<GripVertical className="h-4 w-4 text-muted-foreground" />
 					</div>
 					<AccordionTrigger className="flex-1 px-4">
-						Layer {index + 1}: {layerType}
+						Layer {index + 1}: {name}
 					</AccordionTrigger>
 					<Button
 						variant="ghost"

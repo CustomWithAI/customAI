@@ -19,8 +19,14 @@ import { useToast } from "@/hooks/use-toast";
 import { encodeBase64 } from "@/libs/base64";
 import { decodeBase64 } from "@/libs/base64";
 import { cn } from "@/libs/utils";
+import type { Pipeline } from "@/types/request/requestTrainingPreset";
 import { getArrayFromEnum } from "@/utils/array-from-enum";
-import { addStepAfterName, getStep } from "@/utils/step-utils";
+import {
+	addStepAfterName,
+	findInSteps,
+	getStep,
+	removeStepByName,
+} from "@/utils/step-utils";
 import { Plus } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Virtuoso } from "react-virtuoso";
@@ -126,13 +132,15 @@ export const ModelPage = () => {
 
 	const handleSubmit = useCallback(async () => {
 		if (!modelId && !machineLearning) return;
-		const modelJSON = machineLearning
+		const isPreTrainedModel = enumModelByType?.includes(modelId);
+		const isMachineLearning = !!machineLearning;
+		const modelJSON = isMachineLearning
 			? {
 					machineLearningModel: machineLearning,
 					preTrainedModel: null,
 					customModelId: null,
 				}
-			: enumModelByType?.includes(modelId)
+			: isPreTrainedModel
 				? {
 						preTrainedModel: modelId,
 						machineLearningModel: null,
@@ -150,6 +158,19 @@ export const ModelPage = () => {
 			});
 			return;
 		}
+		let updatedStep = training?.data?.pipeline?.steps;
+		if (isMachineLearning || isPreTrainedModel) {
+			const isHasSetupModel = findInSteps(
+				training?.data.pipeline.steps,
+				STEPS.SetupModel,
+			);
+			if (isHasSetupModel) {
+				updatedStep = removeStepByName(
+					training?.data.pipeline.steps,
+					STEPS.SetupModel,
+				);
+			}
+		}
 		await updateTraining(
 			{
 				workflowId: decodeBase64(workflowId),
@@ -162,21 +183,14 @@ export const ModelPage = () => {
 						training?.data.pipeline.steps,
 						() => onSet(presetList),
 					),
-					steps: training?.data?.pipeline?.steps,
+					steps: updatedStep,
 				},
 			},
 			{
 				onSuccess: (t) => {
 					setQueryParam({
 						params: {
-							step: encodeBase64(
-								getStep(
-									"next",
-									training?.data.pipeline.current,
-									training?.data.pipeline.steps,
-									() => onSet(presetList),
-								),
-							),
+							step: encodeBase64(t?.data?.pipeline?.current || ""),
 							id: workflowId,
 							trainings: trainingId,
 						},

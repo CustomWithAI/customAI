@@ -1,6 +1,37 @@
-import { presetList } from "@/configs/preset";
 import { STEPS } from "@/configs/step-key";
 import type { Pipeline } from "@/types/request/requestTrainingPreset";
+
+export const findInSteps = (
+	steps: Pipeline["steps"] | undefined,
+	name: string,
+): Pipeline["steps"][number] | undefined => {
+	if (!steps) {
+		return undefined;
+	}
+	const step = steps.find((step) => step.name === name);
+	if (!step) {
+		return undefined;
+	}
+	return step;
+};
+
+export function removeStepByName(
+	steps: Pipeline["steps"],
+	nameToRemove: string,
+): Pipeline["steps"] {
+	const indexToRemove = steps.findIndex((step) => step.name === nameToRemove);
+
+	if (indexToRemove === -1) {
+		console.warn(`Step with name "${nameToRemove}" not found.`);
+		return steps;
+	}
+
+	const newSteps = steps
+		.filter((_, idx) => idx !== indexToRemove)
+		.map((step, i) => ({ ...step, index: i }));
+
+	return newSteps;
+}
 
 export const getStep = (
 	method: "prev" | "next",

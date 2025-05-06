@@ -63,6 +63,7 @@ export const useModelStore = create<ModelState>()(
 						...state.layers,
 						{
 							...template.config,
+							name: template.name,
 							layerPurpose: template.purposes[0] || "general",
 						},
 					],

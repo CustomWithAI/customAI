@@ -14,13 +14,13 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { useGetInference } from "@/hooks/mutations/inference-api";
-import { useGetEnum } from "@/hooks/queries/enum-api";
 import {
 	useCreateCustomInference,
 	useCreateTrainingInference,
 	useCreateWorkflowInference,
-} from "@/hooks/queries/inference-api";
+} from "@/hooks/mutations/inference-api";
+import { useGetEnum } from "@/hooks/queries/enum-api";
+import { useGetInference } from "@/hooks/queries/inference-api";
 import {
 	useGetInfTrainingByWorkflowId,
 	useGetTrainingByWorkflowId,

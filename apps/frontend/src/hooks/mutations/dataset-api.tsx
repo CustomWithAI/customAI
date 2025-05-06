@@ -7,6 +7,7 @@ export const useDeleteImageByPath = () => {
 		mutationFn: datasetService.deleteImage,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["datasets"] });
+			queryClient.invalidateQueries({ queryKey: ["inf-datasets"] });
 		},
 	});
 };
@@ -22,6 +23,9 @@ export const useUpdateImage = () => {
 			queryClient.invalidateQueries({
 				queryKey: ["datasets", "images", params.id],
 			});
+			queryClient.invalidateQueries({
+				queryKey: ["inf-datasets", "images", params.id],
+			});
 		},
 	});
 };
@@ -32,6 +36,7 @@ export const useCreateDataset = () => {
 		mutationFn: datasetService.createDataset,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["datasets"] });
+			queryClient.invalidateQueries({ queryKey: ["inf-datasets"] });
 		},
 	});
 };
@@ -42,6 +47,7 @@ export const useUpdateDataset = () => {
 		mutationFn: datasetService.updateDataset,
 		onSuccess: (ctx) => {
 			queryClient.invalidateQueries({ queryKey: ["datasets"] });
+			queryClient.invalidateQueries({ queryKey: ["inf-datasets"] });
 			queryClient.invalidateQueries({ queryKey: ["dataset", ctx?.id] });
 		},
 	});
@@ -53,6 +59,7 @@ export const useDeleteDataset = () => {
 		mutationFn: datasetService.deleteDataset,
 		onSuccess: (ctx, variables) => {
 			queryClient.invalidateQueries({ queryKey: ["datasets"] });
+			queryClient.invalidateQueries({ queryKey: ["inf-datasets"] });
 			queryClient.invalidateQueries({ queryKey: ["dataset", variables?.id] });
 		},
 	});

@@ -79,9 +79,9 @@ export function AddLayerDialog({ open, onOpenChange }: AddLayerDialogProps) {
 					defaultValue="basic"
 					value={selectedCategory}
 					onValueChange={setSelectedCategory}
-					className="flex-1 flex flex-col overflow-hidden"
+					className="flex-1 flex flex-col overflow-hidden h-full"
 				>
-					<TabsList className="grid grid-cols-2 md:grid-cols-5 mb-4">
+					<TabsList className="grid grid-cols-2 md:grid-cols-5 mb-4 h-full">
 						{categories.map((category) => (
 							<TabsTrigger key={category.id} value={category.id}>
 								{category.name}

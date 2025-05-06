@@ -9,6 +9,9 @@ export const useCreateAugmentation = () => {
 			queryClient.invalidateQueries({
 				queryKey: ["augmentation", data?.data.id],
 			});
+			queryClient.invalidateQueries({
+				queryKey: ["inf-augmentation"],
+			});
 		},
 	});
 };
@@ -20,6 +23,9 @@ export const useUpdateAugmentation = () => {
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({
 				queryKey: ["augmentation", data?.data.id],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["inf-augmentation"],
 			});
 		},
 	});

@@ -54,6 +54,9 @@ export const useUpdateTraining = () => {
 			queryClient.invalidateQueries({
 				queryKey: ["training", ctx?.data.workflowId, ctx?.data.id],
 			});
+			queryClient.invalidateQueries({
+				queryKey: ["inf-training"],
+			});
 		},
 	});
 };
@@ -65,6 +68,9 @@ export const useStartTraining = () => {
 		onSuccess: (_, params) => {
 			queryClient.invalidateQueries({
 				queryKey: ["training", params.workflowId, params.trainingId],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["inf-training"],
 			});
 		},
 	});

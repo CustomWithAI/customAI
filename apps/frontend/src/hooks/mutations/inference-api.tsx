@@ -1,25 +1,48 @@
 import { inferenceService } from "@/services/inference";
-import type { AppQueryOptions } from "@/types/tanstack-type";
-import { useQuery } from "@tanstack/react-query";
+import type { AppMutationOptions } from "@/types/tanstack-type";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useGetInference = ({
-	id,
+export const useCreateCustomInference = ({
 	options,
 }: {
-	id: string;
-	options?: AppQueryOptions<typeof inferenceService.getInference>;
-}) =>
-	useQuery({
-		queryKey: ["inference", id],
-		queryFn: async () => await inferenceService.getInference({ id }),
+	options?: AppMutationOptions<typeof inferenceService.createCustomInference>;
+} = {}) => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: inferenceService.createCustomInference,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["inferences"] });
+		},
 		...options,
 	});
+};
 
-export const useGetInferences = ({
+export const useCreateWorkflowInference = ({
 	options,
-}: { options?: AppQueryOptions<typeof inferenceService.getInferences> } = {}) =>
-	useQuery({
-		queryKey: ["inferences"],
-		queryFn: async () => await inferenceService.getInferences(),
+}: {
+	options?: AppMutationOptions<typeof inferenceService.createWorkflowInference>;
+} = {}) => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: inferenceService.createWorkflowInference,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["inferences"] });
+		},
 		...options,
 	});
+};
+
+export const useCreateTrainingInference = ({
+	options,
+}: {
+	options?: AppMutationOptions<typeof inferenceService.createTrainingInference>;
+} = {}) => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: inferenceService.createTrainingInference,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["inferences"] });
+		},
+		...options,
+	});
+};

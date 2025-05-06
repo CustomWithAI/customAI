@@ -23,6 +23,7 @@ export function getLayerType(layer: Record<string, any>): string {
 	if (firstKey.startsWith("poolingLayer")) return "Pooling Layer";
 	if (firstKey.startsWith("flattenLayer")) return "Flatten Layer";
 	if (firstKey.startsWith("denseLayer")) return "Dense Layer";
+	if (firstKey.startsWith("normalizationLayer")) return "Normalization Layer";
 	if (firstKey.startsWith("dropoutLayer")) return "Dropout Layer";
 	if (firstKey.startsWith("batchNormLayer")) return "Batch Normalization";
 	if (firstKey.startsWith("layerNormLayer")) return "Layer Normalization";
