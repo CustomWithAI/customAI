@@ -5,7 +5,7 @@ import { v7 } from "uuid";
 import { generatePresignedUrl } from "@/infrastructures/s3/s3";
 import { sendToRabbitMQ } from "@/infrastructures/rabbitmq/queue";
 import type {
-  CreateModelInferenceDto,
+  CreateTrainingModelInferenceDto,
   CreateUploadModelInferenceDto,
 } from "@/domains/dtos/modelInference";
 import type { ModelInferenceRepository } from "@/applications/repositories/modelInferenceRepository";
@@ -35,7 +35,7 @@ export class ModelInferenceService {
   public async createFromWorkflow(
     userId: string,
     workflowId: string,
-    data: CreateModelInferenceDto
+    data: CreateTrainingModelInferenceDto
   ) {
     const defaultTraining = await this.trainingRepository.findByDefault(
       workflowId
@@ -52,7 +52,7 @@ export class ModelInferenceService {
     userId: string,
     workflowId: string,
     trainingId: string,
-    data: CreateModelInferenceDto
+    data: CreateTrainingModelInferenceDto
   ) {
     const training = await this.trainingRepository.findById(
       workflowId,
@@ -75,7 +75,7 @@ export class ModelInferenceService {
 
   private async createInference(
     userId: string,
-    data: CreateModelInferenceDto | CreateUploadModelInferenceDto,
+    data: CreateTrainingModelInferenceDto | CreateUploadModelInferenceDto,
     trainingId?: string
   ) {
     const imagePath = await this.uploadImage(data.image);

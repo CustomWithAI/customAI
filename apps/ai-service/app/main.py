@@ -184,15 +184,15 @@ async def use_all_model(payload: UseModelRequest):
         return {"prediction": int(prediction)}
 
     if payload.type == "dl_od_pt":
-        prediction = use_model.use_dl_od_pt(image_bytes, payload.version)
+        prediction = use_model.use_dl_od_pt(image_bytes, payload.version, payload.confidence)
         return {"prediction": prediction}
 
     if payload.type == "dl_od_con":
-        prediction = use_model.use_dl_od_con(image_bytes)
+        prediction = use_model.use_dl_od_con(image_bytes, payload.confidence)
         return {"prediction": prediction}
 
     if payload.type == "dl_seg":
-        prediction = use_model.use_dl_seg(image_bytes, payload.version)
+        prediction = use_model.use_dl_seg(image_bytes, payload.version, payload.confidence)
         return {"prediction": prediction}
 
     raise HTTPException(400, "Invalid Model Type")
@@ -200,7 +200,7 @@ async def use_all_model(payload: UseModelRequest):
 @app.get("/evaluation")
 async def get_evaluation_result(workflow: str, yolo: str | None = None):
     evaluation = get_all_evaluation(workflow, yolo)
-    # delete_all_models()
-    # clear_evaluation_folder()
-    # clear_dataset()
+    delete_all_models()
+    clear_evaluation_folder()
+    clear_dataset()
     return JSONResponse(evaluation, status_code=200)

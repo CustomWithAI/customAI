@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import { modelInferenceService } from "@/config/dependencies";
 import { userMiddleware } from "@/middleware/authMiddleware";
 import {
-  createModelInferenceDto,
+  createTrainingModelInferenceDto,
   createUploadModelInferenceDto,
   deleteModelInferenceResponseDto,
   modelInferenceResponseDto,
@@ -62,7 +62,10 @@ export const modelInference = new Elysia({
             body
           );
         },
-        { body: createModelInferenceDto, response: modelInferenceResponseDto }
+        {
+          body: createTrainingModelInferenceDto,
+          response: modelInferenceResponseDto,
+        }
       )
       .post(
         "/trainings/:trainingId",
@@ -74,6 +77,9 @@ export const modelInference = new Elysia({
             body
           );
         },
-        { body: createModelInferenceDto, response: modelInferenceResponseDto }
+        {
+          body: createTrainingModelInferenceDto,
+          response: modelInferenceResponseDto,
+        }
       )
   );

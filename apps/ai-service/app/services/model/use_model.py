@@ -106,7 +106,7 @@ class UseModel:
         predictions = self.model.predict(processed_img)
         return np.argmax(predictions, axis=1)[0]
 
-    def use_dl_od_pt(self, img_bytes: bytes, version):
+    def use_dl_od_pt(self, img_bytes: bytes, version: str, confidence: float):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pt") as temp_model:
             temp_model.write(self.model_bytes)
             model_path = temp_model.name
@@ -121,21 +121,21 @@ class UseModel:
         if version == "yolov8":
             command = (
                 f"yolov8_venv/bin/yolo task=detect mode=predict model={model_path} "
-                f"source={temp_img_path} conf=0.7 save_txt save"
+                f"source={temp_img_path} conf={confidence} save_txt save"
             )
             folder_path = "./runs/detect/predict2/labels/"
 
         elif version == "yolov11":
             command = (
                 f"yolov11_venv/bin/yolo task=detect mode=predict model={model_path} "
-                f"source={temp_img_path} conf=0.7 save_txt save"
+                f"source={temp_img_path} conf={confidence} save_txt save"
             )
             folder_path = "./runs/detect/predict2/labels/"
 
         elif version == "yolov5":
             command = (
                 f"yolov5_venv/bin/python ./app/services/model/yolov5/detect.py "
-                f"--weights {model_path} --conf 0.7 --source {temp_img_path} --save-txt"
+                f"--weights {model_path} --conf {confidence} --source {temp_img_path} --save-txt"
             )
             folder_path = "./app/services/model/yolov5/runs/detect/exp/labels/"
         else:
@@ -171,7 +171,7 @@ class UseModel:
 
         return reverse_convert_object_detection(detections, img_width, img_height)
 
-    def use_dl_od_con(self, img_bytes: bytes):
+    def use_dl_od_con(self, img_bytes: bytes, confidence: float):
         print(f"Image bytes length: {len(img_bytes)}")
         with tempfile.NamedTemporaryFile(delete=False, suffix=".h5") as temp_model:
             temp_model.write(self.model_bytes)
@@ -203,9 +203,9 @@ class UseModel:
             # Get classification data for this detection
             class_probs = class_pred[i]
             class_id = int(class_probs.argmax())
-            confidence = float(class_probs[class_id])
+            model_confidence = float(class_probs[class_id])
 
-            if confidence < 0.5:
+            if model_confidence < confidence:
                 continue  # skip low-confidence detections
 
             # Get bounding box data
@@ -219,7 +219,7 @@ class UseModel:
                     "width": float(width),
                     "height": float(height),
                 },
-                "confidence": confidence
+                "confidence": model_confidence
             })
 
         image = Image.open(io.BytesIO(img_bytes))
@@ -228,7 +228,7 @@ class UseModel:
 
         return reverse_convert_object_detection(detections, img_width, img_height)
 
-    def use_dl_seg(self, img_bytes: bytes, version: str):
+    def use_dl_seg(self, img_bytes: bytes, version: str, confidence: float):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pt") as temp_model:
             temp_model.write(self.model_bytes)
             model_path = temp_model.name
@@ -243,13 +243,13 @@ class UseModel:
         if version == "yolov8":
             command = (
                 f"yolov8_venv/bin/yolo task=segment mode=predict model={model_path} "
-                f"source={temp_img_path} conf=0.7 save_txt save"
+                f"source={temp_img_path} conf={confidence} save_txt save"
             )
 
         elif version == "yolov11":
             command = (
                 f"yolov11_venv/bin/yolo task=segment mode=predict model={model_path} "
-                f"source={temp_img_path} conf=0.7 save_txt save"
+                f"source={temp_img_path} conf={confidence} save_txt save"
             )
 
         else:

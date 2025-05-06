@@ -12,6 +12,7 @@ import { config } from "@/config/env";
 import type { TrainingResponseDto } from "@/domains/dtos/training";
 import type {
   ModelInferenceResponseDto,
+  TrainingModelConfigDto,
   UploadModelConfigDto,
 } from "@/domains/dtos/modelInference";
 import { retryConnection } from "@/utils/retry";
@@ -37,6 +38,15 @@ type WorkerInferenceData = {
 };
 
 type WorkerData = WorkerTrainingData | WorkerInferenceData;
+
+const isTrainingModelConfig = (
+  data: unknown
+): data is TrainingModelConfigDto => {
+  const testData = data as TrainingModelConfigDto;
+  return (
+    testData.confidence === undefined || typeof testData.confidence === "number"
+  );
+};
 
 const isUploadModelConfig = (data: unknown): data is UploadModelConfigDto => {
   const testData = data as UploadModelConfigDto;
@@ -382,6 +392,11 @@ export const startTrainingWorker = async () => {
 
             // ✅ In Case Use Model From Training
             if (data.trainingId) {
+              if (!isTrainingModelConfig(data.modelConfig)) {
+                throw new Error(
+                  `Model Config From Training ID: ${data.trainingId} Not Found`
+                );
+              }
               const trainingsData =
                 await trainingRepository.findModelInferenceInfoById(
                   data.trainingId
@@ -403,6 +418,7 @@ export const startTrainingWorker = async () => {
                         type: modelType,
                         img: imagePath,
                         model: modelFilePath,
+                        confidence: data.modelConfig.confidence,
                       }
                     );
                   } else if (
@@ -416,6 +432,7 @@ export const startTrainingWorker = async () => {
                           version: trainingData.preTrainedModel,
                           img: imagePath,
                           model: modelFilePath,
+                          confidence: data.modelConfig.confidence,
                         }
                       );
                     } else {
@@ -425,6 +442,7 @@ export const startTrainingWorker = async () => {
                           type: "dl_od_con",
                           img: imagePath,
                           model: modelFilePath,
+                          confidence: data.modelConfig.confidence,
                         }
                       );
                     }
@@ -437,6 +455,7 @@ export const startTrainingWorker = async () => {
                           version: trainingData.preTrainedModel,
                           img: imagePath,
                           model: modelFilePath,
+                          confidence: data.modelConfig.confidence,
                         }
                       );
                     } else {
@@ -456,7 +475,7 @@ export const startTrainingWorker = async () => {
 
                   if (!trainingData.dataset) {
                     throw new Error(
-                      `Dataset From Training ID: ${data.trainingId} Don't Have Not Found`
+                      `Dataset From Training ID: ${data.trainingId} Not Found`
                     );
                   }
 
@@ -534,6 +553,7 @@ export const startTrainingWorker = async () => {
                     version: data.modelConfig.version,
                     img: imagePath,
                     model: modelFilePath,
+                    confidence: data.modelConfig.confidence,
                   }
                 );
 

@@ -32,12 +32,20 @@ export const createModelInferenceDto = t.Object({
   }),
 });
 
+export const createTrainingModelInferenceDto = t.Object({
+  ...createModelInferenceDto.properties,
+  config: t.ObjectString({
+    confidence: t.Optional(t.Number()),
+  }),
+});
+
 export const createUploadModelInferenceDto = t.Object({
   ...createModelInferenceDto.properties,
   config: t.ObjectString({
     workflow: modelInferenceWorkflow,
     training: modelInferenceTraining,
     version: t.Optional(modelInferenceVersion),
+    confidence: t.Optional(t.Number()),
   }),
   model: t.File({ maxSize: "200m" }),
 });
@@ -67,10 +75,14 @@ export const modelInferencesResponseDto = toMultipleResponse(
 );
 
 export type CreateModelInferenceDto = typeof createModelInferenceDto.static;
+export type CreateTrainingModelInferenceDto =
+  typeof createTrainingModelInferenceDto.static;
 export type CreateUploadModelInferenceDto =
   typeof createUploadModelInferenceDto.static;
 export type ModelInferenceResponseDto = typeof modelInferenceResponseDto.static;
 export type ModelInferencesResponseDto =
   typeof modelInferencesResponseDto.static;
+export type TrainingModelConfigDto =
+  typeof createTrainingModelInferenceDto.properties.config.static;
 export type UploadModelConfigDto =
   typeof createUploadModelInferenceDto.properties.config.static;

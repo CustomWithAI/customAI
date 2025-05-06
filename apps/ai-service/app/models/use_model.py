@@ -7,6 +7,7 @@ class UseModelRequest(BaseModel):
     img: str
     model: str
     version: Optional[Literal["yolov5", "yolov8", "yolov11"]] = None
+    confidence: float = 0.5
     
     @model_validator(mode="after")
     def validate_size(cls, values: "UseModelRequest"):
