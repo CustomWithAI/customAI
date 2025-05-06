@@ -305,7 +305,7 @@ export class TrainingService {
       throw new NotFoundError(`Training not found: ${id}`);
     }
 
-    const { createdAt, updatedAt, ...training } = trainings[0];
+    const { id: trainingId, createdAt, updatedAt, ...training } = trainings[0];
 
     const result = await this.repository.create({
       ...training,
