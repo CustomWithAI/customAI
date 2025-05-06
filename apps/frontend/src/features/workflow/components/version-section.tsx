@@ -1,3 +1,4 @@
+"use client";
 import { Content, ContentHeader, Subtle } from "@/components/typography/text";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,10 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+	useDeleteTraining,
+	useSetDefaultTraining,
+} from "@/hooks/mutations/training-api";
 import { formatBytes } from "@/hooks/use-file-upload";
 import { getFileMeta } from "@/lib/getFileUrl";
 import { encodeBase64 } from "@/libs/base64";
@@ -58,6 +63,11 @@ export const VersionSection = ({
 		triggerOnce: false,
 		threshold: 0.1,
 	});
+
+	const { mutate: setDefault, isPending: setDefaultPending } =
+		useSetDefaultTraining();
+	const { mutate: deleteTraining, isPending: deletePending } =
+		useDeleteTraining();
 
 	useEffect(() => {
 		if (inView) {
@@ -140,8 +150,28 @@ export const VersionSection = ({
 								</Button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent className="w-56">
-								<DropdownMenuItem>set default</DropdownMenuItem>
-								<DropdownMenuItem className="text-red-500">
+								<DropdownMenuItem>clone</DropdownMenuItem>
+								<DropdownMenuItem
+									disabled={setDefaultPending}
+									onClick={() => {
+										setDefault({
+											workflowId: current.workflow.id,
+											trainingId: current.id,
+										});
+									}}
+								>
+									set default
+								</DropdownMenuItem>
+								<DropdownMenuItem
+									disabled={deletePending}
+									onClick={() => {
+										deleteTraining({
+											workflowId: current.workflow.id,
+											trainingId: current.id,
+										});
+									}}
+									className="text-red-500"
+								>
 									remove
 								</DropdownMenuItem>
 							</DropdownMenuContent>

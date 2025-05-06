@@ -206,6 +206,14 @@ export function InfiniteCombobox<T extends object>({
 										</CommandItem>
 									);
 								})}
+								<div
+									ref={ref}
+									className="flex justify-center items-center w-full py-4"
+								>
+									{isFetchingNextPage && (
+										<Loader2 className="h-6 w-6 animate-spin text-primary" />
+									)}
+								</div>
 							</CommandGroup>
 						)}
 					</CommandList>

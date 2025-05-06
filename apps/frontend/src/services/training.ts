@@ -20,6 +20,16 @@ export const trainingService = {
 			);
 		} catch (error) {}
 	},
+	setDefault: async ({
+		workflowId,
+		trainingId,
+	}: { workflowId: string; trainingId: string }) => {
+		try {
+			return axiosClient.post<TrainingModel>(
+				`/workflows/${workflowId}/trainings/${trainingId}/set-default`,
+			);
+		} catch (error) {}
+	},
 	updateTraining: async ({
 		workflowId,
 		trainingId,
@@ -38,6 +48,16 @@ export const trainingService = {
 	}: { workflowId: string; trainingId: string }) => {
 		try {
 			return axiosClient.get<TrainingModel>(
+				`/workflows/${workflowId}/trainings/${trainingId}`,
+			);
+		} catch (error) {}
+	},
+	deleteTrainingById: async ({
+		workflowId,
+		trainingId,
+	}: { workflowId: string; trainingId: string }) => {
+		try {
+			return axiosClient.delete<TrainingModel>(
 				`/workflows/${workflowId}/trainings/${trainingId}`,
 			);
 		} catch (error) {}

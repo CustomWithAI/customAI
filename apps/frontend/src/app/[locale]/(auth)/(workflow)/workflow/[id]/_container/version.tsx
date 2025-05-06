@@ -8,7 +8,7 @@ import { findPreviousVersion } from "@/utils/lastVersion";
 import { useMemo, useState } from "react";
 
 export const VersionPage = ({ id }: { id: string }) => {
-	const versionData = useGetInfTrainingByWorkflowId(id);
+	const versionData = useGetInfTrainingByWorkflowId({ workflowId: id });
 	const [activeVersion, setActiveVersion] = useState<string | null>(null);
 	const items = useMemo(
 		() =>

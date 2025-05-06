@@ -20,3 +20,14 @@ export const useUpdateWorkflow = () => {
 		},
 	});
 };
+
+export const useDeleteWorkflow = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: workflowService.deleteWorkflow,
+		onSuccess: (data) => {
+			queryClient.invalidateQueries({ queryKey: ["workflows"] });
+			queryClient.invalidateQueries({ queryKey: ["inf-workflows"] });
+		},
+	});
+};

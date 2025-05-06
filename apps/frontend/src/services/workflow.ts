@@ -32,4 +32,9 @@ export const workflowService = {
 			return axiosClient.put<WorkflowModel>(`/workflows/${id}`, workflow);
 		} catch (error) {}
 	},
+	deleteWorkflow: async ({ id }: { id: string }) => {
+		try {
+			return axiosClient.delete<any>(`/workflows/${id}`);
+		} catch (error) {}
+	},
 };

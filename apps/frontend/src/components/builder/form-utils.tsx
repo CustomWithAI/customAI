@@ -11,6 +11,7 @@ type TextFormItemProps = {
 	number?: boolean;
 	onChange: (v: string | number | undefined) => void;
 	value: string;
+	limit?: number;
 	placeholder?: string;
 };
 export const TextFormItem = ({
@@ -19,6 +20,7 @@ export const TextFormItem = ({
 	className,
 	onChange,
 	number,
+	limit,
 	value,
 	placeholder,
 }: TextFormItemProps) => (
@@ -48,9 +50,16 @@ export const TextFormItem = ({
 								inputValue.includes(".")
 							) {
 								onChange(inputValue);
-							} else {
-								const parsedValue = Number.parseFloat(inputValue);
+								return;
+							}
+							const parsedValue = Number.parseFloat(inputValue);
+							if (!limit) {
 								onChange(parsedValue);
+								return;
+							}
+							if ((limit || 0) > parsedValue) {
+								onChange(limit);
+								return;
 							}
 						}
 					}

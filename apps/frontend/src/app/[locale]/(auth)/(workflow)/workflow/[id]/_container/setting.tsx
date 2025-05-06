@@ -7,6 +7,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { WorkflowEditForm } from "@/features/workflow/components/editForm";
+import { WorkflowSettingForm } from "@/features/workflow/components/settingForm";
 import type { WorkflowDetails } from "@/models/workflow";
 import { Suspense } from "react";
 
@@ -25,6 +26,14 @@ export const SettingPage = ({
 				<CardContent>
 					<Suspense fallback={<div>Loading workflows...</div>}>
 						<WorkflowEditForm id={id} workflow={workflows} />
+					</Suspense>
+				</CardContent>
+			</Card>
+			<Card>
+				<CardHeader>Workflow Operation</CardHeader>
+				<CardContent>
+					<Suspense fallback={<div>Loading workflows...</div>}>
+						<WorkflowSettingForm id={id} workflow={workflows} />
 					</Suspense>
 				</CardContent>
 			</Card>

@@ -10,7 +10,7 @@ import {
 	useInfiniteQuery,
 	useQuery,
 } from "@tanstack/react-query";
-import { QueryParams } from "../use-query-params";
+import type { QueryParams } from "../use-query-params";
 
 export const useGetTrainingById = (
 	workflowId: string,
@@ -40,9 +40,15 @@ export const useGetTrainingByWorkflowId = (
 		...options,
 	});
 
-export const useGetInfTrainingByWorkflowId = (
-	workflowId: string,
-): AppInfiniteQuery<typeof trainingService.getTrainingByWorkflowId> =>
+export const useGetInfTrainingByWorkflowId = ({
+	workflowId,
+	params,
+	config: { enabled } = {},
+}: {
+	workflowId: string;
+	params?: QueryParams;
+	config?: { enabled?: boolean };
+}): AppInfiniteQuery<typeof trainingService.getTrainingByWorkflowId> =>
 	useInfiniteQuery({
 		queryKey: ["inf-training", workflowId],
 		queryFn: async ({ pageParam = "" }) =>
@@ -50,17 +56,18 @@ export const useGetInfTrainingByWorkflowId = (
 				workflowId,
 				params: pageParam || "",
 			}),
-		initialPageParam: null as string | null,
+		initialPageParam: buildQueryParams(params),
 		getNextPageParam: (lastPage) =>
 			lastPage?.nextCursor
-				? buildQueryParams({ cursor: lastPage.nextCursor })
+				? buildQueryParams({ cursor: lastPage.nextCursor, ...params })
 				: null,
 		getPreviousPageParam: (firstPage) =>
 			firstPage?.prevCursor
-				? buildQueryParams({ cursor: firstPage.prevCursor })
+				? buildQueryParams({ cursor: firstPage.prevCursor, ...params })
 				: null,
 		refetchOnWindowFocus: false,
 		placeholderData: keepPreviousData,
+		enabled,
 	});
 
 export const useGetTrainingByDefault = (

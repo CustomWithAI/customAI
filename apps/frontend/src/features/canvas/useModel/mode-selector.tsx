@@ -23,10 +23,10 @@ export function ModeSelector({ mode, onChange }: ModeSelectorProps) {
 			if ("w" === event.key) {
 				onChange("action");
 			}
-			if ("space" === event.key) {
+			if ("Space" === event.key) {
 				onChange("hand");
 			}
-			if ("del" === event.key) {
+			if ("Backspace" === event.key) {
 				onChange("delete");
 			}
 		},

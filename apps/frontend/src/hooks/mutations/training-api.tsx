@@ -16,6 +16,36 @@ export const useCreateTraining = () => {
 	});
 };
 
+export const useSetDefaultTraining = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: trainingService.setDefault,
+		onSuccess: (ctx) => {
+			queryClient.invalidateQueries({
+				queryKey: ["training"],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["inf-training"],
+			});
+		},
+	});
+};
+
+export const useDeleteTraining = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: trainingService.deleteTrainingById,
+		onSuccess: (ctx) => {
+			queryClient.invalidateQueries({
+				queryKey: ["training"],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["inf-training"],
+			});
+		},
+	});
+};
+
 export const useUpdateTraining = () => {
 	const queryClient = useQueryClient();
 	return useMutation({

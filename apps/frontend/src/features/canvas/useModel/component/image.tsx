@@ -1,3 +1,4 @@
+import { InfiniteCombobox } from "@/components/layout/inifinityCombobox";
 import { Combobox } from "@/components/specific/combobox";
 import UploadZone from "@/components/specific/upload";
 import UploadFile from "@/components/specific/uploadFile";
@@ -20,10 +21,17 @@ import {
 	useCreateTrainingInference,
 	useCreateWorkflowInference,
 } from "@/hooks/queries/inference-api";
-import { useGetTrainingByWorkflowId } from "@/hooks/queries/training-api";
-import { useGetWorkflows } from "@/hooks/queries/workflow-api";
+import {
+	useGetInfTrainingByWorkflowId,
+	useGetTrainingByWorkflowId,
+} from "@/hooks/queries/training-api";
+import {
+	useGetInfWorkflows,
+	useGetWorkflows,
+} from "@/hooks/queries/workflow-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { toast } from "@/hooks/use-toast";
+import { decodeBase64 } from "@/libs/base64";
 import { cn } from "@/libs/utils";
 import { useInferenceStore } from "@/stores/inferenceStore";
 import type {
@@ -204,11 +212,11 @@ export const ImageComponents = ({
 
 	const { data: enumType, isPending } = useGetEnum();
 
-	const workflowQuery = useGetWorkflows(
-		buildQueryParams({
+	const workflowQuery = useGetInfWorkflows({
+		params: {
 			search: filter.workflow ? `name:${filter.workflow}` : undefined,
-		}),
-	);
+		},
+	});
 
 	const { mutateAsync: createCustomInference, isPending: customPending } =
 		useCreateCustomInference();
@@ -217,13 +225,13 @@ export const ImageComponents = ({
 	const { mutateAsync: createTrainingInference, isPending: trainingPending } =
 		useCreateTrainingInference();
 
-	const trainingQuery = useGetTrainingByWorkflowId(
-		workflowId || data.workflowId || "",
-		buildQueryParams({
+	const trainingQuery = useGetInfTrainingByWorkflowId({
+		workflowId: decodeBase64(workflowId) || data.workflowId || "",
+		params: {
 			search: filter.training ? `name:${filter.training}` : "",
-		}),
-		{ enabled: !!(workflowId || data.workflowId) },
-	);
+		},
+		config: { enabled: !!(workflowId || data.workflowId) },
+	});
 
 	const [selected, setSelected] = useState<SelectType>(
 		trainingId ? "training" : workflowId ? "workflow" : "manual",
@@ -301,10 +309,10 @@ export const ImageComponents = ({
 
 	useEffect(() => {
 		if (workflowId) {
-			onSet("workflowId", workflowId);
+			onSet("workflowId", decodeBase64(workflowId));
 		}
 		if (trainingId) {
-			onSet("trainingId", trainingId);
+			onSet("trainingId", decodeBase64(trainingId));
 		}
 	}, [workflowId, trainingId, onSet]);
 
@@ -651,7 +659,7 @@ export const ImageComponents = ({
 						<Label htmlFor={`${id}-workflow`} className="mb-1 pb-1 text-xs">
 							workflow
 						</Label>
-						<Combobox
+						<InfiniteCombobox
 							hook={workflowQuery}
 							id={`${id}-workflow`}
 							keyExtractor={(workflow) => String(workflow.id)}
@@ -678,7 +686,7 @@ export const ImageComponents = ({
 						<Label htmlFor={`${id}-workflowId`} className="mb-1 pb-1 text-xs">
 							workflow
 						</Label>
-						<Combobox
+						<InfiniteCombobox
 							hook={workflowQuery}
 							keyExtractor={(workflow) => String(workflow.id)}
 							itemDisplay={(workflow) => workflow.name}
@@ -701,7 +709,7 @@ export const ImageComponents = ({
 						<Label htmlFor={`${id}-trainingId`} className="mb-1 pb-1 text-xs">
 							training
 						</Label>
-						<Combobox
+						<InfiniteCombobox
 							hook={trainingQuery}
 							disabled={!(workflowId || data.workflowId)}
 							keyExtractor={(training) => String(training.id)}
