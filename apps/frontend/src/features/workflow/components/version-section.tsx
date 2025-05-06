@@ -12,6 +12,7 @@ import {
 import {
 	useDeleteTraining,
 	useSetDefaultTraining,
+	useUpdateTraining,
 } from "@/hooks/mutations/training-api";
 import { formatBytes } from "@/hooks/use-file-upload";
 import { getFileMeta } from "@/lib/getFileUrl";
@@ -21,15 +22,9 @@ import { cn } from "@/libs/utils";
 import type { TrainingModel } from "@/types/response/training";
 import { diffObjects } from "@/utils/diffVersion";
 import { formatDistanceToNow } from "date-fns";
-import {
-	Edit2,
-	Ellipsis,
-	GitCommitVertical,
-	Link,
-	Router,
-	X,
-} from "lucide-react";
+import { Edit2, Ellipsis, GitCommitVertical, Router, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { forwardRef, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { DiffDisplay } from "./diffDisplay";
@@ -57,6 +52,8 @@ export const VersionSection = ({
 		ReturnType<typeof getFileMeta>
 	> | null>(null);
 	const t = useTranslations();
+	const { mutateAsync: updateTraining, isPending: trainingPending } =
+		useUpdateTraining();
 	const router = useRouter();
 
 	const { ref, inView } = useInView({
@@ -126,8 +123,19 @@ export const VersionSection = ({
 							variant="ghost"
 							size="sm"
 							className="hover:bg-zinc-100/80 h-6 w-6 p-0"
-							onClick={(e) => {
+							disabled={trainingPending}
+							onClick={async (e) => {
 								e.stopPropagation();
+								await updateTraining({
+									workflowId: current.workflow.id,
+									trainingId: current.id,
+									pipeline: {
+										steps: current.pipeline.steps,
+										current:
+											current.pipeline.steps?.find((s) => s.index === 0)
+												?.name || "workflow_info",
+									},
+								});
 								router.push(
 									`/workflow/create?step=${encodeBase64(current.pipeline.steps?.find((s) => s.index === 0)?.name || "workflow_info")}&id=${encodeBase64(current?.workflow?.id)}&trainings=${encodeBase64(current?.id)}`,
 								);
@@ -195,14 +203,17 @@ export const VersionSection = ({
 							<div className="px-5 py-1 rounded flex space-x-2 justify-between">
 								<div className="inline-flex space-x-3">
 									{Icon && <Icon className="w-4 h-4" />}
-									<Content className="text-blue-600 font-semibold">
+									<Link
+										href={current?.trainedModelPath}
+										className="text-blue-600 text-sm font-semibold"
+									>
 										{meta.name}
-									</Content>
-									<Content className="text-blue-600">
+									</Link>
+									<Content className="text-blue-600 text-sm">
 										({meta.extension})
 									</Content>
 								</div>
-								<Content>
+								<Content className="text-sm">
 									{meta.size ? formatBytes(meta.size) : "unknown"}
 								</Content>
 							</div>

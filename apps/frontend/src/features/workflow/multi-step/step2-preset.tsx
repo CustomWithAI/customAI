@@ -116,10 +116,7 @@ export const Step3Page = () => {
 				}
 				if (acc.current === null) {
 					if (item.metadata.check.value === true && item.metadata.name?.value) {
-						acc.steps.push({
-							index: index++,
-							name: String(item.metadata.name.value),
-						});
+						acc.current = String(item.metadata.name?.value);
 					}
 				}
 				return acc;

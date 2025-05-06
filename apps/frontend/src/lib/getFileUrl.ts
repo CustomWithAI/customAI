@@ -55,11 +55,23 @@ export const getFileMeta = async (
 	let size: number | null = null;
 
 	try {
-		const response = await axios.head(url);
-		const contentLength = response.headers["content-length"];
-		size = contentLength ? Number.parseInt(contentLength, 10) : null;
-	} catch {
-		size = null;
+		const headRes = await axios.head(url, { maxRedirects: 5 });
+		const contentLength = headRes.headers["content-length"];
+		if (contentLength) {
+			size = Number.parseInt(contentLength, 10);
+		}
+	} catch {}
+
+	if (size == null) {
+		try {
+			const getRes = await axios.get(url, {
+				responseType: "arraybuffer",
+				maxRedirects: 5,
+			});
+			size = getRes.data.byteLength;
+		} catch {
+			size = null;
+		}
 	}
 
 	return { name, extension, icon, size };
