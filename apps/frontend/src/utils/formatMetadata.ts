@@ -85,6 +85,88 @@ function isSimpleObject(value: unknown): boolean {
 	return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+export function jsonToMetadata(
+	metadata: Metadata,
+	json: Record<string, unknown>,
+): Metadata {
+	const result: Metadata = {};
+
+	for (const [key, meta] of Object.entries(metadata)) {
+		const rawValue = json[key];
+
+		if (rawValue === null || rawValue === undefined) {
+			result[key] = meta;
+			continue;
+		}
+
+		switch (meta.type) {
+			case "Boolean":
+				result[key] = {
+					...meta,
+					value: typeof rawValue === "boolean" ? rawValue : Boolean(rawValue),
+				};
+				break;
+
+			case "String":
+				result[key] = {
+					...meta,
+					value: typeof rawValue === "string" ? rawValue : String(rawValue),
+				};
+				break;
+
+			case "Number":
+				result[key] = {
+					...meta,
+					value: Number.isNaN(Number(rawValue)) ? meta.value : Number(rawValue),
+				};
+				break;
+
+			case "Position":
+				if (
+					typeof rawValue === "object" &&
+					rawValue !== null &&
+					"x" in rawValue &&
+					"y" in rawValue
+				) {
+					const pos = rawValue as Record<string, unknown>;
+					result[key] = {
+						...meta,
+						value: {
+							x: typeof pos.x === "number" ? pos.x : Number(pos.x) || 0,
+							y: typeof pos.y === "number" ? pos.y : Number(pos.y) || 0,
+						},
+					};
+				} else {
+					result[key] = meta;
+				}
+				break;
+
+			case "Object":
+				if (
+					typeof rawValue === "object" &&
+					rawValue !== null &&
+					!Array.isArray(rawValue)
+				) {
+					result[key] = {
+						...meta,
+						value: jsonToMetadata(
+							meta.value,
+							rawValue as Record<string, unknown>,
+						),
+					};
+				} else {
+					result[key] = meta;
+				}
+				break;
+
+			default:
+				result[key] = meta;
+		}
+	}
+
+	return result;
+}
+
 export function arrayToMetadata(
 	metadata: Metadata,
 	array: unknown[] | unknown,

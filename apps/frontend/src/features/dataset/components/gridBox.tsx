@@ -26,7 +26,7 @@ export const DatasetCard: React.FC<CardProps> = ({
 		<button
 			type="button"
 			className={cn(
-				"min-w-64 hover:shadow-blue-500 hover:shadow-xs duration-200 border border-gray-200",
+				"min-w-64 h-60 hover:shadow-blue-500 hover:shadow-xs duration-200 border border-gray-200",
 				" rounded-lg shadow-md overflow-hidden aspect-[4/3]",
 				className,
 			)}
@@ -54,8 +54,10 @@ export const DatasetCard: React.FC<CardProps> = ({
 				</div>
 			</div>
 			<div className="w-full text-left p-6 pt-4 min-h-24 bg-white z-10">
-				<Header className="font-semibold text-lg">{title}</Header>
-				<Subtle className="text-sm text-gray-500">{description}</Subtle>
+				<Header className="font-semibold text-lg truncate">{title}</Header>
+				<Subtle className="text-sm text-gray-500 truncate">
+					{description}
+				</Subtle>
 			</div>
 		</button>
 	);

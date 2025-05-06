@@ -1,5 +1,6 @@
 import { Content } from "@/components/typography/text";
 import { Button } from "@/components/ui/button";
+import { node } from "@/configs/feat-extract";
 import { presetList } from "@/configs/preset";
 import { useDragStore } from "@/contexts/dragContext";
 import { TableFeatureExSection } from "@/features/feature-ex/table";
@@ -12,13 +13,17 @@ import { useUpdateTraining } from "@/hooks/mutations/training-api";
 import { useGetTrainingById } from "@/hooks/queries/training-api";
 import { useQueryParam } from "@/hooks/use-query-params";
 import { useToast } from "@/hooks/use-toast";
+import { Undefined } from "@/libs/Undefined";
 import { decodeBase64, encodeBase64 } from "@/libs/base64";
 import { cn } from "@/libs/utils";
-import { metadataToArray, metadataToJSON } from "@/utils/formatMetadata";
+import type { DragColumn } from "@/stores/dragStore";
+import { jsonToMetadata, metadataToJSON } from "@/utils/formatMetadata";
+import { sortedMetadata } from "@/utils/sortMetadata";
 import { getStep } from "@/utils/step-utils";
 import { formatDate } from "@/utils/to-datetime";
 import { motion } from "framer-motion";
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import type { ZodRawShape } from "zod";
 import { useShallow } from "zustand/react/shallow";
 
 export const FeaturePage = () => {
@@ -30,11 +35,13 @@ export const FeaturePage = () => {
 
 	const [workflowId, trainingId] = getQueryParam(["id", "trainings"], ["", ""]);
 
-	const { data: training, isPending: trainingPending } = useGetTrainingById(
-		decodeBase64(workflowId),
-		decodeBase64(trainingId),
-		{ enabled: workflowId !== "" && trainingId !== "" },
-	);
+	const {
+		data: training,
+		isSuccess,
+		isPending: trainingPending,
+	} = useGetTrainingById(decodeBase64(workflowId), decodeBase64(trainingId), {
+		enabled: workflowId !== "" && trainingId !== "",
+	});
 
 	const { mutateAsync: updateTraining } = useUpdateTraining();
 	const { mutateAsync: createFeature } = useCreateFeatureEx();
@@ -42,6 +49,31 @@ export const FeaturePage = () => {
 
 	const fields = useDragStore(useShallow((state) => state.fields));
 	const onReset = useDragStore((state) => state.onReset);
+	const onUpdateMetadata = useDragStore((state) => state.onUpdateMetadata);
+	const onSet = useDragStore((state) => state.onSet);
+	const hasRunRef = useRef(false);
+
+	useEffect(() => {
+		if (isSuccess && training?.data.featureExtraction && !hasRunRef.current) {
+			hasRunRef.current = true;
+			const fieldObject = Object.entries(
+				training?.data.featureExtraction?.data,
+			);
+			const featureNode = node(fields, onUpdateMetadata);
+			onSet(
+				fieldObject
+					.map(([key, value]) => {
+						const find = featureNode.find((v) => v.type === key);
+						if (!find?.metadata) return undefined;
+						return {
+							...find,
+							metadata: jsonToMetadata(find?.metadata, value),
+						};
+					})
+					.filter(Undefined) as DragColumn<ZodRawShape>[],
+			);
+		}
+	}, [isSuccess, training, fields, onUpdateMetadata, onSet]);
 
 	const handleSubmit = useCallback(async () => {
 		const json = fields.reduce(
@@ -130,6 +162,7 @@ export const FeaturePage = () => {
 		updateFeature,
 		fields,
 		onReset,
+		onSet,
 		trainingId,
 		updateTraining,
 		workflowId,
@@ -139,7 +172,6 @@ export const FeaturePage = () => {
 		training?.data.featureExtraction,
 		training?.data.workflow,
 	]);
-	const onSet = useDragStore((state) => state.onSet);
 
 	const handlePrevious = useCallback(async () => {
 		if (!training?.data.pipeline.steps) return;

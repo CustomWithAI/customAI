@@ -629,7 +629,7 @@ export const node = (
 			icon: <IconBrightness />,
 			id: "brightness-1",
 			metadata: {
-				min: {
+				probability: {
 					type: "Number",
 					value: 0,
 				},
@@ -657,13 +657,13 @@ export const node = (
 						required: true,
 					},
 					config: {
-						setValue: findById(fields, "brightness-1")?.metadata?.min
+						setValue: findById(fields, "brightness-1")?.metadata?.probability
 							?.value as boolean,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "brightness-1",
 								metadata: {
-									min: {
+									probability: {
 										type: "Number",
 										value: value as number,
 									},
@@ -671,7 +671,7 @@ export const node = (
 							});
 						},
 						options: {
-							min: -1,
+							min: 0,
 							max: 1,
 							step: 0.1,
 						},
@@ -701,7 +701,7 @@ export const node = (
 							});
 						},
 						options: {
-							min: 0,
+							min: -1,
 							max: 1,
 							step: 0.1,
 						},
@@ -709,7 +709,7 @@ export const node = (
 				},
 			],
 			inputSchema: z.object({
-				min: z.number(),
+				probability: z.number(),
 				max: z.number(),
 			}),
 		},

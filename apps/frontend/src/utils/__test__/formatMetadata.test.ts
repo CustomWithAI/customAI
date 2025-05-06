@@ -2,6 +2,7 @@ import type { Metadata } from "@/stores/dragStore";
 import {
 	arrayToMetadata,
 	formatMetadata,
+	jsonToMetadata,
 	metadataToArray,
 	metadataToJSON,
 } from "../formatMetadata";
@@ -410,5 +411,163 @@ describe("arrayToMetadata", () => {
 				},
 			},
 		});
+	});
+});
+
+describe("jsonToMetadata", () => {
+	const baseMetadata: Metadata = {
+		active: { type: "Boolean", value: false },
+		title: { type: "String", value: "Untitled" },
+		count: { type: "Number", value: 0 },
+		position: { type: "Position", value: { x: 0, y: 0 } },
+		config: {
+			type: "Object",
+			value: {
+				enabled: { type: "Boolean", value: true },
+				threshold: { type: "Number", value: 10 },
+			},
+		},
+	};
+
+	it("maps values correctly when all fields are present and types match", () => {
+		const json = {
+			active: true,
+			title: "My Title",
+			count: 42,
+			position: { x: 10, y: 20 },
+			config: {
+				enabled: false,
+				threshold: 99,
+			},
+		};
+
+		const result = jsonToMetadata(baseMetadata, json);
+
+		expect(result).toEqual({
+			active: { type: "Boolean", value: true },
+			title: { type: "String", value: "My Title" },
+			count: { type: "Number", value: 42 },
+			position: { type: "Position", value: { x: 10, y: 20 } },
+			config: {
+				type: "Object",
+				value: {
+					enabled: { type: "Boolean", value: false },
+					threshold: { type: "Number", value: 99 },
+				},
+			},
+		});
+	});
+
+	it("handles partial input by preserving default values", () => {
+		const json = {
+			active: true,
+		};
+
+		const result = jsonToMetadata(baseMetadata, json);
+
+		expect(result).toEqual({
+			active: { type: "Boolean", value: true },
+			title: { type: "String", value: "Untitled" },
+			count: { type: "Number", value: 0 },
+			position: { type: "Position", value: { x: 0, y: 0 } },
+			config: {
+				type: "Object",
+				value: {
+					enabled: { type: "Boolean", value: true },
+					threshold: { type: "Number", value: 10 },
+				},
+			},
+		});
+	});
+
+	it("casts incorrect types (e.g., string to number or boolean)", () => {
+		const json = {
+			active: "true",
+			count: "100",
+			position: { x: "5", y: "10" },
+			config: {
+				enabled: "false",
+				threshold: "200",
+			},
+		};
+
+		const result = jsonToMetadata(baseMetadata, json);
+
+		expect(result).toEqual({
+			active: { type: "Boolean", value: true },
+			title: { type: "String", value: "Untitled" },
+			count: { type: "Number", value: 100 },
+			position: { type: "Position", value: { x: 5, y: 10 } },
+			config: {
+				type: "Object",
+				value: {
+					enabled: { type: "Boolean", value: true },
+					threshold: { type: "Number", value: 200 },
+				},
+			},
+		});
+	});
+
+	it("ignores extra fields in the input JSON", () => {
+		const json = {
+			active: true,
+			extraField: "ignored",
+			config: {
+				enabled: false,
+				threshold: 50,
+				extraNested: "ignored",
+			},
+		};
+
+		const result = jsonToMetadata(baseMetadata, json);
+
+		expect(result).toEqual({
+			active: { type: "Boolean", value: true },
+			title: { type: "String", value: "Untitled" },
+			count: { type: "Number", value: 0 },
+			position: { type: "Position", value: { x: 0, y: 0 } },
+			config: {
+				type: "Object",
+				value: {
+					enabled: { type: "Boolean", value: false },
+					threshold: { type: "Number", value: 50 },
+				},
+			},
+		});
+	});
+
+	it("handles null and undefined input values gracefully", () => {
+		const json = {
+			active: null,
+			title: undefined,
+			count: null,
+			position: null,
+			config: {
+				enabled: null,
+				threshold: undefined,
+			},
+		};
+
+		const result = jsonToMetadata(baseMetadata, json);
+
+		expect(result).toEqual({
+			active: { type: "Boolean", value: false },
+			title: { type: "String", value: "Untitled" },
+			count: { type: "Number", value: 0 },
+			position: { type: "Position", value: { x: 0, y: 0 } },
+			config: {
+				type: "Object",
+				value: {
+					enabled: { type: "Boolean", value: true },
+					threshold: { type: "Number", value: 10 },
+				},
+			},
+		});
+	});
+
+	it("preserves original metadata shape if value not in input", () => {
+		const json = {};
+		const result = jsonToMetadata(baseMetadata, json);
+		expect(result).toEqual(baseMetadata);
 	});
 });

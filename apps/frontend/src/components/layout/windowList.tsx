@@ -102,7 +102,7 @@ export const WindowList = <T extends object>({
 					})
 				}
 				className={cn(
-					{ "w-full h-auto min-h-[12.5rem]": direction === "horizontal" },
+					{ "w-full h-[15rem] overflow-x-hidden": direction === "horizontal" },
 					{ "h-full w-auto": direction === "vertical" },
 					className,
 				)}

@@ -109,21 +109,22 @@ export const DatasetPage = () => {
 				query={datasetQuery}
 				direction="horizontal"
 				itemContent={(_, dataset) => (
-					<DatasetCard
-						key={dataset.id}
-						title={dataset.name}
-						description={dataset.description}
-						imagesCount={dataset.imageCount}
-						href={""}
-						className={cn(
-							datasetId === dataset.id
-								? "border-green-400"
-								: "border-transparent",
-							"mr-4 border",
-						)}
-						onClick={() => setDatasetId(dataset.id)}
-						images={dataset.images}
-					/>
+					<div key={dataset.id}>
+						<DatasetCard
+							title={dataset.name}
+							description={dataset.description}
+							imagesCount={dataset.imageCount}
+							href={""}
+							className={cn(
+								datasetId === dataset.id
+									? "border-green-400"
+									: "border-transparent",
+								"mr-4 border",
+							)}
+							onClick={() => setDatasetId(dataset.id)}
+							images={dataset.images}
+						/>
+					</div>
 				)}
 			/>
 			<Subtle>Create new dataset</Subtle>
