@@ -121,21 +121,21 @@ class UseModel:
         if version == "yolov8":
             command = (
                 f"yolov8_venv/bin/yolo task=detect mode=predict model={model_path} "
-                f"source={temp_img_path} conf=0.5 save_txt save"
+                f"source={temp_img_path} conf=0.7 save_txt save"
             )
             folder_path = "./runs/detect/predict2/labels/"
 
         elif version == "yolov11":
             command = (
                 f"yolov11_venv/bin/yolo task=detect mode=predict model={model_path} "
-                f"source={temp_img_path} conf=0.5 save_txt save"
+                f"source={temp_img_path} conf=0.7 save_txt save"
             )
             folder_path = "./runs/detect/predict2/labels/"
 
         elif version == "yolov5":
             command = (
                 f"yolov5_venv/bin/python ./app/services/model/yolov5/detect.py "
-                f"--weights {model_path} --conf 0.09 --source {temp_img_path} --save-txt"
+                f"--weights {model_path} --conf 0.7 --source {temp_img_path} --save-txt"
             )
             folder_path = "./app/services/model/yolov5/runs/detect/exp/labels/"
         else:
@@ -243,13 +243,13 @@ class UseModel:
         if version == "yolov8":
             command = (
                 f"yolov8_venv/bin/yolo task=segment mode=predict model={model_path} "
-                f"source={temp_img_path} conf=0.5 save_txt save"
+                f"source={temp_img_path} conf=0.7 save_txt save"
             )
 
         elif version == "yolov11":
             command = (
                 f"yolov11_venv/bin/yolo task=segment mode=predict model={model_path} "
-                f"source={temp_img_path} conf=0.5 save_txt save"
+                f"source={temp_img_path} conf=0.7 save_txt save"
             )
 
         else:

@@ -1,5 +1,5 @@
 {
-  "id": "bd6bfc6f-d0ad-4f92-8b17-fbd7402405a0",
+  "id": "3f9142d1-a218-4ad3-9772-d451dcd231a7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1081,6 +1081,12 @@
         "evaluation": {
           "name": "evaluation",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "evaluation_image": {
+          "name": "evaluation_image",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },

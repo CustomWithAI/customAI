@@ -73,7 +73,7 @@ export const node = (
 			}),
 		},
 		{
-			type: "cropping",
+			type: "crop",
 			title: "Cropping Node",
 			description: "Crop a region from the image (x, y, width, height)",
 			icon: <Crop />,

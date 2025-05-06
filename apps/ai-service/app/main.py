@@ -4,6 +4,7 @@ import os
 import glob
 import subprocess
 import requests
+import traceback
 
 from app.services.dataset.dataset import preprocess_all_dataset, augment_dataset_class, augment_dataset_obj, augment_dataset_seg, prepare_dataset
 from app.services.model.training import MLTraining, DLTrainingPretrained, ConstructTraining
@@ -19,7 +20,7 @@ from app.models.dataset import DatasetConfigRequest, PrepareDatasetRequest
 from app.models.use_model import UseModelRequest
 from app.services.model.use_model import UseModel
 from app.helpers.models import delete_all_models, get_model
-from app.helpers.evaluation import get_evaluation, clear_evaluate_folder
+from app.helpers.evaluation import get_all_evaluation, clear_evaluation_folder
 from app.helpers.dataset import clear_dataset
 
 ml_training = MLTraining()
@@ -31,10 +32,17 @@ app = FastAPI()
 @app.exception_handler(Exception)
 async def exception_handler(request: Request, e: Exception):
     delete_all_models()
-    clear_evaluate_folder()
+    clear_evaluation_folder()
     return JSONResponse(
         status_code=500,
-        content={"message": f"Error: {str(e)}", "path": f"{request.url}"}
+        content={
+            "detail": "An unexpected error occurred.",
+            "path": request.url,
+            "error_type": type(e).__name__,
+            "error_message": str(e),
+            # Optional: add traceback for debug (should close in production)
+            "trace": traceback.format_exc()
+        },
     )
 
 
@@ -191,8 +199,8 @@ async def use_all_model(payload: UseModelRequest):
 
 @app.get("/evaluation")
 async def get_evaluation_result(workflow: str, yolo: str | None = None):
-    evaluation = get_evaluation(workflow, yolo)
-    delete_all_models()
-    clear_evaluate_folder()
-    clear_dataset()
-    return PlainTextResponse(evaluation, 200)
+    evaluation = get_all_evaluation(workflow, yolo)
+    # delete_all_models()
+    # clear_evaluation_folder()
+    # clear_dataset()
+    return JSONResponse(evaluation, status_code=200)

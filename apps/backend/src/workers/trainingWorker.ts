@@ -324,11 +324,16 @@ export const startTrainingWorker = async () => {
               "application/octet-stream"
             );
 
+            const evaluationData: string = evaluationResponse.data.evaluation;
+            const evaluationImage: object =
+              evaluationResponse.data.evaluation_image;
+
             // ✅ Update Status Into "completed"
             await trainingRepository.updateById(data.workflow.id, data.id, {
               status: "completed",
               trainedModelPath: filePath,
-              evaluation: evaluationResponse.data,
+              evaluation: evaluationData,
+              evaluationImage: evaluationImage,
               errorMessage: null,
             });
             queueLogger.info(`✅ Training completed: ${data.queueId}`);

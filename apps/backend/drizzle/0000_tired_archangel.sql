@@ -152,6 +152,7 @@ CREATE TABLE "trainings" (
 	"error_message" text,
 	"trained_model_path" varchar(255),
 	"evaluation" text,
+	"evaluation_image" jsonb,
 	"workflow_id" varchar(255) NOT NULL,
 	"dataset_id" varchar(255),
 	"image_preprocessing_id" varchar(255),

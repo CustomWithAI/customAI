@@ -51,6 +51,7 @@ export const trainings = pgTable(
     errorMessage: text("error_message"),
     trainedModelPath: varchar("trained_model_path", { length: 255 }),
     evaluation: text("evaluation"),
+    evaluationImage: jsonb("evaluation_image"),
     workflowId: varchar("workflow_id", { length: 255 })
       .notNull()
       .references(() => workflows.id, {
