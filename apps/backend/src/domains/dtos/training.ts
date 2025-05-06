@@ -31,7 +31,7 @@ export const updateTrainingDto = t.Partial(
 export const defaultTrainingResponseDto = t.Object({
   id: t.String(),
   isDefault: t.Boolean(),
-  version: t.Union([t.String(), t.Null()]),
+  version: t.String(),
   hyperparameter: t.Union([t.Unknown(), t.Null()]),
   pipeline: t.Unknown(),
   status: t.String(),
@@ -57,7 +57,7 @@ export const defaultTrainingResponseDto = t.Object({
 export const trainingResponseDto = t.Object({
   id: t.String(),
   isDefault: t.Boolean(),
-  version: t.Union([t.String(), t.Null()]),
+  version: t.String(),
   hyperparameter: t.Union([t.Unknown(), t.Null()]),
   pipeline: t.Unknown(),
   status: t.String(),

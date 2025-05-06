@@ -1,6 +1,5 @@
 # app/helpers/realtime_log.py
 import redis.asyncio as redis
-import sys
 import asyncio
 
 r = redis.Redis()

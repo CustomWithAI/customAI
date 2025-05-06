@@ -10,6 +10,7 @@ import type { PaginationParams } from "@/utils/db-type";
 import { emit } from "@/utils/emit";
 import { isLabels } from "@/utils/split-data";
 import { incrementVersion } from "@/utils/version";
+import { sleep } from "bun";
 import { InternalServerError, NotFoundError, error } from "elysia";
 
 export class TrainingService {
@@ -39,10 +40,7 @@ export class TrainingService {
 
     let isDefault: boolean;
 
-    if (
-      versionTrainings?.[0]?.version !== null &&
-      versionTrainings?.[0]?.version !== undefined
-    ) {
+    if (versionTrainings.length !== 0) {
       data.version = incrementVersion(versionTrainings[0].version, "minor");
       isDefault = false;
     } else {
@@ -129,6 +127,11 @@ export class TrainingService {
 
   public async deleteTraining(userId: string, workflowId: string, id: string) {
     await this.ensureWorkflowExists(userId, workflowId);
+
+    const trainings = await this.repository.findPureDataById(workflowId, id);
+    if (trainings.length !== 0 && trainings[0].isDefault) {
+      throw error(400, "This training is default version.");
+    }
 
     const result = await this.repository.deleteById(workflowId, id);
     if (result.length === 0) {
@@ -242,23 +245,7 @@ export class TrainingService {
 
     yield emit("Validating hyperparameters..", true);
 
-    const needsHyperparameters = !(
-      workflowType === "classification" && machineLearningModel
-    );
-
-    if (needsHyperparameters) {
-      const { hyperparameter } = training;
-      if (
-        !hyperparameter ||
-        typeof hyperparameter !== "object" ||
-        !Object.keys(hyperparameter).length
-      ) {
-        throw error(400, {
-          type: "hyperparameter",
-          message: "Valid hyperparameter object required",
-        });
-      }
-    }
+    sleep(1000);
 
     yield emit("Checking image annotations..", true);
 
@@ -306,6 +293,36 @@ export class TrainingService {
       throw new NotFoundError(`Training not found: ${id}`);
     }
 
+    return result[0];
+  }
+
+  public async cloneTraining(userId: string, workflowId: string, id: string) {
+    await this.ensureWorkflowExists(userId, workflowId);
+
+    const trainings = await this.repository.findPureDataById(workflowId, id);
+
+    if (trainings.length === 0) {
+      throw new NotFoundError(`Training not found: ${id}`);
+    }
+
+    const { createdAt, updatedAt, ...training } = trainings[0];
+
+    const result = await this.repository.create({
+      ...training,
+      isDefault: false,
+      version: incrementVersion(trainings[0].version, "patch"),
+      status: "created",
+      queueId: null,
+      retryCount: 0,
+      errorMessage: null,
+      trainedModelPath: null,
+      evaluation: null,
+      evaluationImage: null,
+    });
+
+    if (result.length === 0) {
+      throw new InternalServerError("Failed to create training");
+    }
     return result[0];
   }
 }

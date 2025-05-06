@@ -155,4 +155,15 @@ export const workflow = new Elysia({
         },
         { response: trainingResponseDto }
       )
+      .post(
+        "/:trainingId/clone",
+        async ({ user, params, trainingService }) => {
+          return trainingService.cloneTraining(
+            user.id,
+            params.id,
+            params.trainingId
+          );
+        },
+        { response: defaultTrainingResponseDto }
+      )
   );

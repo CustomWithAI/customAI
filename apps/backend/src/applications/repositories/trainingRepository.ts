@@ -104,6 +104,15 @@ export class TrainingRepository {
       .orderBy(desc(trainings.createdAt))
       .limit(1);
   }
+
+  public async findPureDataById(workflowId: string, id: string) {
+    return db
+      .select()
+      .from(trainings)
+      .where(and(eq(trainings.workflowId, workflowId), eq(trainings.id, id)))
+      .limit(1);
+  }
+
   public async findById(workflowId: string, id: string) {
     const {
       workflowId: resultWorkflowId,

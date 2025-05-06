@@ -60,13 +60,40 @@ class ClassificationTrainingConfig(BaseModel):
 class ObjectDetectionTrainingConfig(BaseModel):
     batch_size: int = 40
     epochs: int = 10
-    weight_size: ObjectDetectionWeightSizes
+    model: Optional[ObjectDetectionModels] = None
+    weight_size: Optional[ObjectDetectionWeightSizes] = None
+    
+    @model_validator(mode="before")
+    @classmethod
+    def set_default_weight_size(cls, values):
+        if values.get("weight_size") is None and values.get("model"):
+            model = values["model"]
+            default_map = {
+                "yolov5": "yolov5s.pt",
+                "yolov8": "yolov8s.pt",
+                "yolov11": "yolo11s.pt",
+            }
+            values["weight_size"] = default_map[model]
+        return values
 
 
 class SegmentationTrainingConfig(BaseModel):
     batch_size: int = 40
     epochs: int = 10
-    weight_size: SegmentationWeightSizes
+    model: Optional[SegmentationModels] = None
+    weight_size: Optional[SegmentationWeightSizes] = None
+    
+    @model_validator(mode="before")
+    @classmethod
+    def set_default_weight_size(cls, values):
+        if values.get("weight_size") is None and values.get("model"):
+            model = values["model"]
+            default_map = {
+                "yolov8": "yolov8s-seg.pt",
+                "yolov11": "yolo11s-seg.pt",
+            }
+            values["weight_size"] = default_map[model]
+        return values
 
 
 class ObjectDetectionConstructModelConfig(BaseModel):
@@ -79,19 +106,31 @@ class ObjectDetectionConstructModelConfig(BaseModel):
 
 class DeepLearningClassification(BaseModel):
     model: ClassificationModels
-    training: ClassificationTrainingConfig
+    training: Optional[ClassificationTrainingConfig] = ClassificationTrainingConfig()
 
 
 class DeepLearningObjectDetection(BaseModel):
     type: Literal['object_detection'] = 'object_detection'
     model: ObjectDetectionModels
-    training: ObjectDetectionTrainingConfig
+    training: Optional[ObjectDetectionTrainingConfig] = None
+    
+    @model_validator(mode="after")
+    def validate_model(cls, values: "DeepLearningObjectDetection"):
+        if values.training is None:
+            values.training = ObjectDetectionTrainingConfig(model=values.model)
+        return values
 
 
 class DeepLearningSegmentation(BaseModel):
     type: Literal['segmentation'] = 'segmentation'
     model: SegmentationModels
-    training: SegmentationTrainingConfig
+    training: Optional[SegmentationTrainingConfig] = None
+    
+    @model_validator(mode="after")
+    def validate_model(cls, values: "DeepLearningSegmentation"):
+        if values.training is None:
+            values.training = SegmentationTrainingConfig(model=values.model)
+        return values
 
 
 DeepLearningYoloRequest = Union[DeepLearningObjectDetection,
@@ -124,19 +163,19 @@ DeepLearningObjectDetectionConstructModelFeatex = List[Union[
 
 class DeepLearningClassificationConstruct(BaseModel):
     model: DeepLearningClassificationConstructModel
-    training: ClassificationTrainingConfig
+    training: Optional[ClassificationTrainingConfig] = ClassificationTrainingConfig()
     featex: Optional[FeatureExtractionConfig] = None
 
 
 class DeepLearningObjectDetectionConstruct(BaseModel):
     model: DeepLearningObjectDetectionConstructModel
-    training: ObjectDetectionConstructModelConfig
+    training: ObjectDetectionConstructModelConfig = ObjectDetectionConstructModelConfig()
 
 
 class DeepLearningObjectDetectionConstructFeatex(BaseModel):
     featex: FeatureExtractionConfig
     model: DeepLearningObjectDetectionConstructModelFeatex
-    training: ObjectDetectionConstructModelConfig
+    training: ObjectDetectionConstructModelConfig = ObjectDetectionConstructModelConfig()
 
 
 DeepLearningObjectDetectionConstructRequest = Union[

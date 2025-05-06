@@ -42,7 +42,7 @@ export const trainings = pgTable(
       .primaryKey()
       .$defaultFn(() => v7()),
     isDefault: boolean("is_default").default(false).notNull(),
-    version: varchar("version", { length: 255 }),
+    version: varchar("version", { length: 255 }).notNull(),
     hyperparameter: jsonb("hyperparameter"),
     pipeline: jsonb("pipeline").notNull(),
     status: trainingStatusEnum("status").default("created").notNull(),
