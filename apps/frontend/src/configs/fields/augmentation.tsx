@@ -1867,11 +1867,7 @@ export const node = (
 							type: "Number",
 							value: 0,
 						},
-						salt_ratio: {
-							type: "Number",
-							value: 0,
-						},
-						pepper_ratio: {
+						salt_pepper_ratio: {
 							type: "Number",
 							value: 0,
 						},
@@ -1958,14 +1954,14 @@ export const node = (
 					template: "number",
 					element: {
 						testDataId: "salt_pepper_noise-form",
-						label: "Salt Ratio",
-						key: "salt_pepper_noise-salt_noise_ratio-1",
+						label: "Salt Vs Pepper Ratio",
+						key: "salt_pepper_noise-salt_pepper_noise_ratio-1",
 						name: "salt_pepper_noise",
 						required: true,
 					},
 					config: {
 						setValue: (findById(fields, "salt_pepper_noise-1") as any)?.metadata
-							?.config?.value?.salt_ratio?.value,
+							?.config?.value?.salt_pepper_ratio?.value,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "salt_pepper_noise-1",
@@ -1973,37 +1969,7 @@ export const node = (
 									config: {
 										type: "Object",
 										value: {
-											salt_ratio: {
-												type: "Number",
-												value: value as number,
-											},
-										},
-									},
-								},
-							});
-						},
-					},
-				},
-				{
-					template: "number",
-					element: {
-						testDataId: "salt_pepper_noise-form",
-						label: "Pepper Ratio",
-						key: "salt_pepper_noise-pepper_noise_ratio-1",
-						name: "salt_pepper_noise",
-						required: true,
-					},
-					config: {
-						setValue: (findById(fields, "salt_pepper_noise-1") as any)?.metadata
-							?.config?.value?.pepper_ratio?.value,
-						setOnChange: (value: unknown) => {
-							onUpdateMetadata({
-								id: "salt_pepper_noise-1",
-								metadata: {
-									config: {
-										type: "Object",
-										value: {
-											pepper_ratio: {
+											salt_pepper_ratio: {
 												type: "Number",
 												value: value as number,
 											},

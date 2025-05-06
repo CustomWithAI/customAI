@@ -5,7 +5,10 @@ export const documentationNav: DocGroup[] = [
 	{
 		title: "Overview",
 		icon: Home,
-		pages: [{ title: "Learning Home", href: "/learning" }],
+		pages: [
+			{ title: "Learning Home", href: "/learning" },
+			{ title: "Back To Home", href: "/" },
+		],
 	},
 	{
 		title: "AI",

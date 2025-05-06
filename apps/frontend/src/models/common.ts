@@ -5,5 +5,5 @@ export const float = z.union([
 		.string()
 		.regex(/^\d+\.0$/, "Must end with .0")
 		.transform(Number),
-	z.number(),
+	z.number().nullable(),
 ]);

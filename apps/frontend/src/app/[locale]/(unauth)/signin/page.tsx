@@ -17,11 +17,12 @@ import { env } from "@/env.mjs";
 import { useToast } from "@/hooks/use-toast";
 import { authClient } from "@/libs/auth-client";
 import { useRouterAsync } from "@/libs/i18nAsyncRoute";
+import { useRouter } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import { LoginSchema, type LoginSchemaType } from "@/models/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -37,6 +38,7 @@ function SignupPage() {
 	const t = useTranslations();
 	const { toast } = useToast();
 	const locale = useLocale();
+	const router = useRouter();
 	const { asyncRoute, isLoadingRoute } = useRouterAsync();
 	const [state, setState] = useState<"idle" | "loading" | "success">("idle");
 	const form = useForm<LoginSchemaType>({
@@ -102,6 +104,16 @@ function SignupPage() {
 	}
 	return (
 		<>
+			<div className="absolute flex h-14 flex-col items-center z-[9999] shadow-sm justify-center top-4 left-4 px-2 rounded-lg bg-gray-100">
+				<Button
+					onClick={() => router.push("/")}
+					effect="shineHover"
+					className="flex items-center gap-2 h-10"
+					variant="outline"
+				>
+					<ArrowLeft size={16} />
+				</Button>
+			</div>
 			<BackgroundBeams className="bg-white dark:bg-zinc-700/20" />
 			<div className="flex z-0 flex-col justify-center h-full w-full">
 				<div

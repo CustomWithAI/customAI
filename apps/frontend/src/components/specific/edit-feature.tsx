@@ -99,8 +99,8 @@ export const EditFeature = ({
 				</FormBuilder.Provider>
 				<div className="mt-6 w-full">
 					<DialogClose asChild>
-						<Button variant="secondary" className="ml-auto">
-							Close
+						<Button variant="default" className="ml-auto">
+							Save
 						</Button>
 					</DialogClose>
 				</div>

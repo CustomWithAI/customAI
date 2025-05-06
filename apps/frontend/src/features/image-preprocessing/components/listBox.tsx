@@ -46,6 +46,7 @@ export const ListBox = memo(
 				className={cn(
 					"flex space-x-8 group pb-4 pt-5 my-0.5 pl-3 hover:bg-zinc-50 duration-150 active:border-zinc-300 rounded-lg",
 				)}
+				onClick={() => onSelect(!check)}
 				ref={setNodeRef}
 				{...attributes}
 				style={style}

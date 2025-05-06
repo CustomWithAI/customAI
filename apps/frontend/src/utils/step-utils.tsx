@@ -48,11 +48,12 @@ export const getStep = (
 	}
 	const currentIndex = steps?.find((step) => step.name === current)?.index;
 	if (currentIndex === undefined || steps === undefined) {
-		return current || "";
+		return "preset";
 	}
 	switch (method) {
 		case "prev": {
 			if (currentIndex === 0) {
+				console.warn("index is 0");
 				zeroIndexCallback();
 				return "preset";
 			}

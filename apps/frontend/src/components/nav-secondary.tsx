@@ -38,7 +38,7 @@ export function NavSecondary({
 										async () =>
 											await authClient.signOut({
 												fetchOptions: {
-													onSuccess: () => router.push("/login"),
+													onSuccess: () => router.push("/signin"),
 												},
 											}),
 									]

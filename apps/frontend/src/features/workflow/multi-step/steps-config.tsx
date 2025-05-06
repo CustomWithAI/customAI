@@ -12,6 +12,7 @@ import {
 	FileSliders,
 	Image,
 	PackageSearch,
+	Scaling,
 	Shuffle,
 	SquareDashedMousePointer,
 	TextSelect,
@@ -73,7 +74,27 @@ export const stepConfig: Record<STEPS, StepConfig> = {
 		description: null,
 		icon: <Blend />,
 		component: () => (
-			<DragStoreProvider key={STEPS.Preprocessing} initial={[]}>
+			<DragStoreProvider
+				key={STEPS.Preprocessing}
+				initial={[
+					{
+						type: "resize",
+						title: "Resizing Node",
+						description: "Evaluates a condition and routes the flow",
+						icon: <Scaling />,
+						id: "resizing-1",
+						metadata: {
+							size: {
+								type: "Object",
+								value: {
+									x: { type: "Number", value: 80 },
+									y: { type: "Number", value: 80 },
+								},
+							},
+						},
+					},
+				]}
+			>
 				<ImagePreprocessingPage />
 			</DragStoreProvider>
 		),

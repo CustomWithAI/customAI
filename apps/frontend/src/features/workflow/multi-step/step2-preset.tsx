@@ -99,14 +99,14 @@ export const Step3Page = () => {
 		let index = 0;
 		const { current, steps } = fields.reduce(
 			(acc, item) => {
-				if (
-					String(item.metadata.name?.value) === STEPS.ModelConfig &&
-					item.metadata.check.value === true
-				) {
+				if (String(item.metadata.name?.value) === STEPS.ModelConfig) {
 					acc.steps.push({
 						index: index++,
 						name: STEPS.Model,
 					});
+					if (acc.current === null) {
+						acc.current = STEPS.Model;
+					}
 				}
 				if (item.metadata.check.value === true && item.metadata.name?.value) {
 					acc.steps.push({
@@ -115,7 +115,12 @@ export const Step3Page = () => {
 					});
 				}
 				if (acc.current === null) {
-					acc.current = item.metadata.name?.value as string | null;
+					if (item.metadata.check.value === true && item.metadata.name?.value) {
+						acc.steps.push({
+							index: index++,
+							name: String(item.metadata.name.value),
+						});
+					}
 				}
 				return acc;
 			},
@@ -178,7 +183,7 @@ export const Step3Page = () => {
 		setQueryParam({
 			params: {
 				step: encodeBase64("workflow_info"),
-				id: encodeBase64(workflowId),
+				id: workflowId,
 			},
 			resetParams: true,
 		});

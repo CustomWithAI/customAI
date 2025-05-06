@@ -453,9 +453,7 @@ const RenderInput = memo(
 											const inputValue = e.target.value;
 
 											if (inputValue === "") {
-												setOnChange
-													? setOnChange(undefined)
-													: onChange(undefined);
+												setOnChange ? setOnChange(null) : onChange(null);
 												return;
 											}
 
@@ -482,9 +480,7 @@ const RenderInput = memo(
 											let currentValue = e.target.value;
 
 											if (currentValue === "" || currentValue === ".") {
-												setOnChange
-													? setOnChange(undefined)
-													: onChange(undefined);
+												setOnChange ? setOnChange(null) : onChange(null);
 											} else if (currentValue.endsWith(".")) {
 												currentValue = `${currentValue}0`;
 												const parsedValue = Number.parseFloat(currentValue);
@@ -554,6 +550,12 @@ const RenderInput = memo(
 										inputMode="numeric"
 										onChange={(e) => {
 											const inputValue = e.target.value.trim();
+
+											if (inputValue === "") {
+												setOnChange ? setOnChange(null) : onChange(null);
+												return;
+											}
+
 											if (/^\d+$/.test(inputValue)) {
 												setOnChange
 													? setOnChange(Number(inputValue))
@@ -561,11 +563,7 @@ const RenderInput = memo(
 											}
 										}}
 										onBlur={onBlur}
-										value={
-											!Number.isNaN(value) && Number.isInteger(value)
-												? value
-												: ""
-										}
+										value={Number.isInteger(value) ? value : ""}
 										placeholder={placeholder}
 									/>
 								</FormControl>

@@ -49,7 +49,7 @@ export function LearningSidebar({ className }: LearningSidebarProps) {
 	const sidebarContent = (
 		<div className="pr-2 py-6">
 			<div className="mb-4 px-4">
-				<Link href="/docs" className="flex items-center gap-2">
+				<Link href="/learning" className="flex items-center gap-2">
 					<BookOpen className="h-6 w-6 text-primary" />
 					<h3 className="font-semibold text-lg">Documentation</h3>
 				</Link>

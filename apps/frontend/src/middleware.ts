@@ -31,7 +31,7 @@ export default async function middleware(request: NextRequest) {
 		cache: "no-store",
 	});
 
-	if (!session && !url.pathname.startsWith(`/${DEFAULT_LANGUAGE}/signin`)) {
+	if (!session && guestRoutes.includes(segments[0])) {
 		return NextResponse.redirect(
 			new URL(`/${DEFAULT_LANGUAGE}/signin`, request.url),
 		);

@@ -48,7 +48,7 @@ export const EditFeature = ({ id }: { id: string }) => {
 				<div className="mt-6 w-full">
 					<DialogClose asChild>
 						<Button variant="secondary" className="ml-auto">
-							Close
+							Save
 						</Button>
 					</DialogClose>
 				</div>

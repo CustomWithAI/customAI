@@ -1395,21 +1395,15 @@ export const node = (
 						required: true,
 					},
 					config: {
-						setValue: (
-							findById(fields, "gaussian_blur-1")?.metadata?.blur?.value as any
-						)?.sigma?.value as number,
+						setValue: findById(fields, "gaussian_blur-1")?.metadata?.sigma
+							?.value as any,
 						setOnChange: (value: unknown) => {
 							onUpdateMetadata({
 								id: "gaussian_blur-1",
 								metadata: {
-									blur: {
-										type: "Object",
-										value: {
-											sigma: {
-												type: "Number",
-												value: value as number,
-											},
-										},
+									sigma: {
+										type: "Number",
+										value: value as number,
 									},
 								},
 							});

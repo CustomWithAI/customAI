@@ -96,7 +96,7 @@ export const DatasetPage = () => {
 		setQueryParam({
 			params: {
 				step: encodeBase64("preset"),
-				id: encodeBase64(workflowId as string),
+				id: workflowId,
 			},
 			resetParams: true,
 		});
