@@ -22,7 +22,7 @@ function HomePage() {
 			<HomeMenu />
 			<HeaderMain />
 			<FeatureBento />
-			<Pricing />
+			{/* <Pricing /> */}
 			<Footer />
 		</div>
 	);

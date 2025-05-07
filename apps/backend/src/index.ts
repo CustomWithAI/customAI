@@ -14,12 +14,12 @@ import { connectDatabase } from "@/infrastructures/database/connection";
 import { connectRabbitMQ } from "@/infrastructures/rabbitmq/connection";
 import { connectRedis } from "@/infrastructures/redis/connection";
 import { connectS3 } from "@/infrastructures/s3/connection";
-import { betterAuthView } from "@/lib/auth";
 import { retryConnection } from "@/utils/retry";
 import { shutdown } from "@/utils/shutdown";
 import { cors } from "@elysiajs/cors";
 import { staticPlugin } from "@elysiajs/static";
 import { Elysia } from "elysia";
+import { betterAuthView } from "./lib/auth-handler";
 
 try {
 	logger.info("🏃‍♀️ Starting connection..");
@@ -72,3 +72,9 @@ try {
 	logger.error(e, "🚫  Error booting the server");
 	process.exit();
 }
+
+// .onParse(({ request, route }) => {
+// 	if (route.startsWith("/api/auth")) {
+// 		return request.body;
+// 	}
+// })

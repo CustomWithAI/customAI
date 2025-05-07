@@ -10,7 +10,7 @@ const FooterList = ({ children }: { children: ReactNode }) => (
 export const Footer = () => {
 	return (
 		<>
-			<div className="w-full border-t" />
+			<div className="w-full border-t border-gray-200" />
 			<div className="text-center grid grid-cols-4 max-sm:grid-cols-1 mx-auto max-w-(--breakpoint-2xl) p-6 lg:p-10 backdrop-blur-xs gap-4">
 				<SubHeader>CustomAI</SubHeader>
 				<div>

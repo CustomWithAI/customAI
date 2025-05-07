@@ -1,11 +1,14 @@
+import { Header } from "@/components/typography/text";
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { cn } from "@/libs/utils";
 import {
-	IconClipboardCopy,
-	IconFileBroken,
-	IconSignature,
-	IconTableColumn,
-} from "@tabler/icons-react";
+	BrainCog,
+	Code2,
+	Layers,
+	LineChart,
+	Settings2,
+	SlidersHorizontal,
+} from "lucide-react";
 
 export const FeatureBento = () => {
 	const Skeleton = () => (
@@ -20,38 +23,60 @@ export const FeatureBento = () => {
 	);
 	const items = [
 		{
-			title: "The Dawn of Innovation",
-			description: "Explore the birth of groundbreaking ideas and inventions.",
-			header: <Skeleton />,
-			className: "md:col-span-2",
-			icon: <IconClipboardCopy className="h-4 w-4 text-neutral-500" />,
-		},
-		{
-			title: "The Digital Revolution",
-			description: "Dive into the transformative power of technology.",
-			header: <Skeleton />,
-			className: "md:col-span-1",
-			icon: <IconFileBroken className="h-4 w-4 text-neutral-500" />,
-		},
-		{
-			title: "The Art of Design",
-			description: "Discover the beauty of thoughtful and functional design.",
-			header: <Skeleton />,
-			className: "md:col-span-1",
-			icon: <IconSignature className="h-4 w-4 text-neutral-500" />,
-		},
-		{
-			title: "The Power of Communication",
+			title: "Modular Workflow Design",
 			description:
-				"Understand the impact of effective communication in our lives.",
+				"Define and rearrange each step in the AI training pipeline—data prep, training, evaluation, and deployment.",
 			header: <Skeleton />,
+			icon: <Layers className="h-4 w-4 text-neutral-500" />,
 			className: "md:col-span-2",
-			icon: <IconTableColumn className="h-4 w-4 text-neutral-500" />,
+		},
+		{
+			title: "Custom Model Architectures",
+			description:
+				"Build or import your own neural network models and integrate seamlessly into the training flow.",
+			header: <Skeleton />,
+			icon: <BrainCog className="h-4 w-4 text-neutral-500" />,
+			className: "md:col-span-1",
+		},
+		{
+			title: "Hyperparameter Tuning",
+			description:
+				"Manually set or auto-optimize learning rate, batch size, and other parameters at each stage.",
+			header: <Skeleton />,
+			icon: <SlidersHorizontal className="h-4 w-4 text-neutral-500" />,
+			className: "md:col-span-1",
+		},
+		{
+			title: "Pipeline Scripting",
+			description:
+				"Write custom scripts and logic to control process decisions dynamically across the training loop.",
+			header: <Skeleton />,
+			icon: <Code2 className="h-4 w-4 text-neutral-500" />,
+			className: "md:col-span-1",
+		},
+		{
+			title: "Real-Time Monitoring",
+			description:
+				"Get live metrics, logs, and visual feedback during training and evaluation.",
+			header: <Skeleton />,
+			icon: <LineChart className="h-4 w-4 text-neutral-500" />,
+			className: "md:col-span-1",
+		},
+		{
+			title: "Full Configurability",
+			description:
+				"Every component—from preprocessing to post-training actions—can be overridden or extended.",
+			header: <Skeleton />,
+			icon: <Settings2 className="h-4 w-4 text-neutral-500" />,
+			className: "md:col-span-2",
 		},
 	];
 
 	return (
 		<div className="bg-white">
+			<Header className="my-4 mt-12 font-bold w-full flex justify-center">
+				Key Features
+			</Header>
 			<BentoGrid className="mx-auto max-w-(--breakpoint-2xl) md:auto-rows-[20rem] p-6 lg:p-10 backdrop-blur-xs">
 				{items.map((item, i) => (
 					<BentoGridItem

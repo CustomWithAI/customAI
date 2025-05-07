@@ -34,7 +34,7 @@ export function ReactQueryProvider({ children }: ReactQueryProviderProps) {
 		<QueryClientProvider client={queryClient}>
 			<HydrationBoundary state={dehydratedState}>
 				{children}
-				{process.env.NODE_ENV !== "production" && <ReactQueryDevtools />}
+				{/* {process.env.NODE_ENV !== "production" && <ReactQueryDevtools />} */}
 			</HydrationBoundary>
 		</QueryClientProvider>
 	);

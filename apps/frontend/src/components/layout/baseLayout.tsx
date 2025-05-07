@@ -29,12 +29,12 @@ export default async function BaseLayout({ children, locale }: Props) {
 	return (
 		<html suppressHydrationWarning className="h-full" lang={locale}>
 			<head>
-				{process.env.NODE_ENV !== "production" && (
+				{/* {process.env.NODE_ENV !== "production" && (
 					<script
 						crossOrigin="anonymous"
 						src="//unpkg.com/react-scan/dist/auto.global.js"
 					/>
-				)}
+				)} */}
 			</head>
 			<body
 				className={cn(
