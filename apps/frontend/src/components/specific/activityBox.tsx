@@ -1,4 +1,3 @@
-import { StringLike } from "bun";
 import { formatDistanceToNow } from "date-fns";
 import { Cpu } from "lucide-react";
 import type { ReactNode } from "react";

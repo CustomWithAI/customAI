@@ -1,22 +1,17 @@
 services:
-  watchtower:
-    image: containrrr/watchtower
-    command:
-      - "--label-enable"
-      - "--interval"
-      - "30"
-      - "--rolling-restart"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
   reverse-proxy:
     image: traefik:v3.1
     command: 
       - "--api.insecure=true"
       - "--providers.docker"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--providers.docker.network=traefik"
+      - "--log.level=DEBUG"
     ports:
       - "80:80"
-      - "8080:8080"
+      - 443:443
+      - "8080:8080" # Optional: Enable Dashboard (do not use in production)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
@@ -66,18 +61,19 @@ services:
       timeout: 5s
       retries: 5
 
-  ai_app:
-    container_name: python_ai
+  ai-service:
+    container_name: ai_service
     profiles:
       - ""
       - python
-    build: 
-      context: ./apps/python
-      dockerfile: dev.Dockerfile
+    build:
+      context: ./apps/ai-service
+      dockerfile: Dockerfile
     volumes:
-      - ./apps/frontend:/app
+      - ./apps/ai-service:/app
     ports:
-      - 8000:8000 
+      - "8000:8000"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
 
   backend_app:
     profiles:
@@ -85,7 +81,7 @@ services:
       - backend
     build:
       context: ./apps/backend
-      dockerfile: dev.Dockerfile
+      dockerfile: Dockerfile
     env_file: apps/backend/.env
     volumes:
       - ./apps/backend:/app
@@ -106,7 +102,7 @@ services:
       - frontend
     build:
       context: ./apps/frontend
-      dockerfile: dev.Dockerfile
+      dockerfile: Dockerfile
     env_file: apps/frontend/.env
     labels:
       - "traefik.http.routes.frontend_app.rule=Host(`customAI.cloud`)"

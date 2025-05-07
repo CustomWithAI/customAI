@@ -203,5 +203,5 @@ async def get_evaluation_result(workflow: str, yolo: str | None = None):
     evaluation = get_all_evaluation(workflow, yolo)
     delete_all_models()
     clear_evaluation_folder()
-    clear_dataset()
+    # clear_dataset()
     return JSONResponse(evaluation, status_code=200)

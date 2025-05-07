@@ -9,6 +9,7 @@ import { useMDXComponents } from "@/mdx-components";
 import { getPrefixLang } from "@/utils/getPrefixLang";
 import { setRequestLocale } from "next-intl/server";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { Suspense } from "react";
 
 const docsNavigation = {
 	"getting-started": {
@@ -104,6 +105,7 @@ export default async function DocPage({
 	const navigation = docsNavigation[slug as keyof typeof docsNavigation];
 
 	return (
+		<Suspense fallback={<div className="h-screen w-screen" />}>
 		<LearningLayout
 			title={frontmatter.title}
 			description={frontmatter.description}
@@ -114,5 +116,6 @@ export default async function DocPage({
 		>
 			<MDXRemote source={content} components={components} />
 		</LearningLayout>
+		</Suspense>
 	);
 }

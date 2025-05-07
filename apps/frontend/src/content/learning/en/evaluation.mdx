@@ -22,6 +22,8 @@ Accuracy is a key performance indicator used to assess the effectiveness of a ma
 **Formula:**
 Accuracy = Correct Predictions / Total Predictions
 
+![Accuracy](/images/accuracy.png)
+
 **Example:**
 If your model made 100 predictions, and 90 of them were correct, the accuracy would be:
 Accuracy = 90 / 100 = 0.9 or 90%
@@ -38,6 +40,8 @@ Precision is a metric used to evaluate a model’s performance, specifically in 
 
 **Formula:**
 Precision = True Positive / (True Positive + False Positive)
+
+![precision](/images/precision.png)
 
 **Example:**
 Assume a model predicted 100 emails as spam, 80 of which were correct (True Positive), and 20 were incorrect (False Positive). The precision would be:
@@ -56,6 +60,8 @@ Recall is a metric used to evaluate a model's ability to identify all relevant p
 **Formula:**
 Recall = True Positive / (True Positive + False Negative)
 
+![Recall](/images/recall.png)
+
 **Example:**
 Assume there are 100 spam emails, and the model correctly identifies 80 (True Positive), but misses 20 (False Negative). The recall would be:
 Recall = 80 / (80 + 20) = 0.8 or 80%
@@ -72,6 +78,8 @@ The F1 Score provides a single metric that balances both Precision and Recall, m
 
 **Formula:**
 F1 Score = 2 * (Precision * Recall) / (Precision + Recall)
+
+![f1score](/images/f1score.png)
 
 **Example:**
 If Precision = 0.75 and Recall = 0.60, the F1 Score would be:
@@ -94,6 +102,8 @@ The confusion matrix for binary classification consists of the following:
 - **False Positive (FP):** Incorrectly predicted positive cases.
 - **False Negative (FN):** Incorrectly predicted negative cases.
 - **True Negative (TN):** Correctly predicted negative cases.
+
+![confusematrix](/images/confusetmatrix.png)
 
 **Interpretation of the Confusion Matrix:**
 - **True Positive (TP) and True Negative (TN):** Higher values are desirable, indicating correct predictions.

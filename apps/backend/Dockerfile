@@ -3,11 +3,12 @@ FROM oven/bun AS build
 WORKDIR /app
 
 COPY package.json package.json
-COPY bun.lock bun.lock
+RUN apt update && apt install python3 python3-pip make g++ -y
+COPY bun.lockb bun.lockb
 
 RUN bun install
 
-COPY ./src ./src
+COPY . .
 
 ENV NODE_ENV=production
 

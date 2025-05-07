@@ -4,11 +4,13 @@ docker-compose*
 .dockerignore
 .git
 __pycache__/
+.yolov5_venv/
+.yolov8_venv/
+.yolov11_venv/
 .git/
 *.pyc
 *.pyo
 *.pyd
-.venv/
 .gitignore
 README.md
 LICENSE
