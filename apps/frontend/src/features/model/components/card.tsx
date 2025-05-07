@@ -24,7 +24,7 @@ export const ModelCard: React.FC<CardProps> = ({
 		<button
 			type="button"
 			className={cn(
-				"size-52 md:size-64 border-gray-200 hover:shadow-blue-500 aspect-square hover:shadow-xs duration-200 my-1 border",
+				"flex flex-col size-52 md:size-64 border-gray-200 hover:shadow-blue-500 aspect-square hover:shadow-xs duration-200 my-1 border",
 				" rounded-lg shadow-md overflow-hidden [&>div]:shrink-0 p-4",
 				className,
 			)}

@@ -98,9 +98,11 @@ export default function AnnotationSection({
 		const handleKey = (e: KeyboardEvent) => {
 			switch (e.key) {
 				case "ArrowRight":
+					if (disabled?.[0]) return;
 					handleNext?.();
 					break;
 				case "ArrowLeft":
+					if (disabled?.[1]) return;
 					handlePrevious?.();
 					break;
 				case "Enter":
@@ -113,7 +115,7 @@ export default function AnnotationSection({
 		return () => {
 			window.removeEventListener("keydown", handleKey);
 		};
-	}, [handleNext, handlePrevious, handleSubmit]);
+	}, [handleNext, handlePrevious, handleSubmit, disabled]);
 
 	return (
 		<div>

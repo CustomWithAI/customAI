@@ -272,7 +272,9 @@ const FormBuilderProvider = <
 
 	return (
 		<FormProvider {...methods}>
-			<form onSubmit={handleSubmit}>{children}</form>
+			<form onSubmit={handleSubmit} onError={console.error}>
+				{children}
+			</form>
 		</FormProvider>
 	);
 };

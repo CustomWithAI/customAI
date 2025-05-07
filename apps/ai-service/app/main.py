@@ -22,7 +22,7 @@ from app.services.model.use_model import UseModel
 from app.helpers.models import delete_all_models, get_model
 from app.helpers.evaluation import get_all_evaluation, clear_evaluation_folder
 from app.helpers.dataset import clear_dataset
-from app.helpers.realtime_log import RedisLogHandler
+# from app.helpers.realtime_log import RedisLogHandler
 
 ml_training = MLTraining()
 dl_training_pretrained = DLTrainingPretrained()

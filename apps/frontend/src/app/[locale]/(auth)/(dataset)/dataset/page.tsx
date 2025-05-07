@@ -102,6 +102,7 @@ export default function Page() {
 							<InfiniteGrid
 								query={datasetQuery}
 								columns="auto"
+								minItemWidth="290px"
 								renderItem={(item, index) => (
 									<DatasetCard
 										key={index}

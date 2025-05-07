@@ -48,7 +48,7 @@ export function LayerEditor({
 		};
 	}, [rawLayer]);
 
-	const [currentLayer, setCurrentLayer] = useState<LayerConfig>(layer);
+	const [currentLayer, setCurrentLayer] = useState<LayerConfig>(rawLayer);
 
 	const [customParamName, setCustomParamName] = useState("");
 	const [customParamType, setCustomParamType] = useState<

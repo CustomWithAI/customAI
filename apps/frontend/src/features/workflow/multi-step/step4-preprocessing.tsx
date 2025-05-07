@@ -269,39 +269,6 @@ export const ImagePreprocessingPage = () => {
 						)}
 					</button>
 				</div>
-				<DialogBuilder
-					config={{
-						trigger: (
-							<Button variant="secondary" effect="gradientSlideShow">
-								Load Preprocessing
-							</Button>
-						),
-						title: "load data from existed pre processing",
-						body: (
-							<InfiniteCombobox
-								hook={preprocessingQuery}
-								keyExtractor={(preprocess) => String(preprocess.id)}
-								itemDisplay={(preprocess) => preprocess.name}
-								itemContent={(preprocess) => (
-									<div className="flex flex-col">
-										<span>{preprocess.name}</span>
-										<span className="text-xs text-muted-foreground">
-											{preprocess.data?.priority?.length || 0} process
-											{(preprocess.data?.priority?.length || 0) > 0 ? "es" : ""}
-										</span>
-									</div>
-								)}
-								filter={(f) => setFilter(f)}
-								value={filter}
-								popoverClassName="z-[999]"
-								onChange={(v) => setSelected(v)}
-								placeholder="Search preprocessing..."
-								emptyMessage="No preprocessing found"
-							/>
-						),
-						footer: <div className="sr-only" />,
-					}}
-				/>
 			</div>
 			{compareQueryParam({ value: "table", allowNull: true }) ? (
 				<TablePreprocessingSection />

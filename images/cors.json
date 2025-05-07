@@ -1,10 +1,16 @@
 {
-  "CORSRules": [
-    {
-      "AllowedHeaders": ["*"],
-      "AllowedMethods": ["GET", "POST", "PUT", "DELETE"],
-      "AllowedOrigins": ["*"],
-      "ExposeHeaders": ["ETag", "Access-Control-Allow-Origin"]
-    }
-  ]
+	"CORSRules": [
+		{
+			"AllowedHeaders": ["*"],
+			"AllowedMethods": ["GET", "POST", "PUT", "DELETE", "HEAD"],
+			"AllowedOrigins": ["*"],
+			"ExposeHeaders": [
+				"ETag",
+				"Access-Control-Allow-Origin",
+				"Access-Control-Request-Headers",
+				"Access-Control-Request-Method"
+			],
+			"MaxAgeSeconds": 3000
+		}
+	]
 }

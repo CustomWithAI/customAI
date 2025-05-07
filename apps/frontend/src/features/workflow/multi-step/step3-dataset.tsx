@@ -108,12 +108,15 @@ export const DatasetPage = () => {
 			<WindowList
 				query={datasetQuery}
 				direction="horizontal"
+				className="h-64 overflow-y-hidden"
 				itemContent={(_, dataset) => (
 					<div key={dataset.id}>
 						<DatasetCard
 							title={dataset.name}
 							description={dataset.description}
 							imagesCount={dataset.imageCount}
+							splitMethod={dataset.splitMethod}
+							selectMode
 							href={""}
 							className={cn(
 								datasetId === dataset.id

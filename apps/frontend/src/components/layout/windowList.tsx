@@ -10,14 +10,44 @@ import { type ReactNode, useRef, useState } from "react";
 
 import { Virtuoso, type VirtuosoHandle } from "react-virtuoso";
 
+/**
+ * Props for the WindowList component with virtualized scrolling support.
+ *
+ * @template T - The shape of each item in the list.
+ */
 type WindowListProps<T extends object> = {
+	/**
+	 * Optional CSS class name for the list container.
+	 */
 	className?: string;
+
+	/**
+	 * Infinite query hook result, typically from useInfiniteQuery.
+	 */
 	query: UseInfiniteQueryResult<
 		InfiniteData<ResponsePagination<T> | undefined>,
 		Error
 	>;
+
+	/**
+	 * Disable keyboard or button navigation if true.
+	 * @default false
+	 */
 	noNavigation?: boolean;
+
+	/**
+	 * Scroll direction of the list.
+	 * @default "vertical"
+	 */
 	direction: "horizontal" | "vertical";
+
+	/**
+	 * Render function for each item in the list.
+	 *
+	 * @param index - Index of the item.
+	 * @param item - The current item.
+	 * @param list - Full list of currently loaded items.
+	 */
 	itemContent: (index: number, item: T, list: T[]) => ReactNode;
 };
 

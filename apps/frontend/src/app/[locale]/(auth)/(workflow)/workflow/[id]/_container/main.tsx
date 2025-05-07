@@ -1,3 +1,4 @@
+import { RenderStatusAlert } from "@/components/common/alertStatus";
 import { ActivityBox } from "@/components/specific/activityBox";
 import { OverviewBox } from "@/components/specific/panelBox";
 import {
@@ -8,6 +9,7 @@ import {
 	Subtle,
 } from "@/components/typography/text";
 import { DotBadge, type VariantProps } from "@/components/ui/dot-badge";
+import { ModelEvaluationDashboard } from "@/features/workflow/components/modelEvaluationDashboard";
 import { encodeBase64 } from "@/libs/base64";
 import type { TrainingModel } from "@/types/response/training";
 import type { WorkflowModel } from "@/types/response/workflow";
@@ -36,7 +38,12 @@ const STATUS: Record<string, string> = {
 export const MainWorkflowPage = ({
 	data,
 	default: mainDefault,
-}: { data: WorkflowModel | undefined; default: TrainingModel | undefined }) => {
+	default_status,
+}: {
+	data: WorkflowModel | undefined;
+	default: TrainingModel | undefined;
+	default_status: boolean;
+}) => {
 	const { relativeTime } = useFormatter();
 
 	const modelFormat =
@@ -93,7 +100,15 @@ export const MainWorkflowPage = ({
 					<Content className="font-semibold mt-6 mb-3">
 						Training History Chart
 					</Content>
-					<div className="w-full h-96 bg-zinc-200 rounded-md"> </div>
+					<div className="w-full h-96 rounded-md">
+						{mainDefault?.evaluation ? (
+							<ModelEvaluationDashboard initialData={mainDefault?.evaluation} />
+						) : (
+							<RenderStatusAlert status={default_status}>
+								no evaluation result found
+							</RenderStatusAlert>
+						)}
+					</div>
 					<Content className="font-semibold mt-6 mb-4">Activity logs</Content>
 					<ActivityBox
 						title="train a model"
