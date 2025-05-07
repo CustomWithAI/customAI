@@ -13,6 +13,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import {
 	useCreateCustomInference,
@@ -27,6 +28,7 @@ import {
 } from "@/hooks/queries/training-api";
 import {
 	useGetInfWorkflows,
+	useGetWorkflowById,
 	useGetWorkflows,
 } from "@/hooks/queries/workflow-api";
 import { useQueryParam } from "@/hooks/use-query-params";
@@ -50,6 +52,7 @@ import { generateRandomLabel } from "@/utils/random";
 import { toCapital } from "@/utils/toCapital";
 import { Loader2, RotateCcw } from "lucide-react";
 import { useFormatter } from "next-intl";
+import { Condiment } from "next/font/google";
 import {
 	useCallback,
 	useEffect,
@@ -153,7 +156,12 @@ export const ImageComponents = ({
 		},
 	});
 
+	const { data: workflow } = useGetWorkflowById(data.workflowId || "", {
+		enabled: !!data.workflowId,
+	});
+
 	const [showAnnotation, setShowAnnotation] = useState(true);
+	const [confident, setConfident] = useState<number>(50);
 
 	const overlayRef = useRef<HTMLDivElement>(null);
 	const [imageRender, setImageRender] = useState<{
@@ -257,14 +265,26 @@ export const ImageComponents = ({
 				}
 				const customFormData = new FormData();
 				customFormData.append("image", data.image as File);
-				customFormData.append(
-					"config",
-					JSON.stringify({
-						workflow: data.workflow,
-						training: data.training,
-						version: data.version,
-					}),
-				);
+				if (data.workflow === "classification") {
+					customFormData.append(
+						"config",
+						JSON.stringify({
+							workflow: data.workflow,
+							training: data.training,
+							version: data.version,
+						}),
+					);
+				} else {
+					customFormData.append(
+						"config",
+						JSON.stringify({
+							workflow: data.workflow,
+							training: data.training,
+							version: data.version,
+							confidence: confident / 100,
+						}),
+					);
+				}
 				customFormData.append("model", data.model as File);
 				await createCustomInference(
 					{ data: customFormData },
@@ -276,6 +296,14 @@ export const ImageComponents = ({
 				if (!data.image || !data.workflowId) return;
 				const workflowFormData = new FormData();
 				workflowFormData.append("image", data.image as File);
+				if (workflow?.data.type !== "classification") {
+					workflowFormData.append(
+						"config",
+						JSON.stringify({
+							confidence: confident / 100,
+						}),
+					);
+				}
 				await createWorkflowInference(
 					{ workflowId: data.workflowId, data: workflowFormData },
 					{ onSuccess: (data) => handleOnSuccessStart(data?.data) },
@@ -286,6 +314,14 @@ export const ImageComponents = ({
 				if (!data.image || !data.workflowId || !data.trainingId) return;
 				const trainingFormData = new FormData();
 				trainingFormData.append("image", data.image as File);
+				if (workflow?.data.type !== "classification") {
+					trainingFormData.append(
+						"config",
+						JSON.stringify({
+							confidence: confident / 100,
+						}),
+					);
+				}
 				await createTrainingInference(
 					{
 						workflowId: data.workflowId,
@@ -302,7 +338,9 @@ export const ImageComponents = ({
 		createTrainingInference,
 		createWorkflowInference,
 		data,
+		workflow?.data.type,
 		handleOnSuccessStart,
+		confident,
 		inference,
 		selected,
 	]);
@@ -652,6 +690,33 @@ export const ImageComponents = ({
 								</Select>
 							</div>
 						</div>
+						{data.workflow !== "classification" && (
+							<>
+								<div className="flex items-center justify-between">
+									<Label
+										htmlFor={`${id}-workflow`}
+										className="mb-1 pb-1 text-xs"
+									>
+										Confident
+									</Label>
+									<span className="text-sm text-muted-foreground w-12 text-right">
+										{confident}%
+									</span>
+								</div>
+								<Slider
+									max={100}
+									min={0}
+									step={1}
+									value={[confident]}
+									onValueChange={(v) => {
+										const [confidentValue] = v;
+										setConfident(confidentValue);
+									}}
+									className="cursor-pointer -mt-1"
+									aria-label="Percentage value"
+								/>
+							</>
+						)}
 					</>
 				) : null}
 				{selected === "workflow" ? (
@@ -668,7 +733,7 @@ export const ImageComponents = ({
 								<div className="flex flex-col">
 									<span>{workflow.name}</span>
 									<span className="text-xs text-muted-foreground">
-										{workflow.type}
+										{toCapital(workflow.type)}
 									</span>
 								</div>
 							)}
@@ -679,6 +744,33 @@ export const ImageComponents = ({
 							placeholder="Search workflow..."
 							emptyMessage="No workflow found"
 						/>
+						{(workflow?.data.type || "") !== "classification" && (
+							<>
+								<div className="flex items-center justify-between">
+									<Label
+										htmlFor={`${id}-workflow`}
+										className="mb-1 pb-1 text-xs"
+									>
+										Confident
+									</Label>
+									<span className="text-sm text-muted-foreground w-12 text-right">
+										{confident}%
+									</span>
+								</div>
+								<Slider
+									max={100}
+									min={0}
+									step={1}
+									value={[confident]}
+									onValueChange={(v) => {
+										const [confidentValue] = v;
+										setConfident(confidentValue);
+									}}
+									className="cursor-pointer -mt-1"
+									aria-label="Percentage value"
+								/>
+							</>
+						)}
 					</>
 				) : null}
 				{selected === "training" ? (
@@ -730,6 +822,33 @@ export const ImageComponents = ({
 							placeholder="Search training by name..."
 							emptyMessage="No training found"
 						/>
+						{(workflow?.data.type || "") !== "classification" && (
+							<>
+								<div className="flex items-center justify-between">
+									<Label
+										htmlFor={`${id}-workflow`}
+										className="mb-1 pb-1 text-xs"
+									>
+										Confident
+									</Label>
+									<span className="text-sm text-muted-foreground w-12 text-right">
+										{confident}%
+									</span>
+								</div>
+								<Slider
+									max={100}
+									min={0}
+									step={1}
+									value={[confident]}
+									onValueChange={(v) => {
+										const [confidentValue] = v;
+										setConfident(confidentValue);
+									}}
+									className="cursor-pointer -mt-1"
+									aria-label="Percentage value"
+								/>
+							</>
+						)}
 					</>
 				) : null}
 				<Button

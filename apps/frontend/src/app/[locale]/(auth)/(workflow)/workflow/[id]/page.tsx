@@ -13,7 +13,8 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 	const { compareQueryParam, setQueryParam } = useQueryParam({ name: "tab" });
 
 	const { data: workflow } = useGetWorkflowById(id);
-	const { data: defaultTraining } = useGetTrainingByDefault(id);
+	const { data: defaultTraining, isFetching: defaultFetching } =
+		useGetTrainingByDefault(id);
 	return (
 		<AppNavbar
 			activeTab="Home"
@@ -83,12 +84,15 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 				<MainWorkflowPage
 					data={workflow?.data}
 					default={defaultTraining?.data}
+					default_status={defaultFetching}
 				/>
 			) : null}
 			{compareQueryParam({ value: "versions" }) ? (
 				<VersionPage id={id} />
 			) : null}
-			{compareQueryParam({ value: "insights" }) ? <InsightPage /> : null}
+			{compareQueryParam({ value: "insights" }) ? (
+				<InsightPage id={id} />
+			) : null}
 			{compareQueryParam({ value: "settings" }) ? (
 				<SettingPage id={id} workflows={workflow?.data} />
 			) : null}

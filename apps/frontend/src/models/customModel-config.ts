@@ -37,7 +37,6 @@ export const objectDetectionSchema = z.object({
 	optimizer_type: z.string().optional().nullable(),
 	batch_size: z.number().positive().default(32),
 	epochs: z.number().positive().default(1),
-	weight_size: z.string(),
 });
 
 export type SegmentationSchema = z.infer<typeof segmentationSchema>;

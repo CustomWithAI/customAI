@@ -266,7 +266,7 @@ export const node = (
 					element: {
 						testDataId: "rotation-form",
 						label: "Probability",
-						key: "rotation-1",
+						key: "rotation-1-prob",
 						name: "rotation",
 						required: true,
 					},
@@ -353,7 +353,7 @@ export const node = (
 					element: {
 						testDataId: "flip-form",
 						label: "Probability",
-						key: "flip-1",
+						key: "flip-1-prob",
 						name: "flip",
 						required: true,
 					},
@@ -652,7 +652,7 @@ export const node = (
 					element: {
 						testDataId: "brightness-form",
 						label: "Probability",
-						key: "brightness-1",
+						key: "brightness-1-prob",
 						name: "brightness",
 						required: true,
 					},
@@ -682,7 +682,7 @@ export const node = (
 					element: {
 						testDataId: "brightness-form",
 						label: "Brightness",
-						key: "brightness-1",
+						key: "brightness-1-config",
 						name: "brightness",
 						required: true,
 					},
@@ -1682,7 +1682,7 @@ export const node = (
 					template: "number",
 					element: {
 						testDataId: "sharpening-form",
-						label: "Zoom Factor",
+						label: "Sharpening   Factor",
 						key: "sharpening-1",
 						name: "sharpening",
 						required: true,

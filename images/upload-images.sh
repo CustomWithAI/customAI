@@ -22,4 +22,9 @@ if [ -f /aws/cors.json ]; then
 fi
 
 # Optional: show summary
+echo -- show summary -- \n
+
 aws --endpoint-url=http://localstack:4566 s3 ls s3://my-bucket --recursive --human-readable --summarize
+
+echo -- bucket cors detail -- \n
+aws --endpoint-url=http://localstack:4566 s3api get-bucket-cors --bucket my-bucket

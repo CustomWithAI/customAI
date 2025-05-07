@@ -1,5 +1,6 @@
 import { Header, Subtle } from "@/components/typography/text";
 import { useRouter } from "@/libs/i18nNavigation";
+import { MessageCircleWarning } from "lucide-react";
 import { cn } from "../../../libs/utils";
 
 interface CardProps {
@@ -7,7 +8,9 @@ interface CardProps {
 	description: string;
 	imagesCount: number;
 	href?: string;
+	selectMode?: boolean;
 	onClick?: () => void;
+	splitMethod?: string;
 	className?: string;
 	images: string[];
 }
@@ -17,6 +20,8 @@ export const DatasetCard: React.FC<CardProps> = ({
 	description,
 	imagesCount,
 	href = "",
+	splitMethod,
+	selectMode = false,
 	onClick,
 	className,
 	images,
@@ -26,7 +31,7 @@ export const DatasetCard: React.FC<CardProps> = ({
 		<button
 			type="button"
 			className={cn(
-				"min-w-64 h-60 hover:shadow-blue-500 hover:shadow-xs duration-200 border border-gray-200",
+				"flex flex-col min-w-64 h-60 hover:shadow-blue-500 hover:shadow-xs duration-200 border border-gray-200",
 				" rounded-lg shadow-md overflow-hidden aspect-[4/3]",
 				className,
 			)}
@@ -55,8 +60,21 @@ export const DatasetCard: React.FC<CardProps> = ({
 			</div>
 			<div className="w-full text-left p-6 pt-4 min-h-24 bg-white z-10">
 				<Header className="font-semibold text-lg truncate">{title}</Header>
-				<Subtle className="text-sm text-gray-500 truncate">
-					{description}
+				<Subtle
+					className={cn("text-sm flex text-gray-500 truncate", {
+						"text-red-500": selectMode && (!splitMethod || imagesCount < 10),
+					})}
+				>
+					{selectMode && (!splitMethod || imagesCount < 10) && (
+						<MessageCircleWarning className="size-4 mt-0.5 mr-1" />
+					)}
+					{!selectMode
+						? description
+						: !splitMethod
+							? "no split method in dataset"
+							: imagesCount < 10
+								? "dataset contains fewer than 10 images."
+								: description}
 				</Subtle>
 			</div>
 		</button>

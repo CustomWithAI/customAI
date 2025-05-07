@@ -27,24 +27,103 @@ import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import * as React from "react";
 import { useInView } from "react-intersection-observer";
 
+/**
+ * Props for the InfiniteCombobox component.
+ *
+ * @template T - The shape of each item in the list.
+ */
 interface ComboboxProps<T extends object> {
+	/**
+	 * The infinite query result hook.
+	 * Typically from useInfiniteQuery.
+	 */
 	hook: UseInfiniteQueryResult<
 		InfiniteData<ResponsePagination<T> | undefined>,
 		Error
 	>;
+
+	/**
+	 * The ID for the combobox input.
+	 */
 	id?: string;
+
+	/**
+	 * Function to extract a unique key from an item.
+	 *
+	 * @param item - The item to extract the key from.
+	 */
 	keyExtractor: (item: T) => string;
+
+	/**
+	 * Function that returns the content to render in the dropdown.
+	 *
+	 * @param item - The item to display.
+	 */
 	itemContent: (item: T) => React.ReactNode;
+
+	/**
+	 * Optional function to control the display value in the input box.
+	 *
+	 * @param item - The item to represent.
+	 */
 	itemDisplay?: (item: T) => React.ReactNode;
+
+	/**
+	 * Function to call when filtering the list by search input.
+	 *
+	 * @param search - The current search input value.
+	 */
 	filter: (search: string) => void;
+
+	/**
+	 * Placeholder text in the input.
+	 * @default "Search..."
+	 */
 	placeholder?: string;
+
+	/**
+	 * Message to show when no results are found.
+	 * @default "No results found."
+	 */
 	emptyMessage?: string;
+
+	/**
+	 * Message to show when data fails to load.
+	 * @default "Failed to load data."
+	 */
 	errorMessage?: string;
+
+	/**
+	 * Current selected value.
+	 */
 	value?: string;
+
+	/**
+	 * Callback when the selected value changes.
+	 *
+	 * @param value - The selected item's key.
+	 */
 	onChange?: (value: string) => void;
+
+	/**
+	 * Whether the combobox is disabled.
+	 * @default false
+	 */
 	disabled?: boolean;
+
+	/**
+	 * Additional classes to apply to the combobox container.
+	 */
 	className?: string;
+
+	/**
+	 * Additional classes to apply to the dropdown/popover.
+	 */
 	popoverClassName?: string;
+
+	/**
+	 * Additional classes to apply to the trigger button.
+	 */
 	triggerClassName?: string;
 }
 
