@@ -248,7 +248,7 @@ export function ModelEvaluationDashboard({
 						{/* Metric selector tabs */}
 						<div className="absolute top-4 left-4 z-10">
 							<div className="bg-white rounded-lg shadow-md p-1 border">
-								<div className="flex space-x-1">
+								<div className="flex space-x-1 w-xs overflow-x-scroll">
 									<button
 										onClick={() => setSelectedMetric(null)}
 										className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
