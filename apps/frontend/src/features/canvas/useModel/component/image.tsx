@@ -281,7 +281,7 @@ export const ImageComponents = ({
 							workflow: data.workflow,
 							training: data.training,
 							version: data.version,
-							confidence: confident,
+							confidence: confident / 100,
 						}),
 					);
 				}
@@ -300,7 +300,7 @@ export const ImageComponents = ({
 					workflowFormData.append(
 						"config",
 						JSON.stringify({
-							confidence: confident,
+							confidence: confident / 100,
 						}),
 					);
 				}
@@ -318,7 +318,7 @@ export const ImageComponents = ({
 					trainingFormData.append(
 						"config",
 						JSON.stringify({
-							confidence: confident,
+							confidence: confident / 100,
 						}),
 					);
 				}
