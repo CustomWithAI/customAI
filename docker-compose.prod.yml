@@ -21,15 +21,13 @@ services:
     restart: always
     ports:
       - 5432:5432
-    secrets:
-      - db-password
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=app
       - POSTGRES_USER=user
       - POSTGRES_HOST_AUTH_METHOD=trust
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+      - POSTGRES_PASSWORD=your_postgres_password
     healthcheck:
       test: [ "CMD", "pg_isready" ]
       interval: 10s
@@ -60,6 +58,37 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - DEBUG=${DEBUG:-0}
+    healthcheck:
+      test: ["CMD", "curl", "-s", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./localstack}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  aws-cli:
+    image: amazon/aws-cli
+    depends_on:
+      localstack:
+        condition: service_healthy
+    volumes:
+      - ./images:/aws
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+    entrypoint: /bin/sh
+    command: -c "sh /aws/upload-images.sh"
 
   ai-service:
     container_name: ai_service
@@ -117,7 +146,3 @@ services:
       - 3000:3000
     depends_on:
       - backend_app
-
-secrets:
-  db-password:
-    file: db/password.txt

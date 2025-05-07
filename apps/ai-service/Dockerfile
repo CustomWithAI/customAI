@@ -19,15 +19,17 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 # Clone YOLOv5 after copying project to prevent overwrite
-RUN git clone https://github.com/ultralytics/yolov5 app/services/model/yolov5
+RUN if [ ! -d "app/services/model/yolov5" ]; then \
+      git clone https://github.com/ultralytics/yolov5 app/services/model/yolov5; \
+    fi
 
-# # Set up virtual environments and install dependencies
-# RUN python -m venv /app/yolov5_venv && \
-#     /app/yolov5_venv/bin/pip install --no-cache-dir -r /app/app/services/model/yolov5/requirements.txt && \
-#     python -m venv /app/yolov8_venv && \
-#     /app/yolov8_venv/bin/pip install --no-cache-dir ultralytics==8.2.103 && \
-#     python -m venv /app/yolov11_venv && \
-#     /app/yolov11_venv/bin/pip install --no-cache-dir "ultralytics<=8.3.40" supervision roboflow
+# Set up virtual environments and install dependencies
+RUN python -m venv /app/yolov5_venv && \
+    /app/yolov5_venv/bin/python -m pip install --no-cache-dir -r /app/app/services/model/yolov5/requirements.txt && \
+    python -m venv /app/yolov8_venv && \
+    /app/yolov8_venv/bin/python -m pip install --no-cache-dir ultralytics==8.2.103 && \
+    python -m venv /app/yolov11_venv && \
+    /app/yolov11_venv/bin/python -m pip install --no-cache-dir "ultralytics<=8.3.40" supervision roboflow
 
 
 # Expose the FastAPI app port

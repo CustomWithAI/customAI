@@ -159,6 +159,8 @@ export class TrainingService {
 
     const training = trainings[0];
 
+    // TODO: At least preprocessing have resize [80x80]
+
     const canStart =
       training.status === "created" ||
       training.status === "completed" ||
