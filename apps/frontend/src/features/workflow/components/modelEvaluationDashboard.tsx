@@ -58,6 +58,9 @@ export function ModelEvaluationDashboard({
 			const headers = lines[0].split(",");
 			const datasets = lines.slice(1).map((line, index) => {
 				const values = line.split(",").map((val) => {
+					if (headers[index] === "epoch" || headers[index] === "time") {
+						return undefined;
+					}
 					const parsed = Number.parseFloat(val);
 					if (Number.isNaN(parsed)) {
 						throw new Error(
@@ -65,7 +68,7 @@ export function ModelEvaluationDashboard({
 						);
 					}
 					return parsed;
-				});
+				}).filter((val) => val !== undefined) as number[];
 
 				if (values.length !== headers.length) {
 					throw new Error(
@@ -79,7 +82,7 @@ export function ModelEvaluationDashboard({
 				};
 			});
 
-			return { headers, datasets };
+			return { headers: headers.filter((header) => header !== "epoch" && header !== "time"), datasets };
 		} catch (err) {
 			setError((err as Error).message);
 			return null;
@@ -103,7 +106,7 @@ export function ModelEvaluationDashboard({
 		if (!parsedData) return [];
 
 		return parsedData.datasets.map((dataset, epochIndex) => ({
-			name: `Epoch ${epochIndex + 1}`,
+			name: `${epochIndex + 1}`,
 			value: dataset.values[metricIndex],
 		}));
 	};
@@ -113,7 +116,7 @@ export function ModelEvaluationDashboard({
 
 		return parsedData.datasets.map((dataset, epochIndex) => {
 			const dataPoint: Record<string, any> = {
-				name: `Epoch ${epochIndex + 1}`,
+				name: `${epochIndex + 1}`,
 			};
 
 			parsedData.headers.forEach((header, headerIndex) => {
@@ -207,7 +210,7 @@ export function ModelEvaluationDashboard({
 															<div className="text-sm font-medium">
 																{parsedData.datasets.length === 1
 																	? header
-																	: `Epoch ${index + 1}`}
+																	: `${index + 1}`}
 															</div>
 															<div
 																className={`text-sm font-semibold ${getColorForMetric(value)}`}
@@ -248,7 +251,7 @@ export function ModelEvaluationDashboard({
 						{/* Metric selector tabs */}
 						<div className="absolute top-4 left-4 z-10">
 							<div className="bg-white rounded-lg shadow-md p-1 border">
-								<div className="flex space-x-1 w-xs overflow-x-scroll">
+								<div className="flex space-x-1 w-xs overflow-x-scroll no-scroll">
 									<button
 										onClick={() => setSelectedMetric(null)}
 										className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
