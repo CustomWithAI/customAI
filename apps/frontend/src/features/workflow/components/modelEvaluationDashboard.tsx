@@ -11,8 +11,14 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { AlertCircle, TrendingUp } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { fixDecimals } from "@/utils/fixDecimal";
+import {
+	AlertCircle,
+	ChevronLeft,
+	ChevronRight,
+	TrendingUp,
+} from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
 	Area,
 	AreaChart,
@@ -22,6 +28,7 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
+import { toCapital } from "../../../utils/toCapital";
 
 interface ModelMetric {
 	name: string;
@@ -45,6 +52,9 @@ export function ModelEvaluationDashboard({
 	const [parsedData, setParsedData] = useState<ModelData | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
+	const scrollRef = useRef<HTMLDivElement>(null);
+	const [canScrollLeft, setCanScrollLeft] = useState(false);
+	const [canScrollRight, setCanScrollRight] = useState(false);
 
 	const parseData = useCallback((data: string): ModelData | null => {
 		try {
@@ -55,22 +65,26 @@ export function ModelEvaluationDashboard({
 				);
 			}
 
-			const headers = lines[0].split(",");
+			const headers = lines[0].split(",").map((cell) => cell.trim());
 			const datasets = lines.slice(1).map((line, index) => {
-				const values = line.split(",").map((val) => {
-					if (headers[index] === "epoch" || headers[index] === "time") {
-						return undefined;
-					}
-					const parsed = Number.parseFloat(val);
-					if (Number.isNaN(parsed)) {
-						throw new Error(
-							`Invalid number format in line ${index + 2}: ${val}`,
-						);
-					}
-					return parsed;
-				}).filter((val) => val !== undefined) as number[];
+				const values = line
+					.split(",")
+					.map((val, valIndex) => {
+						const trimVal = val.trim();
+						if (headers[valIndex] === "epoch" || headers[valIndex] === "time") {
+							return undefined;
+						}
+						const parsed = Number.parseFloat(trimVal);
+						if (Number.isNaN(parsed)) {
+							throw new Error(
+								`Invalid number format in line ${index + 2}: ${trimVal}`,
+							);
+						}
+						return parsed;
+					})
+					.filter((val) => val !== undefined) as number[];
 
-				if (values.length !== headers.length) {
+				if (values.length > headers.length) {
 					throw new Error(
 						`Line ${index + 2} has ${values.length} values but should have ${headers.length}`,
 					);
@@ -82,9 +96,16 @@ export function ModelEvaluationDashboard({
 				};
 			});
 
-			return { headers: headers.filter((header) => header !== "epoch" && header !== "time"), datasets };
+			console.log(headers, datasets);
+			return {
+				headers: headers.filter(
+					(header) => header !== "epoch" && header !== "time",
+				),
+				datasets,
+			};
 		} catch (err) {
 			setError((err as Error).message);
+			console.log(err);
 			return null;
 		}
 	}, []);
@@ -154,6 +175,16 @@ export function ModelEvaluationDashboard({
 		return Math.max(...values);
 	};
 
+	const getAvgValueForMetric = (metricIndex: number) => {
+		if (!parsedData || parsedData.datasets.length <= 1) return null;
+
+		const values = parsedData.datasets.reduce(
+			(sum, acc) => sum + acc.values[metricIndex],
+			0,
+		);
+		return fixDecimals(values / parsedData.datasets.length);
+	};
+
 	const CustomTooltip = ({ active, payload, label }: any) => {
 		if (active && payload && payload.length) {
 			return (
@@ -177,6 +208,42 @@ export function ModelEvaluationDashboard({
 		return [selectedMetric];
 	};
 
+	const updateScrollButtons = useCallback(() => {
+		const el = scrollRef.current;
+		if (!el) return;
+		setCanScrollLeft(el.scrollLeft > 0);
+		setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth);
+	}, []);
+
+	useEffect(() => {
+		const el = scrollRef.current;
+		if (!el) return;
+
+		updateScrollButtons();
+
+		const handleScroll = () => updateScrollButtons();
+		el.addEventListener("scroll", handleScroll);
+		window.addEventListener("resize", updateScrollButtons);
+
+		return () => {
+			if (!el) return;
+			el.removeEventListener("scroll", handleScroll);
+			window.removeEventListener("resize", updateScrollButtons);
+		};
+	}, [updateScrollButtons]);
+
+	const scroll = (direction: "left" | "right") => {
+		if (!scrollRef.current) return;
+		const { scrollLeft, clientWidth } = scrollRef.current;
+		scrollRef.current.scrollTo({
+			left:
+				direction === "left"
+					? scrollLeft - clientWidth
+					: scrollLeft + clientWidth,
+			behavior: "smooth",
+		});
+	};
+
 	if (!parseData) {
 		return (
 			<RenderStatusAlert status={!!parseData}>
@@ -186,7 +253,7 @@ export function ModelEvaluationDashboard({
 	}
 
 	return (
-		<div className="space-y-6 h-96">
+		<div className="space-y-6 h-full min-h-96">
 			{parsedData &&
 				(parsedData.datasets.length === 1 ? (
 					<Card>
@@ -248,10 +315,28 @@ export function ModelEvaluationDashboard({
 							</CardTitle>
 						</CardHeader>
 
-						{/* Metric selector tabs */}
 						<div className="absolute top-4 left-4 z-10">
-							<div className="bg-white rounded-lg shadow-md p-1 border">
-								<div className="flex space-x-1 w-xs overflow-x-scroll no-scroll">
+							<div className="relative bg-white rounded-lg shadow-md p-1 border border-gray-200">
+								{canScrollLeft && (
+									<button
+										onClick={() => scroll("left")}
+										className="left-1 z-50 top-1/2 -translate-y-1/2 absolute p-1 rounded bg-gradient-to-r pr-2 from-white/100 to-white/90 hover:bg-gray-100 transition-colors"
+									>
+										<ChevronLeft className="w-4 h-4" />
+									</button>
+								)}
+								{canScrollRight && (
+									<button
+										onClick={() => scroll("right")}
+										className="right-1 z-50 top-1/2 -translate-y-1/2 absolute p-1 rounded  bg-gradient-to-r pr-2 from-white/90 to-white/100 hover:bg-gray-100 transition-colors"
+									>
+										<ChevronRight className="w-4 h-4" />
+									</button>
+								)}
+								<div
+									ref={scrollRef}
+									className="relative flex space-x-1 w-full max-w-xs overflow-x-scroll no-scroll"
+								>
 									<button
 										onClick={() => setSelectedMetric(null)}
 										className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
@@ -266,7 +351,7 @@ export function ModelEvaluationDashboard({
 										<button
 											key={header}
 											onClick={() => setSelectedMetric(header)}
-											className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+											className={`px-3 py-1.5 text-sm font-medium text-nowrap rounded-md transition-colors ${
 												selectedMetric === header
 													? "bg-gray-100 text-gray-900"
 													: "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
@@ -278,18 +363,18 @@ export function ModelEvaluationDashboard({
 														: "none",
 											}}
 										>
-											{header.split(" ").pop()}{" "}
+											{toCapital(header.split(" ").pop() || "")}{" "}
 										</button>
 									))}
 								</div>
 							</div>
 						</div>
 
-						<CardContent className="pt-16">
+						<CardContent>
 							{/* Combined chart for "All" view */}
 							{!selectedMetric ? (
 								<Card className="overflow-hidden border-0 shadow-sm mb-6">
-									<CardHeader className="bg-gray-50 pb-2">
+									<CardHeader className="bg-gray-50 py-2">
 										<CardTitle className="text-base">All Metrics</CardTitle>
 									</CardHeader>
 									<CardContent className="p-0">
@@ -336,10 +421,7 @@ export function ModelEvaluationDashboard({
 														tickFormatter={(value) =>
 															`${(value * 100).toFixed(0)}%`
 														}
-														domain={[
-															0,
-															(dataMax: any) => Math.min(1, dataMax * 1.1),
-														]}
+														domain={[0, (dataMax: any) => dataMax * 1.1]}
 														axisLine={false}
 														tickLine={false}
 														tick={{ fontSize: 12 }}
@@ -382,23 +464,26 @@ export function ModelEvaluationDashboard({
 									</CardContent>
 								</Card>
 							) : (
-								<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+								<div className="grid grid-cols-1 gap-6">
 									{getFilteredMetrics().map((metric) => {
 										const index = parsedData.headers.indexOf(metric);
 										const bestValue = getBestValueForMetric(index);
+										const avgValue = getAvgValueForMetric(index);
 										return (
 											<Card
 												key={metric}
 												className="overflow-hidden border-0 shadow-sm"
 											>
 												<CardHeader
-													className="pb-2"
+													className="py-2"
 													style={{
 														background: `linear-gradient(to right, ${getMetricColor(index)}15, transparent)`,
 														borderLeft: `4px solid ${getMetricColor(index)}`,
 													}}
 												>
-													<CardTitle className="text-base">{metric}</CardTitle>
+													<CardTitle className="text-base">
+														{toCapital(metric)}
+													</CardTitle>
 												</CardHeader>
 												<CardContent className="p-0">
 													<div className="h-48 pt-4">
@@ -445,7 +530,7 @@ export function ModelEvaluationDashboard({
 																	domain={[
 																		0,
 																		(dataMax: any) =>
-																			Math.min(1, dataMax * 1.1),
+																			Math.max(1, dataMax * 1.1),
 																	]}
 																	axisLine={false}
 																	tickLine={false}
@@ -467,7 +552,7 @@ export function ModelEvaluationDashboard({
 																						{(
 																							((payload[0]?.value as number) ||
 																								0) * 100
-																						).toFixed(1)}
+																						).toFixed(2)}
 																						%
 																					</p>
 																				</div>
@@ -482,8 +567,24 @@ export function ModelEvaluationDashboard({
 																		stroke="#888"
 																		strokeDasharray="3 3"
 																		label={{
-																			value: `Best: ${(bestValue * 100).toFixed(1)}%`,
+																			value: `Best: ${(bestValue * 100).toFixed(2)}%`,
 																			position: "insideTopRight",
+																			className: "bg-white",
+																			tabIndex: 50,
+																			fill: "#888",
+																			fontSize: 12,
+																		}}
+																	/>
+																)}
+																{avgValue && (
+																	<ReferenceLine
+																		y={avgValue}
+																		stroke="#888"
+																		strokeDasharray="3 3"
+																		label={{
+																			value: `Avg: ${(avgValue * 100).toFixed(1)}%`,
+																			position: "insideTopRight",
+																			tabIndex: 50,
 																			fill: "#888",
 																			fontSize: 12,
 																		}}

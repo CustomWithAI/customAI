@@ -3,12 +3,19 @@ import { Header } from "@/components/typography/text";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { VersionSection } from "@/features/workflow/components/version-section";
 import { useGetInfTrainingByWorkflowId } from "@/hooks/queries/training-api";
+import { useRouter } from "@/libs/i18nNavigation";
 import { cn } from "@/libs/utils";
 import { findPreviousVersion } from "@/utils/lastVersion";
 import { useMemo, useState } from "react";
 
 export const VersionPage = ({ id }: { id: string }) => {
-	const versionData = useGetInfTrainingByWorkflowId({ workflowId: id });
+	const router = useRouter();
+	const versionData = useGetInfTrainingByWorkflowId({
+		workflowId: id,
+		params: {
+			orderBy: "",
+		},
+	});
 	const [activeVersion, setActiveVersion] = useState<string | null>(null);
 	const items = useMemo(
 		() =>
@@ -45,17 +52,17 @@ export const VersionPage = ({ id }: { id: string }) => {
 						<div className="p-4">
 							<h4 className="mb-4 text-sm font-medium leading-none">Tags</h4>
 							{items?.map((tag) => (
-								<>
-									<div
-										key={tag.version}
-										className={cn(
-											"border-l border-gray-200 pl-3 py-1 text-sm hover:bg-zinc-100 duration-200",
-											{ "bg-zinc-100": activeVersion === tag.version },
-										)}
-									>
-										{tag.version}
-									</div>
-								</>
+								<button
+									type="button"
+									key={tag.version}
+									onClick={() => router.push(`#${tag.version}`)}
+									className={cn(
+										"border-l border-gray-200 pl-3 py-1 text-sm w-full text-left hover:bg-zinc-100 duration-200",
+										{ "bg-zinc-100": activeVersion === tag.version },
+									)}
+								>
+									{tag.version}
+								</button>
 							))}
 						</div>
 					</ScrollArea>

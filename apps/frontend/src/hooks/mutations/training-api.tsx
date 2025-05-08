@@ -10,7 +10,25 @@ export const useCreateTraining = () => {
 		mutationFn: trainingService.createTraining,
 		onSuccess: (ctx) => {
 			queryClient.invalidateQueries({
-				queryKey: ["trainings", ctx?.data.workflowId, ctx?.data.id],
+				queryKey: ["training", ctx?.data.workflowId, ctx?.data.id],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["inf-training"],
+			});
+		},
+	});
+};
+
+export const useCreateCloneTraining = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: trainingService.clone,
+		onSuccess: (ctx) => {
+			queryClient.invalidateQueries({
+				queryKey: ["training", ctx?.data.workflowId, ctx?.data.id],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["inf-training"],
 			});
 		},
 	});

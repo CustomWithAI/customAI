@@ -14,7 +14,14 @@ import { encodeBase64 } from "@/libs/base64";
 import type { TrainingModel } from "@/types/response/training";
 import type { WorkflowModel } from "@/types/response/workflow";
 import { toCapital } from "@/utils/toCapital";
-import { Group, Layers2, PackagePlus, ScanSearch, Tractor } from "lucide-react";
+import {
+	Archive,
+	Group,
+	Layers2,
+	PackagePlus,
+	ScanSearch,
+	Tractor,
+} from "lucide-react";
 import { useFormatter } from "next-intl";
 
 const STATUS_COLOR: Record<string, VariantProps> = {
@@ -92,20 +99,23 @@ export const MainWorkflowPage = ({
 							href={`/use/?workflowId=${encodeBase64(data?.id || "")}`}
 						/>
 						<OverviewBox
-							title="Create a model"
-							description="To create your own pipeline."
-							icon={<PackagePlus />}
+							title="evaluate a model"
+							description="To analysis data in last training."
+							icon={<Archive />}
+							href={`?tab=insights&id=${encodeBase64(mainDefault?.id || "")}`}
 						/>
 					</div>
 					<Content className="font-semibold mt-6 mb-3">
-						Training History Chart
+						Training Default Chart
 					</Content>
-					<div className="w-full h-96 rounded-md">
+					<div className="w-full min-h-96 mb-10 rounded-md">
 						{mainDefault?.evaluation ? (
 							<ModelEvaluationDashboard initialData={mainDefault?.evaluation} />
 						) : (
 							<RenderStatusAlert status={default_status}>
-								no evaluation result found
+								<div className="flex border rounded-xl border-gray-200 border-dashed text-gray-400 justify-center items-center w-full h-96">
+									no evaluation result found
+								</div>
 							</RenderStatusAlert>
 						)}
 					</div>

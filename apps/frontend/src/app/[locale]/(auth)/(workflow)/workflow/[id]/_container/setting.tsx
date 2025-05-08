@@ -30,7 +30,9 @@ export const SettingPage = ({
 				</CardContent>
 			</Card>
 			<Card>
-				<CardHeader>Workflow Operation</CardHeader>
+				<CardHeader>
+					<CardTitle>Workflow Operation</CardTitle>
+				</CardHeader>
 				<CardContent>
 					<Suspense fallback={<div>Loading workflows...</div>}>
 						<WorkflowSettingForm id={id} workflow={workflows} />

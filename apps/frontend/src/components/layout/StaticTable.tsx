@@ -19,7 +19,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-
+import { ScrollArea } from "../ui/scroll-area";
 export type ColumnType =
 	| "default"
 	| "bold"
@@ -155,77 +155,85 @@ export function TableStatic<TData extends object>({
 			)}
 
 			<div className={cn("rounded-md", bordered && "border border-gray-200")}>
-				<Table className={cn(!fullWidth && "w-auto")}>
-					<TableHeader>
-						<TableRow>
-							{columnsWithStyles.map((column) =>
-								visibleColumns[column.accessorKey.toString()] ? (
-									<TableHead
-										key={column.accessorKey.toString()}
-										className={cn(
-											getCellClassNameByType(column.type),
-											column.className,
-											headerClassName,
-										)}
-									>
-										{column.header}
-									</TableHead>
-								) : null,
-							)}
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{data.length === 0 ? (
-							<TableRow>
-								<TableCell colSpan={columns.length} className="text-center">
-									{emptyMessage}
-								</TableCell>
-							</TableRow>
-						) : (
-							data.map((item, index) => {
-								const rowKey = item[keyField]
-									? String(item[keyField])
-									: index.toString();
-
-								const rowHref =
-									clickableRows && !onRowClick
-										? columnsWithStyles.find((col) => col.href)?.href?.(item) ||
-											"#"
-										: undefined;
-
-								const handleClick =
-									clickableRows && onRowClick
-										? () => onRowClick(item)
-										: undefined;
-
-								return (
-									<TableRow
-										key={rowKey}
-										className={cn(
-											clickableRows && "cursor-pointer hover:bg-muted/50",
-											striped && index % 2 === 1 && "bg-muted/50",
-										)}
-										onClick={handleClick}
-									>
-										{columnsWithStyles.map((column) =>
-											visibleColumns[column.accessorKey.toString()] ? (
-												<TableCell
-													key={`${rowKey}-${String(column.accessorKey)}`}
-													className={cn(
-														getCellClassNameByType(column.type, cellClassName),
-														column.className,
-													)}
-												>
-													{renderCell(item, column)}
-												</TableCell>
-											) : null,
-										)}
+				<ScrollArea className="w-full" type="always">
+					<div className="min-w-full">
+						<Table className={cn(!fullWidth && "w-auto")}>
+							<TableHeader>
+								<TableRow>
+									{columnsWithStyles.map((column) =>
+										visibleColumns[column.accessorKey.toString()] ? (
+											<TableHead
+												key={column.accessorKey.toString()}
+												className={cn(
+													getCellClassNameByType(column.type),
+													column.className,
+													headerClassName,
+												)}
+											>
+												{column.header}
+											</TableHead>
+										) : null,
+									)}
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{data.length === 0 ? (
+									<TableRow>
+										<TableCell colSpan={columns.length} className="text-center">
+											{emptyMessage}
+										</TableCell>
 									</TableRow>
-								);
-							})
-						)}
-					</TableBody>
-				</Table>
+								) : (
+									data.map((item, index) => {
+										const rowKey = item[keyField]
+											? String(item[keyField])
+											: index.toString();
+
+										const rowHref =
+											clickableRows && !onRowClick
+												? columnsWithStyles
+														.find((col) => col.href)
+														?.href?.(item) || "#"
+												: undefined;
+
+										const handleClick =
+											clickableRows && onRowClick
+												? () => onRowClick(item)
+												: undefined;
+
+										return (
+											<TableRow
+												key={rowKey}
+												className={cn(
+													clickableRows && "cursor-pointer hover:bg-muted/50",
+													striped && index % 2 === 1 && "bg-muted/50",
+												)}
+												onClick={handleClick}
+											>
+												{columnsWithStyles.map((column) =>
+													visibleColumns[column.accessorKey.toString()] ? (
+														<TableCell
+															key={`${rowKey}-${String(column.accessorKey)}`}
+															className={cn(
+																getCellClassNameByType(
+																	column.type,
+																	cellClassName,
+																),
+																column.className,
+															)}
+														>
+															{renderCell(item, column)}
+														</TableCell>
+													) : null,
+												)}
+											</TableRow>
+										);
+									})
+								)}
+							</TableBody>
+						</Table>
+					</div>
+				</ScrollArea>
 			</div>
 		</div>
 	);

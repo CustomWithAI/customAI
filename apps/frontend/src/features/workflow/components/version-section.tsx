@@ -10,6 +10,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+	useCreateCloneTraining,
 	useDeleteTraining,
 	useSetDefaultTraining,
 	useUpdateTraining,
@@ -65,6 +66,8 @@ export const VersionSection = ({
 		useSetDefaultTraining();
 	const { mutate: deleteTraining, isPending: deletePending } =
 		useDeleteTraining();
+	const { mutate: cloneTraining, isPending: clonePending } =
+		useCreateCloneTraining();
 
 	useEffect(() => {
 		if (inView) {
@@ -157,7 +160,17 @@ export const VersionSection = ({
 								</Button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent className="w-56">
-								<DropdownMenuItem>clone</DropdownMenuItem>
+								<DropdownMenuItem
+									disabled={clonePending}
+									onClick={() => {
+										cloneTraining({
+											workflowId: current.workflow.id,
+											trainingId: current.id,
+										});
+									}}
+								>
+									clone
+								</DropdownMenuItem>
 								<DropdownMenuItem
 									disabled={setDefaultPending}
 									onClick={() => {

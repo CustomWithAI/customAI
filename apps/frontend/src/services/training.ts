@@ -20,6 +20,16 @@ export const trainingService = {
 			);
 		} catch (error) {}
 	},
+	clone: async ({
+		workflowId,
+		trainingId,
+	}: { workflowId: string; trainingId: string }) => {
+		try {
+			return axiosClient.post<TrainingModel>(
+				`/workflows/${workflowId}/trainings/${trainingId}/clone`,
+			);
+		} catch (error) {}
+	},
 	setDefault: async ({
 		workflowId,
 		trainingId,

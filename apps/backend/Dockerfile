@@ -1,38 +1,25 @@
-FROM oven/bun AS build
+FROM oven/bun AS base
+WORKDIR /usr/src/app
 
-WORKDIR /app
+FROM base AS install
 
-# Cache packages installation
-COPY package.json package.json
-COPY bun.lock bun.lock
+RUN mkdir -p /temp/prod
+COPY package.json bun.lock /temp/prod/
+RUN cd /temp/prod && bun install --production
 
-RUN bun install --production --frozen-lockfile
-
+FROM base AS prerelease
+COPY --from=install /temp/prod/node_modules node_modules
 COPY . .
 
 ENV NODE_ENV=production
+RUN bun test
+RUN bun run build
 
-RUN bun build \
-	--compile \
-	--minify-whitespace \
-	--minify-syntax \
-  --external pg \
-	--target bun \
-	--outfile server \
-	./src/index.ts
+FROM base AS release
+COPY --from=install /temp/prod/node_modules node_modules
+COPY --from=prerelease /usr/src/app/index.ts .
+COPY --from=prerelease /usr/src/app/package.json .
 
-RUN chmod +x server
-
-FROM gcr.io/distroless/base
-
-COPY --from=build /app/server /app/server
-
-WORKDIR /app
-RUN ls -a
-RUN file server && ls -l server
-
-ENV NODE_ENV=production
-
-EXPOSE 3000
-
-CMD ["./server"]
+USER bun
+EXPOSE 4000
+ENTRYPOINT [ "bun", "run", "index.ts" ]

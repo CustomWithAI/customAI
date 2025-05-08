@@ -289,77 +289,81 @@ export function InfiniteTable<TData extends object>({
 			)}
 
 			<div className={cn("rounded-md", bordered && "border border-gray-200")}>
-				<Table className={cn(!fullWidth && "w-auto")}>
-					<TableHeader>
-						<TableRow>
-							{columnsWithStyles.map((column) =>
-								visibleColumns[column.accessorKey.toString()] ? (
-									<TableHead
-										key={column.accessorKey.toString()}
+				<div className="w-full overflow-auto">
+					<Table className={cn(!fullWidth && "w-auto")}>
+						<TableHeader>
+							<TableRow>
+								{columnsWithStyles.map((column) =>
+									visibleColumns[column.accessorKey.toString()] ? (
+										<TableHead
+											key={column.accessorKey.toString()}
+											className={cn(
+												getCellClassNameByType(column.type),
+												column.className,
+												headerClassName,
+											)}
+										>
+											{column.header}
+										</TableHead>
+									) : null,
+								)}
+							</TableRow>
+						</TableHeader>
+						<TableBody>
+							{allItems.map((item, rowIndex) => {
+								if (!item) return;
+								const rowKey = item[keyField]
+									? String(item[keyField])
+									: rowIndex;
+
+								const rowHref =
+									clickableRows && !onRowClick
+										? columnsWithStyles.find((col) => col.href)?.href?.(item) ||
+											"#"
+										: undefined;
+
+								const handleRowClick =
+									clickableRows && onRowClick
+										? () => onRowClick(item)
+										: undefined;
+
+								return (
+									<TableRow
+										key={rowKey}
 										className={cn(
-											getCellClassNameByType(column.type),
-											column.className,
-											headerClassName,
+											clickableRows && "cursor-pointer hover:bg-muted/50",
+											striped && rowIndex % 2 === 1 && "bg-muted/50",
 										)}
+										onClick={handleRowClick}
 									>
-										{column.header}
-									</TableHead>
-								) : null,
-							)}
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{allItems.map((item, rowIndex) => {
-							if (!item) return;
-							const rowKey = item[keyField] ? String(item[keyField]) : rowIndex;
-
-							const rowHref =
-								clickableRows && !onRowClick
-									? columnsWithStyles.find((col) => col.href)?.href?.(item) ||
-										"#"
-									: undefined;
-
-							const handleRowClick =
-								clickableRows && onRowClick
-									? () => onRowClick(item)
-									: undefined;
-
-							return (
-								<TableRow
-									key={rowKey}
-									className={cn(
-										clickableRows && "cursor-pointer hover:bg-muted/50",
-										striped && rowIndex % 2 === 1 && "bg-muted/50",
-									)}
-									onClick={handleRowClick}
-								>
-									{columnsWithStyles.map((column) =>
-										visibleColumns[column.accessorKey.toString()] ? (
-											<TableCell
-												key={`${rowKey}-${String(column.accessorKey)}`}
-												className={cn(
-													getCellClassNameByType(column.type, cellClassName),
-													column.className,
-												)}
-											>
-												{column.href && !rowHref ? (
-													<Link
-														href={column.href(item) || "#"}
-														className="hover:underline"
-													>
-														{renderCell(item, column)}
-													</Link>
-												) : (
-													renderCell(item, column)
-												)}
-											</TableCell>
-										) : null,
-									)}
-								</TableRow>
-							);
-						})}
-					</TableBody>
-				</Table>
+										{columnsWithStyles.map((column) =>
+											visibleColumns[column.accessorKey.toString()] ? (
+												<TableCell
+													key={`${rowKey}-${String(column.accessorKey)}`}
+													className={cn(
+														getCellClassNameByType(column.type, cellClassName),
+														column.className,
+													)}
+												>
+													{column.href && !rowHref ? (
+														<Link
+															href={column.href(item) || "#"}
+															className="hover:underline"
+														>
+															{renderCell(item, column)}
+														</Link>
+													) : (
+														renderCell(item, column)
+													)}
+												</TableCell>
+											) : null,
+										)}
+									</TableRow>
+								);
+							})}
+						</TableBody>
+					</Table>
+				</div>
 			</div>
 
 			<div ref={ref} className="flex justify-center items-center w-full py-4">

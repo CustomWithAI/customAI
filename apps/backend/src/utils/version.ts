@@ -35,3 +35,26 @@ export const incrementVersion = (
 
 	return `${major}.${minor}.${patch}`;
 };
+
+export const roundUpVersion = (
+	version: string,
+	type: "major" | "minor" | "patch",
+): string => {
+	let [major, minor, patch] = version.split(".").map(Number);
+
+	switch (type) {
+		case "major":
+		case "minor": {
+			major++;
+			minor = 0;
+			patch = 0;
+			break;
+		}
+		case "patch": {
+			minor++;
+			patch = 0;
+		}
+	}
+
+	return `${major}.${minor}.${patch}`;
+};

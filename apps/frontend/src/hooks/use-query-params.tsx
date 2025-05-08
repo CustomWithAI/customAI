@@ -78,6 +78,7 @@ export function useQueryParam(defaultName?: { name?: string }) {
 		}: {
 			name?: string;
 			value: string | null;
+      ignore?: string[],
 			resetParams?: boolean;
 		}): string => {
 			if (!name) {
