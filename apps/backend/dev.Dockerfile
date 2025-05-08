@@ -1,11 +1,10 @@
-FROM oven/bun:latest AS base
-FROM base AS build
+FROM oven/bun:latest
 
 RUN apt update && apt install python3 python3-pip make g++ -y
 
 WORKDIR /app
 
-COPY package.json bun.lockb /
+COPY package.json bun.lock /
 
 RUN bun install
 
