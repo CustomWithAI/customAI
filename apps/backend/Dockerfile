@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Cache packages installation
 COPY package.json package.json
-COPY bun.lockb bun.lockb
+COPY bun.lock bun.lock
 
 RUN bun install --production --frozen-lockfile
 
@@ -23,7 +23,7 @@ RUN bun build \
 
 RUN chmod +x server
 
-FROM alpine:latest AS runner
+FROM gcr.io/distroless/base
 
 COPY --from=build /app/server /app/server
 
