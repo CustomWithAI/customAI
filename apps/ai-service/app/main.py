@@ -1,10 +1,11 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 import os
 import glob
 import subprocess
 import requests
 import traceback
+import sys
 
 from app.services.dataset.dataset import preprocess_all_dataset, augment_dataset_class, augment_dataset_obj, augment_dataset_seg, prepare_dataset
 from app.services.model.training import MLTraining, DLTrainingPretrained, ConstructTraining
@@ -22,7 +23,7 @@ from app.services.model.use_model import UseModel
 from app.helpers.models import delete_all_models, get_model
 from app.helpers.evaluation import get_all_evaluation, clear_evaluation_folder
 from app.helpers.dataset import clear_dataset
-# from app.helpers.realtime_log import RedisLogHandler
+from app.helpers.realtime_log import TeeStream, r
 
 ml_training = MLTraining()
 dl_training_pretrained = DLTrainingPretrained()
@@ -45,6 +46,19 @@ async def exception_handler(request: Request, e: Exception):
             "trace": traceback.format_exc()
         },
     )
+
+@app.websocket("/ws/logs/{user_id}")
+async def websocket_logs(websocket: WebSocket, user_id: str):
+    await websocket.accept()
+    pubsub = r.pubsub()
+    await pubsub.subscribe(user_id)
+
+    try:
+        async for message in pubsub.listen():
+            if message["type"] == "message":
+                await websocket.send_text(message["data"].decode("utf-8"))
+    except WebSocketDisconnect:
+        await pubsub.unsubscribe(user_id)
 
 
 @app.get("/")
@@ -102,7 +116,11 @@ async def create_venv():
 
 
 @app.post("/training-yolo-pt")
-async def training_yolo_pretrained(config: DeepLearningYoloRequest):
+async def training_yolo_pretrained(config: DeepLearningYoloRequest, request: Request):
+    user_id = request.headers.get("X-USER-ID", "default")
+    sys.stdout = TeeStream(user_id, sys.__stdout__)
+    sys.stderr = TeeStream(user_id, sys.__stderr__)
+
     dl_training_pretrained.train_yolo(config)
     if config.type == "object_detection":
         return get_model("od", "pt", config.model)
@@ -113,7 +131,10 @@ async def training_yolo_pretrained(config: DeepLearningYoloRequest):
 
 
 @app.post("/dataset")
-async def create_dataset(data: PrepareDatasetRequest):
+async def create_dataset(data: PrepareDatasetRequest, request: Request):
+    user_id = request.headers.get("X-USER-ID", "default")
+    sys.stdout = TeeStream(user_id, sys.__stdout__)
+    sys.stderr = TeeStream(user_id, sys.__stderr__)
     delete_all_models()
     prepare_dataset(data)
 
@@ -203,5 +224,5 @@ async def get_evaluation_result(workflow: str, yolo: str | None = None):
     evaluation = get_all_evaluation(workflow, yolo)
     delete_all_models()
     clear_evaluation_folder()
-    # clear_dataset()
+    clear_dataset()
     return JSONResponse(evaluation, status_code=200)
