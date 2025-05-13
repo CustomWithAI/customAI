@@ -38,6 +38,8 @@ const envSchema = z.object({
   REDIS_PORT: z.coerce.number().default(6379),
   REDIS_PASSWORD: z.string().optional(),
   REDIS_DB_INDEX: z.string().optional(),
+  REDIS_LOG_INDEX: z.string().optional(),
+  REDIS_LOG_CHANNEL: z.string().default("training-logs"),
 
   // elasticsearch
   ELASTICSEARCH_URL: z.string().default("http://localhost"),

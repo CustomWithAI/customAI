@@ -5,6 +5,7 @@ import { FeatureExtractionRepository } from "@/applications/repositories/feature
 import { FeatureSelectionRepository } from "@/applications/repositories/featureSelectionRepository";
 import { ImagePreprocessingRepository } from "@/applications/repositories/imagePreprocessingRepository";
 import { ImageRepository } from "@/applications/repositories/imageRepository";
+import { LogRepository } from "@/applications/repositories/logRepository";
 import { ModelInferenceRepository } from "@/applications/repositories/modelInferenceRepository";
 import { TrainingRepository } from "@/applications/repositories/trainingRepository";
 import { WorkflowRepository } from "@/applications/repositories/workflowRepository";
@@ -15,6 +16,7 @@ import { FeatureExtractionService } from "@/applications/services/featureExtract
 import { FeatureSelectionService } from "@/applications/services/featureSelectionService";
 import { ImagePreprocessingService } from "@/applications/services/imageProprocessingService";
 import { ImageService } from "@/applications/services/imageService";
+import { LogService } from "@/applications/services/logService";
 import { ModelInferenceService } from "@/applications/services/modelInferenceService";
 import { TrainingService } from "@/applications/services/trainingService";
 import { WorkflowService } from "@/applications/services/workflowService";
@@ -30,6 +32,7 @@ export const customModelRepository = new CustomModelRepository();
 export const workflowRepository = new WorkflowRepository();
 export const trainingRepository = new TrainingRepository();
 export const modelInferenceRepository = new ModelInferenceRepository();
+export const logRepository = new LogRepository();
 
 // Services
 export const augmentationService = new AugmentationService(
@@ -60,3 +63,4 @@ export const modelInferenceService = new ModelInferenceService(
   modelInferenceRepository,
   trainingRepository
 );
+export const logService = new LogService(logRepository);

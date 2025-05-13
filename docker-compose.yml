@@ -104,8 +104,8 @@ services:
       - rabbitmq
       - redis
 
-  worker:
-    container_name: worker
+  queue_worker:
+    container_name: queue_worker
     profiles:
       - ""
       - worker
@@ -115,13 +115,30 @@ services:
     volumes:
       - ./apps/backend:/app
       - /app/node_modules
-    command: ["bun", "run", "--watch", "src/workers/trainingWorker.ts"]
+    command: ["bun", "run", "--watch", "src/workers/queueWorker.ts"]
     env_file: apps/backend/.env
     depends_on:
       - backend_app
       - localstack
       - postgres
       - rabbitmq
+  
+  log_worker:
+    container_name: log_worker
+    profiles:
+      - ""
+      - worker
+    build:
+      context: ./apps/backend
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./apps/backend:/app
+      - /app/node_modules
+    command: ["bun", "run", "--watch", "src/workers/logWorker.ts"]
+    env_file: apps/backend/.env
+    depends_on:
+      - backend_app
+      - postgres
       - redis
 
   frontend_app:

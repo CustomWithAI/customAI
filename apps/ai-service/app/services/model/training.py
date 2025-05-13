@@ -5,7 +5,6 @@ import os
 import numpy as np
 import asyncio
 import os
-import subprocess
 import yaml
 import cv2
 import shutil
@@ -42,14 +41,27 @@ from app.models.dl import (
     DeepLearningYoloRequest,
     DeepLearningClassificationConstruct,
     DeepLearningObjectDetectionConstruct,
-    DeepLearningObjectDetectionConstructFeatex,
 )
+from app.helpers.realtime_log import log_message
 
 mlmodel = MlModel()
 dlmodel = DlModel()
 constructdl_cls = ConstructDLCLS()
 constructdl_od = ConstructDLOD()
 feature_extractor = FeatureExtraction()
+
+async def run_command_streamed(command: str, training_id: str):
+    proc = await asyncio.create_subprocess_shell(
+        command,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.STDOUT
+    )
+    while True:
+        line = await proc.stdout.readline()
+        if not line:
+            break
+        await log_message(training_id, line.decode("utf-8").rstrip())
+    await proc.wait()
 
 
 class MLTraining():
@@ -458,7 +470,7 @@ class DLTrainingPretrained():
 
         print("✅ Dataset has been reformatted and copied to:", target_dir)
 
-    def train_yolo(self, config: DeepLearningYoloRequest):
+    async def train_yolo(self, config: DeepLearningYoloRequest, training_id: str):
         # Clone dataset to the training folder
         self.reformat_dataset("dataset", "yolo_dataset")
 
@@ -477,24 +489,18 @@ class DLTrainingPretrained():
         if "yolov5" in config.model:
             # Training model
             command = f"yolov5_venv/bin/python ./app/services/model/yolov5/train.py --img {img_size} --batch {batch_size} --epochs {epochs} --data ./data.yaml --weights {weight_size} --cache"
-            subprocess.run(command, shell=True, check=True)
-
-            # shutil.rmtree("./app/services/model/yolov5/runs/train", ignore_errors = True)
+            await run_command_streamed(command, training_id)
 
         if "yolov8" in config.model:
             print("training yolov8")
             # TODO: Implement YOLOv8 training
             command = f"yolov8_venv/bin/yolo task=detect mode=train model={weight_size} data=./data.yaml epochs={epochs} imgsz={img_size} plots=True"
-            subprocess.run(command, shell=True, check=True)
-
-            # shutil.rmtree("./runs/", ignore_errors=True)
+            await run_command_streamed(command, training_id)
 
         if "yolov11" in config.model:
             # TODO: Implement YOLOv11 training
             command = f"yolov11_venv/bin/yolo task=detect mode=train model={weight_size} data=./data.yaml epochs={epochs} imgsz={img_size} plots=True"
-            subprocess.run(command, shell=True, check=True)
-
-            # shutil.rmtree("./runs/", ignore_errors=True)
+            await run_command_streamed(command, training_id)
         
         for path in ["train", "test", "valid"]:
             shutil.rmtree(f"./yolo_dataset/{path}", ignore_errors=True)

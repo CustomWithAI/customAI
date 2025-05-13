@@ -16,7 +16,6 @@ import type {
   UploadModelConfigDto,
 } from "@/domains/dtos/modelInference";
 import { retryConnection } from "@/utils/retry";
-import { connectRedis } from "@/infrastructures/redis/connection";
 import { connectDatabase } from "@/infrastructures/database/connection";
 import { connectS3 } from "@/infrastructures/s3/connection";
 import axios, { AxiosError, type AxiosResponse } from "axios";
@@ -53,7 +52,7 @@ const isUploadModelConfig = (data: unknown): data is UploadModelConfigDto => {
   return testData.workflow !== undefined && testData.training !== undefined;
 };
 
-export const startTrainingWorker = async () => {
+export const startQueueWorker = async () => {
   const channel = await getRabbitMQChannel();
   if (!channel) {
     queueLogger.error("❌ RabbitMQ worker failed to start (No channel)");
@@ -212,6 +211,7 @@ export const startTrainingWorker = async () => {
                   },
                   {
                     responseType: "arraybuffer",
+                    headers: { "x-training-id": data.id },
                   }
                 );
                 fileType = "pkl";
@@ -224,6 +224,7 @@ export const startTrainingWorker = async () => {
                   },
                   {
                     responseType: "arraybuffer",
+                    headers: { "x-training-id": data.id },
                   }
                 );
                 fileType = "h5";
@@ -237,6 +238,7 @@ export const startTrainingWorker = async () => {
                   },
                   {
                     responseType: "arraybuffer",
+                    headers: { "x-training-id": data.id },
                   }
                 );
                 fileType = "h5";
@@ -259,6 +261,7 @@ export const startTrainingWorker = async () => {
                   },
                   {
                     responseType: "arraybuffer",
+                    headers: { "x-training-id": data.id },
                   }
                 );
                 evaluationResponse = await axios.get(
@@ -277,6 +280,7 @@ export const startTrainingWorker = async () => {
                   },
                   {
                     responseType: "arraybuffer",
+                    headers: { "x-training-id": data.id },
                   }
                 );
                 evaluationResponse = await axios.get(
@@ -299,6 +303,7 @@ export const startTrainingWorker = async () => {
                   },
                   {
                     responseType: "arraybuffer",
+                    headers: { "x-training-id": data.id },
                   }
                 );
                 evaluationResponse = await axios.get(
@@ -640,16 +645,15 @@ const startWorker = async () => {
   try {
     logger.info("🔄 Initializing Worker...");
 
-    await connectRedis();
     await retryConnection(connectRabbitMQ, "RabbitMQ", 10);
     await connectDatabase();
     await retryConnection(connectS3, "S3", 10);
 
-    await startTrainingWorker();
+    await startQueueWorker();
 
-    logger.info("🐰 Worker started successfully! 🚀");
+    logger.info("🐰 Queue Worker started successfully! 🚀");
   } catch (error) {
-    logger.error("❌ Failed to start Worker:", error);
+    logger.error("❌ Failed to start queue worker:", error);
     process.exit(1);
   }
 };

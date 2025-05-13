@@ -124,6 +124,14 @@ CREATE TABLE "images" (
 	"dataset_id" varchar(255) NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "logs" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"data" text NOT NULL,
+	"training_id" varchar NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "model_inferences" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"training_id" varchar(255),
@@ -143,7 +151,7 @@ CREATE TABLE "model_inferences" (
 CREATE TABLE "trainings" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"is_default" boolean DEFAULT false NOT NULL,
-	"version" varchar(255),
+	"version" varchar(255) NOT NULL,
 	"hyperparameter" jsonb,
 	"pipeline" jsonb NOT NULL,
 	"status" "training_status" DEFAULT 'created' NOT NULL,
@@ -186,6 +194,7 @@ ALTER TABLE "feature_extractions" ADD CONSTRAINT "feature_extractions_user_id_us
 ALTER TABLE "feature_selections" ADD CONSTRAINT "feature_selections_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "image_preprocessings" ADD CONSTRAINT "image_preprocessings_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "images" ADD CONSTRAINT "images_dataset_id_datasets_id_fk" FOREIGN KEY ("dataset_id") REFERENCES "public"."datasets"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
+ALTER TABLE "logs" ADD CONSTRAINT "logs_training_id_trainings_id_fk" FOREIGN KEY ("training_id") REFERENCES "public"."trainings"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "trainings" ADD CONSTRAINT "trainings_workflow_id_workflows_id_fk" FOREIGN KEY ("workflow_id") REFERENCES "public"."workflows"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "trainings" ADD CONSTRAINT "trainings_dataset_id_datasets_id_fk" FOREIGN KEY ("dataset_id") REFERENCES "public"."datasets"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "trainings" ADD CONSTRAINT "trainings_image_preprocessing_id_image_preprocessings_id_fk" FOREIGN KEY ("image_preprocessing_id") REFERENCES "public"."image_preprocessings"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
@@ -198,4 +207,5 @@ CREATE UNIQUE INDEX "id_idx" ON "augmentations" USING btree ("id");--> statement
 CREATE INDEX "user_idx" ON "augmentations" USING btree ("user_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "id_dataset_idx" ON "datasets" USING btree ("id");--> statement-breakpoint
 CREATE INDEX "idx_dataset_created_at" ON "datasets" USING btree ("created_at");--> statement-breakpoint
-CREATE INDEX "user_dataset_idx" ON "datasets" USING btree ("user_id");
+CREATE INDEX "user_dataset_idx" ON "datasets" USING btree ("user_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "training_id_data" ON "logs" USING btree ("training_id","data");

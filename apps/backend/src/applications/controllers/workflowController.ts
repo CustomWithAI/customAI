@@ -1,4 +1,9 @@
-import { trainingService, workflowService } from "@/config/dependencies";
+import {
+  logService,
+  trainingService,
+  workflowService,
+} from "@/config/dependencies";
+import { deleteLogsResponseDto, logsResponseDto } from "@/domains/dtos/logs";
 import { paginationDto } from "@/domains/dtos/pagination";
 import {
   createTrainingDto,
@@ -27,6 +32,7 @@ export const workflow = new Elysia({
   .derive(({ request }) => userMiddleware(request))
   .decorate("workflowService", workflowService)
   .decorate("trainingService", trainingService)
+  .decorate("logService", logService)
   .guard({ response: workflowResponseDto }, (app) =>
     app
       .post(
@@ -165,5 +171,19 @@ export const workflow = new Elysia({
           );
         },
         { response: defaultTrainingResponseDto }
+      )
+      .get(
+        "/:trainingId/logs",
+        async ({ query, params, logService }) => {
+          return logService.getLogsByTrainingId(params.trainingId, query);
+        },
+        { query: paginationDto, response: logsResponseDto }
+      )
+      .delete(
+        "/:trainingId/logs",
+        async ({ params, logService }) => {
+          return logService.deleteLogsByTrainingId(params.trainingId);
+        },
+        { response: deleteLogsResponseDto }
       )
   );
