@@ -131,7 +131,7 @@ export const TableAugmentationSection = () => {
 				ref={editRef}
 				config={{
 					trigger: null,
-					title: "Edit Image Processing",
+					title: "Edit Data Augmentation",
 					body: (id) => (
 						<EditFeature
 							image={images?.data.at(0)?.url || ""}

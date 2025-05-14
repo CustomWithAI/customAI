@@ -69,6 +69,7 @@ export function metadataToArray(metadata: Metadata): unknown[] | unknown {
 				break;
 
 			case "Position":
+				if (!value.value) break;
 				if ("x" in value.value && "y" in value.value)
 					result.push([value.value.x, value.value.y]);
 				break;

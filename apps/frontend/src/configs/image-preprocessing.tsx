@@ -69,7 +69,7 @@ export const node = (
 	return [
 		{
 			type: "resize",
-			title: "Resizing Node",
+			title: "Resizing",
 			description: "Evaluates a condition and routes the flow",
 			icon: <Scaling />,
 			id: "resizing-1",
@@ -149,7 +149,7 @@ export const node = (
 		},
 		{
 			type: "crop",
-			title: "Cropping Node",
+			title: "Cropping",
 			description: "Processes the input value",
 			icon: <Crop />,
 			id: "cropping-1",

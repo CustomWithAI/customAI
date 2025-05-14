@@ -96,6 +96,7 @@ export const ImagePreprocessingPage = () => {
 				if (!field.type) {
 					return acc;
 				}
+				console.log(field.metadata);
 				acc[field.type] = metadataToArray(field.metadata);
 				return acc;
 			},

@@ -76,7 +76,7 @@ export function LayerEditor({
 	};
 
 	const handleInputChange = (key: string, value: any) => {
-		const updatedLayer = { ...currentLayer };
+		const updatedLayer = { ...rawLayer };
 
 		if (typeof currentLayer[key] === "number") {
 			updatedLayer[key] = Number(value);

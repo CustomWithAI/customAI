@@ -79,6 +79,18 @@ export const DecisionTreeParams: FormFieldInput<DecisionTreeSchema> = [
 			},
 		},
 	},
+	{
+		template: "switch",
+		element: {
+			label: "Unfreeze",
+			description:
+				"If true, the model will update the weights of the pre-trained layers during training.",
+			key: "unfreeze",
+			testDataId: "unfreeze",
+			name: "unfreeze",
+		},
+		config: {},
+	},
 ];
 
 export const RandomForestParams: FormFieldInput<RandomForestSchema> = [
@@ -146,6 +158,18 @@ export const RandomForestParams: FormFieldInput<RandomForestSchema> = [
 		},
 		config: {},
 	},
+	{
+		template: "switch",
+		element: {
+			label: "Unfreeze",
+			description:
+				"If true, the model will update the weights of the pre-trained layers during training.",
+			key: "unfreeze",
+			testDataId: "unfreeze",
+			name: "unfreeze",
+		},
+		config: {},
+	},
 ];
 
 export const SVMParams: FormFieldInput<SVMSchema> = [
@@ -203,6 +227,18 @@ export const SVMParams: FormFieldInput<SVMSchema> = [
 			testDataId: "degree",
 			name: "degree",
 			placeholder: "Eg., 2, 3, 4",
+		},
+		config: {},
+	},
+	{
+		template: "switch",
+		element: {
+			label: "Unfreeze",
+			description:
+				"If true, the model will update the weights of the pre-trained layers during training.",
+			key: "unfreeze",
+			testDataId: "unfreeze",
+			name: "unfreeze",
 		},
 		config: {},
 	},
@@ -272,6 +308,18 @@ export const KNNParams: FormFieldInput<KNNSchema> = [
 			testDataId: "leaf_size",
 			name: "leaf_size",
 			placeholder: "Eg., 10, 30, 50",
+		},
+		config: {},
+	},
+	{
+		template: "switch",
+		element: {
+			label: "Unfreeze",
+			description:
+				"If true, the model will update the weights of the pre-trained layers during training.",
+			key: "unfreeze",
+			testDataId: "unfreeze",
+			name: "unfreeze",
 		},
 		config: {},
 	},

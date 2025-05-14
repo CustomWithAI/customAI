@@ -133,7 +133,7 @@ export const HeaderMain = () => {
 						/>
 					</Primary>
 					<Subtle>Make AI models to match your specific needs</Subtle>
-					<Button className="mt-8">Get a demo</Button>
+					<Button className="z-[100] mt-4">Get a demo</Button>
 				</div>
 			</div>
 		</div>

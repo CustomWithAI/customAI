@@ -79,7 +79,7 @@ export const stepConfig: Record<STEPS, StepConfig> = {
 				initial={[
 					{
 						type: "resize",
-						title: "Resizing Node",
+						title: "Resizing",
 						description: "Evaluates a condition and routes the flow",
 						icon: <Scaling />,
 						id: "resizing-1",

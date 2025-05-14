@@ -10,6 +10,7 @@ export const classificationSchema = z.object({
 	loss_function: z.string().optional().nullable(),
 	reduce_lr_on_plateau: z.boolean().optional(),
 	early_stopping: z.boolean().optional(),
+	unfreeze: z.boolean().default(false),
 	callbacks: z
 		.object({
 			reduce_lr_on_plateau: z

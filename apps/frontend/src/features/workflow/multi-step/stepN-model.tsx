@@ -114,7 +114,18 @@ export const ModelDetailsPage = () => {
 														: null
 										}
 									>
-										{JSON.stringify(value, null, 2)}
+										{JSON.stringify(
+											value,
+											(key, val) => {
+												const excludedKeys = [
+													"userId",
+													"updatedAt",
+													"createdAt",
+												];
+												return excludedKeys.includes(key) ? undefined : val;
+											},
+											2,
+										)}
 									</PreDataBlock>
 								)
 							) : (

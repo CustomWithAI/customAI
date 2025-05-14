@@ -71,6 +71,18 @@ export const ClassificationParams: FormFieldInput<ClassificationSchema> = [
 		config: {},
 	},
 	{
+		template: "switch",
+		element: {
+			label: "Unfreeze",
+			description:
+				"If true, the model will update the weights of the pre-trained layers during training.",
+			key: "unfreeze",
+			testDataId: "unfreeze",
+			name: "unfreeze",
+		},
+		config: {},
+	},
+	{
 		template: "select",
 		element: {
 			label: "Loss Function",

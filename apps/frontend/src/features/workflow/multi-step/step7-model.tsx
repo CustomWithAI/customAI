@@ -19,7 +19,6 @@ import { useToast } from "@/hooks/use-toast";
 import { encodeBase64 } from "@/libs/base64";
 import { decodeBase64 } from "@/libs/base64";
 import { cn } from "@/libs/utils";
-import type { Pipeline } from "@/types/request/requestTrainingPreset";
 import { getArrayFromEnum } from "@/utils/array-from-enum";
 import {
 	addStepAfterName,
@@ -164,11 +163,13 @@ export const ModelPage = () => {
 				training?.data.pipeline.steps,
 				STEPS.SetupModel,
 			);
+			console.log(isHasSetupModel);
 			if (isHasSetupModel) {
 				updatedStep = removeStepByName(
 					training?.data.pipeline.steps,
 					STEPS.SetupModel,
 				);
+				console.log(updatedStep);
 			}
 		}
 		await updateTraining(
@@ -180,7 +181,7 @@ export const ModelPage = () => {
 					current: getStep(
 						"next",
 						training?.data.pipeline.current,
-						training?.data.pipeline.steps,
+						updatedStep,
 						() => onSet(presetList),
 					),
 					steps: updatedStep,

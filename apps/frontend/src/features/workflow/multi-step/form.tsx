@@ -44,7 +44,6 @@ export const MultiStepForm = () => {
 		)?.index;
 
 		if (pipelineStep !== undefined) {
-			console.warn("pipeline is undefined");
 			return pipelineStep + 4;
 		}
 		return 6;

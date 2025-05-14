@@ -87,6 +87,17 @@ export const workflow = new Elysia({
         { query: paginationDto, response: trainingsResponseDto }
       )
       .get(
+        "desc-version",
+        async ({ user, params, query, trainingService}) => {
+          return trainingService.getTrainingsByWorkflowId(
+            user.id,
+            params.id,
+            query
+          );
+        },
+        { query: paginationDto, response: trainingsResponseDto }
+      )
+      .get(
         "/:trainingId",
         async ({ user, params, trainingService }) => {
           return trainingService.getTrainingById(
