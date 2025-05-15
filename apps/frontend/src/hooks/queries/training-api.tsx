@@ -25,6 +25,19 @@ export const useGetTrainingById = (
 	});
 };
 
+export const useGetDataTrainingById = (
+	workflowId: string,
+	trainingId: string,
+	options?: AppQueryOptions<typeof trainingService.getDataTrainingById>,
+) => {
+	return useQuery({
+		queryFn: async () =>
+			trainingService.getDataTrainingById({ workflowId, trainingId }),
+		queryKey: ["training", workflowId, trainingId],
+		...options,
+	});
+};
+
 export const useGetTrainingByWorkflowId = (
 	workflowId: string,
 	params: string | null = "",

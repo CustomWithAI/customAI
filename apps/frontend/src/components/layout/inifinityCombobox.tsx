@@ -43,6 +43,18 @@ interface ComboboxProps<T extends object> {
 	>;
 
 	/**
+	 * Optional hook to fetch a specific item by ID.
+	 * This is used when the default value is provided but the item isn't in the loaded pages yet.
+	 */
+	itemFetchHook?: UseQueryResult<T | undefined, Error>;
+
+	/**
+	 * Function to fetch a specific item by ID.
+	 * Call this when the defaultValue is provided but the item isn't in the loaded pages.
+	 */
+	fetchItemById?: (id: string) => void;
+
+	/**
 	 * The ID for the combobox input.
 	 */
 	id?: string;
@@ -130,6 +142,8 @@ interface ComboboxProps<T extends object> {
 export function InfiniteCombobox<T extends object>({
 	hook,
 	keyExtractor,
+	itemFetchHook,
+	fetchItemById,
 	itemContent,
 	id,
 	itemDisplay,
@@ -147,6 +161,8 @@ export function InfiniteCombobox<T extends object>({
 	const [open, setOpen] = React.useState(false);
 	const [selectedValue, setSelectedValue] = React.useState<string>(value || "");
 	const [searchInput, setSearchInput] = React.useState<string>("");
+	const [hasFetchedSelectedItem, setHasFetchedSelectedItem] =
+		React.useState(false);
 
 	const {
 		data,
@@ -167,7 +183,10 @@ export function InfiniteCombobox<T extends object>({
 		if (value !== undefined) {
 			setSelectedValue(value);
 		}
-	}, [value]);
+		if (value !== selectedValue) {
+			setHasFetchedSelectedItem(false);
+		}
+	}, [value, selectedValue]);
 
 	React.useEffect(() => {
 		if (inView && hasNextPage && !isFetchingNextPage) {
@@ -175,12 +194,44 @@ export function InfiniteCombobox<T extends object>({
 		}
 	}, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-	const selectedItem = React.useMemo(() => {
-		if (!data || !selectedValue) return null;
-		return data.pages
+	React.useEffect(() => {
+		const itemFromLoadedPages = data?.pages
 			.flatMap((page) => page?.data || [])
 			.find((item) => keyExtractor(item) === selectedValue);
-	}, [data, selectedValue, keyExtractor]);
+
+		if (
+			selectedValue &&
+			!itemFromLoadedPages &&
+			!hasFetchedSelectedItem &&
+			fetchItemById
+		) {
+			fetchItemById(selectedValue);
+			setHasFetchedSelectedItem(true);
+		}
+	}, [
+		data,
+		selectedValue,
+		keyExtractor,
+		fetchItemById,
+		hasFetchedSelectedItem,
+	]);
+
+	const selectedItem = React.useMemo(() => {
+		if (!selectedValue) return null;
+		const itemFromLoadedPages = data?.pages
+			.flatMap((page) => page?.data || [])
+			.find((item) => keyExtractor(item) === selectedValue);
+
+		if (itemFromLoadedPages) {
+			return itemFromLoadedPages;
+		}
+
+		if (itemFetchHook?.data) {
+			return itemFetchHook.data;
+		}
+
+		return null;
+	}, [data, selectedValue, keyExtractor, itemFetchHook]);
 
 	const handleSelect = React.useCallback(
 		(currentValue: string) => {

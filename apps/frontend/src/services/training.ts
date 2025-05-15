@@ -62,6 +62,17 @@ export const trainingService = {
 			);
 		} catch (error) {}
 	},
+	getDataTrainingById: async ({
+		workflowId,
+		trainingId,
+	}: { workflowId: string; trainingId: string }) => {
+		try {
+			const response = await axiosClient.get<TrainingModel>(
+				`/workflows/${workflowId}/trainings/${trainingId}`,
+			);
+			return response?.data;
+		} catch (error) {}
+	},
 	deleteTrainingById: async ({
 		workflowId,
 		trainingId,

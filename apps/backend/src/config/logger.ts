@@ -1,29 +1,33 @@
 import { createPinoLogger, pino } from "@bogeychan/elysia-logger";
 
 export const logger = createPinoLogger({
-  transport: {
-    targets: [
-      {
-        target: "pino-pretty",
-        options: {
-          colorize: true,
-          translateTime: "dd/mm/yyyy HH:MM:ss",
-          ignore: "pid,hostname",
-        },
-      },
-      {
-        target: "pino-elasticsearch",
-        options: {
-          index: "app-log-index",
-          node: "http://elasticsearch:9200",
-          esVersion: 8,
-          flushBytes: 1000,
-        },
-      },
-    ],
-  },
-  level: "debug",
-  timestamp: pino.stdTimeFunctions.isoTime,
+	transport: {
+		targets: [
+			{
+				target: "pino-pretty",
+				options: {
+					colorize: true,
+					translateTime: "dd/mm/yyyy HH:MM:ss",
+					ignore: "pid,hostname",
+				},
+			},
+			{
+				target: "pino-loki",
+				options: {
+					host: "http://loki-prod:3100",
+					labels: {
+						app: "backend",
+						environment: process.env.NODE_ENV || "development",
+					},
+					batchInterval: 1000,
+					batchSize: 10000,
+					json: true,
+				},
+			},
+		],
+	},
+	level: "debug",
+	timestamp: pino.stdTimeFunctions.isoTime,
 });
 
 export const postgresLogger = logger.child({ service: "postgres" });

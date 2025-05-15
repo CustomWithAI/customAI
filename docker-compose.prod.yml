@@ -1,7 +1,9 @@
+version: "3.9"
+
 services:
   reverse-proxy:
     image: traefik:v3.1
-    command: 
+    command:
       - "--api.insecure=true"
       - "--providers.docker"
       - "--entrypoints.web.address=:80"
@@ -10,10 +12,12 @@ services:
       - "--log.level=DEBUG"
     ports:
       - "80:80"
-      - 443:443
-      - "8080:8080" # Optional: Enable Dashboard (do not use in production)
+      - "443:443"
+      - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik
 
   postgres_prod:
     image: postgres:17-alpine
@@ -29,11 +33,13 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
       - POSTGRES_PASSWORD=your_postgres_password
     healthcheck:
-      test: [ "CMD", "pg_isready" ]
+      test: ["CMD", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5
-  
+    networks:
+      - backend
+
   rabbitmq_prod:
     image: rabbitmq:4-management-alpine
     container_name: rabbitmq-prod
@@ -41,8 +47,8 @@ services:
       - 5672:5672
       - 15672:15672
     environment:
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: admin
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
@@ -51,6 +57,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - backend
 
   redis_prod:
     image: redis:6.2.5-alpine
@@ -60,7 +68,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  
+    networks:
+      - backend
+
   localstack_prod:
     container_name: localstack_prod
     image: localstack/localstack:latest
@@ -77,6 +87,8 @@ services:
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./localstack}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - backend
 
   aws-cli_prod:
     image: amazon/aws-cli
@@ -92,12 +104,12 @@ services:
       - AWS_DEFAULT_REGION=us-east-1
     entrypoint: /bin/sh
     command: -c "sh /aws/upload-images.sh"
+    networks:
+      - backend
 
   ai-service_prod:
     container_name: ai_service_prod
-    profiles:
-      - ""
-      - python
+    profiles: ["", "python"]
     build:
       context: ./apps/ai-service
       dockerfile: Dockerfile
@@ -106,42 +118,118 @@ services:
     ports:
       - "8000:8000"
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    networks:
+      - backend
+      - monitoring
+    labels:
+      - "logging=enabled"
 
   backend_app_prod:
     container_name: backend_prod
-    profiles:
-      - backend
-      - ""
+    profiles: ["backend", ""]
     build:
       context: ./apps/backend
       dockerfile: Dockerfile
     env_file: apps/backend/.env
+    environment:
+      - LOKI_HOST=http://loki:3100
+      - NODE_ENV=production
     ports:
-      - 4000:4000 
-    # depends_on:
-    #   postgres_prod:
-    #     condition: service_healthy
-    #   rabbitmq_prod:
-    #     condition: service_healthy
-    #   redis_prod:
-    #     condition: service_healthy
+      - 4000:4000
+    networks:
+      - backend
+      - traefik
+      - monitoring
+    labels:
+      - "traefik.http.services.backend_app.loadbalancer.server.port=4000"
+      - "traefik.http.routers.backend_app.rule=Host(`api.customai.cloud`)"
+      - "logging=enabled"
 
   frontend_app_prod:
     container_name: frontend_prod
-    profiles:
-      - ""
-      - frontend
+    profiles: ["", "frontend"]
     build:
       context: ./apps/frontend
       dockerfile: Dockerfile
     env_file: apps/frontend/.env
-    labels:
-      - "traefik.http.routes.frontend_app.rule=Host(`customAI.cloud`)"
+    environment:
+      - LOKI_HOST=http://loki:3100
+      - NODE_ENV=production
     volumes:
       - ./apps/frontend:/app
       - /app/apps/frontend/node_modules
       - /app/apps/frontend/.next
     ports:
       - 3000:3000
+    networks:
+      - frontend
+      - traefik
+      - monitoring
     depends_on:
       - backend_app_prod
+    labels:
+      - "traefik.http.routers.frontend_app.rule=Host(`customai.cloud`)"
+      - "traefik.http.services.frontend_app.loadbalancer.server.port=3000"
+      - "logging=enabled"
+
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/config.yml
+    volumes:
+      - ./monitoring/loki-config.yml:/etc/loki/config.yml
+    networks:
+      - monitoring
+
+  promtail:
+    image: grafana/promtail:2.9.4
+    container_name: promtail
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/log:/var/log
+      - /etc/machine-id:/etc/machine-id:ro
+      - /etc/hostname:/etc/hostname:ro
+      - ./monitoring/promtail-config.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:10.3.1
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - loki
+    networks:
+      - monitoring
+      - traefik
+    labels:
+      - "traefik.http.routers.grafana.rule=Host(`monitoring.customai.cloud`)"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+
+volumes:
+  grafana-data:
+
+networks:
+  traefik:
+    driver: bridge
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge
+  monitoring:
+    driver: bridge
