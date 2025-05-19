@@ -16,39 +16,33 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - traefik
-
-  postgres_prod:
+    # networks:
+    #   - traefik
+  
+  postgres:
     image: postgres:17-alpine
     container_name: postgres-prod
-    restart: always
     ports:
       - 5432:5432
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=app
-      - POSTGRES_USER=user
-      - POSTGRES_HOST_AUTH_METHOD=trust
-      - POSTGRES_PASSWORD=your_postgres_password
-    healthcheck:
-      test: ["CMD", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - backend
+      POSTGRES_DB: app
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: your_postgres_password
+      POSTGRES_HOST_AUTH_METHOD: trust
+    # networks:
+    #   - backend
 
-  rabbitmq_prod:
+  rabbitmq:
     image: rabbitmq:4-management-alpine
     container_name: rabbitmq-prod
     ports:
       - 5672:5672
       - 15672:15672
     environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=admin
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
@@ -57,10 +51,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - backend
+    # networks:
+    #   - backend
 
-  redis_prod:
+  redis:
     image: redis:6.2.5-alpine
     container_name: redis-prod
     healthcheck:
@@ -68,11 +62,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - backend
+    # networks:
+    #   - backend
 
-  localstack_prod:
-    container_name: localstack_prod
+  localstack:
+    container_name: localstack-prod
     image: localstack/localstack:latest
     ports:
       - "4566:4566"
@@ -87,14 +81,14 @@ services:
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./localstack}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
-    networks:
-      - backend
+    # networks:
+    #   - backend
 
-  aws-cli_prod:
+  aws-cli:
     image: amazon/aws-cli
-    container_name: aws-cli_prod
+    container_name: aws-cli-prod
     depends_on:
-      localstack_prod:
+      localstack:
         condition: service_healthy
     volumes:
       - ./images:/aws
@@ -104,28 +98,25 @@ services:
       - AWS_DEFAULT_REGION=us-east-1
     entrypoint: /bin/sh
     command: -c "sh /aws/upload-images.sh"
-    networks:
-      - backend
+    # networks:
+    #   - backend
 
-  ai-service_prod:
-    container_name: ai_service_prod
+  ai-service:
+    container_name: ai-service-prod
     profiles: ["", "python"]
     build:
       context: ./apps/ai-service
       dockerfile: Dockerfile
-    volumes:
-      - ./apps/ai-service:/app
     ports:
       - "8000:8000"
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
-    networks:
-      - backend
-      - monitoring
+    # networks:
+    #   - backend
+    #   - monitoring
     labels:
       - "logging=enabled"
 
-  backend_app_prod:
-    container_name: backend_prod
+  backend-app:
+    container_name: backend-prod
     profiles: ["backend", ""]
     build:
       context: ./apps/backend
@@ -136,41 +127,108 @@ services:
       - NODE_ENV=production
     ports:
       - 4000:4000
-    networks:
-      - backend
-      - traefik
-      - monitoring
+    # networks:
+    #   - backend
+    #   - traefik
+    #   - monitoring
     labels:
-      - "traefik.http.services.backend_app.loadbalancer.server.port=4000"
-      - "traefik.http.routers.backend_app.rule=Host(`api.customai.cloud`)"
+      - "traefik.http.services.backend-app.loadbalancer.server.port=4000"
+      - "traefik.http.routers.backend-app.rule=Host(`api.customai.cloud`)"
       - "logging=enabled"
 
-  frontend_app_prod:
-    container_name: frontend_prod
-    profiles: ["", "frontend"]
+  # backend-app:
+  #   container_name: backend-app
+  #   profiles:
+  #     - ""
+  #     - backend
+  #   build:
+  #     context: ./apps/backend
+  #     dockerfile: dev.Dockerfile
+  #   env_file: apps/backend/.env
+  #   volumes:
+  #     - ./apps/backend:/app
+  #     - /app/node_modules
+  #   ports:
+  #     - 4000:4000 
+  #   depends_on:
+  #     - localstack
+  #     - postgres
+  #     - rabbitmq
+  #     - redis
+  
+  queue-worker:
+    container_name: queue-worker-prod
+    profiles: ["worker", ""]
+    build:
+      context: ./apps/backend
+      dockerfile: queue.Dockerfile
+    env_file: apps/backend/.env
+    # networks:
+    #   - backend
+    depends_on:
+      - backend-app
+      - localstack
+      - postgres
+      - rabbitmq
+  
+  log-worker:
+    container_name: log-worker-prod
+    profiles: ["worker", ""]
+    build:
+      context: ./apps/backend
+      dockerfile: log.Dockerfile
+    env_file: apps/backend/.env
+    # networks:
+    #   - backend
+    depends_on:
+      - backend-app
+      - postgres
+      - redis
+    
+  frontend-app:
+    container_name: frontend-app
+    profiles:
+      - ""
+      - frontend
     build:
       context: ./apps/frontend
-      dockerfile: Dockerfile
+      dockerfile: dev.Dockerfile
     env_file: apps/frontend/.env
-    environment:
-      - LOKI_HOST=http://loki:3100
-      - NODE_ENV=production
-    volumes:
-      - ./apps/frontend:/app
-      - /app/apps/frontend/node_modules
-      - /app/apps/frontend/.next
     ports:
       - 3000:3000
-    networks:
-      - frontend
-      - traefik
-      - monitoring
+    # networks:
+    #   - frontend
+    #   - traefik
+    #   - monitoring
     depends_on:
-      - backend_app_prod
-    labels:
-      - "traefik.http.routers.frontend_app.rule=Host(`customai.cloud`)"
-      - "traefik.http.services.frontend_app.loadbalancer.server.port=3000"
-      - "logging=enabled"
+      - backend-app
+
+  # frontend-app:
+  #   container_name: frontend-prod
+  #   profiles: ["", "frontend"]
+  #   build:
+  #     context: ./apps/frontend
+  #     dockerfile: Dockerfile
+  #   env_file: apps/frontend/.env
+  #   environment:
+  #     - LOKI_HOST=http://loki:3100
+  #     - NODE_ENV=production
+  #   volumes:
+  #     - ./apps/frontend:/app
+  #     - /app/apps/frontend/node_modules
+  #     - /app/apps/frontend/.next
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - frontend
+  #     - traefik
+  #     - monitoring
+  #   depends_on:
+  #     - backend-app
+  #   labels:
+  #     - "traefik.http.routers.frontend_app.rule=Host(`customai.cloud`)"
+  #     - "traefik.http.services.frontend_app.loadbalancer.server.port=3000"
+  #     - "logging=enabled"
 
   loki:
     image: grafana/loki:2.9.4
@@ -180,23 +238,24 @@ services:
     command: -config.file=/etc/loki/config.yml
     volumes:
       - ./monitoring/loki-config.yml:/etc/loki/config.yml
-    networks:
-      - monitoring
+      - ./monitoring/wal:/wal
+    # networks:
+    #   - monitoring
 
-  promtail:
-    image: grafana/promtail:2.9.4
-    container_name: promtail
-    volumes:
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/log:/var/log
-      - /etc/machine-id:/etc/machine-id:ro
-      - /etc/hostname:/etc/hostname:ro
-      - ./monitoring/promtail-config.yml:/etc/promtail/config.yml
-    command: -config.file=/etc/promtail/config.yml
-    depends_on:
-      - loki
-    networks:
-      - monitoring
+  # promtail:
+  #   image: grafana/promtail:2.9.4
+  #   container_name: promtail
+  #   volumes:
+  #     - /var/lib/docker/containers:/var/lib/docker/containers:ro
+  #     - /var/log:/var/log
+  #     - /etc/machine-id:/etc/machine-id:ro
+  #     - /etc/hostname:/etc/hostname:ro
+  #     - ./monitoring/promtail-config.yml:/etc/promtail/config.yml
+  #   command: -config.file=/etc/promtail/config.yml
+  #   depends_on:
+  #     - loki
+  #   networks:
+  #     - monitoring
 
   grafana:
     image: grafana/grafana:10.3.1
@@ -214,9 +273,9 @@ services:
       - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
     depends_on:
       - loki
-    networks:
-      - monitoring
-      - traefik
+    # networks:
+    #   - monitoring
+    #   - traefik
     labels:
       - "traefik.http.routers.grafana.rule=Host(`monitoring.customai.cloud`)"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
@@ -224,12 +283,12 @@ services:
 volumes:
   grafana-data:
 
-networks:
-  traefik:
-    driver: bridge
-  backend:
-    driver: bridge
-  frontend:
-    driver: bridge
-  monitoring:
-    driver: bridge
+# networks:
+#   traefik:
+#     driver: bridge
+#   backend:
+#     driver: bridge
+#   frontend:
+#     driver: bridge
+#   monitoring:
+#     driver: bridge

@@ -130,5 +130,6 @@ dist
 .pnp.*
 
 localstack
+monitoring
 
 .DS_Store

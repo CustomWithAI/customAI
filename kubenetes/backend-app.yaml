@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend-app
-          image: backend_app:latest
+          image: backend-app:latest
           ports:
             - containerPort: 4000
           volumeMounts:

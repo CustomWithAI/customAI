@@ -84,8 +84,8 @@ services:
     entrypoint: /bin/sh
     command: -c "sh /aws/upload-images.sh"
 
-  backend_app:
-    container_name: backend_app
+  backend-app:
+    container_name: backend-app
     profiles:
       - ""
       - backend
@@ -104,8 +104,8 @@ services:
       - rabbitmq
       - redis
 
-  queue_worker:
-    container_name: queue_worker
+  queue-worker:
+    container_name: queue-worker
     profiles:
       - ""
       - worker
@@ -118,13 +118,13 @@ services:
     command: ["bun", "run", "--watch", "src/workers/queueWorker.ts"]
     env_file: apps/backend/.env
     depends_on:
-      - backend_app
+      - backend-app
       - localstack
       - postgres
       - rabbitmq
   
-  log_worker:
-    container_name: log_worker
+  log-worker:
+    container_name: log-worker
     profiles:
       - ""
       - worker
@@ -137,12 +137,12 @@ services:
     command: ["bun", "run", "--watch", "src/workers/logWorker.ts"]
     env_file: apps/backend/.env
     depends_on:
-      - backend_app
+      - backend-app
       - postgres
       - redis
 
-  frontend_app:
-    container_name: frontend_app
+  frontend-app:
+    container_name: frontend-app
     profiles:
       - ""
       - frontend
@@ -156,10 +156,10 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - backend_app
+      - backend-app
 
   ai-service:
-    container_name: ai_service
+    container_name: ai-service
     profiles:
       - ""
       - python

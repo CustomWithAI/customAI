@@ -16,6 +16,8 @@ const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   APP_PORT: z.coerce.number().default(4000),
+  FRONTEND_URL: z.string().default("http://localhost:3000"),
+  FRONTEND_SERVER_URL: z.string().default("http://frontend-app:3000"),
 
   // PostgreSQL Configuration
   POSTGRES_HOST: z.string().default("postgres"),

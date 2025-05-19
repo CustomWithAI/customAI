@@ -15,4 +15,4 @@ COPY . .
 
 USER bun
 EXPOSE 4000
-ENTRYPOINT [ "bun", "index.ts" ]
+ENTRYPOINT [ "bun", "src", "index.ts" ]

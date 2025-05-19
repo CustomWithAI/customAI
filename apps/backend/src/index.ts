@@ -23,7 +23,7 @@ import { shutdown } from "@/utils/shutdown";
 import { cors } from "@elysiajs/cors";
 import { staticPlugin } from "@elysiajs/static";
 import { Elysia } from "elysia";
-import { betterAuthView } from "./lib/auth-handler";
+import { betterAuthView } from "@/lib/auth-handler";
 
 try {
   logger.info("🏃‍♀️ Starting connection..");

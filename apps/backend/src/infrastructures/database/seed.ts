@@ -1,12 +1,9 @@
 import { config } from "@/config/env";
 import { logger } from "@/config/logger";
-import { augmentations } from "@/domains/schema/augmentations";
-import { account, session, user, verification } from "@/domains/schema/auth";
+import { account, user } from "@/domains/schema/auth";
 import { datasets } from "@/domains/schema/datasets";
-import { imagePreprocessings } from "@/domains/schema/imagePreprocessings";
 import { images } from "@/domains/schema/images";
 import { workflows } from "@/domains/schema/workflows";
-import { cleanupDB } from "@/utils/db-utils";
 import { randomUUIDv7 } from "bun";
 import { drizzle } from "drizzle-orm/node-postgres";
 import classificationOneData from "@/infrastructures/database/seed-data/classification-1.json";
