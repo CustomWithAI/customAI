@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { LogEntryItem } from "./../common/logEntry";
 import { LogDateSeparator } from "./../common/logSeparator";
+import { env } from "@/env.mjs";
 
 interface LogListProps<TData extends ResponseLog> {
 	queryHook: UseInfiniteQueryResult<
@@ -40,7 +41,7 @@ export function InfiniteLog<TData extends ResponseLog>({
 
 	useEffect(() => {
 		const ws = new WebSocket(
-			`${window.location.origin.replace(/^http/, "ws")}/ws/logs/${trainingId}`,
+			`${env.NEXT_PUBLIC_BACKEND_URL.replace(/^http/, "ws")}/ws/logs/${trainingId}`,
 		);
 
 		ws.onmessage = (event) => {

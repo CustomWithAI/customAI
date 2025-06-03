@@ -194,6 +194,9 @@ services:
       context: ./apps/frontend
       dockerfile: dev.Dockerfile
     env_file: apps/frontend/.env
+    volumes:
+      - ./apps/frontend:/app
+      - /app/node_modules
     ports:
       - 3000:3000
     # networks:

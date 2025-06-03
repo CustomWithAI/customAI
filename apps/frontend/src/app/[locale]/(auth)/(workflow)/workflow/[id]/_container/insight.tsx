@@ -44,11 +44,15 @@ export const InsightPage = ({ id }: { id: string }) => {
 		refetch,
 	} = useGetTrainingById(id, selected || "", {
 		enabled: !!(selected && id),
+		refetchInterval: 1000 * 3,
 	});
 
 	const logQuery = useGetLogs({
 		id,
 		trainingId: training?.data.id,
+		params: {
+			createdAt: "desc",
+		},
 		config: {
 			enabled: !!id && !!training?.data.id,
 		},
@@ -122,7 +126,11 @@ export const InsightPage = ({ id }: { id: string }) => {
 						<TabsTrigger value="table">Table Result</TabsTrigger>
 						<TabsTrigger value="chart">Chart Visualization</TabsTrigger>
 						<TabsTrigger value="image">Image</TabsTrigger>
+						<TabsTrigger value="log">Log</TabsTrigger>
 					</TabsList>
+					<TabsContent value="log" className="pt-6">
+						<InfiniteLog queryHook={logQuery} trainingId={training?.data.id} />
+					</TabsContent>
 					<TabsContent value="table" className="pt-6">
 						{evaluateTable ? (
 							<TableStatic
