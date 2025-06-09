@@ -186,17 +186,20 @@ services:
       - redis
     
   frontend-app:
-    container_name: frontend-app
-    profiles:
-      - ""
-      - frontend
+    container_name: frontend-prod
+    profiles: ["", "frontend"]
+    platform: linux/amd64
     build:
       context: ./apps/frontend
-      dockerfile: dev.Dockerfile
+      dockerfile: Dockerfile
     env_file: apps/frontend/.env
+    environment:
+      - LOKI_HOST=http://loki:3100
+      - NODE_ENV=production
     volumes:
       - ./apps/frontend:/app
-      - /app/node_modules
+      - /app/apps/frontend/node_modules
+      - /app/apps/frontend/.next
     ports:
       - 3000:3000
     # networks:
@@ -205,33 +208,10 @@ services:
     #   - monitoring
     depends_on:
       - backend-app
-
-  # frontend-app:
-  #   container_name: frontend-prod
-  #   profiles: ["", "frontend"]
-  #   build:
-  #     context: ./apps/frontend
-  #     dockerfile: Dockerfile
-  #   env_file: apps/frontend/.env
-  #   environment:
-  #     - LOKI_HOST=http://loki:3100
-  #     - NODE_ENV=production
-  #   volumes:
-  #     - ./apps/frontend:/app
-  #     - /app/apps/frontend/node_modules
-  #     - /app/apps/frontend/.next
-  #   ports:
-  #     - 3000:3000
-  #   networks:
-  #     - frontend
-  #     - traefik
-  #     - monitoring
-  #   depends_on:
-  #     - backend-app
-  #   labels:
-  #     - "traefik.http.routers.frontend_app.rule=Host(`customai.cloud`)"
-  #     - "traefik.http.services.frontend_app.loadbalancer.server.port=3000"
-  #     - "logging=enabled"
+    labels:
+      - "traefik.http.routers.frontend_app.rule=Host(`customai.cloud`)"
+      - "traefik.http.services.frontend_app.loadbalancer.server.port=3000"
+      - "logging=enabled"
 
   loki:
     image: grafana/loki:2.9.4

@@ -1,37 +1,35 @@
-FROM node:20-alpine AS builder
+# ===============================
+# Stage 1: Build
+# ===============================
+FROM node:20-slim AS builder
 WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Install deps separately to improve caching
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --prefer-offline
 
-# Copy rest of the code and build
 COPY . .
 RUN npm run build
 
-# Stage 2: Production image
-FROM node:20-alpine AS runner
+# ===============================
+# Stage 2: Production runtime
+# ===============================
+FROM node:20-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+ENV PORT=3000
+ENV NODE_OPTIONS=--max-old-space-size=512
 
-# Only install production deps
-COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
+# Optional: add tini for PID 1 stability
+RUN apt-get update && apt-get install -y --no-install-recommends tini && apt-get clean && rm -rf /var/lib/apt/lists/*
+ENTRYPOINT ["/usr/bin/tini", "--"]
 
-# Copy build output and necessary files
-COPY --from=builder /app/.next .next
-COPY --from=builder /app/public public
-COPY --from=builder /app/next.config.js .
-COPY --from=builder /app/tsconfig.json .
-COPY --from=builder /app/pages pages
-COPY --from=builder /app/app app
-COPY --from=builder /app/styles styles
-COPY --from=builder /app/components components
-COPY --from=builder /app/utils utils
+# Copy standalone output only
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static .next/static
+COPY --from=builder /app/public ./public
 
 EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD ["node", "server.js"]

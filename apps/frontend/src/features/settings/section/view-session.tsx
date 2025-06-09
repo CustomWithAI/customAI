@@ -35,13 +35,15 @@ export const ViewSessionSection = () => {
 		return data?.data?.map((user) => {
 			const currentSession =
 				(user as unknown as Session).token ===
-				(session.session as unknown as Session).token;
+				(session?.session as unknown as Session).token;
 			return {
 				current: currentSession,
 				token: (user as unknown as Session).token,
 				expireAt: user.expiresAt,
 				ipAddress: user.ipAddress,
-				device: getDeviceFromUserAgent(user.userAgent),
+				device: user?.userAgent
+					? getDeviceFromUserAgent(user.userAgent)
+					: "unknown",
 			};
 		});
 	}, [data, session]);

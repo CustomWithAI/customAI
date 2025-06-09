@@ -20,7 +20,13 @@ import {
 import { isSameUnorderedArray } from "@/utils/isSameArray";
 import { useMemo } from "react";
 
-export default function Page({ params: { id } }: { params: { id: string } }) {
+type PageProps = {
+	params: {
+		id: string;
+	};
+};
+
+export default function Page({ params: { id } }: PageProps): JSX.Element {
 	const router = useRouter();
 	const { getQueryParam, setQueryParam } = useQueryParam({ name: "image" });
 	const {

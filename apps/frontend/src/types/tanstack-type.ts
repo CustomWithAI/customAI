@@ -23,7 +23,6 @@ export type AppInfiniteQueryOptions<T extends (...args: any) => any> = Partial<
 		AxiosError<ResponseError>,
 		InfiniteData<Awaited<ReturnType<T>> | undefined>,
 		any,
-		any,
 		any
 	>
 >;
@@ -55,7 +54,6 @@ export type AppInfiniteOptions<T extends (...args: any) => any> = Partial<
 		Awaited<ReturnType<T>>,
 		AxiosError,
 		InfiniteData<Awaited<ReturnType<T>>>,
-		Awaited<ReturnType<T>>,
 		string[],
 		Awaited<Parameters<T>>[0]
 	>
