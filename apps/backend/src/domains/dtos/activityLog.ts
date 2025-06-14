@@ -1,4 +1,3 @@
-import { defaultTrainingResponseDto } from "@/domains/dtos/training";
 import { toMultipleResponse } from "@/utils/dto";
 import { t } from "elysia";
 
