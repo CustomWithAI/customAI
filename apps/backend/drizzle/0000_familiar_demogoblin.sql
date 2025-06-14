@@ -1,5 +1,17 @@
+CREATE TYPE "public"."type" AS ENUM('training_start', 'training_pending', 'training_in_progress', 'training_complete', 'training_failed', 'training_clone', 'training_delete', 'training_set_default');--> statement-breakpoint
 CREATE TYPE "public"."inference_status" AS ENUM('pending', 'running', 'completed', 'failed');--> statement-breakpoint
 CREATE TYPE "public"."training_status" AS ENUM('created', 'pending', 'prepare_dataset', 'training', 'completed', 'failed');--> statement-breakpoint
+CREATE TABLE "activity_logs" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"type" "type" NOT NULL,
+	"version" varchar(255) NOT NULL,
+	"from_version" varchar(255),
+	"error_message" text,
+	"workflow_id" varchar,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "augmentations" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"name" varchar(255) NOT NULL,
@@ -185,6 +197,7 @@ CREATE TABLE "workflows" (
 	"user_id" text NOT NULL
 );
 --> statement-breakpoint
+ALTER TABLE "activity_logs" ADD CONSTRAINT "activity_logs_workflow_id_workflows_id_fk" FOREIGN KEY ("workflow_id") REFERENCES "public"."workflows"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "augmentations" ADD CONSTRAINT "augmentations_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint

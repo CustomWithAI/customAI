@@ -1,6 +1,7 @@
 import type { ImageRepository } from "@/applications/repositories/imageRepository";
 import type { TrainingRepository } from "@/applications/repositories/trainingRepository";
 import type { WorkflowRepository } from "@/applications/repositories/workflowRepository";
+import type { ActivityLogRepository } from "@/applications/repositories/activityLogRepository";
 import { config } from "@/config/env";
 import type { CreateTrainingDto } from "@/domains/dtos/training";
 import type { trainings } from "@/domains/schema/trainings";
@@ -18,7 +19,8 @@ export class TrainingService {
   public constructor(
     private repository: TrainingRepository,
     private workflowRepository: WorkflowRepository,
-    private imageRepository: ImageRepository
+    private imageRepository: ImageRepository,
+    private activityLogRepository: ActivityLogRepository
   ) {}
 
   private async ensureWorkflowExists(userId: string, workflowId: string) {
@@ -141,6 +143,13 @@ export class TrainingService {
     if (result[0].trainedModelPath) {
       await deleteFile(result[0].trainedModelPath);
     }
+
+    await this.activityLogRepository.create({
+      type: "training_delete",
+      version: result[0].version,
+      workflowId,
+    });
+
     return result[0];
   }
 
@@ -287,6 +296,18 @@ export class TrainingService {
     );
     await this.repository.updateStatus(id, "pending", queueId);
 
+    await this.activityLogRepository.create({
+      type: "training_start",
+      version: training.version,
+      workflowId,
+    });
+
+    await this.activityLogRepository.create({
+      type: "training_pending",
+      version: training.version,
+      workflowId,
+    });
+
     yield emit("Training job queued successfully", true);
 
     return { message: "Training added to queue", queueId, messagePending };
@@ -308,6 +329,12 @@ export class TrainingService {
     if (result.length === 0) {
       throw new NotFoundError(`Training not found: ${id}`);
     }
+
+    await this.activityLogRepository.create({
+      type: "training_set_default",
+      version: result[0].version,
+      workflowId,
+    });
 
     return result[0];
   }
@@ -354,6 +381,14 @@ export class TrainingService {
     if (result.length === 0) {
       throw new InternalServerError("Failed to create training");
     }
+
+    await this.activityLogRepository.create({
+      type: "training_clone",
+      version: result[0].version,
+      fromVersion: version,
+      workflowId,
+    });
+
     return result[0];
   }
 }

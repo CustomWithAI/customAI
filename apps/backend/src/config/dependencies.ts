@@ -9,6 +9,7 @@ import { LogRepository } from "@/applications/repositories/logRepository";
 import { ModelInferenceRepository } from "@/applications/repositories/modelInferenceRepository";
 import { TrainingRepository } from "@/applications/repositories/trainingRepository";
 import { WorkflowRepository } from "@/applications/repositories/workflowRepository";
+import { ActivityLogRepository } from "@/applications/repositories/activityLogRepository";
 import { AugmentationService } from "@/applications/services/augmentationService";
 import { CustomModelService } from "@/applications/services/customModelService";
 import { DatasetService } from "@/applications/services/datasetService";
@@ -20,6 +21,7 @@ import { LogService } from "@/applications/services/logService";
 import { ModelInferenceService } from "@/applications/services/modelInferenceService";
 import { TrainingService } from "@/applications/services/trainingService";
 import { WorkflowService } from "@/applications/services/workflowService";
+import { ActivityLogService } from "@/applications/services/activityLogService";
 
 // Repositories
 export const augmentationRepository = new AugmentationRepository();
@@ -33,6 +35,7 @@ export const workflowRepository = new WorkflowRepository();
 export const trainingRepository = new TrainingRepository();
 export const modelInferenceRepository = new ModelInferenceRepository();
 export const logRepository = new LogRepository();
+export const activityLogRepository = new ActivityLogRepository();
 
 // Services
 export const augmentationService = new AugmentationService(
@@ -57,10 +60,12 @@ export const workflowService = new WorkflowService(workflowRepository);
 export const trainingService = new TrainingService(
   trainingRepository,
   workflowRepository,
-  imageRepository
+  imageRepository,
+  activityLogRepository
 );
 export const modelInferenceService = new ModelInferenceService(
   modelInferenceRepository,
   trainingRepository
 );
 export const logService = new LogService(logRepository);
+export const activityLogService = new ActivityLogService(activityLogRepository);

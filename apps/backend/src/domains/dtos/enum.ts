@@ -21,6 +21,7 @@ export const enumResponseDto = t.Object({
   inferenceWorkflow: t.Array(t.String()),
   inferenceTraining: t.Array(t.String()),
   inferenceVersion: t.Array(t.String()),
+  activityType: t.Array(t.String()),
 });
 
 export type EnumResponseDto = typeof enumResponseDto.static;

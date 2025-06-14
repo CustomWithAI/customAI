@@ -1,9 +1,87 @@
 {
-  "id": "dc6dc6d1-d555-4948-aeed-31e2f0a872b9",
+  "id": "60286be1-6135-40bd-98c4-d62ade74f819",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.activity_logs": {
+      "name": "activity_logs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "from_version": {
+          "name": "from_version",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "error_message": {
+          "name": "error_message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "workflow_id": {
+          "name": "workflow_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "activity_logs_workflow_id_workflows_id_fk": {
+          "name": "activity_logs_workflow_id_workflows_id_fk",
+          "tableFrom": "activity_logs",
+          "tableTo": "workflows",
+          "columnsFrom": [
+            "workflow_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.augmentations": {
       "name": "augmentations",
       "schema": "",
@@ -1422,6 +1500,20 @@
     }
   },
   "enums": {
+    "public.type": {
+      "name": "type",
+      "schema": "public",
+      "values": [
+        "training_start",
+        "training_pending",
+        "training_in_progress",
+        "training_complete",
+        "training_failed",
+        "training_clone",
+        "training_delete",
+        "training_set_default"
+      ]
+    },
     "public.inference_status": {
       "name": "inference_status",
       "schema": "public",

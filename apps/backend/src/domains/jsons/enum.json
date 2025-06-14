@@ -51,5 +51,15 @@
   },
   "inferenceWorkflow": ["classification", "object_detection", "segmentation"],
   "inferenceTraining": ["machine_learning", "pre_trained", "custom"],
-  "inferenceVersion": ["yolov5", "yolov8", "yolov11"]
+  "inferenceVersion": ["yolov5", "yolov8", "yolov11"],
+  "activityType": [
+    "training_start",
+    "training_pending",
+    "training_in_progress",
+    "training_complete",
+    "training_failed",
+    "training_clone",
+    "training_delete",
+    "training_set_default"
+  ]
 }

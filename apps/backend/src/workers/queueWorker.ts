@@ -6,6 +6,7 @@ import {
   imageService,
   trainingRepository,
   modelInferenceRepository,
+  activityLogRepository,
 } from "@/config/dependencies";
 import { logger, queueLogger } from "@/config/logger";
 import { config } from "@/config/env";
@@ -77,6 +78,12 @@ export const startQueueWorker = async () => {
         if (workerData.type === "training") {
           const { data } = workerData;
           queueLogger.info(`🚀 Processing training: ${data.queueId}`);
+
+          await activityLogRepository.create({
+            type: "training_in_progress",
+            version: data.version,
+            workflowId: data.workflow.id,
+          });
 
           try {
             // ✅ Update Status Into "prepare_dataset"
@@ -351,6 +358,13 @@ export const startQueueWorker = async () => {
               evaluationImage: evaluationImage,
               errorMessage: null,
             });
+
+            await activityLogRepository.create({
+              type: "training_complete",
+              version: data.version,
+              workflowId: data.workflow.id,
+            });
+
             queueLogger.info(`✅ Training completed: ${data.queueId}`);
           } catch (error) {
             let errorMessage = "Unknown error occurred.";
@@ -375,6 +389,13 @@ export const startQueueWorker = async () => {
               status: "failed",
               errorMessage: errorMessage,
               retryCount: data.retryCount + 1,
+            });
+
+            await activityLogRepository.create({
+              type: "training_failed",
+              version: data.version,
+              errorMessage: errorMessage,
+              workflowId: data.workflow.id,
             });
           } finally {
             // ✅ Delete Request From Queue
