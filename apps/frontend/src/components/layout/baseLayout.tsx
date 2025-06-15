@@ -11,8 +11,10 @@ import type { ReactNode } from "react";
 const ibm = IBM_Plex_Sans_Thai({
 	subsets: ["latin", "thai"],
 	display: "swap",
+	variable: "--font-ibm",
 	weight: ["200", "300", "400", "500", "600", "700"],
 });
+
 const inter = Inter({
 	subsets: ["latin"],
 	display: "swap",

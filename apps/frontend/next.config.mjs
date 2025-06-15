@@ -12,7 +12,6 @@ const nextConfig = {
 		parallelServerBuildTraces: true,
 		parallelServerCompiles: true,
 	},
-	output: "standalone",
 	typescript: {
 		ignoreBuildErrors: true,
 	},
